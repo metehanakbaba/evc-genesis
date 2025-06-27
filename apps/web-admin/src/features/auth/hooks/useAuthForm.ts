@@ -1,46 +1,55 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useActionState } from 'react'; // React 19: New hook!
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
-import type { LoginFormData } from '../types/auth.types';
+
+// React 19: Action state interface
+interface LoginState {
+  success?: boolean;
+  error?: string;
+  pending?: boolean;
+}
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 export const useAuthForm = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: '',
-  });
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { showToast } = useToast();
-  const [login, { isLoading }] = useLoginMutation();
+  const [login] = useLoginMutation();
 
-  const handleEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({ ...prev, email: e.target.value }));
-    },
-    [],
-  );
-
-  const handlePasswordChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({ ...prev, password: e.target.value }));
-    },
-    [],
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
+  // React 19: useActionState replaces complex state management!
+  const [state, submitAction, isPending] = useActionState(
+    async (previousState: LoginState | null, formData: FormData): Promise<LoginState> => {
       try {
-        const result = await login({
-          email: formData.email,
-          password: formData.password,
-        }).unwrap();
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
+
+        if (!email || !password) {
+          return {
+            success: false,
+            error: 'Please fill in all fields'
+          };
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          return {
+            success: false,
+            error: 'Please enter a valid email address'
+          };
+        }
+
+        // Perform login
+        const result = await login({ email, password }).unwrap();
 
         if (result.success) {
           dispatch(
@@ -49,22 +58,42 @@ export const useAuthForm = () => {
               token: result.data.token,
             }),
           );
+          
           showToast({
             type: 'success',
             title: 'Welcome back!',
             message: 'Successfully signed in',
           });
+
+          // Navigate to dashboard
           navigate('/');
+
+          return {
+            success: true
+          };
         }
+
+        return {
+          success: false,
+          error: 'Login failed. Please check your credentials.'
+        };
+
       } catch (error) {
+        const errorMessage = getApiErrorMessage(error);
+        
         showToast({
           type: 'error',
           title: 'Sign in failed',
-          message: getApiErrorMessage(error),
+          message: errorMessage,
         });
+
+        return {
+          success: false,
+          error: errorMessage
+        };
       }
     },
-    [formData, login, dispatch, showToast, navigate],
+    null // Initial state
   );
 
   const handleForgotPassword = useCallback(() => {
@@ -76,11 +105,11 @@ export const useAuthForm = () => {
   }, [showToast]);
 
   return {
-    formData,
-    isLoading,
-    handleEmailChange,
-    handlePasswordChange,
-    handleSubmit,
+    // React 19: Much cleaner API!
+    submitAction,
+    isPending,
+    error: state?.error,
+    success: state?.success,
     handleForgotPassword,
   };
 };

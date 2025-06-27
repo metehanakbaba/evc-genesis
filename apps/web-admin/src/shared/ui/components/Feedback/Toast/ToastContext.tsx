@@ -3,125 +3,116 @@ import { createContext, useCallback, useContext, useState } from 'react';
 import type { ToastProps } from './Toast';
 import { Toast } from './Toast';
 
-interface ToastData extends Omit<ToastProps, 'id' | 'onClose' | 'show'> {
-  id?: string;
+export interface ToastData {
+  readonly type: 'success' | 'error' | 'warning' | 'info';
+  readonly title: string;
+  readonly message?: string;
+  readonly duration?: number;
 }
 
-interface ToastContextValue {
-  showToast: (toast: ToastData) => void;
+interface ToastContextType {
+  readonly showToast: (toast: ToastData) => void;
 }
 
-const ToastContext = createContext<ToastContextValue | undefined>(undefined);
+const ToastContext = createContext<ToastContextType | undefined>(undefined);
+
+interface ToastProviderProps {
+  readonly children: React.ReactNode;
+}
 
 /**
  * Toast provider component
  * Manages toast notifications globally
  */
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [toasts, setToasts] = useState<Array<ToastProps & { id: string }>>([]);
+export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
+  const [toasts, setToasts] = useState<ToastData[]>([]);
 
   const showToast = useCallback((toast: ToastData) => {
-    const id = toast.id || Date.now().toString();
+    setToasts((prev) => [...prev, toast]);
 
-    setToasts((prev) => [
-      ...prev,
-      {
-        ...toast,
-        id,
-        show: true,
-        onClose: (toastId: string) => {
-          setToasts((prevToasts) =>
-            prevToasts.map((t) =>
-              t.id === toastId ? { ...t, show: false } : t,
-            ),
-          );
-
-          // Remove toast after animation completes
-          setTimeout(() => {
-            setToasts((prevToasts) =>
-              prevToasts.filter((t) => t.id !== toastId),
-            );
-          }, 300);
-        },
-      },
-    ]);
+    // Auto-remove toast after duration
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t !== toast));
+    }, toast.duration || 5000);
   }, []);
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    // React 19: Using Context directly instead of Context.Provider!
+    <ToastContext value={{ showToast }}>
       {children}
-      {/* Toast Container */}
-      <div
-        aria-live="assertive"
-        className="pointer-events-none fixed inset-0 z-50 flex items-end px-4 py-6 sm:items-start sm:p-6"
-      >
-        <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
-          {toasts.map((toast) => (
-            <Toast key={toast.id} {...toast} />
-          ))}
-        </div>
+      
+      {/* Toast container */}
+      <div className="fixed top-4 right-4 z-50 space-y-2">
+        {toasts.map((toast, index) => (
+          <div
+            key={index}
+            className={`
+              px-4 py-3 rounded-lg shadow-lg backdrop-blur-sm border
+              ${toast.type === 'success' && 'bg-emerald-500/20 border-emerald-400/30 text-emerald-100'}
+              ${toast.type === 'error' && 'bg-red-500/20 border-red-400/30 text-red-100'}
+              ${toast.type === 'warning' && 'bg-amber-500/20 border-amber-400/30 text-amber-100'}
+              ${toast.type === 'info' && 'bg-blue-500/20 border-blue-400/30 text-blue-100'}
+            `}
+          >
+            <div className="font-medium">{toast.title}</div>
+            {toast.message && <div className="text-sm opacity-90">{toast.message}</div>}
+          </div>
+        ))}
       </div>
-    </ToastContext.Provider>
+    </ToastContext>
   );
 };
 
 /**
  * Hook to use toast notifications
  */
-export const useToast = () => {
+export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error('useToast must be used within ToastProvider');
+  
+  if (context === undefined) {
+    throw new Error('useToast must be used within a ToastProvider');
   }
+  
   return context;
 };
 
 // Helper functions for common toast types
 export const toast = {
   success: (title: string, message?: string, duration?: number) => {
-    const { showToast } = useToast();
-    const data: ToastData = { type: 'success', title };
-    if (message) {
-      data.message = message;
-    }
-    if (duration) {
-      data.duration = duration;
-    }
-    showToast(data);
+    const data: ToastData = { 
+      type: 'success', 
+      title,
+      ...(message && { message }),
+      ...(duration && { duration })
+    };
+    // Note: These should be called within a component that has access to useToast
+    return data;
   },
   error: (title: string, message?: string, duration?: number) => {
-    const { showToast } = useToast();
-    const data: ToastData = { type: 'error', title };
-    if (message) {
-      data.message = message;
-    }
-    if (duration) {
-      data.duration = duration;
-    }
-    showToast(data);
+    const data: ToastData = { 
+      type: 'error', 
+      title,
+      ...(message && { message }),
+      ...(duration && { duration })
+    };
+    return data;
   },
   warning: (title: string, message?: string, duration?: number) => {
-    const { showToast } = useToast();
-    const data: ToastData = { type: 'warning', title };
-    if (message) {
-      data.message = message;
-    }
-    if (duration) {
-      data.duration = duration;
-    }
-    showToast(data);
+    const data: ToastData = { 
+      type: 'warning', 
+      title,
+      ...(message && { message }),
+      ...(duration && { duration })
+    };
+    return data;
   },
   info: (title: string, message?: string, duration?: number) => {
-    const { showToast } = useToast();
-    const data: ToastData = { type: 'info', title };
-    if (message) {
-      data.message = message;
-    }
-    if (duration) {
-      data.duration = duration;
-    }
-    showToast(data);
+    const data: ToastData = { 
+      type: 'info', 
+      title,
+      ...(message && { message }),
+      ...(duration && { duration })
+    };
+    return data;
   },
 };
