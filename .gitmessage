@@ -1,0 +1,55 @@
+# 🎯 Git Commit Message Template
+#
+# Format: <emoji> <type>: <description>
+#
+# 📦 CORE CHANGES
+# ✨ feat: new feature
+# 🐛 fix: bug fix
+# 🔧 chore: maintenance
+# 📝 docs: documentation
+# 💄 style: formatting/styling
+# ♻️  refactor: code restructuring
+# ⚡ perf: performance improvement
+# ✅ test: adding/updating tests
+#
+# 🛠️ DEVELOPMENT
+# 🔨 build: build system changes
+# 👷 ci: CI/CD changes
+# 🔀 merge: merge branches
+# ⏪ revert: revert previous commit
+# 🚀 deploy: deployment related
+#
+# 🎨 UI/UX
+# 🎨 ui: user interface changes
+# 💫 animation: animations/transitions
+# 📱 responsive: responsive design
+# 🌈 design: design system updates
+#
+# 🔒 SECURITY & CRITICAL
+# 🔒 security: security improvements
+# 🚨 critical: critical fixes
+# 🔥 hotfix: urgent production fix
+# ⚠️  warning: deprecation warnings
+#
+# 📊 DATA & API
+# 🗃️  database: database changes
+# 🌐 api: API related changes
+# 📡 network: network/connectivity
+# 🔄 sync: data synchronization
+#
+# 🧪 EXPERIMENTAL
+# 🧪 experiment: experimental features
+# 🚧 wip: work in progress
+# 🔬 research: research/investigation
+#
+# Examples:
+# ✨ feat: add user authentication system
+# 🐛 fix: resolve login form validation issue
+# 💄 style: update button hover animations
+# 📝 docs: add React 19 migration guide
+# ⚡ perf: optimize component re-renders
+#
+# Keep messages under 50 characters
+# Use present tense ("add" not "added")
+# Don't end with period
+# Be descriptive but concise 
