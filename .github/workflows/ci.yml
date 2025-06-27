@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - dev-*
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      # Enable Nx Cloud task distribution for faster builds
+      - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+
+      # Setup Node.js with cache
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+       
+      - run: npm ci --legacy-peer-deps
+      - uses: nrwl/nx-set-shas@v4
+
+      # Quality Gates - Linting & Type Checking
+      - name: 🔍 Lint & Type Check
+        run: npx nx affected -t lint typecheck --parallel=3
+
+      # Build all affected packages
+      - name: 🏗️ Build Packages
+        run: npx nx affected -t build --parallel=3
+
+      # Test all affected packages
+      - name: 🧪 Test Packages
+        run: npx nx affected -t test --parallel=3 --coverage
+
+      # Build dependency graph for validation
+      - name: 📊 Generate Dependency Graph
+        run: npx nx graph --file=dist/dependency-graph.html
+
+      # Archive build artifacts
+      - name: 📦 Archive Build Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            shared-*/dist/
+            design-tokens/dist/
+          retention-days: 30
+
+      # Archive dependency graph
+      - name: 📊 Archive Dependency Graph
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-graph
+          path: dist/dependency-graph.html
+          retention-days: 7
+
+  # Prepare for React Native builds (future)
+  mobile-prep:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: main
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: 📱 React Native Environment Check
+        run: |
+          echo "React Native build environment check"
+          echo "This job will be expanded when mobile apps are added"
+          
+      # Future: React Native Android build
+      # Future: React Native iOS build (macOS runner)
+      # Future: E2E testing with Detox

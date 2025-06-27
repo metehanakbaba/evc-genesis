@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./shared-api"
+    },
+    {
+      "path": "./shared-types"
+    },
+    {
+      "path": "./shared-store"
+    },
+    {
+      "path": "./design-tokens"
+    },
+    {
+      "path": "./shared-utils"
+    },
+    {
+      "path": "./apps-e2e"
+    },
+    {
+      "path": "./shared-ui"
+    }
+  ]
+}

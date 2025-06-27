@@ -1,0 +1,40 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "../../shared-api"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@ui/display": [
+        "./src/shared/ui/components/Display"
+      ],
+      "@ui/feedback": [
+        "./src/shared/ui/components/Feedback"
+      ],
+      "@ui/forms": [
+        "./src/shared/ui/components/Forms"
+      ],
+      "@ui/layout": [
+        "./src/shared/ui/components/Layout"
+      ],
+      "@ui/navigation": [
+        "./src/shared/ui/components/Navigation"
+      ],
+      "@ui/theme": [
+        "./src/shared/ui/theme"
+      ]
+    }
+  }
+}

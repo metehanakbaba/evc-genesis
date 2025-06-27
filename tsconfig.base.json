@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "customConditions": [
+      "development"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@evc-unified/design-tokens": [
+        "design-tokens/src/index.ts"
+      ],
+      "@evc-unified/shared-api": [
+        "shared-api/src/index.ts"
+      ],
+      "@evc-unified/shared-store": [
+        "shared-store/src/index.ts"
+      ],
+      "@evc-unified/shared-types": [
+        "shared-types/src/index.ts"
+      ],
+      "@evc-unified/shared-ui": [
+        "shared-ui/src/index.ts"
+      ],
+      "@evc-unified/shared-utils": [
+        "shared-utils/src/index.ts"
+      ]
+    }
+  }
+}
