@@ -1,55 +1,81 @@
-# 🎯 Git Commit Message Template
+# 🎯 @EVC Workspace Git Commit Template
 #
 # Format: <emoji> <type>: <description>
 #
-# 📦 CORE CHANGES
-# ✨ feat: new feature
-# 🐛 fix: bug fix
-# 🔧 chore: maintenance
-# 📝 docs: documentation
-# 💄 style: formatting/styling
-# ♻️  refactor: code restructuring
-# ⚡ perf: performance improvement
+# 📦 CORE DEVELOPMENT (@EVC)
+# ✨ feat: new feature (React 19/Next.js specific)
+# 🐛 fix: bug fix (@evc package imports, etc.)
+# 🔧 chore: maintenance (dependency updates)
+# 📝 docs: documentation (migration guides)
+# 💄 style: formatting/styling (glassmorphism)
+# ♻️  refactor: code restructuring (workspace migration)
+# ⚡ perf: performance (Turbopack, React 19)
 # ✅ test: adding/updating tests
 #
-# 🛠️ DEVELOPMENT
-# 🔨 build: build system changes
+# 🏗️ WORKSPACE STRUCTURE
+# 🏗️ structure: architecture changes
+# 🔗 deps: package dependencies
+# 📦 package: @evc scoped packages
+# 🔄 migration: React 19/Next.js migration
+# 🚚 move: file/component relocation
+#
+# 🛠️ BUILD & DEPLOYMENT
+# 🔨 build: build system (Next.js config)
 # 👷 ci: CI/CD changes
 # 🔀 merge: merge branches
 # ⏪ revert: revert previous commit
-# 🚀 deploy: deployment related
+# 🚀 deploy: deployment (Vercel/production)
 #
-# 🎨 UI/UX
-# 🎨 ui: user interface changes
-# 💫 animation: animations/transitions
-# 📱 responsive: responsive design
-# 🌈 design: design system updates
+# 🎨 UI/UX (@EVC REVOLUTIONARY DESIGN)
+# 🎨 ui: revolutionary glassmorphism UI
+# 💫 animation: floating orbs/transitions
+# 📱 responsive: mobile optimization
+# 🌈 design: @evc/design-tokens
+# ✨ revolutionary: AI Intelligence Center
+#
+# 🔋 EV CHARGING SPECIFIC
+# ⚡ charging: EV charging features
+# 🔋 station: station management
+# 🚗 vehicle: vehicle integration
+# 💳 payment: payment systems (Stripe)
+# 📍 location: GPS/maps integration
 #
 # 🔒 SECURITY & CRITICAL
 # 🔒 security: security improvements
 # 🚨 critical: critical fixes
 # 🔥 hotfix: urgent production fix
-# ⚠️  warning: deprecation warnings
+# ⚠️  warning: deprecation (@evc-unified)
 #
 # 📊 DATA & API
 # 🗃️  database: database changes
-# 🌐 api: API related changes
-# 📡 network: network/connectivity
-# 🔄 sync: data synchronization
+# 🌐 api: @evc/shared-api changes
+# 📡 network: connectivity/offline
+# 🔄 sync: real-time updates
 #
 # 🧪 EXPERIMENTAL
-# 🧪 experiment: experimental features
+# 🧪 experiment: React 19 features
 # 🚧 wip: work in progress
-# 🔬 research: research/investigation
+# 🔬 research: investigation
 #
-# Examples:
-# ✨ feat: add user authentication system
-# 🐛 fix: resolve login form validation issue
-# 💄 style: update button hover animations
-# 📝 docs: add React 19 migration guide
-# ⚡ perf: optimize component re-renders
+# @EVC Examples:
+# ✨ feat: implement React 19 Server Actions in login form
+# 🐛 fix: resolve @evc/shared-api import resolution
+# 🏗️ structure: complete @evc workspace monorepo setup
+# 💫 animation: add revolutionary floating orbs to dashboard
+# 🔄 migration: transfer components from web-admin
+# ⚡ charging: implement real-time station monitoring
+# 🔗 deps: integrate @evc packages with Next.js transpilation
 #
-# Keep messages under 50 characters
-# Use present tense ("add" not "added")
-# Don't end with period
-# Be descriptive but concise 
+# Rules:
+# - Keep messages under 60 characters
+# - Use present tense ("add" not "added") 
+# - Don't end with period
+# - Be specific about @evc packages
+# - Reference React 19/Next.js when relevant
+# - Test admin app functionality (localhost:3000)
+#
+# Current workspace status:
+# ✅ @evc/app-admin working at localhost:3000
+# ✅ React 19.1.0 + Next.js 15 complete
+# ✅ @evc scoped packages structure
+# 🔄 web-admin component migration pending 
