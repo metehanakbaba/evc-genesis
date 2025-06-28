@@ -1,149 +1,147 @@
 /**
- * 🔋 Charge Station Endpoints
+ * 🔋 Station Management Endpoints
  * 
- * Type-safe RTK Query endpoints for charge station management operations.
- * Single responsibility: Station CRUD and status operations only.
+ * RTK Query endpoints for EV charging station operations.
+ * Includes station CRUD, status monitoring, and analytics.
  * 
- * @module StationsEndpoints
+ * @module StationsEndpoints  
  * @version 2.0.0
  * @author EV Charging Team
  */
 
-import type { EndpointBuilder } from '@reduxjs/toolkit/query/react';
-import type { 
-  ApiSuccessResponse,
-  ApiErrorResponse,
-  PaginatedResponse 
-} from '../types/common.types.js';
-import type { 
+import type { EndpointBuilder } from '@reduxjs/toolkit/query';
+import type {
   ChargeStation,
-  StationRegistrationRequest,
-  StatusUpdateRequest,
-  StationSearchQuery,
+  StationStatus,
+  CreateStationRequest,
+  UpdateStationRequest,
+  StationQuery,
+  StationListResponse,
   StationStats 
-} from '../types/station.types.js';
-import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi.js';
+} from '../types/station.types';
+import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi';
 
 export const stationsEndpoints = (
   builder: EndpointBuilder<any, any, any>
 ) => ({
-  // 📋 Get All Stations
-  getStations: builder.query<PaginatedResponse<ChargeStation>, StationSearchQuery>({
-    query: (params = {}) => ({
+  // 📊 Get All Stations
+  getStations: builder.query<StationListResponse, StationQuery>({
+    query: (params) => ({
       url: '/stations',
       params,
     }),
-    transformResponse: (response: ApiSuccessResponse<PaginatedResponse<ChargeStation>>) =>
-      transformResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: (result) => [
-      createApiTags.list('Station'),
-      ...(result?.items.map((station) => createApiTags.station(station.id)) || []),
-    ],
+    transformResponse,
+    providesTags: (result) => 
+      result?.data 
+        ? [
+            ...result.data.map(({ id }) => ({ type: 'Station' as const, id })),
+            'Station',
+          ]
+        : ['Station'],
   }),
 
-  // ⚡ Get Station by ID
-  getStationById: builder.query<ChargeStation, string>({
-    query: (stationId) => `/stations/${stationId}`,
-    transformResponse: (response: ApiSuccessResponse<{ station: ChargeStation }>) =>
-      transformResponse(response).station,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: (result, error, stationId) => [createApiTags.station(stationId)],
+  // 🎯 Get Station by ID
+  getStation: builder.query<ChargeStation, string>({
+    query: (id) => `/stations/${id}`,
+    transformResponse,
+    providesTags: (result, error, id) => [{ type: 'Station', id }],
   }),
 
-  // ➕ Register Station (Admin)
-  registerStation: builder.mutation<ChargeStation, StationRegistrationRequest>({
-    query: (stationData) => ({
-      url: '/admin/stations',
+  // ➕ Create New Station
+  createStation: builder.mutation<ChargeStation, CreateStationRequest>({
+    query: (newStation) => ({
+      url: '/stations',
       method: 'POST',
-      body: stationData,
+      body: newStation,
     }),
-    transformResponse: (response: ApiSuccessResponse<{ station: ChargeStation }>) =>
-      transformResponse(response).station,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.list('Station')],
+    transformResponse,
+    invalidatesTags: ['Station'],
+  }),
+
+  // ✏️ Update Station
+  updateStation: builder.mutation<ChargeStation, { id: string; updates: UpdateStationRequest }>({
+    query: ({ id, updates }) => ({
+      url: `/stations/${id}`,
+      method: 'PUT',
+      body: updates,
+    }),
+    transformResponse,
+    invalidatesTags: (result, error, { id }) => [{ type: 'Station', id }, 'Station'],
+  }),
+
+  // 🗑️ Delete Station
+  deleteStation: builder.mutation<void, string>({
+    query: (id) => ({
+      url: `/stations/${id}`,
+      method: 'DELETE',
+    }),
+    transformResponse: transformVoidResponse,
+    invalidatesTags: (result, error, id) => [{ type: 'Station', id }, 'Station'],
+  }),
+
+  // 📈 Get Station Statistics
+  getStationStats: builder.query<StationStats, { stationId?: string; period?: string }>({
+    query: (params) => ({
+      url: '/stations/stats',
+      params,
+    }),
+    transformResponse,
+    providesTags: ['StationStats'],
   }),
 
   // 🔄 Update Station Status
-  updateStationStatus: builder.mutation<ChargeStation, { id: string; data: StatusUpdateRequest }>({
-    query: ({ id, data }) => ({
+  updateStationStatus: builder.mutation<ChargeStation, { id: string; status: StationStatus }>({
+    query: ({ id, status }) => ({
       url: `/stations/${id}/status`,
       method: 'PATCH',
-      body: data,
+      body: { status },
     }),
-    transformResponse: (response: ApiSuccessResponse<{ station: ChargeStation }>) =>
-      transformResponse(response).station,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, { id }) => [
-      createApiTags.station(id),
-      createApiTags.list('Station'),
+    transformResponse,
+    invalidatesTags: (result, error, { id }) => [{ type: 'Station', id }, 'Station'],
+  }),
+
+  // 🔧 Get Station Maintenance Log
+  getStationMaintenance: builder.query<any[], string>({
+    query: (stationId) => `/stations/${stationId}/maintenance`,
+    transformResponse,
+    providesTags: (result, error, stationId) => [
+      { type: 'StationMaintenance', id: stationId }
     ],
   }),
 
-  // ✏️ Update Station (Admin)
-  updateStation: builder.mutation<ChargeStation, { id: string; data: Partial<StationRegistrationRequest> }>({
-    query: ({ id, data }) => ({
-      url: `/admin/stations/${id}`,
-      method: 'PUT',
-      body: data,
-    }),
-    transformResponse: (response: ApiSuccessResponse<{ station: ChargeStation }>) =>
-      transformResponse(response).station,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, { id }) => [
-      createApiTags.station(id),
-      createApiTags.list('Station'),
-    ],
-  }),
-
-  // 🗑️ Delete Station (Admin)
-  deleteStation: builder.mutation<void, string>({
-    query: (stationId) => ({
-      url: `/admin/stations/${stationId}`,
-      method: 'DELETE',
-    }),
-    transformResponse: (response: ApiSuccessResponse<null>) =>
-      transformVoidResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, stationId) => [
-      createApiTags.station(stationId),
-      createApiTags.list('Station'),
-    ],
-  }),
-
-  // 📊 Get Station Statistics (Admin)
-  getStationStats: builder.query<StationStats, void>({
-    query: () => '/admin/stations/stats',
-    transformResponse: (response: ApiSuccessResponse<StationStats>) =>
-      transformResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: [createApiTags.list('Station')],
-  }),
-
-  // 🔍 Search Nearby Stations
-  searchNearbyStations: builder.query<ChargeStation[], { latitude: number; longitude: number; radius?: number }>({
-    query: ({ latitude, longitude, radius = 10 }) => ({
-      url: '/stations/nearby',
-      params: { lat: latitude, lng: longitude, radius },
-    }),
-    transformResponse: (response: ApiSuccessResponse<{ stations: ChargeStation[] }>) =>
-      transformResponse(response).stations,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: (result) => [
-      createApiTags.list('Station'),
-      ...(result?.map((station) => createApiTags.station(station.id)) || []),
-    ],
-  }),
-
-  // 💓 Send Station Heartbeat
-  sendHeartbeat: builder.mutation<void, string>({
-    query: (stationId) => ({
-      url: `/stations/${stationId}/heartbeat`,
+  // 📋 Add Maintenance Record
+  addMaintenanceRecord: builder.mutation<any, { stationId: string; record: any }>({
+    query: ({ stationId, record }) => ({
+      url: `/stations/${stationId}/maintenance`,
       method: 'POST',
+      body: record,
     }),
-    transformResponse: (response: ApiSuccessResponse<null>) =>
-      transformVoidResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, stationId) => [createApiTags.station(stationId)],
+    transformResponse,
+    invalidatesTags: (result, error, { stationId }) => [
+      { type: 'StationMaintenance', id: stationId },
+      { type: 'Station', id: stationId }
+    ],
+  }),
+
+  // 🌍 Get Nearby Stations
+  getNearbyStations: builder.query<ChargeStation[], { lat: number; lng: number; radius?: number }>({
+    query: ({ lat, lng, radius = 10 }) => ({
+      url: '/stations/nearby',
+      params: { lat, lng, radius },
+    }),
+    transformResponse,
+    providesTags: ['Station'],
+  }),
+
+  // ⚡ Get Station Power Consumption
+  getStationPowerData: builder.query<any[], { stationId: string; period: string }>({
+    query: ({ stationId, period }) => ({
+      url: `/stations/${stationId}/power`,
+      params: { period },
+    }),
+    transformResponse,
+    providesTags: (result, error, { stationId }) => [
+      { type: 'StationPower', id: stationId }
+    ],
   }),
 }); 

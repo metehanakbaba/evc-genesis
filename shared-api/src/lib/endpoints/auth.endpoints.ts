@@ -1,26 +1,25 @@
 /**
  * 🔐 Authentication Endpoints
  * 
- * Type-safe RTK Query endpoints for user authentication operations.
- * Single responsibility: Authentication only.
+ * RTK Query endpoints for user authentication and authorization.
+ * Provides login, logout, registration, and token management.
  * 
  * @module AuthEndpoints
  * @version 2.0.0
  * @author EV Charging Team
  */
 
-import type { EndpointBuilder } from '@reduxjs/toolkit/query/react';
-import type { 
+import type { EndpointBuilder } from '@reduxjs/toolkit/query';
+import type {
+  UserLoginRequest, 
+  UserRegistrationRequest, 
+  User, 
+  UserRole,
   ApiSuccessResponse,
-  ApiErrorResponse 
-} from '../types/common.types.js';
-import type { 
-  User,
-  UserLoginRequest,
-  UserRegistrationRequest,
+  ApiErrorResponse,
   AuthSuccessResponse 
-} from '../types/user.types.js';
-import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi.js';
+} from '../types/user.types';
+import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi';
 
 export const authEndpoints = (
   builder: EndpointBuilder<any, any, any>
@@ -32,23 +31,19 @@ export const authEndpoints = (
       method: 'POST',
       body: credentials,
     }),
-    transformResponse: (response: ApiSuccessResponse<AuthSuccessResponse>) =>
-      transformResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.user()],
+    transformResponse,
+    invalidatesTags: ['User'],
   }),
 
   // 📝 User Registration
-  register: builder.mutation<User, UserRegistrationRequest>({
+  register: builder.mutation<AuthSuccessResponse, UserRegistrationRequest>({
     query: (userData) => ({
       url: '/auth/register',
       method: 'POST',
       body: userData,
     }),
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.user()],
+    transformResponse,
+    invalidatesTags: ['User'],
   }),
 
   // 🚪 User Logout
@@ -57,10 +52,20 @@ export const authEndpoints = (
       url: '/auth/logout',
       method: 'POST',
     }),
-    transformResponse: (response: ApiSuccessResponse<null>) =>
-      transformVoidResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.user()],
+    transformResponse: transformVoidResponse,
+    invalidatesTags: (result, error) => {
+      if (!error) {
+        return ['User', 'Session'];
+      }
+      return [];
+    },
+  }),
+
+  // 👤 Get Current User
+  getCurrentUser: builder.query<User, void>({
+    query: () => '/auth/me',
+    transformResponse,
+    providesTags: ['User'],
   }),
 
   // 🔄 Refresh Token
@@ -69,18 +74,26 @@ export const authEndpoints = (
       url: '/auth/refresh',
       method: 'POST',
     }),
-    transformResponse: (response: ApiSuccessResponse<AuthSuccessResponse>) =>
-      transformResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.user()],
+    transformResponse,
   }),
 
-  // 👤 Get Current User Profile
-  getCurrentUser: builder.query<User, void>({
-    query: () => '/auth/me',
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: [createApiTags.user('me')],
+  // 📧 Forgot Password
+  forgotPassword: builder.mutation<void, { email: string }>({
+    query: ({ email }) => ({
+      url: '/auth/forgot-password',
+      method: 'POST',
+      body: { email },
+    }),
+    transformResponse: transformVoidResponse,
+  }),
+
+  // 🔐 Reset Password
+  resetPassword: builder.mutation<void, { token: string; password: string }>({
+    query: ({ token, password }) => ({
+      url: '/auth/reset-password',
+      method: 'POST',
+      body: { token, password },
+    }),
+    transformResponse: transformVoidResponse,
   }),
 }); 

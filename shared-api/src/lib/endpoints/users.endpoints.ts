@@ -1,128 +1,137 @@
 /**
  * 👥 User Management Endpoints
  * 
- * Type-safe RTK Query endpoints for user management operations.
- * Single responsibility: User CRUD operations only.
+ * RTK Query endpoints for user operations and administration.
+ * Includes user CRUD, role management, and profile operations.
  * 
  * @module UsersEndpoints
  * @version 2.0.0
  * @author EV Charging Team
  */
 
-import type { EndpointBuilder } from '@reduxjs/toolkit/query/react';
-import type { 
-  ApiSuccessResponse,
-  ApiErrorResponse,
-  PaginatedResponse 
-} from '../types/common.types.js';
-import type { 
+import type { EndpointBuilder } from '@reduxjs/toolkit/query';
+import type {
   User,
-  ProfileUpdateRequest 
-} from '../types/user.types.js';
+  UserRole,
+  CreateUserRequest,
+  UpdateUserRequest,
+  UserListResponse,
+  UserQuery,
+  UserProfile,
+  ApiSuccessResponse
+} from '../types/user.types';
 import type { 
-  AdminCreateUserRequest,
-  AdminUpdateUserRequest,
   AdminUserQuery 
-} from '../types/admin.types.js';
-import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi.js';
+} from '../types/admin.types';
+import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi';
 
 export const usersEndpoints = (
   builder: EndpointBuilder<any, any, any>
 ) => ({
-  // 📋 Get All Users (Admin)
-  getUsers: builder.query<PaginatedResponse<User>, AdminUserQuery>({
-    query: (params = {}) => ({
+  // 📊 Get All Users (Admin)
+  getUsers: builder.query<UserListResponse, AdminUserQuery>({
+    query: (params) => ({
       url: '/admin/users',
       params,
     }),
-    transformResponse: (response: ApiSuccessResponse<PaginatedResponse<User>>) =>
-      transformResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: (result) => [
-      createApiTags.list('User'),
-      ...(result?.items.map((user) => createApiTags.user(user.id)) || []),
-    ],
+    transformResponse,
+    providesTags: (result) => 
+      result?.data 
+        ? [
+            ...result.data.map(({ id }) => ({ type: 'User' as const, id })),
+            'User',
+          ]
+        : ['User'],
   }),
 
-  // 👤 Get User by ID
-  getUserById: builder.query<User, string>({
-    query: (userId) => `/admin/users/${userId}`,
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    providesTags: (result, error, userId) => [createApiTags.user(userId)],
+  // 🎯 Get User by ID
+  getUser: builder.query<User, string>({
+    query: (id) => `/users/${id}`,
+    transformResponse,
+    providesTags: (result, error, id) => [{ type: 'User', id }],
   }),
 
-  // ➕ Create User (Admin)
-  createUser: builder.mutation<User, AdminCreateUserRequest>({
-    query: (userData) => ({
+  // ➕ Create New User (Admin)
+  createUser: builder.mutation<User, CreateUserRequest>({
+    query: (newUser) => ({
       url: '/admin/users',
       method: 'POST',
-      body: userData,
+      body: newUser,
     }),
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.list('User')],
+    transformResponse,
+    invalidatesTags: ['User'],
   }),
 
-  // ✏️ Update User (Admin)
-  updateUser: builder.mutation<User, { id: string; data: AdminUpdateUserRequest }>({
-    query: ({ id, data }) => ({
-      url: `/admin/users/${id}`,
+  // ✏️ Update User
+  updateUser: builder.mutation<User, { id: string; updates: UpdateUserRequest }>({
+    query: ({ id, updates }) => ({
+      url: `/users/${id}`,
       method: 'PUT',
-      body: data,
+      body: updates,
     }),
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, { id }) => [
-      createApiTags.user(id),
-      createApiTags.list('User'),
-    ],
+    transformResponse,
+    invalidatesTags: (result, error, { id }) => [{ type: 'User', id }, 'User'],
   }),
 
   // 🗑️ Delete User (Admin)
   deleteUser: builder.mutation<void, string>({
-    query: (userId) => ({
-      url: `/admin/users/${userId}`,
+    query: (id) => ({
+      url: `/admin/users/${id}`,
       method: 'DELETE',
     }),
-    transformResponse: (response: ApiSuccessResponse<null>) =>
-      transformVoidResponse(response),
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, userId) => [
-      createApiTags.user(userId),
-      createApiTags.list('User'),
-    ],
+    transformResponse: transformVoidResponse,
+    invalidatesTags: (result, error, id) => [{ type: 'User', id }, 'User'],
   }),
 
-  // 🔄 Update Own Profile
-  updateProfile: builder.mutation<User, ProfileUpdateRequest>({
-    query: (data) => ({
-      url: '/users/profile',
+  // 👤 Get User Profile
+  getUserProfile: builder.query<UserProfile, string>({
+    query: (id) => `/users/${id}/profile`,
+    transformResponse,
+    providesTags: (result, error, id) => [{ type: 'UserProfile', id }],
+  }),
+
+  // ✏️ Update User Profile
+  updateUserProfile: builder.mutation<UserProfile, { id: string; profile: Partial<UserProfile> }>({
+    query: ({ id, profile }) => ({
+      url: `/users/${id}/profile`,
       method: 'PUT',
-      body: data,
+      body: profile,
     }),
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: [createApiTags.user('me')],
+    transformResponse,
+    invalidatesTags: (result, error, { id }) => [
+      { type: 'UserProfile', id },
+      { type: 'User', id }
+    ],
   }),
 
-  // ✅ Activate/Deactivate User (Admin)
-  toggleUserStatus: builder.mutation<User, { id: string; isActive: boolean }>({
-    query: ({ id, isActive }) => ({
-      url: `/admin/users/${id}/status`,
+  // 🔄 Change User Role (Admin)
+  changeUserRole: builder.mutation<User, { id: string; role: UserRole }>({
+    query: ({ id, role }) => ({
+      url: `/admin/users/${id}/role`,
       method: 'PATCH',
-      body: { isActive },
+      body: { role },
     }),
-    transformResponse: (response: ApiSuccessResponse<{ user: User }>) =>
-      transformResponse(response).user,
-    transformErrorResponse: (response: ApiErrorResponse) => response,
-    invalidatesTags: (result, error, { id }) => [
-      createApiTags.user(id),
-      createApiTags.list('User'),
-    ],
+    transformResponse,
+    invalidatesTags: (result, error, { id }) => [{ type: 'User', id }, 'User'],
+  }),
+
+  // 🚫 Suspend User (Admin)
+  suspendUser: builder.mutation<void, string>({
+    query: (id) => ({
+      url: `/admin/users/${id}/suspend`,
+      method: 'POST',
+    }),
+    transformResponse: transformVoidResponse,
+    invalidatesTags: (result, error, id) => [{ type: 'User', id }, 'User'],
+  }),
+
+  // ✅ Activate User (Admin)
+  activateUser: builder.mutation<void, string>({
+    query: (id) => ({
+      url: `/admin/users/${id}/activate`,
+      method: 'POST',
+    }),
+    transformResponse: transformVoidResponse,
+    invalidatesTags: (result, error, id) => [{ type: 'User', id }, 'User'],
   }),
 }); 

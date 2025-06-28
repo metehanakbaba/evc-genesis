@@ -9,7 +9,7 @@
  * @author EV Charging Team
  */
 
-import { createEVChargingApi, defaultApiConfig } from '../evChargingApi.js';
+import { createEVChargingApi, defaultApiConfig } from '../evChargingApi';
 
 /**
  * 🔧 Create Web API Instance

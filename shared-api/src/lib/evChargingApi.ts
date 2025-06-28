@@ -9,11 +9,11 @@
  * @author EV Charging Team
  */
 
-import { createTypedApi, createBaseQuery } from './baseApi.js';
-import { authEndpoints } from './endpoints/auth.endpoints.js';
-import { usersEndpoints } from './endpoints/users.endpoints.js';
-import { stationsEndpoints } from './endpoints/stations.endpoints.js';
-import { walletEndpoints } from './endpoints/wallet.endpoints.js';
+import { createTypedApi, createBaseQuery } from './baseApi';
+import { authEndpoints } from './endpoints/auth.endpoints';
+import { usersEndpoints } from './endpoints/users.endpoints';
+import { stationsEndpoints } from './endpoints/stations.endpoints';
+import { walletEndpoints } from './endpoints/wallet.endpoints';
 
 /**
  * 🏭 Create EV Charging API Factory

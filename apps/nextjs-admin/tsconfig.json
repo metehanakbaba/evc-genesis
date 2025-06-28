@@ -1,0 +1,52 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/app/*": ["./src/app/*"],
+      
+      // UI Component Path Mappings
+      "@ui/*": ["./src/shared/ui/components/*"],
+      "@ui/forms": ["./src/shared/ui/components/Forms"],
+      "@ui/display": ["./src/shared/ui/components/Display"],
+      "@ui/layout": ["./src/shared/ui/components/Layout"],
+      "@ui/feedback": ["./src/shared/ui/components/Feedback"],
+      "@ui/navigation": ["./src/shared/ui/components/Navigation"],
+      "@ui/theme": ["./src/shared/ui/theme"],
+      
+      // Workspace Shared Packages
+      "@evc-unified/shared-api": ["../../shared-api/src/index.ts"],
+      "@evc-unified/shared-types": ["../../shared-types/src/index.ts"],
+      "@evc-unified/design-tokens": ["../../design-tokens/src/index.ts"],
+      "@evc-unified/shared-store": ["../../shared-store/src/index.ts"],
+      "@evc-unified/shared-utils": ["../../shared-utils/src/index.ts"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

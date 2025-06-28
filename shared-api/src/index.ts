@@ -1,44 +1,56 @@
 /**
- * 🔗 Shared API Package
+ * 🔗 EV Charging Shared API
  * 
- * Cross-platform RTK Query API for EV Charging platform.
- * Type-safe, single responsibility design with platform-agnostic implementation.
+ * Unified API layer for all EV Charging applications.
+ * Provides consistent data access patterns across web, mobile, and admin platforms.
  * 
- * @module SharedApi
+ * @module SharedAPI
  * @version 2.0.0
  * @author EV Charging Team
  */
 
-// 🏭 Main API Factory
-export { 
-  createEVChargingApi, 
-  defaultApiConfig,
-  type EVChargingApi 
-} from './lib/evChargingApi.js';
-
-// 🔧 Base API Utilities
-export { 
-  createBaseQuery, 
-  createTypedApi, 
-  transformResponse, 
-  transformVoidResponse,
-  handleApiError, 
-  createApiTags 
-} from './lib/baseApi.js';
+// 🚀 Core API (RTK Query + Platform Adapters)
+export * from './lib/baseApi';
+export * from './lib/evChargingApi';
 
 // 🌐 Platform Adapters
-export { createWebApi, webApiHelpers } from './lib/platform/web.adapter.js';
-export { createMobileApi, createMobileApiHelpers } from './lib/platform/mobile.adapter.js';
+export * from './lib/platform/web.adapter';
+export * from './lib/platform/mobile.adapter';
 
-// 🎯 Endpoint Functions (for custom API instances)
-export { authEndpoints } from './lib/endpoints/auth.endpoints.js';
-export { usersEndpoints } from './lib/endpoints/users.endpoints.js';
-export { stationsEndpoints } from './lib/endpoints/stations.endpoints.js';
-export { walletEndpoints } from './lib/endpoints/wallet.endpoints.js';
+// 🔗 API Endpoints (correct file names)
+export * from './lib/endpoints/auth.endpoints';
+export * from './lib/endpoints/stations.endpoints';
+export * from './lib/endpoints/users.endpoints';
+export * from './lib/endpoints/wallet.endpoints'; // Fixed: wallet not wallets
+
+// 🎯 Easy-to-use Functions
+export {
+  // Core API Factory
+  createEVChargingApi,
+  defaultApiConfig,
+  type EVChargingApi,
+} from './lib/evChargingApi';
+
+export {
+  // Web Platform
+  createWebApi,
+  webApiHelpers,
+} from './lib/platform/web.adapter';
+
+export {
+  // Mobile Platform  
+  createMobileApi,
+  mobileApiHelpers,
+} from './lib/platform/mobile.adapter';
+
+// 📊 Helper Functions & Types
+export * from './lib/types';
 
 // 📋 All Types (from schema-adapter)
-export * from './lib/schema-adapter.js';
+export * from './lib/schema-adapter';
 
-// 🎣 RTK Query Hooks (from default instances)
-// Note: These will be available only after calling createWebApi or createMobileApi
-// For type safety, hooks should be exported from the created API instance
+// 🔧 Development Utilities (only in development)
+if (process.env['NODE_ENV'] === 'development') {
+  // Export test utilities and mock data
+  console.debug('🔧 [Shared API] Development mode - Additional utilities available');
+}

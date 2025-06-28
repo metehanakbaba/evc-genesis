@@ -9,7 +9,7 @@
  * @author EV Charging Team
  */
 
-import { createEVChargingApi, defaultApiConfig } from '../evChargingApi.js';
+import { createEVChargingApi, defaultApiConfig } from '../evChargingApi';
 
 /**
  * 🔧 Create Mobile API Instance
@@ -47,28 +47,31 @@ export const createMobileApi = (config?: {
 };
 
 /**
- * 🎯 Mobile API Helpers Factory
- * Creates utility functions for mobile-specific operations
+ * 🎯 Mobile API Helpers
+ * Utility functions for mobile-specific operations
  */
-export const createMobileApiHelpers = (AsyncStorage: any) => ({
-  // Store token in AsyncStorage
-  setAuthToken: async (token: string) => {
-    await AsyncStorage.setItem('authToken', token);
-  },
+export const mobileApiHelpers = {
+  // Create helpers for a specific AsyncStorage instance
+  create: (AsyncStorage: any) => ({
+    // Store token in AsyncStorage
+    setAuthToken: async (token: string) => {
+      await AsyncStorage.setItem('authToken', token);
+    },
 
-  // Remove token from AsyncStorage
-  clearAuthToken: async () => {
-    await AsyncStorage.removeItem('authToken');
-  },
+    // Remove token from AsyncStorage
+    clearAuthToken: async () => {
+      await AsyncStorage.removeItem('authToken');
+    },
 
-  // Get token from AsyncStorage
-  getAuthToken: async () => {
-    return await AsyncStorage.getItem('authToken');
-  },
+    // Get token from AsyncStorage
+    getAuthToken: async () => {
+      return await AsyncStorage.getItem('authToken');
+    },
 
-  // Check if user is authenticated
-  isAuthenticated: async () => {
-    const token = await AsyncStorage.getItem('authToken');
-    return !!token;
-  },
-} as const); 
+    // Check if user is authenticated
+    isAuthenticated: async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      return !!token;
+    },
+  })
+} as const; 
