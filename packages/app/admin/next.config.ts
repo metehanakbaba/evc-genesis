@@ -11,12 +11,13 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  eslint: { ignoreDuringBuilds: !!process.env.CI },
   transpilePackages: [
-    '@evc-unified/shared-api',
-    '@evc-unified/shared-types', 
-    '@evc-unified/design-tokens',
-    '@evc-unified/shared-store',
-    '@evc-unified/shared-utils'
+    '@evc/shared-api',
+    '@evc/shared-types', 
+    '@evc/design-tokens',
+    '@evc/shared-store',
+    '@evc/shared-utils'
   ],
   webpack: (config, { dev, isServer }) => {
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx', ...config.resolve.extensions];

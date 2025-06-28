@@ -5,7 +5,7 @@ import * as path from 'path';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../node_modules/.vite/shared-utils',
+  cacheDir: '../node_modules/.vite/shared-types',
   plugins: [dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
   // Uncomment this if you are using workers.
   // worker: {
@@ -23,7 +23,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: '@evc-unified/shared-utils',
+      name: '@evc/shared-types',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.

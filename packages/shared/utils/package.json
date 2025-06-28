@@ -1,6 +1,7 @@
 {
-  "name": "@evc-unified/shared-utils",
-  "version": "0.0.1",
+  "name": "@evc/shared-utils",
+  "version": "1.0.0",
+  "description": "Shared utility functions for EV Charging platform",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",

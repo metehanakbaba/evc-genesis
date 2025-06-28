@@ -1,7 +1,8 @@
 {
-  "name": "nextjs-admin",
-  "version": "0.1.0",
+  "name": "@evc/app-admin",
+  "version": "1.0.0",
   "private": true,
+  "description": "EV Charging Admin Panel - Next.js 15 + React 19",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

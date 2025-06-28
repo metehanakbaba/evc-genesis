@@ -9,8 +9,8 @@
  * @author EV Charging Team
  */
 
-import { createWebApi, webApiHelpers } from '@evc-unified/shared-api';
-import type { RootState } from '@/app/store/store';
+import { createWebApi, webApiHelpers } from '@evc/shared-api';
+import type { RootState } from '@/lib/store/store';
 import { logout } from '@/features/auth/authSlice';
 
 /**
@@ -92,4 +92,4 @@ export type {
   ApiErrorResponse,
   UserLoginRequest,
   UserRegistrationRequest
-} from '@evc-unified/shared-api';
+} from '@evc/shared-api';

@@ -1,6 +1,7 @@
 {
-  "name": "@evc-unified/shared-store",
-  "version": "0.0.1",
+  "name": "@evc/shared-store",
+  "version": "1.0.0",
+  "description": "Shared state management for EV Charging platform",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",

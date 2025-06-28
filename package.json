@@ -1,6 +1,6 @@
 {
-  "name": "@evc-unified/source",
-  "version": "0.0.0",
+  "name": "@evc/workspace",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "dev": "nx serve web-admin --port 3001",
@@ -86,14 +86,8 @@
     "vitest": "^3.0.0"
   },
   "workspaces": [
-    "apps/*",
-    "packages",
-    "shared-api",
-    "shared-types",
-    "shared-store",
-    "design-tokens",
-    "shared-utils",
-    "apps",
-    "apps-e2e"
+    "packages/app/*",
+    "packages/shared/*",
+    "packages/design/*"
   ]
 }

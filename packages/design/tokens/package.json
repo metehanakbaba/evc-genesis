@@ -1,6 +1,7 @@
 {
-  "name": "@evc-unified/shared-types",
-  "version": "0.0.1",
+  "name": "@evc/design-tokens",
+  "version": "1.0.0",
+  "description": "Design system tokens for EV Charging platform",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",

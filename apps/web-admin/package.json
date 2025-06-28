@@ -1,5 +1,5 @@
 {
-  "name": "@evc-unified/web-admin",
+  "name": "@evc/legacy-web-admin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,7 +14,7 @@
     "check": "biome check --write"
   },
   "dependencies": {
-    "@evc-unified/shared-api": "*",
+    "@evc/shared-api": "*",
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.5.0",
