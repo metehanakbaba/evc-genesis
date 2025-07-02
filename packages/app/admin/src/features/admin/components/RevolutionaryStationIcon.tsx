@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { BoltIcon } from '@heroicons/react/24/outline';
 
 interface RevolutionaryStationIconProps {
   className?: string;
@@ -14,11 +15,11 @@ export const RevolutionaryStationIcon: React.FC<RevolutionaryStationIconProps> =
   className = "w-6 h-6",
   glowing = false,
 }) => (
-  <div className={`relative ${className}`}>
-    {/* Main icon using emoji for Next.js compatibility */}
-    <span className={`text-current ${glowing ? 'animate-pulse' : ''}`}>
-      🔌
-    </span>
+  <div className="relative">
+    {/* Main icon using BoltIcon for professional appearance */}
+    <BoltIcon 
+      className={`${className} text-current ${glowing ? 'animate-pulse' : ''}`}
+    />
     
     {/* Glow effect */}
     {glowing && (

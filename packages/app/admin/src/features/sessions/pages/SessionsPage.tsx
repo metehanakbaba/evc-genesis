@@ -1,9 +1,11 @@
+'use client';
+
 import type React from 'react';
 import { useState, useEffect } from 'react';
 // import { MinimalStatCard, FloatingCard } from '@ui/display';
 import { AppHeader } from '@ui/layout';
 import { Button, Input, Select } from '@ui/forms';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   BoltIcon,
   ClockIcon,
@@ -82,7 +84,7 @@ interface SessionStats {
  * - Live Operations critical monitoring focus
  */
 const SessionsPage: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
@@ -317,7 +319,7 @@ const SessionsPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => router.push('/')}
             className="p-2 hover:bg-gray-700/30"
           >
             <HomeIcon className="w-4 h-4" />

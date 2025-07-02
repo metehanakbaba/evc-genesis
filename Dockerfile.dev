@@ -1,0 +1,27 @@
+# Development Dockerfile
+FROM node:20-alpine AS development
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+
+# Copy workspace package files
+COPY packages/app/admin/package.json ./packages/app/admin/
+COPY packages/shared/*/package.json ./packages/shared/*/
+COPY packages/design/*/package.json ./packages/design/*/
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy source code
+COPY . .
+
+EXPOSE 3000
+
+# Start development server
+CMD ["npx", "nx", "serve", "@evc/app-admin", "--host", "0.0.0.0", "--port", "3000"] 

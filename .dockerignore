@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+.next
+dist
+out
+build
+
+# Development files
+.git
+.gitignore
+README.md
+*.md
+.env*.local
+
+# Testing
+coverage
+.nyc_output
+*.log
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NX
+.nx
+
+# Vite
+.vite
+
+# Expo
+.expo
+
+# Misc
+*.tgz
+*.tar.gz
+dependency-graph.html
+static/
+
+# Apps we don't need
+apps/
+apps-e2e/
+packages/app/mobile/
+
+# Keep only admin app and shared packages
+!packages/app/admin/
+!packages/shared/
+!packages/design/ 

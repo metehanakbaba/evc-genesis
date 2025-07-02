@@ -1,14 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
+import { 
+  LockClosedIcon, 
+  ArrowRightOnRectangleIcon, 
+  DocumentTextIcon, 
+  ShieldCheckIcon 
+} from '@heroicons/react/24/outline';
 
 export default function AuthPage() {
   return (
     <div className="space-y-8">
       {/* Auth Hero Section */}
       <div className="glass-card p-8 text-center">
-        <h1 className="text-4xl font-bold text-white mb-4">
-          🔐 Authentication & Security
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <LockClosedIcon className="w-10 h-10 text-blue-400" />
+          <h1 className="text-4xl font-bold text-white">
+            Authentication & Security
+          </h1>
+        </div>
         <p className="text-gray-300 text-lg">
           Login, Registration & User Security Management
         </p>
@@ -20,8 +29,8 @@ export default function AuthPage() {
           href="/auth/login"
           className="group glass-card p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
-            🚪
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <ArrowRightOnRectangleIcon className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">
             Login Portal
@@ -35,8 +44,8 @@ export default function AuthPage() {
           href="/auth/register"
           className="group glass-card p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
-            📝
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <DocumentTextIcon className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">
             Registration
@@ -50,8 +59,8 @@ export default function AuthPage() {
           href="/auth/security"
           className="group glass-card p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
-            🛡️
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <ShieldCheckIcon className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">
             Security Settings

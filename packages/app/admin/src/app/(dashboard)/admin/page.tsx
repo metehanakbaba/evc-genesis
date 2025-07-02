@@ -9,6 +9,7 @@ import {
 } from '@/features/admin/components';
 import { useDashboardData } from '@/features/admin/hooks/useDashboardData';
 import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
+import { BoltIcon } from '@heroicons/react/24/outline';
 
 /**
  * Revolutionary Admin Dashboard - Next.js App Router Version with MainLayout
@@ -36,7 +37,7 @@ export default function AdminDashboardPage() {
             <div className="inline-flex items-center gap-6 mb-8 transform hover:scale-105 transition-transform duration-700">
               <div className="relative">
                 <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500/30 via-cyan-400/20 to-teal-500/25 border border-cyan-400/40 flex items-center justify-center backdrop-blur-xl shadow-2xl">
-                  <span className="text-3xl animate-pulse">⚡</span>
+                  <BoltIcon className="w-8 h-8 text-cyan-400 animate-pulse" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full animate-ping" />
               </div>
