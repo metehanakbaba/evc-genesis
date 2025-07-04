@@ -1,6 +1,6 @@
 import type React from 'react';
 import { memo, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 /**
  * Transition phase types
@@ -37,9 +37,9 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
   enterDelay = 50,
   className = '',
 }) => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
-  const [displayLocation, setDisplayLocation] = useState(location);
+  const [displayPath, setDisplayPath] = useState(pathname);
   const [transitionPhase, setTransitionPhase] =
     useState<TransitionPhase>('enter');
   const [isExiting, setIsExiting] = useState(false);
@@ -47,8 +47,8 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
   useEffect(() => {
     if (debugMode) {
       console.log('🎭 Route Transition Debug:', {
-        from: displayLocation.pathname,
-        to: location.pathname,
+        from: displayPath,
+        to: pathname,
         phase: 'exit-start',
       });
     }
@@ -60,13 +60,13 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
 
     // Longer exit animation for spectacular effect
     const timer = setTimeout(() => {
-      setDisplayLocation(location);
+      setDisplayPath(pathname);
       setIsExiting(false);
       setTransitionPhase('enter');
 
       if (debugMode) {
         console.log('🚀 Route Transition Debug:', {
-          route: location.pathname,
+          route: pathname,
           phase: 'enter-start',
         });
       }
@@ -76,7 +76,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
         setIsVisible(true);
         if (debugMode) {
           console.log('✨ Route Transition Debug:', {
-            route: location.pathname,
+            route: pathname,
             phase: 'enter-complete',
           });
         }
@@ -84,7 +84,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
     }, exitDuration / animationSpeed);
 
     return () => clearTimeout(timer);
-  }, [location.pathname, debugMode, animationSpeed, exitDuration, enterDelay]);
+  }, [pathname, debugMode, animationSpeed, exitDuration, enterDelay]);
 
   useEffect(() => {
     // Initial enter animation
@@ -159,7 +159,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
       {/* Debug Transition Indicator */}
       {debugMode && (
         <div className="fixed top-4 right-4 z-50 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-mono border border-gray-600/50">
-          🎭 {transitionPhase.toUpperCase()} • {displayLocation.pathname}
+          🎭 {transitionPhase.toUpperCase()} • {displayPath}
         </div>
       )}
 
@@ -218,7 +218,7 @@ const RouteTransition: React.FC<RouteTransitionProps> = ({
           transform: getTransformStyle(),
           opacity: getOpacity(),
         }}
-        key={displayLocation.pathname}
+        key={displayPath}
       >
         {/* Synchronized Spectacular Page Container */}
         <div

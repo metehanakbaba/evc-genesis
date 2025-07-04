@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MinimalStatCard } from '@ui/display';
 import { MainLayout } from '@ui/layout';
 import { Button, Input, Select } from '@ui/forms';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   MapPinIcon,
   BoltIcon,
@@ -130,7 +130,7 @@ interface ChargingStation {
  * API Schema Ready with Real-time Monitoring
  */
 const StationsPage: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [connectorFilter, setConnectorFilter] = useState<string>('all');
@@ -292,7 +292,7 @@ const StationsPage: React.FC = () => {
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => router.push('/')}
             className="flex items-center gap-1 hover:text-white transition-colors"
           >
             <HomeIcon className="w-4 h-4" />

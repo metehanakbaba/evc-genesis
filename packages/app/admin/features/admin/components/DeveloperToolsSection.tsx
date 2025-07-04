@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import type { DeveloperTool } from '../hooks/useDashboardData';
 
 interface DeveloperToolsSectionProps {
@@ -12,13 +12,13 @@ interface DeveloperToolsSectionProps {
  */
 export const DeveloperToolsSection: React.FC<DeveloperToolsSectionProps> =
   React.memo(({ developerTools, isDeveloperMode }) => {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleToolClick = useCallback(
       (path: string) => {
-        navigate(path);
+        router.push(path);
       },
-      [navigate],
+      [router],
     );
 
     if (!isDeveloperMode) return null;

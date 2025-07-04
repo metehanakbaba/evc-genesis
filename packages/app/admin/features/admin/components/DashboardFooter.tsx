@@ -1,20 +1,20 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { SignalIcon } from '@heroicons/react/24/outline';
 
 /**
  * Dashboard footer with status and navigation controls
  */
 export const DashboardFooter: React.FC = React.memo(() => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleRefresh = useCallback(() => {
     window.location.reload();
   }, []);
 
   const handleSettings = useCallback(() => {
-    navigate('/settings');
-  }, [navigate]);
+    router.push('/settings');
+  }, [router]);
 
   return (
     <footer className="pt-12 border-t border-gray-700/30 backdrop-blur-xl">

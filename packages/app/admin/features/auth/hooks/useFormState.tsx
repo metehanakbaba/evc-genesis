@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
@@ -41,7 +41,7 @@ export const useCustomFormStatus = () => {
 
 // React 19 Ready: Enhanced form hook with status
 export const useEnhancedAuthForm = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { showToast } = useToast();
   const [login] = useLoginMutation();
@@ -105,7 +105,7 @@ export const useEnhancedAuthForm = () => {
           isPending: false,
         });
 
-        navigate('/');
+        router.push('/');
       } else {
         setFormState({
           success: false,
@@ -132,7 +132,7 @@ export const useEnhancedAuthForm = () => {
     } finally {
       setPending(false);
     }
-  }, [login, dispatch, showToast, navigate, setPending]);
+  }, [login, dispatch, showToast, router, setPending]);
 
   return {
     formState,

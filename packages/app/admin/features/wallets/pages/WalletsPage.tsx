@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { AppHeader } from '@ui/layout';
 import { Button, Input } from '@ui/forms';
 import { Modal } from '@ui/display';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   BanknotesIcon,
   CreditCardIcon,
@@ -234,7 +234,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
  * - API schema compliant TypeScript
  */
 const WalletsPage: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -473,7 +473,7 @@ const WalletsPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => router.push('/')}
             className="p-2 hover:bg-gray-700/30"
           >
             <HomeIcon className="w-4 h-4" />

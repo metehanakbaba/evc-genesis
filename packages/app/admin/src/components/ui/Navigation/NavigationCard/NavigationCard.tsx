@@ -1,7 +1,7 @@
 import type React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Badge } from '../../Display/Badge/Badge';
-import type { ComponentSize } from '../../../theme/theme.config';
+import type { ComponentSize } from '../../theme/theme.config';
 import { cn } from '@/shared/utils/cn';
 
 export interface NavigationCardProps {
@@ -158,7 +158,7 @@ export const NavigationCard: React.FC<NavigationCardProps> = ({
 
   return (
     <Link
-      to={path}
+      href={path}
       className={cn(
         // Revolutionary floating card base styles
         'group relative flex flex-col cursor-pointer rounded-2xl',

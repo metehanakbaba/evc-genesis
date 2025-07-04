@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import type { CoreManagementItem } from '../hooks/useDashboardData';
 
 interface CoreManagementSectionProps {
@@ -11,13 +11,13 @@ interface CoreManagementSectionProps {
  */
 export const CoreManagementSection: React.FC<CoreManagementSectionProps> =
   React.memo(({ coreManagement }) => {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleModuleClick = useCallback(
       (path: string) => {
-        navigate(path);
+        router.push(path);
       },
-      [navigate],
+      [router],
     );
 
     return (

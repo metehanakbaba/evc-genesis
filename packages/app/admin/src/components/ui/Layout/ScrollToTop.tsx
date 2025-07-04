@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 /**
  * ScrollToTop component - automatically scrolls to top on route changes
  * Ensures consistent user experience across page navigation
  */
 export const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Scroll to top immediately when route changes

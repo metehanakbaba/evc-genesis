@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
 import type { ActiveOperation } from '../hooks/useDashboardData';
 
@@ -12,13 +12,13 @@ interface LiveOperationsSectionProps {
  */
 export const LiveOperationsSection: React.FC<LiveOperationsSectionProps> =
   React.memo(({ activeOperations }) => {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleOperationClick = useCallback(
       (path: string) => {
-        navigate(path);
+        router.push(path);
       },
-      [navigate],
+      [router],
     );
 
     return (

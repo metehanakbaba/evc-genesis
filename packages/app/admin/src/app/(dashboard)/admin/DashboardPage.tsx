@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/store/hooks';
 import { MainLayout } from '@ui/layout';
 import { SparklesIcon } from '@heroicons/react/24/outline';
@@ -17,7 +17,7 @@ import { useDashboardData } from '../hooks/useDashboardData';
  */
 const DashboardPage: React.FC = React.memo(() => {
   const user = useAppSelector((state) => state.auth.user);
-  const navigate = useNavigate();
+  const router = useRouter();
   const {
     networkStats,
     coreManagement,
@@ -28,9 +28,9 @@ const DashboardPage: React.FC = React.memo(() => {
 
   const handleNavigation = useCallback(
     (path: string) => {
-      navigate(path);
+      router.push(path);
     },
-    [navigate],
+    [router],
   );
 
   const handleRefresh = useCallback(() => {
