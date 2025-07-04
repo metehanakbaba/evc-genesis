@@ -9,7 +9,7 @@ export interface User {
   readonly name?: string;
 }
 
-interface AuthState {
+export interface AuthState {
   readonly user: User | null;
   readonly token: string | null;
   readonly isAuthenticated: boolean;

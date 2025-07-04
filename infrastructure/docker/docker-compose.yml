@@ -1,8 +1,8 @@
 services:
   evc-admin:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile
       target: runner
     container_name: evc-admin-app
     ports:
@@ -25,14 +25,14 @@ services:
   # Development service
   evc-admin-dev:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.dev
       target: development
     container_name: evc-admin-dev
     ports:
       - "3001:3000"
     volumes:
-      - .:/app
+      - ../../:/app
       - /app/node_modules
       - /app/.next
     environment:

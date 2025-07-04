@@ -9,12 +9,15 @@
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/**/*.md"
     ],
     "sharedGlobals": [
-      "{workspaceRoot}/.github/workflows/ci.yml"
+      "{workspaceRoot}/tools/tsconfig/jest.config.ts",
+      "{workspaceRoot}/tools/tsconfig/jest.preset.js"
     ]
   },
   "nxCloudId": "685e6a4e987037155c8179ff",
@@ -90,7 +93,7 @@
       "inputs": [
         "default",
         "^production",
-        "{workspaceRoot}/vitest.workspace.ts"
+        "{workspaceRoot}/tools/tsconfig/jest.preset.js"
       ]
     },
     "typecheck": {
@@ -111,8 +114,8 @@
       "inputs": [
         "default",
         "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/biome.json",
-        "{projectRoot}/biome.json"
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.js"
       ]
     },
     "format": {
@@ -147,22 +150,40 @@
       "dependsOn": [
         "docker:build"
       ]
+    },
+    "@nx/jest:jest": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/tsconfig/jest.preset.js"],
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "coverageReporters": ["text"]
+        }
+      }
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/tsconfig/vitest.workspace.ts"]
     }
   },
   "generators": {
     "@nx/react": {
       "application": {
-        "babel": true,
-        "style": "none",
-        "linter": "none",
-        "bundler": "vite"
+        "style": "tailwind",
+        "linter": "eslint",
+        "bundler": "vite",
+        "unitTestRunner": "vitest",
+        "e2eTestRunner": "none"
       },
       "component": {
-        "style": "none"
+        "style": "tailwind"
       },
       "library": {
-        "style": "none",
-        "linter": "none",
+        "style": "tailwind",
+        "linter": "eslint",
         "unitTestRunner": "vitest"
       }
     }
@@ -170,5 +191,14 @@
   "parallel": 3,
   "cacheDirectory": "node_modules/.nx/cache",
   "useDaemonProcess": true,
-  "defaultBase": "main"
+  "defaultBase": "main",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
+  "release": {
+    "version": {
+      "preVersionCommand": "npx nx run-many -t build"
+    }
+  }
 }

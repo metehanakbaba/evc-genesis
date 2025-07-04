@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# EV Charging Admin - Docker Build Script (No NX Cloud)
-# This script builds Docker images without requiring NX Cloud connectivity
+# 🐳 EV Charging Admin Panel - Docker Build Script
+# Location: infrastructure/docker/docker-build.sh
 
 set -e
 
@@ -12,91 +12,71 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-print_status() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
+# Configuration
+ENVIRONMENT=${1:-production}
+IMAGE_TAG=${2:-evc-admin:latest}
+BUILD_CONTEXT="../../"  # Root of the project from infrastructure/docker/
+DOCKERFILE_PATH="infrastructure/docker/Dockerfile"
 
-print_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
+echo -e "${BLUE}🐳 Building EV Charging Admin Panel Docker Image${NC}"
+echo -e "${YELLOW}Environment: ${ENVIRONMENT}${NC}"
+echo -e "${YELLOW}Image Tag: ${IMAGE_TAG}${NC}"
+echo ""
 
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-# Parse arguments
-BUILD_TYPE=${1:-"production"}
-TAG=${2:-"evc-admin:latest"}
-
-echo "🐳 EV Charging Admin - Docker Build"
-echo "==================================="
-print_status "Build type: $BUILD_TYPE"
-print_status "Docker tag: $TAG"
-
-# Ensure we're in the correct directory
-if [ ! -f "nx.json" ]; then
-    print_error "nx.json not found. Please run this script from the project root."
+# Validate environment
+if [[ ! "$ENVIRONMENT" =~ ^(development|production)$ ]]; then
+    echo -e "${RED}❌ Error: Environment must be 'development' or 'production'${NC}"
+    echo "Usage: $0 [development|production] [image-tag]"
     exit 1
 fi
 
-# Disable NX Cloud for local builds
-export NX_CLOUD_DISTRIBUTED_EXECUTION=false
-export NX_CLOUD_ACCESS_TOKEN=""
+# Set dockerfile based on environment
+if [ "$ENVIRONMENT" = "development" ]; then
+    DOCKERFILE_PATH="infrastructure/docker/Dockerfile.dev"
+    echo -e "${YELLOW}📦 Using development Dockerfile${NC}"
+else
+    echo -e "${YELLOW}🚀 Using production Dockerfile${NC}"
+fi
 
-case "$BUILD_TYPE" in
-    "production" | "prod")
-        print_status "Building production Docker image..."
-        docker build \
-            -f Dockerfile \
-            --target runner \
-            --build-arg NODE_ENV=production \
-            --build-arg NEXT_TELEMETRY_DISABLED=1 \
-            --build-arg NX_CLOUD_DISTRIBUTED_EXECUTION=false \
-            --build-arg NX_CLOUD_ACCESS_TOKEN="" \
-            -t "$TAG" \
-            .
-        ;;
-    "development" | "dev")
-        print_status "Building development Docker image..."
-        docker build \
-            -f Dockerfile.dev \
-            --target development \
-            --build-arg NODE_ENV=development \
-            --build-arg NX_CLOUD_DISTRIBUTED_EXECUTION=false \
-            -t "${TAG%-*}:dev" \
-            .
-        ;;
-    *)
-        print_error "Unknown build type: $BUILD_TYPE"
-        print_status "Available types: production, development"
-        exit 1
-        ;;
-esac
+# Navigate to project root
+cd "$(dirname "$0")/../../"
+
+echo -e "${BLUE}📂 Current directory: $(pwd)${NC}"
+echo -e "${BLUE}🔍 Build context: ${BUILD_CONTEXT}${NC}"
+echo -e "${BLUE}📄 Dockerfile: ${DOCKERFILE_PATH}${NC}"
+echo ""
+
+# Clean previous builds if needed
+if [ "$ENVIRONMENT" = "production" ]; then
+    echo -e "${YELLOW}🧹 Cleaning previous builds...${NC}"
+    docker builder prune -f --filter until=24h
+fi
+
+# Build the Docker image
+echo -e "${GREEN}🔨 Building Docker image...${NC}"
+docker build \
+    --build-arg NODE_ENV="$ENVIRONMENT" \
+    --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+    --build-arg VERSION="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')" \
+    -t "$IMAGE_TAG" \
+    -f "$DOCKERFILE_PATH" \
+    "$BUILD_CONTEXT"
 
 if [ $? -eq 0 ]; then
-    print_success "Docker image built successfully! 🎉"
-    print_status "Image: $TAG"
-    
-    # Show image size
-    IMAGE_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | grep "$TAG" | awk '{print $2}')
-    print_status "Image size: ${IMAGE_SIZE:-"Unknown"}"
-    
     echo ""
-    print_status "To run the container:"
-    if [ "$BUILD_TYPE" = "development" ] || [ "$BUILD_TYPE" = "dev" ]; then
-        echo "  docker run -p 3000:3000 -v \$(pwd):/app ${TAG%-*}:dev"
+    echo -e "${GREEN}✅ Docker image built successfully!${NC}"
+    echo -e "${GREEN}🏷️  Image tag: ${IMAGE_TAG}${NC}"
+    echo ""
+    echo -e "${BLUE}📊 Image size:${NC}"
+    docker images "$IMAGE_TAG" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+    echo ""
+    echo -e "${YELLOW}🚀 To run the container:${NC}"
+    if [ "$ENVIRONMENT" = "development" ]; then
+        echo -e "${BLUE}docker run -p 3000:3000 --name evc-admin-dev ${IMAGE_TAG}${NC}"
     else
-        echo "  docker run -p 3000:3000 $TAG"
+        echo -e "${BLUE}docker run -p 3000:3000 --name evc-admin ${IMAGE_TAG}${NC}"
     fi
-    
-    print_status "To run with Docker Compose:"
-    echo "  docker-compose up evc-admin"
-    
 else
-    print_error "Docker build failed!"
+    echo -e "${RED}❌ Docker build failed!${NC}"
     exit 1
 fi 
