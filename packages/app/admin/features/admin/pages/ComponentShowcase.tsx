@@ -169,10 +169,8 @@ const ComponentShowcase = () => {
               <div className="space-y-3">
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
-                <Button variant="success">Success</Button>
-                <Button variant="warning">Warning</Button>
-                <Button variant="info">Info</Button>
-                <Button variant="danger">Danger</Button>
+                <Button variant="outline">Outline</Button>
+                <Button variant="destructive">Destructive</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
             </div>
@@ -197,17 +195,17 @@ const ComponentShowcase = () => {
                 Outline Style
               </h3>
               <div className="space-y-3">
-                <Button variant="primary" styleType="outline">
+                <Button variant="outline">
                   Primary Outline
                 </Button>
-                <Button variant="success" styleType="outline">
-                  Success Outline
+                <Button variant="outline">
+                  Secondary Outline
                 </Button>
-                <Button variant="warning" styleType="outline">
-                  Warning Outline
+                <Button variant="outline">
+                  Tertiary Outline
                 </Button>
-                <Button variant="danger" styleType="outline">
-                  Danger Outline
+                <Button variant="outline">
+                  Ghost Outline
                 </Button>
               </div>
             </div>
@@ -222,20 +220,19 @@ const ComponentShowcase = () => {
                   {loading ? 'Submitting...' : 'Submit Form'}
                 </Button>
                 <Button
-                  variant="success"
-                  onClick={() => console.log('Success action!')}
+                  variant="primary"
+                  onClick={() => console.log('Save action!')}
                 >
                   Save Changes
                 </Button>
                 <Button
-                  variant="warning"
-                  onClick={() => console.log('Warning action!')}
+                  variant="destructive"
+                  onClick={() => console.log('Reset action!')}
                 >
                   Reset Form
                 </Button>
                 <Button
-                  variant="info"
-                  styleType="outline"
+                  variant="outline"
                   onClick={() => console.log('Info action!')}
                 >
                   Learn More

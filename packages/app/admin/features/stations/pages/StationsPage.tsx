@@ -6,12 +6,10 @@ import { useRouter } from 'next/navigation';
 import {
   MapPinIcon,
   BoltIcon,
-  PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
+
   SignalIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon,
   XCircleIcon,
   WrenchScrewdriverIcon,
   ClockIcon,
@@ -23,7 +21,6 @@ import {
   ChevronRightIcon,
   ViewColumnsIcon,
   TableCellsIcon,
-  BuildingStorefrontIcon,
 } from '@heroicons/react/24/outline';
 
 // Custom Gas Station Icon Component (better than PlusIcon)
@@ -317,8 +314,6 @@ const StationsPage: React.FC = () => {
             <Button
               variant="primary"
               size="md"
-              icon={GasStationIcon}
-              iconPosition="left"
             >
               Add Station
             </Button>

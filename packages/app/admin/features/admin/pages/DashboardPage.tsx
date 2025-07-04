@@ -1,8 +1,5 @@
-import React, { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/store/hooks';
+import React from 'react';
 import { MainLayout } from '@ui/layout';
-import { SparklesIcon } from '@heroicons/react/24/outline';
 import {
   RevolutionaryStatCard,
   CoreManagementSection,
@@ -16,8 +13,6 @@ import { useDashboardData } from '../hooks/useDashboardData';
  * Revolutionary Admin Dashboard - Optimized & Type-safe
  */
 const DashboardPage: React.FC = React.memo(() => {
-  const user = useAppSelector((state) => state.auth.user);
-  const router = useRouter();
   const {
     networkStats,
     coreManagement,
@@ -25,17 +20,6 @@ const DashboardPage: React.FC = React.memo(() => {
     developerTools,
     isDeveloperMode,
   } = useDashboardData();
-
-  const handleNavigation = useCallback(
-    (path: string) => {
-      router.push(path);
-    },
-    [router],
-  );
-
-  const handleRefresh = useCallback(() => {
-    window.location.reload();
-  }, []);
 
   return (
     <MainLayout

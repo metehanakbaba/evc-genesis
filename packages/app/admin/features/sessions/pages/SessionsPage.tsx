@@ -8,7 +8,6 @@ import {
   BoltIcon,
   ClockIcon,
   UserIcon,
-  CurrencyDollarIcon,
   HomeIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
@@ -17,13 +16,10 @@ import {
   CheckCircleIcon,
   PlayIcon,
   XCircleIcon,
-  SignalIcon,
   MapPinIcon,
-  CalendarIcon,
   EyeIcon,
   StopIcon,
   BanknotesIcon,
-  ChartBarIcon,
   FireIcon,
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
@@ -86,7 +82,6 @@ const SessionsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [isLiveDataEnabled, setIsLiveDataEnabled] = useState(true);
 
   // Revolutionary floating stats with live data
   const sessionStats: SessionStats[] = [
@@ -295,8 +290,6 @@ const SessionsPage: React.FC = () => {
    * 🔄 WebSocket Ready - Live Data Effect
    */
   useEffect(() => {
-    if (!isLiveDataEnabled) return;
-
     // TODO: Implement WebSocket connection for real-time updates
     const interval = setInterval(() => {
       // Simulate live data updates
@@ -304,7 +297,7 @@ const SessionsPage: React.FC = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isLiveDataEnabled]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">

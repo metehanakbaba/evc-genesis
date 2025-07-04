@@ -1,5 +1,6 @@
 import { evChargingApi } from '@/shared/api/evChargingApi';
 import type { ApiResponse, PaginationResponse } from '@/types/global.types';
+import type { EndpointBuilder } from '@reduxjs/toolkit/query';
 import type {
   AdminStationsQueryParams,
   CreateStationRequest,
@@ -19,7 +20,7 @@ interface AdminStationsResponse {
 }
 
 const stationsApi = evChargingApi.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: (builder: EndpointBuilder<any, any, any>) => ({
     // Public endpoints
     getNearbyStations: builder.query<
       ApiResponse<StationsResponse>,

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { Badge, Spinner, Button, Input } from '@/shared/ui';
+import { Badge, Spinner, Button } from '@/shared/ui';
 import {
   // Main Section Icons
   BuildingLibraryIcon,
@@ -22,8 +22,6 @@ import {
   CodeBracketIcon,
   PaintBrushIcon,
   CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 
 /**
@@ -45,12 +43,6 @@ interface DesignSystemSection {
   readonly emoji: string;
   readonly description: string;
   readonly content: React.ReactNode;
-}
-
-interface CodeExample {
-  readonly title: string;
-  readonly code: string;
-  readonly language: string;
 }
 
 interface ArchitecturalPrinciple {
@@ -121,30 +113,6 @@ const ARCHITECTURAL_PRINCIPLES: ReadonlyArray<ArchitecturalPrinciple> = [
     icon: 'BoltIcon',
   },
 ] as const;
-
-/**
- * 🎨 Design Tokens
- */
-const DESIGN_TOKENS = {
-  colors: {
-    primary: 'Headless UI 2.1 Dark Theme',
-    semantic: 'Primary, Secondary, Success, Danger, Warning',
-    gradients: 'from-gray-900 via-gray-800 to-gray-900',
-  },
-  typography: {
-    fonts: 'Inter (UI) + JetBrains Mono (Code)',
-    scale: 'xs, sm, md, lg, xl, 2xl, 3xl, 4xl',
-    weights: '300, 400, 500, 600, 700, 800, 900',
-  },
-  spacing: {
-    scale: 'Tailwind CSS spacing scale (0.25rem increments)',
-    containers: 'max-w-6xl with responsive breakpoints',
-  },
-  animation: {
-    durations: 'fast: 150ms, normal: 300ms, slow: 500ms',
-    easing: 'ease-out for entrances, ease-in for exits',
-  },
-} as const;
 
 /**
  * 🧩 Component Patterns
@@ -247,31 +215,6 @@ src/
 │   └── utils/             # Utility functions
 └── types/                 # Global type definitions
 ` as const;
-
-/**
- * 🔧 Development Tools Configuration
- */
-const DEV_TOOLS_CONFIG = {
-  linting: {
-    tool: 'Biome.js',
-    benefits:
-      '10-100x faster than ESLint, built-in formatter, zero dependencies',
-    rules: 'Strict TypeScript, React best practices, accessibility checks',
-  },
-  bundling: {
-    tool: 'Vite',
-    features: 'Fast HMR, TypeScript support, path aliases (@/*)',
-  },
-  styling: {
-    framework: 'Tailwind CSS 4.1',
-    approach: 'Utility-first with component abstractions',
-    theme: 'Headless UI 2.1 Dark Theme',
-  },
-  state: {
-    tool: 'Redux Toolkit + RTK Query',
-    pattern: 'Feature slices with normalized state',
-  },
-} as const;
 
 const CodeBlock: React.FC<{ children: string; language?: string }> = ({
   children,
@@ -424,7 +367,7 @@ const DesignSystemDocs: React.FC = () => {
           <div>
             <h4 className="font-semibold text-gray-200">Animation</h4>
             <div className="flex items-center gap-2">
-              <Spinner size="sm" color="primary" />
+                                <Spinner size="sm" />
               <span className="text-gray-400">
                 Smooth transitions & micro-interactions
               </span>
@@ -678,8 +621,8 @@ const DesignSystemDocs: React.FC = () => {
                   <Button variant="secondary" size="sm">
                     Secondary
                   </Button>
-                  <Button variant="danger" size="sm">
-                    Danger
+                  <Button variant="destructive" size="sm">
+                    Destructive
                   </Button>
                 </div>
               </div>

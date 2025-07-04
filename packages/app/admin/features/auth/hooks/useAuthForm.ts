@@ -14,11 +14,6 @@ interface LoginState {
   pending?: boolean;
 }
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
 export const useAuthForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

@@ -10,7 +10,7 @@ import {
   Checkbox,
   Badge,
   GridGap,
-} from '../../../shared/ui';
+} from '@/shared/ui';
 import {
   CursorArrowRaysIcon,
   DocumentTextIcon,
@@ -82,15 +82,15 @@ const LayoutExamplePage: React.FC = () => {
               <Button variant="secondary" size="sm">
                 Secondary
               </Button>
-              <Button variant="success" size="sm">
-                Success
+              <Button variant="outline" size="sm">
+                Outline
               </Button>
-              <Button variant="danger" size="sm">
-                Danger
+              <Button variant="destructive" size="sm">
+                Destructive
               </Button>
             </div>
             <div className="space-y-2">
-              <Button variant="primary" styleType="outline" className="w-full">
+              <Button variant="outline" className="w-full">
                 Outline Primary
               </Button>
               <Button variant="ghost" className="w-full">

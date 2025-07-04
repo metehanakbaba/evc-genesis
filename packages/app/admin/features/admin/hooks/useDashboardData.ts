@@ -71,7 +71,7 @@ interface DashboardData {
  */
 export const useDashboardData = (): DashboardData => {
   const isDeveloperMode = useMemo(
-    () => import.meta.env.DEV || localStorage.getItem('devMode') === 'true',
+    () => process.env.NODE_ENV !== 'production' || localStorage.getItem('devMode') === 'true',
     [],
   );
 
