@@ -10,6 +10,14 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      # External access configuration
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.evcharge.com}
+      # API Configuration
+      - API_BASE_URL=${API_BASE_URL:-https://api.evcharge.com/v1}
+      # Build optimizations
+      - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
     networks:
       - evc-network

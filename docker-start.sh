@@ -41,9 +41,40 @@ case $COMMAND in
         ;;
     "prod")
         log_info "Production modunda başlatılıyor..."
+        
+        # Production environment setup
+        export NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-"http://0.0.0.0:3000"}
+        export NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-"https://api.evcharge.com"}
+        export API_BASE_URL=${API_BASE_URL:-"https://api.evcharge.com/v1"}
+        
         docker-compose up --build -d evc-admin
+        
         log_success "Production container başlatıldı!"
-        echo -e "${GREEN}🌐 Uygulama:${NC} http://localhost:3000"
+        echo -e "${GREEN}🌐 Uygulama:${NC} http://0.0.0.0:3000 (External Access)"
+        echo -e "${GREEN}🌐 Lokal:${NC} http://localhost:3000"
+        echo -e "${YELLOW}💡 Sunucu IP'si ile erişim için:${NC} http://your-server-ip:3000"
+        ;;
+    "prod-custom")
+        DOMAIN_OR_IP=${2:-""}
+        if [ -z "$DOMAIN_OR_IP" ]; then
+            log_error "Domain veya IP adresi belirtiniz!"
+            echo -e "${YELLOW}Kullanım:${NC} ./docker-start.sh prod-custom your-domain.com"
+            echo -e "${YELLOW}Veya:${NC} ./docker-start.sh prod-custom 192.168.1.100"
+            exit 1
+        fi
+        
+        log_info "Production modunda başlatılıyor ($DOMAIN_OR_IP)..."
+        
+        # Custom domain/IP environment setup
+        export NEXT_PUBLIC_APP_URL="http://$DOMAIN_OR_IP:3000"
+        export NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-"https://api.evcharge.com"}
+        export API_BASE_URL=${API_BASE_URL:-"https://api.evcharge.com/v1"}
+        
+        docker-compose up --build -d evc-admin
+        
+        log_success "Production container başlatıldı!"
+        echo -e "${GREEN}🌐 Uygulama:${NC} http://$DOMAIN_OR_IP:3000"
+        echo -e "${GREEN}🌐 API:${NC} $NEXT_PUBLIC_API_URL"
         ;;
     "build")
         log_info "Docker image build ediliyor..."
@@ -90,7 +121,8 @@ case $COMMAND in
         echo
         echo -e "${YELLOW}Komutlar:${NC}"
         echo -e "  ${BLUE}dev${NC}         - Development modunda başlat (hot reload)"
-        echo -e "  ${BLUE}prod${NC}        - Production modunda başlat"
+        echo -e "  ${BLUE}prod${NC}        - Production modunda başlat (0.0.0.0:3000)"
+        echo -e "  ${BLUE}prod-custom${NC} - Production modunda başlat (custom domain/IP)"
         echo -e "  ${BLUE}build${NC}       - Docker image build et"
         echo -e "  ${BLUE}test-build${NC}  - Local build test et"
         echo -e "  ${BLUE}stop${NC}        - Container'ları durdur"
@@ -102,9 +134,11 @@ case $COMMAND in
         echo -e "  ${BLUE}help${NC}        - Bu yardım mesajını göster"
         echo
         echo -e "${YELLOW}Örnekler:${NC}"
-        echo -e "  ${GREEN}./docker-start.sh dev${NC}       # Development başlat"
-        echo -e "  ${GREEN}./docker-start.sh prod${NC}      # Production başlat"
-        echo -e "  ${GREEN}./docker-start.sh test-build${NC} # Local build test"
-        echo -e "  ${GREEN}./docker-start.sh logs${NC}      # Logları izle"
+        echo -e "  ${GREEN}./docker-start.sh dev${NC}                    # Development başlat"
+        echo -e "  ${GREEN}./docker-start.sh prod${NC}                   # Production başlat (external access)"
+        echo -e "  ${GREEN}./docker-start.sh prod-custom 192.168.1.100${NC} # Custom IP ile başlat"
+        echo -e "  ${GREEN}./docker-start.sh prod-custom mydomain.com${NC}   # Custom domain ile başlat"
+        echo -e "  ${GREEN}./docker-start.sh test-build${NC}              # Local build test"
+        echo -e "  ${GREEN}./docker-start.sh logs${NC}                   # Logları izle"
         ;;
 esac 
