@@ -52,7 +52,7 @@ export const LiveOperationsSection: React.FC<LiveOperationsSectionProps> =
                   <div className="flex items-center gap-6">
                     {/* Icon */}
                     <div className="relative w-18 h-18 rounded-3xl bg-gradient-to-br from-emerald-500/30 to-green-400/20 border border-emerald-400/40 flex items-center justify-center">
-                      <span className="text-4xl text-emerald-300 drop-shadow-lg">{operation.icon}</span>
+                      <operation.icon className="w-10 h-10 text-emerald-300 drop-shadow-lg" />
                       <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping" />
                     </div>
 

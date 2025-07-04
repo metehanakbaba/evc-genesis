@@ -1,4 +1,5 @@
 import React from 'react';
+import { BoltIcon } from '@heroicons/react/24/outline';
 
 /**
  * 🦶 Dashboard Footer
@@ -83,7 +84,7 @@ export const DashboardFooter: React.FC = () => {
         <div className="border-t border-gray-700/30 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">⚡</span>
+              <BoltIcon className="w-5 h-5 text-white" />
             </div>
             <span className="text-sm text-gray-300 font-medium">
               EV Charging Admin Dashboard

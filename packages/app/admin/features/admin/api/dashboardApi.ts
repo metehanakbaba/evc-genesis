@@ -17,7 +17,7 @@ const dashboardApi = evChargingApi.injectEndpoints({
     }),
 
     getDashboardStats: builder.query<ApiResponse<DashboardStats>, void>({
-      query: (: any) => '/admin/dashboard/stats',
+      query: () => '/admin/dashboard/stats',
       providesTags: ['Station', 'Session', 'User'],
     }),
 

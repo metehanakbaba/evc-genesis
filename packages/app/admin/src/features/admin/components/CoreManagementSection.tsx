@@ -48,13 +48,11 @@ export const CoreManagementSection: React.FC<CoreManagementSectionProps> =
                   module.variant === 'purple' ? 'bg-gradient-to-br from-purple-500/30 to-purple-400/20 border border-purple-400/40' :
                   'bg-gradient-to-br from-teal-500/30 to-teal-400/20 border border-teal-400/40'
                 } flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-                  <span className={`text-3xl ${
+                  <module.icon className={`w-10 h-10 ${
                     module.variant === 'blue' ? 'text-blue-300' :
                     module.variant === 'purple' ? 'text-purple-300' :
                     'text-teal-300'
-                  } drop-shadow-lg`}>
-                    {module.icon}
-                  </span>
+                  } drop-shadow-lg`} />
                   <div className={`absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r ${
                     module.variant === 'blue' ? 'from-blue-400 to-blue-500' :
                     module.variant === 'purple' ? 'from-purple-400 to-purple-500' :

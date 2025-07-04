@@ -19,7 +19,7 @@ const usersApi = evChargingApi.injectEndpoints({
   endpoints: (builder: any) => ({
     // User endpoints
     getUserProfile: builder.query<ApiResponse<UserProfile>, void>({
-      query: (: any) => '/user/profile',
+      query: () => '/user/profile',
       providesTags: ['User'],
     }),
 
@@ -39,7 +39,7 @@ const usersApi = evChargingApi.injectEndpoints({
       ApiResponse<{ methods: ReadonlyArray<PaymentMethod> }>,
       void
     >({
-      query: (: any) => '/user/payment-methods',
+      query: () => '/user/payment-methods',
     }),
 
     addPaymentMethod: builder.mutation<
@@ -107,7 +107,7 @@ const usersApi = evChargingApi.injectEndpoints({
     }),
 
     getUserStatistics: builder.query<ApiResponse<UserStatistics>, void>({
-      query: (: any) => '/admin/users/statistics',
+      query: () => '/admin/users/statistics',
     }),
 
     resetUserPassword: builder.mutation<

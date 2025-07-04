@@ -5,7 +5,7 @@ import React from 'react';
 interface RevolutionaryStatCardProps {
   readonly title: string;
   readonly value: string;
-  readonly icon: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
   readonly variant: 'blue' | 'emerald' | 'purple' | 'teal';
   readonly trend: string;
   readonly description: string;
@@ -18,7 +18,7 @@ interface RevolutionaryStatCardProps {
  */
 export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
   React.memo(
-    ({ title, value, icon, trend, description, gradient, glowColor, variant }) => {
+    ({ title, value, icon: IconComponent, trend, description, gradient, glowColor, variant }) => {
       const glowColorMap = {
         blue: 'blue',
         emerald: 'emerald', 
@@ -62,14 +62,12 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
                 variant === 'purple' ? 'bg-gradient-to-br from-purple-500/30 to-purple-400/20 border-purple-400/40' :
                 'bg-gradient-to-br from-teal-500/30 to-teal-400/20 border-teal-400/40'
               } border flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-                <span className={`text-2xl ${
+                <IconComponent className={`w-8 h-8 ${
                   variant === 'blue' ? 'text-blue-300' :
                   variant === 'emerald' ? 'text-emerald-300' :
                   variant === 'purple' ? 'text-purple-300' :
                   'text-teal-300'
-                } drop-shadow-lg`}>
-                  {icon}
-                </span>
+                } drop-shadow-lg`} />
                 
                 <div className={`absolute inset-0 ${
                   variant === 'blue' ? 'bg-gradient-to-r from-blue-400/20' :

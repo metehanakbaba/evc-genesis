@@ -1,9 +1,20 @@
+import React from 'react';
 import { useMemo } from 'react';
+import {
+  BoltIcon,
+  UserGroupIcon,
+  CreditCardIcon,
+  BanknotesIcon,
+  Squares2X2Icon,
+  DocumentTextIcon,
+  RectangleStackIcon,
+} from '@heroicons/react/24/outline';
+import { RevolutionaryStationIcon } from '@/features/admin/components/RevolutionaryStationIcon';
 
 interface NetworkStat {
   readonly title: string;
   readonly value: string;
-  readonly icon: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
   readonly variant: 'blue' | 'emerald' | 'purple' | 'teal';
   readonly trend: string;
   readonly description: string;
@@ -14,7 +25,7 @@ interface NetworkStat {
 export interface CoreManagementItem {
   readonly title: string;
   readonly path: string;
-  readonly icon: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
   readonly description: string;
   readonly variant: 'blue' | 'purple' | 'teal';
   readonly stats: string;
@@ -27,7 +38,7 @@ export interface CoreManagementItem {
 export interface ActiveOperation {
   readonly title: string;
   readonly path: string;
-  readonly icon: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
   readonly description: string;
   readonly variant: 'emerald';
   readonly stats: string;
@@ -39,7 +50,7 @@ export interface ActiveOperation {
 export interface DeveloperTool {
   readonly title: string;
   readonly path: string;
-  readonly icon: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
   readonly description: string;
   readonly variant: 'cyan' | 'purple' | 'teal';
   readonly badge?: string;
@@ -67,7 +78,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Active Stations',
         value: '156',
-        icon: '⚡',
+        icon: RevolutionaryStationIcon,
         variant: 'blue' as const,
         trend: '+8 new this week',
         description: 'Next-gen CCS, CHAdeMO & Type2 infrastructure',
@@ -77,7 +88,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Live Sessions',
         value: '23',
-        icon: '🔋',
+        icon: BoltIcon,
         variant: 'emerald' as const,
         trend: '+12% vs last hour',
         description: 'Active charging sessions in progress',
@@ -87,7 +98,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Total Users',
         value: '2,847',
-        icon: '👥',
+        icon: UserGroupIcon,
         variant: 'purple' as const,
         trend: '+156 this month',
         description: 'Registered EV driver accounts',
@@ -97,7 +108,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Daily Revenue',
         value: '₺24,680',
-        icon: '💰',
+        icon: BanknotesIcon,
         variant: 'teal' as const,
         trend: '+18% vs yesterday',
         description: 'Payment transactions via Stripe',
@@ -113,7 +124,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Charging Stations',
         path: '/stations',
-        icon: '⚡',
+        icon: RevolutionaryStationIcon,
         description:
           'Manage charging infrastructure and monitor station status',
         variant: 'blue' as const,
@@ -126,7 +137,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'User Management',
         path: '/users',
-        icon: '👥',
+        icon: UserGroupIcon,
         description: 'Manage user accounts, roles and permissions',
         variant: 'purple' as const,
         stats: '2,847 users',
@@ -138,7 +149,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Payment System',
         path: '/wallets',
-        icon: '💳',
+        icon: CreditCardIcon,
         description: 'Process payments, manage balances and transactions',
         variant: 'teal' as const,
         stats: '₺1.2M volume',
@@ -156,7 +167,7 @@ export const useDashboardData = (): DashboardData => {
       {
         title: 'Live Charging Sessions',
         path: '/sessions',
-        icon: '🔋',
+        icon: BoltIcon,
         description: 'Monitor ongoing charging sessions in real-time',
         variant: 'emerald' as const,
         stats: '23 active',
@@ -175,21 +186,21 @@ export const useDashboardData = (): DashboardData => {
             {
               title: 'Component Showcase',
               path: '/showcase',
-              icon: '🎨',
+              icon: Squares2X2Icon,
               description: 'UI component library',
               variant: 'cyan' as const,
             },
             {
               title: 'Design System',
               path: '/design-system',
-              icon: '📋',
+              icon: DocumentTextIcon,
               description: 'Design documentation',
               variant: 'purple' as const,
             },
             {
               title: 'Layout Examples',
               path: '/layout-examples',
-              icon: '📐',
+              icon: RectangleStackIcon,
               description: 'Grid system examples',
               badge: 'New',
               variant: 'teal' as const,
