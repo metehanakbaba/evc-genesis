@@ -30,48 +30,18 @@ COPY . .
 COPY packages/shared ./packages/shared
 COPY packages/design ./packages/design
 
-# Build the admin app
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV CI true
-ENV NEXT_PRIVATE_SKIP_TYPECHECK true
-ENV DISABLE_ESLINT_PLUGIN true
-WORKDIR /app/packages/app/admin
+# Set environment variables for optimized build
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    CI=true \
+    NODE_ENV=production \
+    NX_CLOUD_DISTRIBUTED_EXECUTION=false \
+    NX_CLOUD_ACCESS_TOKEN=""
 
-# Backup original config and create build-optimized config
-RUN cp next.config.ts next.config.ts.backup
-RUN echo 'import type { NextConfig } from "next"; \
-\
-const nextConfig: NextConfig = { \
-  output: "standalone", \
-  typescript: { ignoreBuildErrors: true }, \
-  eslint: { ignoreDuringBuilds: true }, \
-  experimental: { \
-    turbo: { \
-      rules: { \
-        "*.svg": { \
-          loaders: ["@svgr/webpack"], \
-          as: "*.js", \
-        }, \
-      }, \
-    }, \
-  }, \
-  transpilePackages: [ \
-    "@evc/shared-api", \
-    "@evc/shared-types", \
-    "@evc/design-tokens", \
-    "@evc/shared-store", \
-    "@evc/shared-utils" \
-  ], \
-  webpack: (config, { dev, isServer }) => { \
-    config.resolve.extensions = [".ts", ".tsx", ".js", ".jsx", ...config.resolve.extensions]; \
-    return config; \
-  }, \
-}; \
-\
-export default nextConfig;' > next.config.ts
+# Build shared packages first using NX (disable cloud explicitly)
+RUN npx nx run-many --target=build --projects=@evc/shared-api,@evc/shared-types,@evc/shared-store,@evc/shared-utils,@evc/design-tokens --parallel=3 --no-cloud
 
-# Build with TypeScript and ESLint errors ignored
-RUN npm run build
+# Build the admin app using NX
+RUN npx nx build @evc/app-admin --configuration=docker --skip-nx-cache --no-cloud
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -99,8 +69,8 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Start the application
 CMD ["node", "packages/app/admin/server.js"] 

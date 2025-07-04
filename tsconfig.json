@@ -20,6 +20,9 @@
     },
     {
       "path": "./packages/shared/api"
+    },
+    {
+      "path": "./packages/design/tokens"
     }
   ]
 }

@@ -82,10 +82,22 @@ case $COMMAND in
         log_success "Build tamamlandı!"
         ;;
     "test-build")
-        log_info "Local build test ediliyor..."
-        cd packages/app/admin
-        CI=true npm run build
-        log_success "Local build test başarılı!"
+        log_info "Hızlı build test ediliyor (sadece admin app)..."
+        npx nx build @evc/app-admin --configuration=production --no-cloud --skip-nx-cache
+        log_success "Hızlı build test başarılı!"
+        ;;
+    "nx-build")
+        log_info "Tam NX build ediliyor (Docker için)..."
+        log_info "Shared packages build ediliyor..."
+        npx nx run-many --target=build --projects=@evc/shared-api,@evc/shared-types,@evc/shared-store,@evc/shared-utils,@evc/design-tokens --parallel=3 --no-cloud
+        log_info "Admin app build ediliyor (Docker config)..."
+        npx nx build @evc/app-admin --configuration=docker --no-cloud
+        log_success "Tam NX build tamamlandı!"
+        ;;
+    "nx-clean")
+        log_info "NX cache temizleniyor..."
+        npx nx reset
+        log_success "NX cache temizlendi!"
         ;;
     "stop")
         log_info "Container'lar durduruluyor..."
@@ -124,7 +136,9 @@ case $COMMAND in
         echo -e "  ${BLUE}prod${NC}        - Production modunda başlat (0.0.0.0:3000)"
         echo -e "  ${BLUE}prod-custom${NC} - Production modunda başlat (custom domain/IP)"
         echo -e "  ${BLUE}build${NC}       - Docker image build et"
-        echo -e "  ${BLUE}test-build${NC}  - Local build test et"
+        echo -e "  ${BLUE}test-build${NC}  - Hızlı build test et (sadece admin app)"
+        echo -e "  ${BLUE}nx-build${NC}    - Tam NX build et (Docker için, tüm projeler)"
+        echo -e "  ${BLUE}nx-clean${NC}    - NX cache'i temizle"
         echo -e "  ${BLUE}stop${NC}        - Container'ları durdur"
         echo -e "  ${BLUE}restart${NC}     - Container'ları yeniden başlat"
         echo -e "  ${BLUE}logs${NC}        - Container loglarını göster"
@@ -138,7 +152,9 @@ case $COMMAND in
         echo -e "  ${GREEN}./docker-start.sh prod${NC}                   # Production başlat (external access)"
         echo -e "  ${GREEN}./docker-start.sh prod-custom 192.168.1.100${NC} # Custom IP ile başlat"
         echo -e "  ${GREEN}./docker-start.sh prod-custom mydomain.com${NC}   # Custom domain ile başlat"
-        echo -e "  ${GREEN}./docker-start.sh test-build${NC}              # Local build test"
+        echo -e "  ${GREEN}./docker-start.sh test-build${NC}              # Hızlı build test (admin app)"
+        echo -e "  ${GREEN}./docker-start.sh nx-build${NC}                # Tam build (Docker için)"
+        echo -e "  ${GREEN}./docker-start.sh nx-clean${NC}                # NX cache temizle"
         echo -e "  ${GREEN}./docker-start.sh logs${NC}                   # Logları izle"
         ;;
 esac 

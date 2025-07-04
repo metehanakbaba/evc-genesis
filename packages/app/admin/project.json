@@ -1,0 +1,204 @@
+{
+  "name": "@evc/app-admin",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/app/admin/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "next dev --turbopack --port 3000",
+        "cwd": "packages/app/admin"
+      },
+      "configurations": {
+        "production": {
+          "command": "next dev --port 3000",
+          "cwd": "packages/app/admin"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "production",
+        "^production",
+        "{workspaceRoot}/.env",
+        "{workspaceRoot}/.env.local"
+      ],
+      "outputs": [
+        "{projectRoot}/.next",
+        "{projectRoot}/.next/standalone",
+        "{projectRoot}/.next/static"
+      ],
+      "options": {
+        "command": "next build",
+        "cwd": "packages/app/admin"
+      },
+      "configurations": {
+        "production": {
+          "command": "NODE_ENV=production next build",
+          "cwd": "packages/app/admin"
+        },
+        "docker": {
+          "command": "NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 next build",
+          "cwd": "packages/app/admin"
+        }
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "next start --port 3000",
+        "cwd": "packages/app/admin"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "next dev --turbopack --port 3000",
+        "cwd": "packages/app/admin"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/tsconfig.base.json"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/tsconfig.tsbuildinfo"
+      ],
+      "options": {
+        "command": "tsc --noEmit --incremental",
+        "cwd": "packages/app/admin"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/biome.json",
+        "{workspaceRoot}/biome.json"
+      ],
+      "options": {
+        "command": "biome check src/",
+        "cwd": "packages/app/admin"
+      },
+      "configurations": {
+        "fix": {
+          "command": "biome check --write src/",
+          "cwd": "packages/app/admin"
+        }
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/biome.json"
+      ],
+      "options": {
+        "command": "biome format --write src/",
+        "cwd": "packages/app/admin"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/test-output"
+      ],
+      "options": {
+        "command": "echo 'Tests will be added in future iterations'",
+        "cwd": "packages/app/admin"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rm -rf .next",
+          "rm -rf dist",
+          "rm -rf node_modules/.cache"
+        ],
+        "cwd": "packages/app/admin",
+        "parallel": false
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "docker build -f ../../../Dockerfile -t evc-admin:latest ../../../",
+        "cwd": "packages/app/admin"
+      },
+      "configurations": {
+        "production": {
+          "command": "docker build -f ../../../Dockerfile --target runner -t evc-admin:prod ../../../",
+          "cwd": "packages/app/admin"
+        },
+        "development": {
+          "command": "docker build -f ../../../Dockerfile.dev --target development -t evc-admin:dev ../../../",
+          "cwd": "packages/app/admin"
+        }
+      }
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["docker:build"],
+      "options": {
+        "command": "docker run -p 3000:3000 evc-admin:latest",
+        "cwd": "packages/app/admin"
+      },
+      "configurations": {
+        "production": {
+          "command": "docker run -p 3000:3000 -e NODE_ENV=production evc-admin:prod",
+          "cwd": "packages/app/admin"
+        },
+        "development": {
+          "command": "docker run -p 3000:3000 -v $(pwd)/../../../:/app evc-admin:dev",
+          "cwd": "packages/app/admin"
+        }
+      }
+    },
+    "docker:compose": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose up evc-admin",
+        "cwd": "../../../"
+      },
+      "configurations": {
+        "dev": {
+          "command": "docker-compose --profile dev up evc-admin-dev",
+          "cwd": "../../../"
+        }
+      }
+    }
+  },
+  "tags": [
+    "type:app", 
+    "platform:web", 
+    "framework:nextjs", 
+    "scope:admin"
+  ],
+  "implicitDependencies": [
+    "@evc/shared-api",
+    "@evc/shared-types",
+    "@evc/shared-store", 
+    "@evc/shared-utils",
+    "@evc/design-tokens"
+  ]
+} 

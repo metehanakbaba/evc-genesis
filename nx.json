@@ -74,6 +74,12 @@
       "inputs": [
         "production",
         "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/.next",
+        "{projectRoot}/.next/standalone",
+        "{projectRoot}/.next/static",
+        "{projectRoot}/dist"
       ]
     },
     "test": {
@@ -95,6 +101,9 @@
       "inputs": [
         "default",
         "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/tsconfig.tsbuildinfo"
       ]
     },
     "lint": {
@@ -102,7 +111,16 @@
       "inputs": [
         "default",
         "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/biome.json"
+        "{workspaceRoot}/biome.json",
+        "{projectRoot}/biome.json"
+      ]
+    },
+    "format": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "{workspaceRoot}/biome.json",
+        "{projectRoot}/biome.json"
       ]
     },
     "serve": {
@@ -110,6 +128,25 @@
     },
     "dev": {
       "cache": false
+    },
+    "docker:build": {
+      "cache": true,
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "production",
+        "^production",
+        "{workspaceRoot}/Dockerfile",
+        "{workspaceRoot}/Dockerfile.dev",
+        "{workspaceRoot}/.dockerignore"
+      ]
+    },
+    "docker:run": {
+      "cache": false,
+      "dependsOn": [
+        "docker:build"
+      ]
     }
   },
   "generators": {
