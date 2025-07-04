@@ -36,11 +36,6 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as root
-if [[ $EUID -eq 0 ]]; then
-   log_error "Bu script root olarak çalıştırılmamalı!"
-   exit 1
-fi
 
 # System update
 log_info "Sistem güncelleniyor..."
