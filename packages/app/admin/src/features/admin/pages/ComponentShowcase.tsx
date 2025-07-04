@@ -169,7 +169,7 @@ const ComponentShowcase = () => {
               <div className="space-y-3">
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
-                <Button variant="success">Success</Button>
+                <Button variant="outline">Success</Button>
                 <Button variant="warning">Warning</Button>
                 <Button variant="info">Info</Button>
                 <Button variant="danger">Danger</Button>
@@ -200,7 +200,7 @@ const ComponentShowcase = () => {
                 <Button variant="primary" styleType="outline">
                   Primary Outline
                 </Button>
-                <Button variant="success" styleType="outline">
+                <Button variant="outline" styleType="outline">
                   Success Outline
                 </Button>
                 <Button variant="warning" styleType="outline">
@@ -222,7 +222,7 @@ const ComponentShowcase = () => {
                   {loading ? 'Submitting...' : 'Submit Form'}
                 </Button>
                 <Button
-                  variant="success"
+                  variant="outline"
                   onClick={() => console.log('Success action!')}
                 >
                   Save Changes

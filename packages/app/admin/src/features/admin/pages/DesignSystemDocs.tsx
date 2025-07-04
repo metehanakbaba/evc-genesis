@@ -410,7 +410,7 @@ const DesignSystemDocs: React.FC = () => {
             <div className="flex gap-2 mt-2">
               <Badge variant="primary">Primary</Badge>
               <Badge variant="secondary">Secondary</Badge>
-              <Badge variant="success">Success</Badge>
+              <Badge variant="outline">Success</Badge>
               <Badge variant="danger">Danger</Badge>
               <Badge variant="warning">Warning</Badge>
             </div>
@@ -452,7 +452,7 @@ const DesignSystemDocs: React.FC = () => {
               <div className="flex items-center gap-2 mb-3">
                 <BoltIcon className="w-5 h-5 text-yellow-400" />
                 <h4 className="font-semibold text-gray-200">Biome.js</h4>
-                <Badge variant="success" size="sm">
+                <Badge variant="outline" size="sm">
                   Fast
                 </Badge>
               </div>
@@ -624,7 +624,7 @@ const DesignSystemDocs: React.FC = () => {
               <h4 className="font-semibold text-gray-200 text-lg">
                 React Patterns
               </h4>
-              <Badge variant="success" size="sm">
+              <Badge variant="outline" size="sm">
                 Modern
               </Badge>
             </div>
@@ -641,7 +641,7 @@ const DesignSystemDocs: React.FC = () => {
                 <span className="text-sm text-gray-300">
                   useCallback for handlers
                 </span>
-                <Badge variant="success" size="sm">
+                <Badge variant="outline" size="sm">
                   Required
                 </Badge>
               </div>
@@ -649,7 +649,7 @@ const DesignSystemDocs: React.FC = () => {
                 <span className="text-sm text-gray-300">
                   Memo for pure components
                 </span>
-                <Badge variant="success" size="sm">
+                <Badge variant="outline" size="sm">
                   Optimization
                 </Badge>
               </div>
@@ -736,7 +736,7 @@ const DesignSystemDocs: React.FC = () => {
             <Badge variant="primary" size="lg">
               TypeScript
             </Badge>
-            <Badge variant="success" size="lg">
+            <Badge variant="outline" size="lg">
               React 18
             </Badge>
             <Badge variant="warning" size="lg">

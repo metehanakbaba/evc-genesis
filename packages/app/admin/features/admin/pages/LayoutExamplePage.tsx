@@ -56,7 +56,7 @@ const LayoutExamplePage: React.FC = () => {
           <Badge variant="primary" size="lg">
             Type-safe
           </Badge>
-          <Badge variant="success" size="lg">
+          <Badge variant="outline" size="lg">
             Responsive
           </Badge>
           <Badge variant="warning" size="lg">
