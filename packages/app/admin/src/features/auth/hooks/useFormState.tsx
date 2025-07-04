@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useCallback, useState } from 'react';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
 
-// React 19 Ready: Enhanced form state interface  
+// React 19 Ready: Enhanced form state interface
 interface EnhancedFormState {
   success?: boolean;
   error?: string;
@@ -27,11 +28,11 @@ export const useCustomFormStatus = () => {
   });
 
   const setPending = useCallback((pending: boolean) => {
-    setStatus(prev => ({ ...prev, pending }));
+    setStatus((prev) => ({ ...prev, pending }));
   }, []);
 
   const setFormData = useCallback((data: FormData | null) => {
-    setStatus(prev => ({ ...prev, data }));
+    setStatus((prev) => ({ ...prev, data }));
   }, []);
 
   return {
@@ -51,90 +52,93 @@ export const useEnhancedAuthForm = () => {
   const { setPending } = useCustomFormStatus();
 
   // React 19 Ready: Form action handler
-  const formAction = useCallback(async (formData: FormData) => {
-    setPending(true);
-    
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  const formAction = useCallback(
+    async (formData: FormData) => {
+      setPending(true);
 
-    // Client-side validation
-    const validationErrors: Record<string, string> = {};
-    
-    if (!email) {
-      validationErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      validationErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!password) {
-      validationErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      validationErrors.password = 'Password must be at least 6 characters';
-    }
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-    if (Object.keys(validationErrors).length > 0) {
-      setFormState({
-        success: false,
-        error: 'Please fix the validation errors',
-        validationErrors,
-        lastSubmission: new Date(),
-        isPending: false,
-      });
-      setPending(false);
-      return;
-    }
+      // Client-side validation
+      const validationErrors: Record<string, string> = {};
 
-    try {
-      const result = await login({ email, password }).unwrap();
+      if (!email) {
+        validationErrors.email = 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        validationErrors.email = 'Please enter a valid email address';
+      }
 
-      if (result.success) {
-        dispatch(
-          loginSuccess({
-            user: result.data.user,
-            token: result.data.token,
-          }),
-        );
-        
-        showToast({
-          type: 'success',
-          title: 'Welcome back!',
-          message: 'Successfully signed in',
-        });
+      if (!password) {
+        validationErrors.password = 'Password is required';
+      } else if (password.length < 6) {
+        validationErrors.password = 'Password must be at least 6 characters';
+      }
 
-        setFormState({
-          success: true,
-          lastSubmission: new Date(),
-          isPending: false,
-        });
-
-        router.push('/');
-      } else {
+      if (Object.keys(validationErrors).length > 0) {
         setFormState({
           success: false,
-          error: 'Login failed. Please check your credentials.',
+          error: 'Please fix the validation errors',
+          validationErrors,
           lastSubmission: new Date(),
           isPending: false,
         });
+        setPending(false);
+        return;
       }
-    } catch (error) {
-      const errorMessage = getApiErrorMessage(error);
-      
-      showToast({
-        type: 'error',
-        title: 'Sign in failed',
-        message: errorMessage,
-      });
 
-      setFormState({
-        success: false,
-        error: errorMessage,
-        lastSubmission: new Date(),
-        isPending: false,
-      });
-    } finally {
-      setPending(false);
-    }
-  }, [login, dispatch, showToast, router, setPending]);
+      try {
+        const result = await login({ email, password }).unwrap();
+
+        if (result.success) {
+          dispatch(
+            loginSuccess({
+              user: result.data.user,
+              token: result.data.token,
+            }),
+          );
+
+          showToast({
+            type: 'success',
+            title: 'Welcome back!',
+            message: 'Successfully signed in',
+          });
+
+          setFormState({
+            success: true,
+            lastSubmission: new Date(),
+            isPending: false,
+          });
+
+          router.push('/');
+        } else {
+          setFormState({
+            success: false,
+            error: 'Login failed. Please check your credentials.',
+            lastSubmission: new Date(),
+            isPending: false,
+          });
+        }
+      } catch (error) {
+        const errorMessage = getApiErrorMessage(error);
+
+        showToast({
+          type: 'error',
+          title: 'Sign in failed',
+          message: errorMessage,
+        });
+
+        setFormState({
+          success: false,
+          error: errorMessage,
+          lastSubmission: new Date(),
+          isPending: false,
+        });
+      } finally {
+        setPending(false);
+      }
+    },
+    [login, dispatch, showToast, router, setPending],
+  );
 
   return {
     formState,
@@ -144,7 +148,9 @@ export const useEnhancedAuthForm = () => {
 };
 
 // React 19 Ready: Form status component
-export const FormStatusIndicator: React.FC<{ isPending: boolean }> = ({ isPending }) => {
+export const FormStatusIndicator: React.FC<{ isPending: boolean }> = ({
+  isPending,
+}) => {
   if (!isPending) return null;
 
   return (
@@ -166,7 +172,7 @@ export const FieldValidation: React.FC<FieldValidationProps> = ({
   formState,
 }) => {
   const error = formState?.validationErrors?.[fieldName];
-  
+
   if (!error) return null;
 
   return (
@@ -175,4 +181,4 @@ export const FieldValidation: React.FC<FieldValidationProps> = ({
       {error}
     </div>
   );
-}; 
+};

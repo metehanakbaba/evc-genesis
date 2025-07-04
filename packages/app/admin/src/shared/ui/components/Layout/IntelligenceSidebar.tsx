@@ -1,7 +1,7 @@
-import React from 'react';
-import { XMarkIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import { IntelligenceSection } from '@/features/admin/components/Intelligence';
+import { SparklesIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
 import { AIInsightsWidget } from '@/features/admin/components/AIInsights';
+import { IntelligenceSection } from '@/features/admin/components/Intelligence';
 
 export interface IntelligenceSidebarProps {
   /** Sidebar open state */
@@ -46,11 +46,13 @@ export const IntelligenceSidebar: React.FC<IntelligenceSidebarProps> = ({
               <SparklesIcon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Intelligence Center</h2>
+              <h2 className="text-lg font-bold text-white">
+                Intelligence Center
+              </h2>
               <p className="text-xs text-gray-400">AI-Powered Insights</p>
             </div>
           </div>
-          
+
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors duration-200"
@@ -75,9 +77,12 @@ export const IntelligenceSidebar: React.FC<IntelligenceSidebarProps> = ({
         {/* Background Effects */}
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-2xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+          />
         </div>
       </div>
     </>
   );
-}; 
+};

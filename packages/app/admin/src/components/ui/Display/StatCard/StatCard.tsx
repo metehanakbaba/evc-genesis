@@ -1,6 +1,6 @@
 import type React from 'react';
-import type { ComponentSize } from '../../../theme/theme.config';
 import { cn } from '@/shared/utils/cn';
+import type { ComponentSize } from '../../../../lib/theme.config';
 
 export interface StatCardProps {
   /** Stat title */

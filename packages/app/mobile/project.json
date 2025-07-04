@@ -1,49 +1,49 @@
 {
-  "name": "mobile-clean",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "mobile-packages",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/mobile-clean",
+  "sourceRoot": "packages/app/mobile",
   "targets": {
     "start": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     },
     "android": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --android",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     },
     "ios": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --ios",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     },
     "web": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --web",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo build",
-        "cwd": "apps/mobile-clean"
+        "cwd": "packages/app/mobile"
       }
     }
   },

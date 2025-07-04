@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { cn } from '../../../utils/cn';
+import React, { type ReactNode } from 'react';
+import { cn } from '../../../shared/utils/cn';
 
 /**
  * Grid Item Component Props
@@ -13,7 +13,7 @@ export interface GridItemProps {
   readonly lgSpan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   readonly variant?: 'default' | 'glass' | 'solid' | 'minimal' | 'floating';
   readonly padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  readonly as?: keyof JSX.IntrinsicElements;
+  readonly as?: React.ElementType;
   readonly colorAccent?:
     | 'blue'
     | 'purple'
@@ -193,11 +193,12 @@ export const GridItem: React.FC<GridItemProps> = ({
   lgSpan,
   variant = 'glass',
   padding = 'md',
-  as: Component = 'section',
+  as = 'section',
   colorAccent = 'neutral',
   showAccent = false,
   animationDelay = 0,
 }) => {
+  const Component = as as React.ElementType;
   const colorAccentStyles = colorAccentMap[colorAccent];
   const isFloating = variant === 'floating';
   const isMinimal = variant === 'minimal';

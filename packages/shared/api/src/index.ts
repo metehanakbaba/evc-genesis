@@ -19,9 +19,10 @@ export * from './lib/platform/mobile.adapter';
 
 // 🔗 API Endpoints (correct file names)
 export * from './lib/endpoints/auth.endpoints';
-export * from './lib/endpoints/stations.endpoints';
-export * from './lib/endpoints/users.endpoints';
-export * from './lib/endpoints/wallet.endpoints'; // Fixed: wallet not wallets
+// TODO: Fix missing types in these endpoints
+// export * from './lib/endpoints/stations.endpoints';
+// export * from './lib/endpoints/users.endpoints';
+// export * from './lib/endpoints/wallet.endpoints'; // Fixed: wallet not wallets
 
 // 🎯 Easy-to-use Functions
 export {
@@ -43,10 +44,10 @@ export {
   mobileApiHelpers,
 } from './lib/platform/mobile.adapter';
 
-// 📊 Helper Functions & Types
-export * from './lib/types';
+// 📊 Helper Functions & Types (deprecated - use schema-adapter instead)
+// export * from './lib/types';
 
-// 📋 All Types (from schema-adapter)
+// 📋 All Types (from schema-adapter) - PRIMARY SOURCE
 export * from './lib/schema-adapter';
 
 // 🔧 Development Utilities (only in development)

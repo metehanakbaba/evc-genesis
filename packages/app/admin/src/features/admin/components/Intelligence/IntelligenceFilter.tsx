@@ -1,6 +1,6 @@
-import React from 'react';
-import { FunnelIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
+import React from 'react';
 import type { IntelligenceFilterProps } from './types';
 
 /**

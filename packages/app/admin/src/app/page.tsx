@@ -1,15 +1,15 @@
 'use client';
 
+import { BoltIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import {
-  RevolutionaryStatCard,
   CoreManagementSection,
-  LiveOperationsSection,
   DeveloperToolsSection,
+  LiveOperationsSection,
+  RevolutionaryStatCard,
 } from '@/features/admin/components';
 import { useDashboardData } from '@/features/admin/hooks/useDashboardData';
 import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
-import { BoltIcon } from '@heroicons/react/24/outline';
 
 /**
  * Revolutionary Admin Dashboard - Main Page (Root Path)
@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
   } = useDashboardData();
 
   return (
-    <MainLayout 
+    <MainLayout
       showNotifications={true}
       notificationCount={3}
       headerVariant="default"
@@ -74,4 +74,4 @@ export default function AdminDashboardPage() {
       </div>
     </MainLayout>
   );
-} 
+}

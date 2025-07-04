@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 /**
  * ScrollToTop component - automatically scrolls to top on route changes

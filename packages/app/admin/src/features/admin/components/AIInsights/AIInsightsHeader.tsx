@@ -1,5 +1,5 @@
+import { ArrowPathIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import React from 'react';
-import { SparklesIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import type { AIInsightsHeaderProps } from './types';
 
 /**

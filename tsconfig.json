@@ -4,25 +4,22 @@
   "files": [],
   "references": [
     {
-      "path": "./shared-api"
-    },
-    {
-      "path": "./shared-types"
-    },
-    {
-      "path": "./shared-store"
-    },
-    {
-      "path": "./design-tokens"
-    },
-    {
-      "path": "./shared-utils"
-    },
-    {
       "path": "./apps-e2e"
     },
     {
-      "path": "./shared-ui"
+      "path": "./packages/app/admin"
+    },
+    {
+      "path": "./packages/shared/store"
+    },
+    {
+      "path": "./packages/shared/types"
+    },
+    {
+      "path": "./packages/shared/utils"
+    },
+    {
+      "path": "./packages/shared/api"
     }
   ]
 }

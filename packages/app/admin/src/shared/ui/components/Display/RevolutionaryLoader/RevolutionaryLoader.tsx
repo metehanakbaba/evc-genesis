@@ -1,5 +1,5 @@
 import type React from 'react';
-import { memo, useState, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import RevolutionaryLoadingVisual from '../RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
 
 /**

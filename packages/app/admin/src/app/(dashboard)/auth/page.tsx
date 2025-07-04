@@ -1,11 +1,11 @@
-import React from 'react';
-import Link from 'next/link';
-import { 
-  LockClosedIcon, 
-  ArrowRightOnRectangleIcon, 
-  DocumentTextIcon, 
-  ShieldCheckIcon 
+import {
+  ArrowRightOnRectangleIcon,
+  DocumentTextIcon,
+  LockClosedIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import React from 'react';
 
 export default function AuthPage() {
   return (
@@ -50,9 +50,7 @@ export default function AuthPage() {
           <h3 className="text-xl font-semibold text-white mb-2">
             Registration
           </h3>
-          <p className="text-gray-400">
-            Create new admin accounts
-          </p>
+          <p className="text-gray-400">Create new admin accounts</p>
         </Link>
 
         <Link
@@ -65,9 +63,7 @@ export default function AuthPage() {
           <h3 className="text-xl font-semibold text-white mb-2">
             Security Settings
           </h3>
-          <p className="text-gray-400">
-            2FA, password policies, sessions
-          </p>
+          <p className="text-gray-400">2FA, password policies, sessions</p>
         </Link>
       </div>
 
@@ -77,7 +73,7 @@ export default function AuthPage() {
           { label: 'Active Sessions', value: '23', change: '+3' },
           { label: 'Failed Logins', value: '0', change: '0%' },
           { label: 'Admin Users', value: '5', change: '+1' },
-          { label: 'Security Score', value: '98%', change: '+2%' }
+          { label: 'Security Score', value: '98%', change: '+2%' },
         ].map((stat, index) => (
           <div key={index} className="glass-card p-4">
             <div className="text-sm text-gray-400">{stat.label}</div>
@@ -98,4 +94,4 @@ export default function AuthPage() {
       </div>
     </div>
   );
-} 
+}

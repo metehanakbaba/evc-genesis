@@ -1,7 +1,5 @@
 import type React from 'react';
 import { createContext, useCallback, useContext, useState } from 'react';
-import type { ToastProps } from './Toast';
-import { Toast } from './Toast';
 
 export interface ToastData {
   readonly type: 'success' | 'error' | 'warning' | 'info';
@@ -40,7 +38,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     // React 19: Using Context directly instead of Context.Provider!
     <ToastContext value={{ showToast }}>
       {children}
-      
+
       {/* Toast container */}
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {toasts.map((toast, index) => (
@@ -55,7 +53,9 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
             `}
           >
             <div className="font-medium">{toast.title}</div>
-            {toast.message && <div className="text-sm opacity-90">{toast.message}</div>}
+            {toast.message && (
+              <div className="text-sm opacity-90">{toast.message}</div>
+            )}
           </div>
         ))}
       </div>
@@ -68,50 +68,50 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
  */
 export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
-  
+
   if (context === undefined) {
     throw new Error('useToast must be used within a ToastProvider');
   }
-  
+
   return context;
 };
 
 // Helper functions for common toast types
 export const toast = {
   success: (title: string, message?: string, duration?: number) => {
-    const data: ToastData = { 
-      type: 'success', 
+    const data: ToastData = {
+      type: 'success',
       title,
       ...(message && { message }),
-      ...(duration && { duration })
+      ...(duration && { duration }),
     };
     // Note: These should be called within a component that has access to useToast
     return data;
   },
   error: (title: string, message?: string, duration?: number) => {
-    const data: ToastData = { 
-      type: 'error', 
+    const data: ToastData = {
+      type: 'error',
       title,
       ...(message && { message }),
-      ...(duration && { duration })
+      ...(duration && { duration }),
     };
     return data;
   },
   warning: (title: string, message?: string, duration?: number) => {
-    const data: ToastData = { 
-      type: 'warning', 
+    const data: ToastData = {
+      type: 'warning',
       title,
       ...(message && { message }),
-      ...(duration && { duration })
+      ...(duration && { duration }),
     };
     return data;
   },
   info: (title: string, message?: string, duration?: number) => {
-    const data: ToastData = { 
-      type: 'info', 
+    const data: ToastData = {
+      type: 'info',
       title,
       ...(message && { message }),
-      ...(duration && { duration })
+      ...(duration && { duration }),
     };
     return data;
   },

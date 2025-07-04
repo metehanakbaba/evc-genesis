@@ -1,6 +1,16 @@
 'use client';
 
-import React from 'react';
+import {
+  BellIcon,
+  XMarkIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  WrenchScrewdriverIcon,
+  InboxIcon
+} from '@heroicons/react/24/outline';
+import type React from 'react';
 
 export interface NotificationSidebarProps {
   /** Sidebar open state */
@@ -18,7 +28,6 @@ interface Notification {
   time: string;
   type: 'success' | 'warning' | 'error' | 'info' | 'alert';
   isRead: boolean;
-  icon: string;
 }
 
 // Mock notifications data
@@ -30,7 +39,6 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     time: '2 minutes ago',
     type: 'success',
     isRead: false,
-    icon: '🟢'
   },
   {
     id: 2,
@@ -39,16 +47,15 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     time: '15 minutes ago',
     type: 'warning',
     isRead: false,
-    icon: '⚠️'
   },
   {
     id: 3,
     title: 'System Update',
-    message: 'Firmware update v2.1.0 completed successfully across all stations',
+    message:
+      'Firmware update v2.1.0 completed successfully across all stations',
     time: '1 hour ago',
     type: 'info',
     isRead: true,
-    icon: 'ℹ️'
   },
   {
     id: 4,
@@ -57,7 +64,6 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     time: '2 hours ago',
     type: 'alert',
     isRead: false,
-    icon: '🔧'
   },
   {
     id: 5,
@@ -66,33 +72,46 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     time: '3 hours ago',
     type: 'success',
     isRead: true,
-    icon: '💰'
-  }
+  },
 ];
 
-const getNotificationIcon = (type: string): string => {
+const getNotificationIcon = (type: Notification['type']) => {
   switch (type) {
-    case 'success': return '✅';
-    case 'warning': return '⚠️';
-    case 'error': return '❌';
-    case 'info': return 'ℹ️';
-    case 'alert': return '🔔';
-    default: return '📢';
+    case 'success':
+      return <CheckCircleIcon className="w-5 h-5 text-green-400" />;
+    case 'warning':
+      return <ExclamationTriangleIcon className="w-5 h-5 text-yellow-400" />;
+    case 'error':
+      return <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />;
+    case 'info':
+      return <InformationCircleIcon className="w-5 h-5 text-blue-400" />;
+    case 'alert':
+      return <WrenchScrewdriverIcon className="w-5 h-5 text-purple-400" />;
+    default:
+      return <BellIcon className="w-5 h-5 text-gray-400" />;
   }
 };
 
+
+
 const getNotificationBgColor = (type: string, isRead: boolean): string => {
-  const baseClasses = isRead 
-    ? 'bg-gray-800/30 border-gray-700/30' 
+  const baseClasses = isRead
+    ? 'bg-gray-800/30 border-gray-700/30'
     : 'bg-gray-800/50 border-gray-700/50';
-  
+
   switch (type) {
-    case 'success': return `${baseClasses} hover:bg-green-500/5`;
-    case 'warning': return `${baseClasses} hover:bg-yellow-500/5`;
-    case 'error': return `${baseClasses} hover:bg-red-500/5`;
-    case 'info': return `${baseClasses} hover:bg-blue-500/5`;
-    case 'alert': return `${baseClasses} hover:bg-purple-500/5`;
-    default: return baseClasses;
+    case 'success':
+      return `${baseClasses} hover:bg-green-500/5`;
+    case 'warning':
+      return `${baseClasses} hover:bg-yellow-500/5`;
+    case 'error':
+      return `${baseClasses} hover:bg-red-500/5`;
+    case 'info':
+      return `${baseClasses} hover:bg-blue-500/5`;
+    case 'alert':
+      return `${baseClasses} hover:bg-purple-500/5`;
+    default:
+      return baseClasses;
   }
 };
 
@@ -129,7 +148,7 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <span className="text-2xl">🔔</span>
+                <BellIcon className="w-6 h-6 text-gray-300" />
                 {notificationCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
                     {notificationCount}
@@ -137,15 +156,20 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
                 )}
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-white">Notifications</h2>
-                <p className="text-sm text-gray-400">{MOCK_NOTIFICATIONS.filter(n => !n.isRead).length} new notifications</p>
+                <h2 className="text-lg font-semibold text-white">
+                  Notifications
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {MOCK_NOTIFICATIONS.filter((n) => !n.isRead).length} new
+                  notifications
+                </p>
               </div>
             </div>
             <button
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-700/50"
             >
-              <span className="text-xl">✕</span>
+              <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -164,24 +188,28 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
             >
               <div className="flex items-start space-x-3">
                 <div className="flex-shrink-0 mt-1">
-                  <span className="text-lg">{notification.icon}</span>
+                  {getNotificationIcon(notification.type)}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className={`text-sm font-medium truncate ${notification.isRead ? 'text-gray-400' : 'text-white'}`}>
+                    <h3
+                      className={`text-sm font-medium truncate ${notification.isRead ? 'text-gray-400' : 'text-white'}`}
+                    >
                       {notification.title}
                     </h3>
                     <div className="flex items-center space-x-2 text-xs text-gray-500">
-                      <span>🕐</span>
+                      <ClockIcon className="w-3 h-3" />
                       <span>{notification.time}</span>
                     </div>
                   </div>
-                  
-                  <p className={`text-sm leading-relaxed ${notification.isRead ? 'text-gray-500' : 'text-gray-300'}`}>
+
+                  <p
+                    className={`text-sm leading-relaxed ${notification.isRead ? 'text-gray-500' : 'text-gray-300'}`}
+                  >
                     {notification.message}
                   </p>
-                  
+
                   {!notification.isRead && (
                     <div className="mt-3 flex items-center justify-between">
                       <button className="text-xs text-blue-400 hover:text-blue-300 font-medium">
@@ -197,9 +225,11 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
 
           {MOCK_NOTIFICATIONS.length === 0 && (
             <div className="text-center py-12">
-              <span className="text-6xl mb-4 block opacity-50">📭</span>
+              <InboxIcon className="w-16 h-16 mx-auto mb-4 text-gray-500 opacity-50" />
               <p className="text-gray-400 text-lg">No notifications</p>
-              <p className="text-gray-500 text-sm mt-2">You're all caught up!</p>
+              <p className="text-gray-500 text-sm mt-2">
+                You're all caught up!
+              </p>
             </div>
           )}
         </div>
@@ -220,4 +250,4 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
   );
 };
 
-export default NotificationSidebar; 
+export default NotificationSidebar;

@@ -1,24 +1,19 @@
+import {
+  Squares2X2Icon,
+} from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import {
+  Badge,
+  Button,
+  Checkbox,
   Container,
   Grid,
-  GridItem,
-  SectionHeader,
-  Button,
-  Input,
-  Select,
-  Checkbox,
-  Badge,
   GridGap,
+  GridItem,
+  Input,
+  SectionHeader,
+  Select,
 } from '../../../shared/ui';
-import {
-  CursorArrowRaysIcon,
-  DocumentTextIcon,
-  AdjustmentsHorizontalIcon,
-  Squares2X2Icon,
-  ChartBarIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
 
 /**
  * Example Page using the new Layout Components
@@ -72,7 +67,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Button Components"
             description="Interactive elements with multiple variants"
-            
           />
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
@@ -90,7 +84,7 @@ const LayoutExamplePage: React.FC = () => {
               </Button>
             </div>
             <div className="space-y-2">
-              <Button variant="primary"  className="w-full">
+              <Button variant="primary" className="w-full">
                 Outline Primary
               </Button>
               <Button variant="ghost" className="w-full">
@@ -105,7 +99,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Form Elements"
             description="Input fields and controls"
-            
           />
           <div className="space-y-4">
             <Input
@@ -130,9 +123,9 @@ const LayoutExamplePage: React.FC = () => {
               placeholder="Choose category..."
               options={categoryOptions}
               value={formData.category}
-                              onChange={(value) =>
+              onChange={(value) =>
                 setFormData({ ...formData, category: value || '' })
-                }
+              }
             />
             <Checkbox
               label="Subscribe to newsletter"
@@ -149,7 +142,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Settings"
             description="App configuration options"
-            
           />
           <div className="space-y-4">
             <div className="bg-gray-700/30 rounded-lg p-4 border border-gray-600/50">
@@ -182,7 +174,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Component Statistics"
             description="Overview of the layout system capabilities"
-            
             size="lg"
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
@@ -212,7 +203,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Usage Example"
             description="How to use the layout components"
-            
           />
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
             <pre className="text-sm text-gray-300 overflow-auto">
@@ -238,7 +228,6 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Form State"
             description="Current form values"
-            
             size="sm"
           />
           <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/30">

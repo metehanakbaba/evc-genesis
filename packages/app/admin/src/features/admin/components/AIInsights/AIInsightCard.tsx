@@ -1,10 +1,10 @@
-import React from 'react';
 import {
-  ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
+import React from 'react';
+import { INSIGHT_BORDERS, INSIGHT_COLORS, INSIGHT_ICONS } from './constants';
 import type { AIInsightCardProps } from './types';
-import { INSIGHT_ICONS, INSIGHT_COLORS, INSIGHT_BORDERS } from './constants';
 
 /**
  * Individual AI insight card component

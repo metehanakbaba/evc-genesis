@@ -1,12 +1,12 @@
-import React from 'react';
-import { 
-  XMarkIcon, 
-  BellIcon, 
-  ExclamationTriangleIcon,
+import {
+  BellIcon,
   CheckCircleIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
   InformationCircleIcon,
-  ClockIcon
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
+import type React from 'react';
 
 export interface NotificationSidebarProps {
   /** Sidebar open state */
@@ -85,7 +85,10 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
     }
   };
 
-  const getNotificationBgColor = (type: Notification['type'], isRead: boolean) => {
+  const getNotificationBgColor = (
+    type: Notification['type'],
+    isRead: boolean,
+  ) => {
     const opacity = isRead ? '10' : '20';
     switch (type) {
       case 'success':
@@ -105,13 +108,13 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
     const minutes = Math.floor(diff / 60000);
-    
+
     if (minutes < 1) return 'Just now';
     if (minutes < 60) return `${minutes}m ago`;
-    
+
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `${hours}h ago`;
-    
+
     const days = Math.floor(hours / 24);
     return `${days}d ago`;
   };
@@ -150,10 +153,12 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Notifications</h2>
-              <p className="text-xs text-gray-400">{notificationCount} unread</p>
+              <p className="text-xs text-gray-400">
+                {notificationCount} unread
+              </p>
             </div>
           </div>
-          
+
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors duration-200"
@@ -178,7 +183,7 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
                 <div className="flex-shrink-0 mt-0.5">
                   {getNotificationIcon(notification.type)}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-white">
@@ -188,11 +193,11 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
                       <div className="w-2 h-2 bg-blue-400 rounded-full" />
                     )}
                   </div>
-                  
+
                   <p className="text-sm text-gray-300 mt-1">
                     {notification.message}
                   </p>
-                  
+
                   <div className="flex items-center mt-2 text-xs text-gray-400">
                     <ClockIcon className="w-3 h-3 mr-1" />
                     {formatTime(notification.timestamp)}
@@ -206,9 +211,12 @@ export const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
         {/* Background Effects */}
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div
+            className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-2xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+          />
         </div>
       </div>
     </>
   );
-}; 
+};

@@ -1,14 +1,14 @@
-import React from 'react';
-import { useMemo } from 'react';
 import {
-  BoltIcon,
-  UserGroupIcon,
-  CreditCardIcon,
   BanknotesIcon,
-  Squares2X2Icon,
+  BoltIcon,
+  CreditCardIcon,
   DocumentTextIcon,
   RectangleStackIcon,
+  Squares2X2Icon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useMemo } from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components/RevolutionaryStationIcon';
 
 interface NetworkStat {
@@ -69,7 +69,10 @@ interface DashboardData {
  */
 export const useDashboardData = (): DashboardData => {
   const isDeveloperMode = useMemo(
-    () => process.env.NODE_ENV === 'development' || (typeof window !== 'undefined' && localStorage.getItem('devMode') === 'true'),
+    () =>
+      process.env.NODE_ENV === 'development' ||
+      (typeof window !== 'undefined' &&
+        localStorage.getItem('devMode') === 'true'),
     [],
   );
 

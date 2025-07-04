@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { cn } from '../../../utils/cn';
+import React, { type ReactNode } from 'react';
+import { cn } from '../../../shared/utils/cn';
 
 /**
  * Container Component Props
@@ -12,7 +12,7 @@ export interface ContainerProps {
   readonly withBackground?: boolean;
   readonly withOrbs?: boolean;
   readonly centered?: boolean;
-  readonly as?: keyof JSX.IntrinsicElements;
+  readonly as?: React.ElementType;
 }
 
 /**
@@ -87,8 +87,9 @@ export const Container: React.FC<ContainerProps> = ({
   withBackground = true,
   withOrbs = false,
   centered = true,
-  as: Component = 'div',
+  as = 'div',
 }) => {
+  const Component = as as React.ElementType;
   const containerClasses = cn(
     // Base layout
     withBackground &&

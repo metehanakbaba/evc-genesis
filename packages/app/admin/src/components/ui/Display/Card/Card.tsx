@@ -1,5 +1,5 @@
-import type React from 'react';
 import { clsx } from 'clsx';
+import type React from 'react';
 
 export interface CardProps {
   /** Revolutionary card variant */

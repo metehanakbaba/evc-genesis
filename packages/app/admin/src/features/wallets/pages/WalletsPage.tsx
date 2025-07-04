@@ -1,41 +1,38 @@
 'use client';
 
-import type React from 'react';
-import { useState, useEffect } from 'react';
-import { AppHeader } from '@ui/layout';
-import { Button, Input } from '@ui/forms';
-import { Modal } from '@ui/display';
-import { useRouter } from 'next/navigation';
 import {
-  BanknotesIcon,
-  CreditCardIcon,
   ArrowDownTrayIcon,
+  ArrowPathIcon,
+  ArrowTrendingUpIcon,
   ArrowUpIcon,
+  BanknotesIcon,
+  BoltIcon,
   ChartBarIcon,
-  HomeIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  ViewColumnsIcon,
-  TableCellsIcon,
   CheckCircleIcon,
-  XCircleIcon,
+  ChevronRightIcon,
   ClockIcon,
   EyeIcon,
-  ArrowPathIcon,
-  PlusIcon,
-  CalendarIcon,
-  ArrowTrendingUpIcon,
-  WalletIcon,
-  ReceiptRefundIcon,
-  BoltIcon,
   FunnelIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+  ReceiptRefundIcon,
+  TableCellsIcon,
+  ViewColumnsIcon,
+  WalletIcon,
+  XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { Modal } from '@ui/display';
+import { Button, Input } from '@ui/forms';
+import { AppHeader } from '@ui/layout';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useState } from 'react';
 import type {
   PLNTransaction,
-  TransactionType,
   TransactionStatus,
-  WalletBalance,
+  TransactionType,
 } from '../types/wallet.types';
 
 // Type for icon components - fixed for Heroicons
@@ -126,6 +123,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
             onClick={onClearFilters}
             className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300"
           >
+            <XMarkIcon className="w-4 h-4 mr-2" />
             Clear All
           </Button>
           <Button
@@ -696,6 +694,7 @@ const WalletsPage: React.FC = () => {
                   onClick={handleClearFilters}
                   className="text-gray-400 hover:text-white text-sm"
                 >
+                  <XMarkIcon className="w-3 h-3 mr-1" />
                   Clear all
                 </Button>
               </div>
@@ -979,6 +978,7 @@ const WalletsPage: React.FC = () => {
                 onClick={handleClearFilters}
                 className="bg-teal-600 hover:bg-teal-500 text-white"
               >
+                <XMarkIcon className="w-4 h-4 mr-2" />
                 Clear Filters
               </Button>
             </div>

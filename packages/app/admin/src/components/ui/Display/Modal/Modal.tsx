@@ -5,9 +5,9 @@ import {
   DialogTitle,
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
 import type React from 'react';
 import { Button } from '../../Forms/Button/Button';
-import clsx from 'clsx';
 
 export interface ModalProps {
   /** Open state */
@@ -258,19 +258,28 @@ export const ModalFooter = {
     actionLoading?: boolean;
     actionDisabled?: boolean;
     variant?: 'primary' | 'success' | 'warning' | 'danger';
-  }) => (
-    <div className="flex justify-end gap-4">
-      <Button variant="secondary" onClick={onCancel}>
-        {cancelText}
-      </Button>
-      <Button
-        variant={variant}
-        onClick={onAction}
-        loading={actionLoading}
-        disabled={actionDisabled}
-      >
-        {actionText}
-      </Button>
-    </div>
-  ),
+  }) => {
+    // Map modal variants to button variants
+    const buttonVariant: 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' = 
+      variant === 'danger' ? 'destructive' :
+      variant === 'success' ? 'primary' :
+      variant === 'warning' ? 'outline' :
+      'primary'; // default fallback
+
+    return (
+      <div className="flex justify-end gap-4">
+        <Button variant="secondary" onClick={onCancel}>
+          {cancelText}
+        </Button>
+        <Button
+          variant={buttonVariant}
+          onClick={onAction}
+          loading={actionLoading}
+          disabled={actionDisabled}
+        >
+          {actionText}
+        </Button>
+      </div>
+    );
+  },
 };

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../utils/cn';
 
 /**
@@ -82,7 +82,7 @@ const variantMap = {
  * <SectionHeader
  *   title="Button Components"
  *   description="Interactive elements for user actions"
- *   
+ *
  *   size="lg"
  *   variant="primary"
  * />

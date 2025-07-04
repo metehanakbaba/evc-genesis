@@ -1,6 +1,7 @@
-import React, { Suspense, use } from 'react'; // React 19: use hook!
-import { LoginForm } from '../components/LoginForm';
 import { MainLayout } from '@ui/layout';
+import type React from 'react'; // React 19: use hook!
+import { Suspense, use } from 'react';
+import { LoginForm } from '../components/LoginForm';
 
 // React 19: Example of use() hook with promise
 const themePromise = Promise.resolve({
@@ -12,7 +13,7 @@ const themePromise = Promise.resolve({
 const ThemeInfo: React.FC = () => {
   // React 19: use() hook can consume promises directly!
   const themeData = use(themePromise);
-  
+
   return (
     <div className="text-xs text-gray-500/60 text-center">
       {themeData.name} v{themeData.version} • {themeData.theme}
@@ -22,7 +23,7 @@ const ThemeInfo: React.FC = () => {
 
 export const LoginPage: React.FC = () => {
   return (
-    <MainLayout 
+    <MainLayout
       showHeader={false}
       showFooter={false}
       showFloatingOrbs={false}
@@ -37,23 +38,27 @@ export const LoginPage: React.FC = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-lg" />
             </div>
             <h1 className="text-2xl font-bold text-white">EV Charging Admin</h1>
-            <p className="text-gray-400">Revolutionary access to your dashboard</p>
+            <p className="text-gray-400">
+              Revolutionary access to your dashboard
+            </p>
           </div>
-          
+
           {/* Login Form using React 19 features */}
           <div className="bg-gray-800/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 shadow-2xl">
             <LoginForm />
           </div>
-          
+
           {/* React 19: use() hook example with Suspense */}
-          <Suspense fallback={
-            <div className="text-xs text-gray-500/40 text-center animate-pulse">
-              Loading theme info...
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="text-xs text-gray-500/40 text-center animate-pulse">
+                Loading theme info...
+              </div>
+            }
+          >
             <ThemeInfo />
           </Suspense>
-          
+
           {/* Footer info */}
           <div className="text-center text-xs text-gray-500/40">
             React 19.1.0 • useActionState • use() hook • Direct refs

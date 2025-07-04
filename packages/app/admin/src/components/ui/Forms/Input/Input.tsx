@@ -1,17 +1,15 @@
-import React, { useState, useCallback } from 'react';
 import {
   Description,
   Field,
-  Input as HeadlessInput,
   Label,
 } from '@headlessui/react';
-import { clsx } from 'clsx';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { clsx } from 'clsx';
+import React, { useCallback, useState } from 'react';
 import {
-  getComponentSize,
-  componentTokens,
   type ComponentSize,
-} from '../../../theme/theme.config';
+  getComponentSize,
+} from '../../../../lib/theme.config';
 
 interface InputProps {
   label?: string;
@@ -95,9 +93,6 @@ const Input: React.FC<InputProps> = ({
   // Get size classes from design tokens
   const sizeClasses = getComponentSize('input', size);
 
-  // Get base classes from design tokens
-  const baseClasses = componentTokens.input.base.default;
-
   // Modern dark theme input classes
   const inputClasses = clsx(
     'w-full rounded-lg border text-white placeholder-gray-400 transition-all duration-200',
@@ -162,22 +157,22 @@ const Input: React.FC<InputProps> = ({
         </div>
       )}
 
-             {/* Password toggle button */}
-       {showPasswordToggle && type === 'password' && (
-         <button
-           type="button"
-           onClick={handleTogglePassword}
-           className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-gray-400/70 hover:text-gray-300 transition-colors"
-         >
-           {showPassword ? (
-             // @ts-ignore React 19 compatibility
-             <EyeSlashIcon className="h-5 w-5" />
-           ) : (
-             // @ts-ignore React 19 compatibility
-             <EyeIcon className="h-5 w-5" />
-           )}
-         </button>
-       )}
+      {/* Password toggle button */}
+      {showPasswordToggle && type === 'password' && (
+        <button
+          type="button"
+          onClick={handleTogglePassword}
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-gray-400/70 hover:text-gray-300 transition-colors"
+        >
+          {showPassword ? (
+            // @ts-ignore React 19 compatibility
+            <EyeSlashIcon className="h-5 w-5" />
+          ) : (
+            // @ts-ignore React 19 compatibility
+            <EyeIcon className="h-5 w-5" />
+          )}
+        </button>
+      )}
 
       {/* Subtle focus overlay */}
       <div

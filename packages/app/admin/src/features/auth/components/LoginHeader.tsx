@@ -1,6 +1,6 @@
+
 import type React from 'react';
 import { memo } from 'react';
-import { BoltIcon } from '@heroicons/react/24/outline';
 import { RevolutionaryStationIcon } from '@/features/admin/components';
 import type { LoginHeaderProps } from '../types/auth.types';
 

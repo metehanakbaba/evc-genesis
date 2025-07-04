@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 export default function DashboardLayout({
   children,
@@ -19,10 +19,8 @@ export default function DashboardLayout({
           </div>
         </div>
       </header>
-      
-      <main className="max-w-7xl mx-auto p-6">
-        {children}
-      </main>
+
+      <main className="max-w-7xl mx-auto p-6">{children}</main>
     </div>
   );
-} 
+}

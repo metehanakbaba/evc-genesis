@@ -5,8 +5,7 @@
 
 // Error Handling
 export { ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
-
+export type { ToastProps } from './Toast/Toast';
 // Notifications
 export { Toast } from './Toast/Toast';
-export type { ToastProps } from './Toast/Toast';
-export { ToastProvider, useToast, toast } from './Toast/ToastContext';
+export { ToastProvider, toast, useToast } from './Toast/ToastContext';

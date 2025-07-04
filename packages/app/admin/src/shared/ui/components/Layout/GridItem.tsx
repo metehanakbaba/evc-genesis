@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../utils/cn';
 
 /**
@@ -13,7 +13,7 @@ export interface GridItemProps {
   readonly lgSpan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   readonly variant?: 'default' | 'glass' | 'solid' | 'minimal' | 'floating';
   readonly padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  readonly as?: keyof JSX.IntrinsicElements;
+  readonly as?: React.ElementType;
   readonly colorAccent?:
     | 'blue'
     | 'purple'
@@ -223,8 +223,10 @@ export const GridItem: React.FC<GridItemProps> = ({
     className,
   );
 
+  const ElementComponent = Component as React.ElementType;
+
   return (
-    <Component
+    <ElementComponent
       id={id}
       className={gridItemClasses}
       style={
@@ -249,7 +251,7 @@ export const GridItem: React.FC<GridItemProps> = ({
       {isFloating && (
         <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 bg-gradient-to-br from-white/3 to-transparent transition-opacity duration-500 pointer-events-none" />
       )}
-    </Component>
+    </ElementComponent>
   );
 };
 

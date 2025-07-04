@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useActionState } from 'react'; // React 19: New hook!
+import { useActionState, useCallback } from 'react'; // React 19: New hook!
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
@@ -14,10 +13,7 @@ interface LoginState {
   pending?: boolean;
 }
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+
 
 export const useAuthForm = () => {
   const navigate = useNavigate();
@@ -27,7 +23,10 @@ export const useAuthForm = () => {
 
   // React 19: useActionState replaces complex state management!
   const [state, submitAction, isPending] = useActionState(
-    async (previousState: LoginState | null, formData: FormData): Promise<LoginState> => {
+    async (
+      previousState: LoginState | null,
+      formData: FormData,
+    ): Promise<LoginState> => {
       try {
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
@@ -35,7 +34,7 @@ export const useAuthForm = () => {
         if (!email || !password) {
           return {
             success: false,
-            error: 'Please fill in all fields'
+            error: 'Please fill in all fields',
           };
         }
 
@@ -44,7 +43,7 @@ export const useAuthForm = () => {
         if (!emailRegex.test(email)) {
           return {
             success: false,
-            error: 'Please enter a valid email address'
+            error: 'Please enter a valid email address',
           };
         }
 
@@ -58,7 +57,7 @@ export const useAuthForm = () => {
               token: result.data.token,
             }),
           );
-          
+
           showToast({
             type: 'success',
             title: 'Welcome back!',
@@ -69,18 +68,17 @@ export const useAuthForm = () => {
           navigate('/');
 
           return {
-            success: true
+            success: true,
           };
         }
 
         return {
           success: false,
-          error: 'Login failed. Please check your credentials.'
+          error: 'Login failed. Please check your credentials.',
         };
-
       } catch (error) {
         const errorMessage = getApiErrorMessage(error);
-        
+
         showToast({
           type: 'error',
           title: 'Sign in failed',
@@ -89,11 +87,11 @@ export const useAuthForm = () => {
 
         return {
           success: false,
-          error: errorMessage
+          error: errorMessage,
         };
       }
     },
-    null // Initial state
+    null, // Initial state
   );
 
   const handleForgotPassword = useCallback(() => {

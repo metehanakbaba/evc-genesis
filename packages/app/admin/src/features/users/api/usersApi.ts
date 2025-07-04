@@ -72,7 +72,9 @@ const usersApi = (evChargingApi as any).injectEndpoints({
 
     getUser: builder.query<ApiResponse<UserProfile>, string>({
       query: (userId: any) => `/admin/users/${userId}`,
-      providesTags: (_result: any, _error: any, id: any) => [{ type: 'User', id }],
+      providesTags: (_result: any, _error: any, id: any) => [
+        { type: 'User', id },
+      ],
     }),
 
     createUser: builder.mutation<ApiResponse<UserProfile>, CreateUserRequest>({

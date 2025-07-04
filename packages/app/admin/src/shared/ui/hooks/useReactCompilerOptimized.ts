@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 // React 19: Compiler optimization hints
 // These hooks provide hints to React Compiler for better optimization
@@ -10,7 +10,7 @@ import { useMemo, useCallback } from 'react';
 export const useCompilerMemo = <T>(
   factory: () => T,
   deps: React.DependencyList,
-  debugName?: string
+  debugName?: string,
 ): T => {
   // React 19: Add compiler hints through comments
   'use compiler-optimize'; // React Compiler directive
@@ -31,7 +31,7 @@ export const useCompilerMemo = <T>(
 export const useCompilerCallback = <T extends (...args: any[]) => any>(
   callback: T,
   deps: React.DependencyList,
-  debugName?: string
+  debugName?: string,
 ): T => {
   'use compiler-optimize'; // React Compiler directive
 
@@ -50,7 +50,7 @@ export const useCompilerCallback = <T extends (...args: any[]) => any>(
  */
 export const useStableReference = <T>(value: T): T => {
   'use compiler-optimize';
-  
+
   // React Compiler will automatically optimize this
   return useMemo(() => value, [value]);
 };
@@ -62,7 +62,7 @@ export const useStableReference = <T>(value: T): T => {
 export const useDerivedState = <T, U>(
   source: T,
   transformer: (source: T) => U,
-  debugName?: string
+  debugName?: string,
 ): U => {
   'use compiler-optimize';
 
@@ -80,7 +80,7 @@ export const useDerivedState = <T, U>(
  */
 export const useOptimizedEventHandler = <T extends (...args: any[]) => any>(
   handler: T,
-  dependencies: React.DependencyList = []
+  dependencies: React.DependencyList = [],
 ): T => {
   'use compiler-optimize';
 
@@ -97,15 +97,15 @@ export const useStableProps = <T extends Record<string, any>>(props: T): T => {
   return useMemo(() => {
     // React Compiler will optimize this automatically
     const stableProps = { ...props };
-    
+
     // Sort keys for consistent object structure
     const sortedKeys = Object.keys(stableProps).sort();
     const stabilized = {} as T;
-    
+
     for (const key of sortedKeys) {
       stabilized[key as keyof T] = stableProps[key];
     }
-    
+
     return stabilized;
   }, [JSON.stringify(props)]); // React Compiler will optimize this dependency
 };
@@ -119,7 +119,7 @@ export const useBatchedUpdates = () => {
 
   const batchUpdates = useCallback((updates: (() => void)[]) => {
     // React 19 automatically batches, but this provides explicit hint
-    updates.forEach(update => update());
+    updates.forEach((update) => update());
   }, []);
 
   return batchUpdates;
@@ -135,30 +135,35 @@ export const useExpensiveComputation = <T>(
   options?: {
     debugName?: string;
     priority?: 'high' | 'normal' | 'low';
-  }
+  },
 ): T => {
   'use compiler-optimize';
 
   return useMemo(() => {
     const start = performance.now();
-    
+
     if (process.env['NODE_ENV'] === 'development') {
-      console.time(`[React Compiler] ${options?.debugName || 'Expensive computation'}`);
+      console.time(
+        `[React Compiler] ${options?.debugName || 'Expensive computation'}`,
+      );
     }
-    
+
     const result = computation();
-    
+
     if (process.env['NODE_ENV'] === 'development') {
       const end = performance.now();
-      console.timeEnd(`[React Compiler] ${options?.debugName || 'Expensive computation'}`);
-      
-      if (end - start > 16) { // More than one frame
+      console.timeEnd(
+        `[React Compiler] ${options?.debugName || 'Expensive computation'}`,
+      );
+
+      if (end - start > 16) {
+        // More than one frame
         console.warn(
-          `[React Compiler] Expensive computation detected: ${options?.debugName || 'Unknown'} (${(end - start).toFixed(2)}ms)`
+          `[React Compiler] Expensive computation detected: ${options?.debugName || 'Unknown'} (${(end - start).toFixed(2)}ms)`,
         );
       }
     }
-    
+
     return result;
   }, deps);
 };
@@ -172,6 +177,8 @@ export type CompilerOptimized<T> = T & {
  * React 19: Mark component as compiler-optimized
  * Type-only marker for React Compiler
  */
-export const markCompilerOptimized = <T>(component: T): CompilerOptimized<T> => {
+export const markCompilerOptimized = <T>(
+  component: T,
+): CompilerOptimized<T> => {
   return component as CompilerOptimized<T>;
-}; 
+};

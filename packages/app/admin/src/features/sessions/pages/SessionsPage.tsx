@@ -1,34 +1,30 @@
 'use client';
 
-import type React from 'react';
-import { useState, useEffect } from 'react';
+import {
+  ArrowTrendingUpIcon,
+  BanknotesIcon,
+  BoltIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  EyeIcon,
+  FireIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  PlayIcon,
+  StopIcon,
+  TableCellsIcon,
+  UserIcon,
+  ViewColumnsIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
+import { Button, Input, Select } from '@ui/forms';
 // import { MinimalStatCard, FloatingCard } from '@ui/display';
 import { AppHeader } from '@ui/layout';
-import { Button, Input, Select } from '@ui/forms';
 import { useRouter } from 'next/navigation';
-import {
-  BoltIcon,
-  ClockIcon,
-  UserIcon,
-  CurrencyDollarIcon,
-  HomeIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  ViewColumnsIcon,
-  TableCellsIcon,
-  CheckCircleIcon,
-  PlayIcon,
-  XCircleIcon,
-  SignalIcon,
-  MapPinIcon,
-  CalendarIcon,
-  EyeIcon,
-  StopIcon,
-  BanknotesIcon,
-  ChartBarIcon,
-  FireIcon,
-  ArrowTrendingUpIcon,
-} from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import type { SessionStatus } from '@/types/global.types';
 
 // Type for icon components - fixed for Heroicons
@@ -88,7 +84,7 @@ const SessionsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [isLiveDataEnabled, setIsLiveDataEnabled] = useState(true);
+  const [isLiveDataEnabled, _] = useState(true);
 
   // Revolutionary floating stats with live data
   const sessionStats: SessionStats[] = [

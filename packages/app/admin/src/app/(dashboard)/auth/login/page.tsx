@@ -1,27 +1,28 @@
-import React from 'react';
 import Link from 'next/link';
+import React from 'react';
+import { redirect } from 'next/navigation';
 
 // React 19 Server Action for form handling
 async function loginAction(formData: FormData) {
   'use server';
-  
+
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
-  
+
   // Server-side validation
   if (!email || !password) {
-    return { error: 'Email and password are required' };
+    throw new Error('Email and password are required');
   }
-  
+
   // Simulate authentication
   console.log('Login attempt:', { email, password });
-  
+
   // For demo purposes - in real app, authenticate with backend
   if (email === 'admin@evc.com' && password === 'admin123') {
-    return { success: true, redirect: '/' };
+    redirect('/');
+  } else {
+    throw new Error('Invalid credentials');
   }
-  
-  return { error: 'Invalid credentials' };
 }
 
 export default function LoginPage() {
@@ -31,18 +32,17 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center">
           <div className="revolutionary-loader w-12 h-12 rounded-lg mx-auto mb-4"></div>
-          <h2 className="text-3xl font-bold text-white">
-            EV Charging Admin
-          </h2>
-          <p className="mt-2 text-gray-400">
-            Sign in to your account
-          </p>
+          <h2 className="text-3xl font-bold text-white">EV Charging Admin</h2>
+          <p className="mt-2 text-gray-400">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
         <form action={loginAction} className="glass-card p-8 space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -57,7 +57,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Password
             </label>
             <input
@@ -79,7 +82,10 @@ export default function LoginPage() {
                 type="checkbox"
                 className="h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-300"
+              >
                 Remember me
               </label>
             </div>
@@ -119,4 +125,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

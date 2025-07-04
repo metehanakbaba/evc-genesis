@@ -3,57 +3,46 @@
  * Components for page structure, grids, containers, and spatial organization
  */
 
-// Container Components
-export { Container } from './Container';
-export type { ContainerProps } from './Container';
-
-// Grid System
-export { Grid } from './Grid';
-export type { GridProps } from './Grid';
-
-export { GridItem } from './GridItem';
-export type { GridItemProps } from './GridItem';
-
-// Section Components
-export { SectionHeader } from './SectionHeader';
-export type { SectionHeaderProps, IconComponent } from './SectionHeader';
-
+export type { AppHeaderProps } from './AppHeader';
 // Header Components
 export { AppHeader } from './AppHeader';
-export type { AppHeaderProps } from './AppHeader';
-
-// Sidebar Components
-export { IntelligenceSidebar } from './IntelligenceSidebar';
-export type { IntelligenceSidebarProps } from './IntelligenceSidebar';
-
-export { NotificationSidebar } from './NotificationSidebar';
-export type { NotificationSidebarProps } from './NotificationSidebar';
-
-// Main Layout Component
-export { MainLayout } from './MainLayout';
-export type { MainLayoutProps } from './MainLayout';
-
-// Scroll Management
-export { ScrollToTop } from './ScrollToTop';
-
+export type { ContainerProps } from './Container';
+// Container Components
+export { Container } from './Container';
 // Layout Enums
-export {
-  GridColumns,
-  GridGap,
-  GridItemVariant,
-  GridItemSpan,
-  Padding,
-  ContainerSize,
-  SectionHeaderSize,
-  SectionHeaderVariant,
-  HeadingLevel,
-} from './enums';
-
 // Export type guards
 export {
+  ContainerSize,
+  GridColumns,
+  GridGap,
+  GridItemSpan,
+  GridItemVariant,
+  HeadingLevel,
+  isValidContainerSize,
   isValidGridColumns,
   isValidGridGap,
   isValidGridItemVariant,
   isValidPadding,
-  isValidContainerSize,
+  Padding,
+  SectionHeaderSize,
+  SectionHeaderVariant,
 } from './enums';
+export type { GridProps } from './Grid';
+// Grid System
+export { Grid } from './Grid';
+export type { GridItemProps } from './GridItem';
+export { GridItem } from './GridItem';
+export type { IntelligenceSidebarProps } from './IntelligenceSidebar';
+// Sidebar Components
+export { IntelligenceSidebar } from './IntelligenceSidebar';
+export type { MainLayoutProps } from './MainLayout';
+// Main Layout Component
+export { MainLayout } from './MainLayout';
+export type { NotificationSidebarProps } from './NotificationSidebar';
+export { NotificationSidebar } from './NotificationSidebar';
+
+// Scroll Management
+export { ScrollToTop } from './ScrollToTop';
+export type { IconComponent, SectionHeaderProps } from './SectionHeader';
+// Section Components
+export { SectionHeader } from './SectionHeader';

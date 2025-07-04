@@ -1,8 +1,8 @@
 import {
   ChartBarIcon,
-  LightBulbIcon,
-  CpuChipIcon,
   ChartPieIcon,
+  CpuChipIcon,
+  LightBulbIcon,
 } from '@heroicons/react/24/outline';
 import type { AIInsight } from './types';
 

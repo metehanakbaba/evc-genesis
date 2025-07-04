@@ -1,28 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MinimalStatCard } from '@ui/display';
-import { MainLayout } from '@ui/layout';
-import { Button, Input, Select } from '@ui/forms';
-import { useRouter } from 'next/navigation';
 import {
-  MapPinIcon,
   BoltIcon,
-  MagnifyingGlassIcon,
-  SignalIcon,
   CheckCircleIcon,
-  XCircleIcon,
-  WrenchScrewdriverIcon,
+  ChevronRightIcon,
   ClockIcon,
   CurrencyDollarIcon,
   EyeIcon,
-  PencilIcon,
-  TrashIcon,
   HomeIcon,
-  ChevronRightIcon,
-  ViewColumnsIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  PencilIcon,
+  SignalIcon,
   TableCellsIcon,
+  TrashIcon,
+  ViewColumnsIcon,
+  WrenchScrewdriverIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
+import { MinimalStatCard } from '@ui/display';
+import { Button, Input, Select } from '@ui/forms';
+import { MainLayout } from '@ui/layout';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useState } from 'react';
 
 // // Custom Gas Station Icon Component (better than PlusIcon)
 // const GasStationIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -104,9 +105,6 @@ const ChargingStationIcon: React.FC<{ className?: string }> = ({
     `}</style>
   </svg>
 );
-
-// Type for icon components
-type IconComponent = React.ComponentType<{ className?: string }>;
 
 // API Schema based types (chargeStation.ts)
 interface ChargingStation {
@@ -312,12 +310,7 @@ const StationsPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant="primary"
-              size="md"
-              
-              
-            >
+            <Button variant="primary" size="md">
               Add Station
             </Button>
           </div>
@@ -351,7 +344,7 @@ const StationsPage: React.FC = () => {
                 key={stat.title}
                 title={stat.title}
                 value={stat.value}
-                
+                icon={stat.icon}
                 variant={stat.variant}
                 trend={stat.trend}
                 description={stat.description}

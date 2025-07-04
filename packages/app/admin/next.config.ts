@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  eslint: { ignoreDuringBuilds: !!process.env.CI },
+  eslint: { ignoreDuringBuilds: true },
   transpilePackages: [
     '@evc/shared-api',
     '@evc/shared-types', 

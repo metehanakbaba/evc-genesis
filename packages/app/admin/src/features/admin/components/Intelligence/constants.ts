@@ -1,13 +1,13 @@
 import {
-  SparklesIcon,
-  ShieldExclamationIcon,
-  CurrencyDollarIcon,
-  ComputerDesktopIcon,
-  BugAntIcon,
   BeakerIcon,
+  BugAntIcon,
+  ComputerDesktopIcon,
   CpuChipIcon,
+  CurrencyDollarIcon,
+  ShieldExclamationIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
-import type { IntelligenceEvent, EventType } from './types';
+import type { EventType, IntelligenceEvent } from './types';
 
 export const MOCK_EVENTS: readonly IntelligenceEvent[] = [
   {

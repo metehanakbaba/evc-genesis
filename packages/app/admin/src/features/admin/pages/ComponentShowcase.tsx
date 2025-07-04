@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import type React from 'react';
+import {
+  AdjustmentsHorizontalIcon,
+  CodeBracketIcon,
+  CursorArrowRaysIcon,
+  DocumentTextIcon,
+  RectangleStackIcon,
+  Squares2X2Icon,
+} from '@heroicons/react/24/outline';
 import {
   Button,
   Checkbox,
@@ -10,27 +16,19 @@ import {
   Select,
   Switch,
   Textarea,
-
 } from '@ui/forms';
 import {
   Container,
   Grid,
-  GridItem,
-  SectionHeader,
   GridColumns,
   GridGap,
+  GridItem,
+  SectionHeader,
 } from '@ui/layout';
-import {
-  Squares2X2Icon,
-  CursorArrowRaysIcon,
-  AdjustmentsHorizontalIcon,
-  DocumentTextIcon,
-  RectangleStackIcon,
-  CodeBracketIcon,
-} from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useState } from 'react';
 
-// Type for icon components (more flexible to handle Heroicons)
-type IconComponent = React.ComponentType<any>;
+
 
 const sections = [
   {
@@ -161,7 +159,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Buttons"
             description="Interactive elements with multiple variants and states"
-            
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -197,18 +194,10 @@ const ComponentShowcase = () => {
                 Outline Style
               </h3>
               <div className="space-y-3">
-                <Button variant="primary" >
-                  Primary Outline
-                </Button>
-                <Button variant="outline" >
-                  Success Outline
-                </Button>
-                <Button variant="secondary" >
-                  Warning Outline
-                </Button>
-                <Button variant="destructive" >
-                  Danger Outline
-                </Button>
+                <Button variant="primary">Primary Outline</Button>
+                <Button variant="outline">Success Outline</Button>
+                <Button variant="secondary">Warning Outline</Button>
+                <Button variant="destructive">Danger Outline</Button>
               </div>
             </div>
             <div className="space-y-4">
@@ -235,7 +224,6 @@ const ComponentShowcase = () => {
                 </Button>
                 <Button
                   variant="ghost"
-                  
                   onClick={() => console.log('Info action!')}
                 >
                   Learn More
@@ -250,7 +238,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form Components"
             description="Input fields, textareas, and form controls"
-            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -320,7 +307,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Selection Components"
             description="Toggles, dropdowns, and selection controls"
-            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -390,7 +376,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Radio Group"
             description="Single selection from multiple options"
-            
           />
           <div className="max-w-2xl">
             <RadioGroup
@@ -408,7 +393,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Fieldset"
             description="Grouped form elements with legend"
-            
           />
           <div className="max-w-2xl">
             <Fieldset legend="Shipping Information">
@@ -433,7 +417,6 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form State"
             description="Real-time form data visualization"
-            
           />
           <div className="bg-gray-900 rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-300 mb-4">

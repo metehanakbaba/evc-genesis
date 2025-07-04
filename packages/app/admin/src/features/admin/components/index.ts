@@ -1,11 +1,10 @@
-export { RevolutionaryStatCard } from './RevolutionaryStatCard';
+export { AIInsightsWidget } from './AIInsights';
 export { CoreManagementSection } from './CoreManagementSection';
-export { LiveOperationsSection } from './LiveOperationsSection';
-export { DeveloperToolsSection } from './DeveloperToolsSection';
 export { DashboardFooter } from './DashboardFooter';
+export { DeveloperToolsSection } from './DeveloperToolsSection';
 export { FloatingOrbs } from './FloatingOrbs';
-export { RevolutionaryStationIcon } from './RevolutionaryStationIcon';
-
 // New modular exports
 export { IntelligenceSection } from './Intelligence';
-export { AIInsightsWidget } from './AIInsights';
+export { LiveOperationsSection } from './LiveOperationsSection';
+export { RevolutionaryStatCard } from './RevolutionaryStatCard';
+export { RevolutionaryStationIcon } from './RevolutionaryStationIcon';

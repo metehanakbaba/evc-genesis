@@ -1,16 +1,16 @@
 import {
+  Description,
+  Field,
+  Label,
   Listbox,
   ListboxButton,
   ListboxOption,
   ListboxOptions,
   Transition,
-  Field,
-  Label,
-  Description,
 } from '@headlessui/react';
-import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import { forwardRef, Fragment } from 'react';
+import { Fragment, forwardRef } from 'react';
 
 interface SelectOption {
   value: string;

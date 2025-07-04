@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../utils/cn';
 
 /**
@@ -12,7 +12,7 @@ export interface ContainerProps {
   readonly withBackground?: boolean;
   readonly withOrbs?: boolean;
   readonly centered?: boolean;
-  readonly as?: keyof JSX.IntrinsicElements;
+  readonly as?: React.ElementType;
 }
 
 /**
@@ -108,20 +108,22 @@ export const Container: React.FC<ContainerProps> = ({
 
   const content = <div className={contentClasses}>{children}</div>;
 
+  const ElementComponent = Component as React.ElementType;
+
   if (withBackground) {
     return (
-      <Component className={containerClasses}>
+      <ElementComponent className={containerClasses}>
         {withOrbs && <AnimatedOrbs />}
         {withOrbs ? (
           <div className="relative z-10 backdrop-blur-[0.5px]">{content}</div>
         ) : (
           content
         )}
-      </Component>
+      </ElementComponent>
     );
   }
 
-  return <Component className={containerClasses}>{content}</Component>;
+  return <ElementComponent className={containerClasses}>{content}</ElementComponent>;
 };
 
 Container.displayName = 'Container';

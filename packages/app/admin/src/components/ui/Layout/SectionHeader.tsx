@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { cn } from '../../../utils/cn';
+import type { ReactNode } from 'react';
+import { cn } from '../../../shared/utils/cn';
 
 /**
  * Icon Component Type - Compatible with Heroicons and other icon libraries
@@ -82,7 +82,7 @@ const variantMap = {
  * <SectionHeader
  *   title="Button Components"
  *   description="Interactive elements for user actions"
- *   
+ *
  *   size="lg"
  *   variant="primary"
  * />

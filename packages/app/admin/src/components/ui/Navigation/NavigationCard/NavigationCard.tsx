@@ -1,8 +1,8 @@
-import type React from 'react';
 import Link from 'next/link';
-import { Badge } from '../../Display/Badge/Badge';
-import type { ComponentSize } from '../../theme/theme.config';
+import type React from 'react';
 import { cn } from '@/shared/utils/cn';
+import { Badge } from '../../Display/Badge/Badge';
+import type { ComponentSize } from '../../../../lib/theme.config';
 
 export interface NavigationCardProps {
   /** Navigation title */

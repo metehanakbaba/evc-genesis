@@ -1,9 +1,10 @@
-import React from 'react';
-import { Input, Button } from '@ui/forms';
+import { Button, Input } from '@ui/forms';
+import type React from 'react';
 import { useAuthForm } from '../hooks/useAuthForm';
 
 export const LoginForm: React.FC = () => {
-  const { submitAction, isPending, error, handleForgotPassword } = useAuthForm();
+  const { submitAction, isPending, error, handleForgotPassword } =
+    useAuthForm();
 
   return (
     <div className="space-y-8">
@@ -42,9 +43,7 @@ export const LoginForm: React.FC = () => {
         {error && (
           <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
             <div className="flex items-center">
-              <div className="text-red-400 text-sm font-medium">
-                {error}
-              </div>
+              <div className="text-red-400 text-sm font-medium">{error}</div>
             </div>
           </div>
         )}

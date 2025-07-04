@@ -14,12 +14,9 @@ import type {
   UserLoginRequest, 
   UserRegistrationRequest, 
   User, 
-  UserRole,
-  ApiSuccessResponse,
-  ApiErrorResponse,
   AuthSuccessResponse 
 } from '../types/user.types';
-import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi';
+import { transformResponse, transformVoidResponse } from '../baseApi';
 
 export const authEndpoints = (
   builder: EndpointBuilder<any, any, any>

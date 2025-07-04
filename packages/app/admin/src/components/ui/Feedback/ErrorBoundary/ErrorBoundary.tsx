@@ -34,9 +34,9 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       // Error logging would go to external service in production
       // console.error('Error caught by ErrorBoundary:', error, errorInfo);
     }
@@ -58,7 +58,7 @@ export class ErrorBoundary extends Component<Props, State> {
     });
   };
 
-  render() {
+  override render() {
     const { hasError, error } = this.state;
     const { children, fallback } = this.props;
 
@@ -71,7 +71,7 @@ export class ErrorBoundary extends Component<Props, State> {
       // Default error UI
       return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
-          <Card className="w-full max-w-lg" padding="lg">
+          <Card className="w-full max-w-lg">
             <CardBody>
               <div className="text-center">
                 <svg
@@ -99,7 +99,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   refreshing the page.
                 </p>
 
-                {import.meta.env.DEV && error && (
+                {process.env.NODE_ENV === 'development' && error && (
                   <details className="mt-4 rounded-md bg-gray-800 border border-gray-700 p-4 text-left">
                     <summary className="cursor-pointer font-medium text-gray-200">
                       Error details (Development only)
@@ -112,11 +112,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 )}
 
                 <div className="mt-6 flex justify-center gap-4">
-                  <Button
-                    variant="secondary"
-                    
-                    onClick={this.handleReset}
-                  >
+                  <Button variant="secondary" onClick={this.handleReset}>
                     Try again
                   </Button>
                   <Button

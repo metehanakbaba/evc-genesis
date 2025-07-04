@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components';
 
 export interface AppHeaderProps {
@@ -116,7 +116,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 <span className="text-lg">✨</span>
                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
               </div>
-              <span className="font-medium hidden sm:block">AI Intelligence Center</span>
+              <span className="font-medium hidden sm:block">
+                AI Intelligence Center
+              </span>
               <span className="text-sm opacity-60">🧠</span>
             </button>
           </div>
@@ -125,7 +127,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <div className="flex items-center space-x-4">
             {/* Notifications */}
             {showNotifications && (
-              <button 
+              <button
                 onClick={onToggleNotificationSidebar}
                 className={`
                   relative p-2 text-gray-400 hover:text-white 
@@ -160,7 +162,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   <p className="text-sm font-medium">Admin</p>
                   <p className="text-xs text-gray-400">Administrator</p>
                 </div>
-                <span className={`text-sm transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`}>
+                <span
+                  className={`text-sm transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`}
+                >
                   ⌄
                 </span>
               </button>
@@ -169,8 +173,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl shadow-black/20 py-2 z-50">
                   <div className="px-4 py-2 border-b border-gray-700">
-                    <p className="text-sm font-medium text-white">admin@evc.com</p>
-                    <p className="text-xs text-gray-400">System Administrator</p>
+                    <p className="text-sm font-medium text-white">
+                      admin@evc.com
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      System Administrator
+                    </p>
                   </div>
 
                   <button className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors duration-200 flex items-center space-x-2">

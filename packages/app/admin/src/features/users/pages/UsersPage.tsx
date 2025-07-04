@@ -1,38 +1,36 @@
 'use client';
 
-import type React from 'react';
-import { useState, useEffect } from 'react';
-import { AppHeader } from '@ui/layout';
-import { Button, Input } from '@ui/forms';
-import { Modal } from '@ui/display';
-import { useRouter } from 'next/navigation';
 import {
-  UserIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  CogIcon,
-  HomeIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  ViewColumnsIcon,
-  TableCellsIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon,
-  PlusIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  CalendarIcon,
   ArrowTrendingUpIcon,
-  UserPlusIcon,
-  KeyIcon,
+  CalendarIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  CogIcon,
+  EnvelopeIcon,
+  EyeIcon,
   FunnelIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  PencilIcon,
+  PhoneIcon,
+  ShieldCheckIcon,
+  TableCellsIcon,
+  TrashIcon,
+  UserGroupIcon,
+  UserIcon,
+  UserPlusIcon,
+  ViewColumnsIcon,
+  XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { Modal } from '@ui/display';
+import { Button, Input } from '@ui/forms';
+import { AppHeader } from '@ui/layout';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useState } from 'react';
 import type { UserRole } from '@/types/global.types';
-import type { UserProfile, UserStatistics } from '../types/user.types';
+import type { UserProfile } from '../types/user.types';
 
 // Type for icon components - fixed for Heroicons
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -219,7 +217,6 @@ const UsersPage: React.FC = () => {
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   // Revolutionary floating stats with role-based data
@@ -531,9 +528,8 @@ const UsersPage: React.FC = () => {
                 /* Add user logic */
               }}
               className="bg-purple-600 hover:bg-purple-500 text-white"
-              
-              
             >
+              <UserPlusIcon className="w-4 h-4 mr-2" />
               New User
             </Button>
           </div>
@@ -559,9 +555,8 @@ const UsersPage: React.FC = () => {
                   variant="ghost"
                   onClick={() => setIsFilterModalOpen(true)}
                   className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white border border-gray-600/30 min-w-[120px]"
-                  
-                  
                 >
+                  <FunnelIcon className="w-4 h-4 mr-2" />
                   Filters
                   {(roleFilter !== 'all' || statusFilter !== 'all') && (
                     <div className="ml-2 w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
@@ -576,15 +571,17 @@ const UsersPage: React.FC = () => {
                   size="sm"
                   onClick={() => setViewMode('grid')}
                   className={`p-2 ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
-                  
-                />
+                >
+                  <ViewColumnsIcon className="w-4 h-4" />
+                </Button>
                 <Button
                   variant={viewMode === 'table' ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('table')}
                   className={`p-2 ${viewMode === 'table' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
-                  
-                />
+                >
+                  <TableCellsIcon className="w-4 h-4" />
+                </Button>
               </div>
             </div>
 
@@ -624,6 +621,7 @@ const UsersPage: React.FC = () => {
                   onClick={handleClearFilters}
                   className="text-gray-400 hover:text-white text-sm"
                 >
+                  <XMarkIcon className="w-3 h-3 mr-1" />
                   Clear all
                 </Button>
               </div>
@@ -750,23 +748,24 @@ const UsersPage: React.FC = () => {
                                 size="sm"
                                 variant="ghost"
                                 className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white px-3 py-2"
-                                
-                                
                               >
+                                <EyeIcon className="w-4 h-4 mr-2" />
                                 View
                               </Button>
                               <Button
                                 size="sm"
                                 variant="ghost"
                                 className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
-                                
-                              />
+                              >
+                                <PencilIcon className="w-4 h-4" />
+                              </Button>
                               <Button
                                 size="sm"
                                 variant="ghost"
                                 className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
-                                
-                              />
+                              >
+                                <TrashIcon className="w-4 h-4" />
+                              </Button>
                             </div>
                           </td>
                         </tr>
@@ -881,23 +880,24 @@ const UsersPage: React.FC = () => {
                             size="sm"
                             variant="ghost"
                             className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white"
-                            
-                            
                           >
+                            <EyeIcon className="w-4 h-4 mr-2" />
                             View Profile
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
-                            
-                          />
+                          >
+                            <PencilIcon className="w-4 h-4" />
+                          </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
-                            
-                          />
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -924,6 +924,7 @@ const UsersPage: React.FC = () => {
                 onClick={handleClearFilters}
                 className="bg-purple-600 hover:bg-purple-500 text-white"
               >
+                <XMarkIcon className="w-4 h-4 mr-2" />
                 Clear Filters
               </Button>
             </div>

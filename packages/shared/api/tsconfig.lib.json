@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
@@ -19,7 +19,7 @@
   ],
   "references": [
     {
-      "path": "../shared-types/tsconfig.lib.json"
+      "path": "../types/tsconfig.lib.json"
     }
   ],
   "exclude": [

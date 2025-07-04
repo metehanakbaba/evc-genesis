@@ -9,45 +9,12 @@
  * @author EV Charging Team
  */
 
-// 🎯 Standard API Response Types (from common.ts schema)
-export interface ApiSuccessResponse<T = unknown> {
-  success: true;
-  data: T;
-  message: string;
-  meta: ResponseMeta;
-}
-
-export interface ApiErrorResponse {
-  success: false;
-  error: {
-    code: string;
-    message: string;
-    details?: ValidationError[];
-  };
-  meta: ResponseMeta;
-}
-
-export interface ResponseMeta {
-  timestamp: string;
-  requestId?: string;
-  version: string;
-}
-
-export interface ValidationError {
-  field: string;
-  message: string;
-  value?: unknown;
-}
-
-export interface Pagination {
-  total: number;
-  page: number;
-  limit: number;
-}
+import type { UserRole } from './types/user.types';
+import type { StationStatus, ConnectorType } from './types/station.types';
+import type { TransactionType } from './types/wallet.types';
+import type { ApiSuccessResponse, ApiErrorResponse, ResponseMeta, ValidationError, Pagination, ApiTagType, ApiTag } from './types/common.types';
 
 // 👤 User Domain Types (from user.ts schema)
-export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
-
 export interface User {
   id: string;
   email: string;
@@ -81,9 +48,6 @@ export interface ProfileUpdateRequest {
 }
 
 // 🔋 Charge Station Domain Types (from chargeStation.ts schema)
-export type StationStatus = 'available' | 'charging' | 'offline' | 'maintenance';
-export type ConnectorType = 'Type1' | 'Type2' | 'CCS' | 'CHAdeMO';
-
 export interface ChargeStation {
   id: string;
   name: string;
@@ -120,12 +84,6 @@ export interface StationSearchQuery {
 }
 
 // 💰 PLN Wallet Domain Types (from wallet.ts schema)
-export type TransactionType = 
-  | 'STRIPE_PLN_PAYMENT' 
-  | 'ADD_PLN_FUNDS' 
-  | 'PLN_CHARGING_PAYMENT' 
-  | 'PLN_REFUND';
-
 export type TransactionStatus = 
   | 'PENDING' 
   | 'PROCESSING' 
@@ -184,15 +142,8 @@ export interface TransactionQuery {
 }
 
 // 🔧 Admin Domain Types (from admin.ts schema)
-export interface AdminCreateUserRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
-  role: UserRole;
-  isActive?: boolean;
-}
+// Note: Admin types are now primarily defined in schema-adapter.ts
+// Remove duplicate AdminCreateUserRequest to avoid export conflicts
 
 export interface AdminUpdateUserRequest {
   firstName?: string;
@@ -200,12 +151,6 @@ export interface AdminUpdateUserRequest {
   phoneNumber?: string;
   role?: UserRole;
   isActive?: boolean;
-}
-
-export interface AdminAdjustBalanceRequest {
-  amount: number;
-  reason: string;
-  reference?: string;
 }
 
 export interface AdminProcessRefundRequest {
@@ -228,12 +173,4 @@ export interface ApiBaseQueryConfig {
     maxRetries: number;
     retryCondition?: (error: unknown) => boolean;
   };
-}
-
-// 🏷️ RTK Query Tag Types
-export type ApiTagType = 'Station' | 'Session' | 'User' | 'Transaction' | 'Wallet';
-
-export interface ApiTag {
-  type: ApiTagType;
-  id?: string | number;
 } 

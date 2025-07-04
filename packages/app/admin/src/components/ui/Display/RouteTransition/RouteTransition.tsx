@@ -1,6 +1,6 @@
-import type React from 'react';
-import { memo, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import type React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 /**
  * Transition phase types

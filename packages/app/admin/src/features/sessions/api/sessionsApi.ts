@@ -1,6 +1,6 @@
 /**
  * 🔄 Sessions API Hooks
- * 
+ *
  * Custom session management endpoints that extend the base evChargingApi.
  * These are additional features not included in the shared-api package.
  */
@@ -23,7 +23,9 @@ const sessionsApi = (evChargingApi as any).injectEndpoints({
 
     getSession: builder.query({
       query: (sessionId: string) => `/sessions/${sessionId}`,
-      providesTags: (_result: any, _error: any, id: any) => [{ type: 'Session', id }],
+      providesTags: (_result: any, _error: any, id: any) => [
+        { type: 'Session', id },
+      ],
     }),
 
     stopSession: builder.mutation({

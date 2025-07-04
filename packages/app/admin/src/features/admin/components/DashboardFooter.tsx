@@ -1,9 +1,9 @@
-import React from 'react';
 import { BoltIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
 
 /**
  * 🦶 Dashboard Footer
- * 
+ *
  * Professional footer for the EV charging admin dashboard.
  * Shows system status, version info, and branding.
  */
@@ -12,7 +12,6 @@ export const DashboardFooter: React.FC = () => {
     <footer className="bg-gray-900/50 backdrop-blur-sm border-t border-gray-700/30 mt-16">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
           {/* System Status */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wide">
@@ -21,7 +20,9 @@ export const DashboardFooter: React.FC = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm text-gray-300">All Systems Operational</span>
+                <span className="text-sm text-gray-300">
+                  All Systems Operational
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-blue-400 rounded-full" />
@@ -29,7 +30,9 @@ export const DashboardFooter: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                <span className="text-sm text-gray-300">React 19 + Next.js 15</span>
+                <span className="text-sm text-gray-300">
+                  React 19 + Next.js 15
+                </span>
               </div>
             </div>
           </div>
@@ -40,16 +43,28 @@ export const DashboardFooter: React.FC = () => {
               Quick Links
             </h3>
             <div className="space-y-2">
-              <a href="/docs" className="block text-sm text-gray-300 hover:text-blue-400 transition-colors">
+              <a
+                href="/docs"
+                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+              >
                 Documentation
               </a>
-              <a href="/support" className="block text-sm text-gray-300 hover:text-blue-400 transition-colors">
+              <a
+                href="/support"
+                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+              >
                 Support Center
               </a>
-              <a href="/api" className="block text-sm text-gray-300 hover:text-blue-400 transition-colors">
+              <a
+                href="/api"
+                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+              >
                 API Reference
               </a>
-              <a href="/status" className="block text-sm text-gray-300 hover:text-blue-400 transition-colors">
+              <a
+                href="/status"
+                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+              >
                 System Status
               </a>
             </div>
@@ -68,16 +83,15 @@ export const DashboardFooter: React.FC = () => {
                 © 2024 EV Charging Team. All rights reserved.
               </p>
               <div className="flex items-center gap-4 pt-2">
+                <span className="text-xs text-gray-500">Version 2.1.0</span>
                 <span className="text-xs text-gray-500">
-                  Version 2.1.0
-                </span>
-                <span className="text-xs text-gray-500">
-                  Build {new Date().getFullYear()}.{String(new Date().getMonth() + 1).padStart(2, '0')}.{String(new Date().getDate()).padStart(2, '0')}
+                  Build {new Date().getFullYear()}.
+                  {String(new Date().getMonth() + 1).padStart(2, '0')}.
+                  {String(new Date().getDate()).padStart(2, '0')}
                 </span>
               </div>
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar */}
@@ -90,7 +104,7 @@ export const DashboardFooter: React.FC = () => {
               EV Charging Admin Dashboard
             </span>
           </div>
-          
+
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
             <span className="text-xs text-gray-500">
               Last updated: {new Date().toLocaleTimeString()}
@@ -106,4 +120,4 @@ export const DashboardFooter: React.FC = () => {
   );
 };
 
-export default DashboardFooter; 
+export default DashboardFooter;

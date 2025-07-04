@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { AIInsightsHeader } from './AIInsightsHeader';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AIInsightCard } from './AIInsightCard';
 import { AIInsightsFooter } from './AIInsightsFooter';
+import { AIInsightsHeader } from './AIInsightsHeader';
 import { MOCK_INSIGHTS } from './constants';
 
 /**

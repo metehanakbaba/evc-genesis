@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
+import { DashboardFooter } from '@/features/admin/components/DashboardFooter';
+import { FloatingOrbs } from '@/features/admin/components/FloatingOrbs';
 import { AppHeader } from './AppHeader';
 import { IntelligenceSidebar } from './IntelligenceSidebar';
 import { NotificationSidebar } from './NotificationSidebar';
-import { FloatingOrbs } from '@/features/admin/components/FloatingOrbs';
-import { DashboardFooter } from '@/features/admin/components/DashboardFooter';
 
 export interface MainLayoutProps {
   children: React.ReactNode;
@@ -32,8 +33,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   headerVariant = 'default',
   className = '',
 }) => {
-  const [isIntelligenceSidebarOpen, setIsIntelligenceSidebarOpen] = useState(false);
-  const [isNotificationSidebarOpen, setIsNotificationSidebarOpen] = useState(false);
+  const [isIntelligenceSidebarOpen, setIsIntelligenceSidebarOpen] =
+    useState(false);
+  const [isNotificationSidebarOpen, setIsNotificationSidebarOpen] =
+    useState(false);
   return (
     <div
       className={`min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden ${className}`}
@@ -49,8 +52,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
           variant={headerVariant}
           isIntelligenceSidebarOpen={isIntelligenceSidebarOpen}
           isNotificationSidebarOpen={isNotificationSidebarOpen}
-          onToggleIntelligenceSidebar={() => setIsIntelligenceSidebarOpen(!isIntelligenceSidebarOpen)}
-          onToggleNotificationSidebar={() => setIsNotificationSidebarOpen(!isNotificationSidebarOpen)}
+          onToggleIntelligenceSidebar={() =>
+            setIsIntelligenceSidebarOpen(!isIntelligenceSidebarOpen)
+          }
+          onToggleNotificationSidebar={() =>
+            setIsNotificationSidebarOpen(!isNotificationSidebarOpen)
+          }
         />
       )}
 
@@ -59,7 +66,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         isOpen={isIntelligenceSidebarOpen}
         onClose={() => setIsIntelligenceSidebarOpen(false)}
       />
-      
+
       <NotificationSidebar
         isOpen={isNotificationSidebarOpen}
         onClose={() => setIsNotificationSidebarOpen(false)}

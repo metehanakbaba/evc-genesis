@@ -9,9 +9,12 @@
  * @author EV Charging Team
  */
 
-// 🎯 User Types from Root Schema
-export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
+import type { UserRole } from './types/user.types';
+import type { StationStatus, ConnectorType } from './types/station.types';
+import type { TransactionType } from './types/wallet.types';
+import type { Pagination } from './types/common.types';
 
+// 🎯 User Types from Root Schema
 export interface User {
   id: string;
   email: string;
@@ -51,9 +54,6 @@ export interface AuthSuccessResponse {
 }
 
 // 🔋 Station Types from Root Schema
-export type StationStatus = 'available' | 'charging' | 'offline' | 'maintenance';
-export type ConnectorType = 'Type1' | 'Type2' | 'CCS' | 'CHAdeMO';
-
 export interface ChargeStation {
   id: string;
   name: string;
@@ -104,7 +104,6 @@ export interface StationStats {
 }
 
 // 💰 Wallet Types from Root Schema
-export type TransactionType = 'STRIPE_PLN_PAYMENT' | 'ADD_PLN_FUNDS' | 'PLN_CHARGING_PAYMENT' | 'PLN_REFUND';
 export type TransactionStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
 
 export interface PLNAmount {
@@ -252,60 +251,12 @@ export interface AdminActivityQuery {
 }
 
 // 📋 Common Types from Root Schema (API Response structures)
-export interface ApiSuccessResponse<T = unknown> {
-  success: true;
-  data: T;
-  message: string;
-  meta: ResponseMeta;
-}
-
-export interface ApiErrorResponse {
-  success: false;
-  error: {
-    code: string;
-    message: string;
-    details?: ValidationError[];
-  };
-  meta: ResponseMeta;
-}
-
-export interface ResponseMeta {
-  timestamp: string;
-  requestId?: string;
-  version: string;
-}
-
-export interface ValidationError {
-  field: string;
-  message: string;
-  value?: unknown;
-}
-
-export interface Pagination {
-  total: number;
-  page: number;
-  limit: number;
-}
-
 export interface PaginatedResponse<T> {
   items: T[];
   pagination: Pagination;
 }
 
-// 🏷️ RTK Query Tag Types
-export type ApiTagType = 'Station' | 'Session' | 'User' | 'Transaction' | 'Wallet';
-
-export interface ApiTag {
-  type: ApiTagType;
-  id?: string | number;
-}
-
 // 🔧 Query Parameters
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-}
-
 export interface DateRangeParams {
   startDate?: string;
   endDate?: string;

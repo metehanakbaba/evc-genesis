@@ -1,5 +1,5 @@
-import type React from 'react';
 import { ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
+import type React from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export interface FloatingCardProps {

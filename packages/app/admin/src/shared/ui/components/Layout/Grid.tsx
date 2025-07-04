@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../utils/cn';
-import { GridColumns, GridGap, GridColumnsMap, GridGapMap } from './enums';
+import { GridColumns, GridColumnsMap, GridGap, GridGapMap } from './enums';
 
 /**
  * Grid Layout Component Props
@@ -12,7 +12,7 @@ export interface GridProps {
   readonly mdCols?: GridColumns;
   readonly lgCols?: GridColumns;
   readonly gap?: GridGap;
-  readonly as?: keyof JSX.IntrinsicElements;
+  readonly as?: React.ElementType;
 }
 
 /**
@@ -66,7 +66,9 @@ export const Grid: React.FC<GridProps> = ({
     className,
   );
 
-  return <Component className={gridClasses}>{children}</Component>;
+  const ElementComponent = Component as React.ElementType;
+  
+  return <ElementComponent className={gridClasses}>{children}</ElementComponent>;
 };
 
 Grid.displayName = 'Grid';

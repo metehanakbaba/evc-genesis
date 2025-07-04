@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
 import type { DeveloperTool } from '../hooks/useDashboardData';
 
 interface DeveloperToolsSectionProps {
@@ -59,7 +59,7 @@ export const DeveloperToolsSection: React.FC<DeveloperToolsSectionProps> =
               <div className="relative p-6 bg-gray-800/60 border border-gray-700/50 rounded-2xl hover:bg-gray-700/60 hover:border-gray-600/50 backdrop-blur-xl transition-all duration-500">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-700/50 to-gray-600/50 border border-gray-600/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-lg text-gray-300">{tool.icon}</span>
+                    <tool.icon className="w-5 h-5 text-gray-300" />
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-white group-hover:text-blue-200 transition-colors">

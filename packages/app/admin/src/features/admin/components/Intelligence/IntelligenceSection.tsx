@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { IntelligenceHeader } from './IntelligenceHeader';
-import { IntelligenceFilter } from './IntelligenceFilter';
+import React, { useCallback, useMemo, useState } from 'react';
+import { EVENT_TYPES, MOCK_EVENTS } from './constants';
 import { IntelligenceEventCard } from './IntelligenceEventCard';
+import { IntelligenceFilter } from './IntelligenceFilter';
+import { IntelligenceHeader } from './IntelligenceHeader';
 import { IntelligenceLiveIndicator } from './IntelligenceLiveIndicator';
-import { MOCK_EVENTS, EVENT_TYPES } from './constants';
 
 /**
  * Main Intelligence Section - Orchestrates child components

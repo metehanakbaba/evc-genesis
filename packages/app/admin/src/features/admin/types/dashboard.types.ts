@@ -1,6 +1,6 @@
 /**
  * 📊 Dashboard Types
- * 
+ *
  * Type definitions for the EV charging admin dashboard.
  * Includes stats, operations, and developer tools.
  */
