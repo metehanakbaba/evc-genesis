@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "es6"],
@@ -40,11 +40,11 @@
       "@ui/theme": ["./src/shared/ui/theme"],
       
       // EVC Workspace Packages
-      "@evc/shared-api": ["../../shared/api/src/index.ts"],
-      "@evc/shared-types": ["../../shared/types/src/index.ts"],
-      "@evc/design-tokens": ["../../design/tokens/src/index.ts"],
-      "@evc/shared-store": ["../../shared/store/src/index.ts"],
-      "@evc/shared-utils": ["../../shared/utils/src/index.ts"]
+      "@evc/shared-api": ["../../packages/shared/api/src/index.ts"],
+      "@evc/shared-types": ["../../packages/shared/types/src/index.ts"],
+      "@evc/design-tokens": ["../../packages/design/tokens/src/index.ts"],
+      "@evc/shared-store": ["../../packages/shared/store/src/index.ts"],
+      "@evc/shared-utils": ["../../packages/shared/utils/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
@@ -53,7 +53,7 @@
   ],
   "references": [
     {
-      "path": "../../shared/api"
+      "path": "../../packages/shared/api"
     }
   ]
 }

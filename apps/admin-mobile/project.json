@@ -1,51 +1,51 @@
 {
-  "name": "mobile-packages",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@evc/admin-mobile",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "packages/app/mobile",
+  "sourceRoot": "apps/admin-mobile",
   "targets": {
     "start": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     },
     "android": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --android",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     },
     "ios": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --ios",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     },
     "web": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo start --web",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "expo build",
-        "cwd": "packages/app/mobile"
+        "cwd": "apps/admin-mobile"
       }
     }
   },
-  "tags": ["type:app", "platform:mobile"]
+  "tags": ["type:app", "platform:mobile", "framework:expo", "scope:admin"]
 } 

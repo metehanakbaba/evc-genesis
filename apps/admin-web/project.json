@@ -1,19 +1,19 @@
 {
-  "name": "@evc/app-admin",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@evc/admin-web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "packages/app/admin/src",
+  "sourceRoot": "apps/admin-web/src",
   "targets": {
     "dev": {
       "executor": "nx:run-commands",
       "options": {
         "command": "next dev --turbopack --port 3000",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       },
       "configurations": {
         "production": {
           "command": "next dev --port 3000",
-          "cwd": "packages/app/admin"
+          "cwd": "apps/admin-web"
         }
       }
     },
@@ -34,16 +34,16 @@
       ],
       "options": {
         "command": "next build",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       },
       "configurations": {
         "production": {
           "command": "NODE_ENV=production next build",
-          "cwd": "packages/app/admin"
+          "cwd": "apps/admin-web"
         },
         "docker": {
           "command": "NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 next build",
-          "cwd": "packages/app/admin"
+          "cwd": "apps/admin-web"
         }
       }
     },
@@ -52,14 +52,14 @@
       "dependsOn": ["build"],
       "options": {
         "command": "next start --port 3000",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
         "command": "next dev --turbopack --port 3000",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       }
     },
     "typecheck": {
@@ -76,7 +76,7 @@
       ],
       "options": {
         "command": "tsc --noEmit --incremental",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       }
     },
     "lint": {
@@ -89,12 +89,12 @@
       ],
       "options": {
         "command": "biome check src/",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       },
       "configurations": {
         "fix": {
           "command": "biome check --write src/",
-          "cwd": "packages/app/admin"
+          "cwd": "apps/admin-web"
         }
       }
     },
@@ -107,7 +107,7 @@
       ],
       "options": {
         "command": "biome format --write src/",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       }
     },
     "test": {
@@ -123,7 +123,7 @@
       ],
       "options": {
         "command": "echo 'Tests will be added in future iterations'",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       }
     },
     "clean": {
@@ -134,7 +134,7 @@
           "rm -rf dist",
           "rm -rf node_modules/.cache"
         ],
-        "cwd": "packages/app/admin",
+        "cwd": "apps/admin-web",
         "parallel": false
       }
     },
@@ -142,17 +142,17 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build"],
       "options": {
-        "command": "docker build -f ../../../Dockerfile -t evc-admin:latest ../../../",
-        "cwd": "packages/app/admin"
+        "command": "docker build -f ../../Dockerfile -t evc-admin:latest ../../",
+        "cwd": "apps/admin-web"
       },
       "configurations": {
         "production": {
-          "command": "docker build -f ../../../Dockerfile --target runner -t evc-admin:prod ../../../",
-          "cwd": "packages/app/admin"
+          "command": "docker build -f ../../Dockerfile --target runner -t evc-admin:prod ../../",
+          "cwd": "apps/admin-web"
         },
         "development": {
-          "command": "docker build -f ../../../Dockerfile.dev --target development -t evc-admin:dev ../../../",
-          "cwd": "packages/app/admin"
+          "command": "docker build -f ../../Dockerfile.dev --target development -t evc-admin:dev ../../",
+          "cwd": "apps/admin-web"
         }
       }
     },
@@ -161,16 +161,16 @@
       "dependsOn": ["docker:build"],
       "options": {
         "command": "docker run -p 3000:3000 evc-admin:latest",
-        "cwd": "packages/app/admin"
+        "cwd": "apps/admin-web"
       },
       "configurations": {
         "production": {
           "command": "docker run -p 3000:3000 -e NODE_ENV=production evc-admin:prod",
-          "cwd": "packages/app/admin"
+          "cwd": "apps/admin-web"
         },
         "development": {
-          "command": "docker run -p 3000:3000 -v $(pwd)/../../../:/app evc-admin:dev",
-          "cwd": "packages/app/admin"
+          "command": "docker run -p 3000:3000 -v $(pwd)/../../:/app evc-admin:dev",
+          "cwd": "apps/admin-web"
         }
       }
     },
@@ -178,12 +178,12 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "docker-compose up evc-admin",
-        "cwd": "../../../"
+        "cwd": "../../"
       },
       "configurations": {
         "dev": {
           "command": "docker-compose --profile dev up evc-admin-dev",
-          "cwd": "../../../"
+          "cwd": "../../"
         }
       }
     }

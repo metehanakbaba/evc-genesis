@@ -7,7 +7,7 @@
       "path": "./apps-e2e"
     },
     {
-      "path": "./packages/app/admin"
+      "path": "./apps/admin-web"
     },
     {
       "path": "./packages/shared/store"
