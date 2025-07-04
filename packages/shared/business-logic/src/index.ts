@@ -20,5 +20,8 @@ export * from './stations';
 // ✅ Sessions Domain - COMPLETED
 export * from './sessions';
 
+// ✅ Admin/Dashboard Domain - COMPLETED
+export * from './admin';
+
 // Core domain exports will be added as they are implemented
 // export * from './core'; 

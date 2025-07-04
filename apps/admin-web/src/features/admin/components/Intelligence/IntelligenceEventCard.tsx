@@ -10,6 +10,8 @@ import {
 import { Button } from '@ui/forms';
 import React from 'react';
 import type { IntelligenceEventCardProps } from './types';
+// ✅ Import shared business logic
+import { formatTimeAgo } from '@evc/shared-business-logic';
 
 
 const TYPE_ICONS = {
@@ -35,13 +37,7 @@ const SEVERITY_BORDERS = {
   critical: 'border-red-400/30',
 } as const;
 
-const formatTimeAgo = (date: Date): string => {
-  const diff = Date.now() - date.getTime();
-  const minutes = Math.floor(diff / (1000 * 60));
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  return `${Math.floor(minutes / 60)}h ago`;
-};
+// ✅ formatTimeAgo now handled by shared business logic
 
 /**
  * Individual intelligence event card component

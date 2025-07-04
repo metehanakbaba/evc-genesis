@@ -1,17 +1,8 @@
 import { ClockIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import type { AIInsightsFooterProps } from './types';
-
-const formatTimeAgo = (date: Date): string => {
-  const diff = Date.now() - date.getTime();
-  const seconds = Math.floor(diff / 1000);
-
-  if (seconds < 60) return `${seconds}s ago`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  return `${hours}h ago`;
-};
+// ✅ Import shared business logic
+import { formatTimeAgo } from '@evc/shared-business-logic';
 
 /**
  * AI Insights footer with status indicators

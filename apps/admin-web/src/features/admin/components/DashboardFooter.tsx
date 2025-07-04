@@ -1,5 +1,7 @@
 import { BoltIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
+// ✅ Import shared business logic
+import { formatBuildTimestamp, formatLiveUpdateTime } from '@evc/shared-business-logic';
 
 /**
  * 🦶 Dashboard Footer
@@ -85,9 +87,7 @@ export const DashboardFooter: React.FC = () => {
               <div className="flex items-center gap-4 pt-2">
                 <span className="text-xs text-gray-500">Version 2.1.0</span>
                 <span className="text-xs text-gray-500">
-                  Build {new Date().getFullYear()}.
-                  {String(new Date().getMonth() + 1).padStart(2, '0')}.
-                  {String(new Date().getDate()).padStart(2, '0')}
+                  Build {formatBuildTimestamp()}
                 </span>
               </div>
             </div>
@@ -107,7 +107,7 @@ export const DashboardFooter: React.FC = () => {
 
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
             <span className="text-xs text-gray-500">
-              Last updated: {new Date().toLocaleTimeString()}
+              Last updated: {formatLiveUpdateTime(new Date())}
             </span>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
