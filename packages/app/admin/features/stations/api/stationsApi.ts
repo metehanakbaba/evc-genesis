@@ -26,7 +26,7 @@ const stationsApi = evChargingApi.injectEndpoints({
       ApiResponse<StationsResponse>,
       StationsQueryParams
     >({
-      query: ({ lat, lng, radius, available_only }) => ({
+      query: ({ lat, lng, radius, available_only }: any) => ({
         url: '/stations',
         params: {
           lat,
@@ -39,7 +39,7 @@ const stationsApi = evChargingApi.injectEndpoints({
     }),
 
     getStation: builder.query<ApiResponse<Station>, string>({
-      query: (stationId) => `/stations/${stationId}`,
+      query: (stationId: any) => `/stations/${stationId}`,
       providesTags: (_result, _error, id) => [{ type: 'Station', id }],
     }),
 
@@ -48,7 +48,7 @@ const stationsApi = evChargingApi.injectEndpoints({
       ApiResponse<AdminStationsResponse>,
       AdminStationsQueryParams
     >({
-      query: (params) => ({
+      query: (params: any) => ({
         url: '/admin/stations',
         params,
       }),
@@ -57,7 +57,7 @@ const stationsApi = evChargingApi.injectEndpoints({
 
     createStation: builder.mutation<ApiResponse<Station>, CreateStationRequest>(
       {
-        query: (station) => ({
+        query: (station: any) => ({
           url: '/admin/stations',
           method: 'POST',
           body: station,
@@ -70,7 +70,7 @@ const stationsApi = evChargingApi.injectEndpoints({
       ApiResponse<Station>,
       { id: string; data: UpdateStationRequest }
     >({
-      query: ({ id, data }) => ({
+      query: ({ id, data }: any) => ({
         url: `/admin/stations/${id}`,
         method: 'PUT',
         body: data,
@@ -82,7 +82,7 @@ const stationsApi = evChargingApi.injectEndpoints({
     }),
 
     deleteStation: builder.mutation<ApiResponse<void>, string>({
-      query: (stationId) => ({
+      query: (stationId: any) => ({
         url: `/admin/stations/${stationId}`,
         method: 'DELETE',
       }),

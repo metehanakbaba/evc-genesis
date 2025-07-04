@@ -161,7 +161,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Buttons"
             description="Interactive elements with multiple variants and states"
-            icon={CursorArrowRaysIcon as IconComponent}
+            
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -170,9 +170,9 @@ const ComponentShowcase = () => {
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="outline">Success</Button>
-                <Button variant="warning">Warning</Button>
-                <Button variant="info">Info</Button>
-                <Button variant="danger">Danger</Button>
+                <Button variant="secondary">Warning</Button>
+                <Button variant="ghost">Info</Button>
+                <Button variant="destructive">Danger</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
             </div>
@@ -197,16 +197,16 @@ const ComponentShowcase = () => {
                 Outline Style
               </h3>
               <div className="space-y-3">
-                <Button variant="primary" styleType="outline">
+                <Button variant="primary" >
                   Primary Outline
                 </Button>
-                <Button variant="outline" styleType="outline">
+                <Button variant="outline" >
                   Success Outline
                 </Button>
-                <Button variant="warning" styleType="outline">
+                <Button variant="secondary" >
                   Warning Outline
                 </Button>
-                <Button variant="danger" styleType="outline">
+                <Button variant="destructive" >
                   Danger Outline
                 </Button>
               </div>
@@ -228,14 +228,14 @@ const ComponentShowcase = () => {
                   Save Changes
                 </Button>
                 <Button
-                  variant="warning"
+                  variant="secondary"
                   onClick={() => console.log('Warning action!')}
                 >
                   Reset Form
                 </Button>
                 <Button
-                  variant="info"
-                  styleType="outline"
+                  variant="ghost"
+                  
                   onClick={() => console.log('Info action!')}
                 >
                   Learn More
@@ -250,7 +250,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form Components"
             description="Input fields, textareas, and form controls"
-            icon={DocumentTextIcon}
+            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -320,7 +320,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Selection Components"
             description="Toggles, dropdowns, and selection controls"
-            icon={AdjustmentsHorizontalIcon}
+            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -390,7 +390,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Radio Group"
             description="Single selection from multiple options"
-            icon={Squares2X2Icon}
+            
           />
           <div className="max-w-2xl">
             <RadioGroup
@@ -408,7 +408,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Fieldset"
             description="Grouped form elements with legend"
-            icon={RectangleStackIcon}
+            
           />
           <div className="max-w-2xl">
             <Fieldset legend="Shipping Information">
@@ -433,7 +433,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form State"
             description="Real-time form data visualization"
-            icon={CodeBracketIcon}
+            
           />
           <div className="bg-gray-900 rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-300 mb-4">

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { MinimalStatCard } from '@ui/display';
-import { MainLayout } from '@ui/layout';
-import { Button, Input, Select } from '@ui/forms';
+import { MinimalStatCard } from '@/shared/ui/components/Display';
+import { MainLayout } from '@/shared/ui/components/Layout';
+import { Button, Input, Select } from '@/shared/ui/components/Forms';
 import { useRouter } from 'next/navigation';
 import {
   MapPinIcon,
   BoltIcon,
   MagnifyingGlassIcon,
-
   SignalIcon,
   CheckCircleIcon,
   XCircleIcon,
@@ -22,23 +21,6 @@ import {
   ViewColumnsIcon,
   TableCellsIcon,
 } from '@heroicons/react/24/outline';
-
-// Custom Gas Station Icon Component (better than PlusIcon)
-const GasStationIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M8.25 18.75a1.125 1.125 0 01-1.125-1.125V8.25a1.125 1.125 0 011.125-1.125h2.25a1.125 1.125 0 011.125 1.125v9.375a1.125 1.125 0 01-1.125 1.125H8.25zM6.75 12.75h.008v.008H6.75v-.008zm0 3h.008v.008H6.75v-.008zm0-6h.008v.008H6.75v-.008zm6.75-1.875v-.375m0 13.125h.008v.008h-.008v-.008zm0-13.125v.375m0 0l3.75 3.75v5.625a.75.75 0 01-.75.75h-1.125a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-.375a.75.75 0 00-.75.75v4.5a.75.75 0 01-.75.75H13.5v-7.875a.75.75 0 01.75-.75h.375m0 0h.375a.75.75 0 01.75.75v1.5h1.5"
-    />
-  </svg>
-);
 
 // Electric Charging Station Icon - Revolutionary Design
 const ChargingStationIcon: React.FC<{ className?: string }> = ({
@@ -103,9 +85,6 @@ const ChargingStationIcon: React.FC<{ className?: string }> = ({
     `}</style>
   </svg>
 );
-
-// Type for icon components
-type IconComponent = React.ComponentType<{ className?: string }>;
 
 // API Schema based types (chargeStation.ts)
 interface ChargingStation {
@@ -348,7 +327,7 @@ const StationsPage: React.FC = () => {
                 key={stat.title}
                 title={stat.title}
                 value={stat.value}
-                icon={stat.icon as IconComponent}
+                icon={stat.icon}
                 variant={stat.variant}
                 trend={stat.trend}
                 description={stat.description}

@@ -9,7 +9,7 @@ const dashboardApi = evChargingApi.injectEndpoints({
       ApiResponse<DashboardData>,
       { period?: 'day' | 'week' | 'month' }
     >({
-      query: (params) => ({
+      query: (params: any) => ({
         url: '/admin/dashboard',
         params,
       }),
@@ -17,7 +17,7 @@ const dashboardApi = evChargingApi.injectEndpoints({
     }),
 
     getDashboardStats: builder.query<ApiResponse<DashboardStats>, void>({
-      query: () => '/admin/dashboard/stats',
+      query: (: any) => '/admin/dashboard/stats',
       providesTags: ['Station', 'Session', 'User'],
     }),
 
@@ -30,7 +30,7 @@ const dashboardApi = evChargingApi.injectEndpoints({
         to: string;
       }
     >({
-      query: (params) => ({
+      query: (params: any) => ({
         url: '/admin/reports/export',
         method: 'POST',
         body: params,

@@ -56,7 +56,7 @@ const LayoutExamplePage: React.FC = () => {
           <Badge variant="primary" size="lg">
             Type-safe
           </Badge>
-          <Badge variant="outline" size="lg">
+          <Badge variant="success" size="lg">
             Responsive
           </Badge>
           <Badge variant="warning" size="lg">
@@ -72,7 +72,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Button Components"
             description="Interactive elements with multiple variants"
-            icon={CursorArrowRaysIcon}
+            
           />
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
@@ -85,12 +85,12 @@ const LayoutExamplePage: React.FC = () => {
               <Button variant="outline" size="sm">
                 Success
               </Button>
-              <Button variant="danger" size="sm">
+              <Button variant="destructive" size="sm">
                 Danger
               </Button>
             </div>
             <div className="space-y-2">
-              <Button variant="primary" styleType="outline" className="w-full">
+              <Button variant="primary"  className="w-full">
                 Outline Primary
               </Button>
               <Button variant="ghost" className="w-full">
@@ -105,7 +105,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Form Elements"
             description="Input fields and controls"
-            icon={DocumentTextIcon}
+            
           />
           <div className="space-y-4">
             <Input
@@ -149,7 +149,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Settings"
             description="App configuration options"
-            icon={AdjustmentsHorizontalIcon}
+            
           />
           <div className="space-y-4">
             <div className="bg-gray-700/30 rounded-lg p-4 border border-gray-600/50">
@@ -182,7 +182,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Component Statistics"
             description="Overview of the layout system capabilities"
-            icon={ChartBarIcon}
+            
             size="lg"
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
@@ -212,7 +212,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Usage Example"
             description="How to use the layout components"
-            icon={UserGroupIcon}
+            
           />
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
             <pre className="text-sm text-gray-300 overflow-auto">
@@ -221,7 +221,7 @@ const LayoutExamplePage: React.FC = () => {
     <GridItem variant="glass" padding="md">
       <SectionHeader 
         title="My Section" 
-        icon={CursorArrowRaysIcon} 
+         
       />
       <div className="space-y-4">
         {/* Content */}
@@ -238,7 +238,7 @@ const LayoutExamplePage: React.FC = () => {
           <SectionHeader
             title="Form State"
             description="Current form values"
-            icon={DocumentTextIcon}
+            
             size="sm"
           />
           <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/30">

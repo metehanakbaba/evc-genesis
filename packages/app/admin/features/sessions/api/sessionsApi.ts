@@ -12,7 +12,7 @@ const sessionsApi = (evChargingApi as any).injectEndpoints({
   endpoints: (builder: any) => ({
     // User endpoints
     startSession: builder.mutation({
-      query: (data: any) => ({
+      query: (data: any: any) => ({
         url: '/sessions',
         method: 'POST',
         body: data,
@@ -21,12 +21,12 @@ const sessionsApi = (evChargingApi as any).injectEndpoints({
     }),
 
     getSession: builder.query({
-      query: (sessionId: string) => `/sessions/${sessionId}`,
+      query: (sessionId: string: any) => `/sessions/${sessionId}`,
       providesTags: (_result: any, _error: any, id: any) => [{ type: 'Session', id }],
     }),
 
     stopSession: builder.mutation({
-      query: (sessionId: string) => ({
+      query: (sessionId: string: any) => ({
         url: `/sessions/${sessionId}/stop`,
         method: 'PUT',
       }),
@@ -37,13 +37,13 @@ const sessionsApi = (evChargingApi as any).injectEndpoints({
     }),
 
     getUserSessions: builder.query({
-      query: () => '/sessions/my',
+      query: (: any) => '/sessions/my',
       providesTags: ['Session'],
     }),
 
     // Admin endpoints
     getAllSessions: builder.query({
-      query: (params: any) => ({
+      query: (params: any: any) => ({
         url: '/admin/sessions',
         params,
       }),
@@ -51,14 +51,14 @@ const sessionsApi = (evChargingApi as any).injectEndpoints({
     }),
 
     getSessionStatistics: builder.query({
-      query: (params: any) => ({
+      query: (params: any: any) => ({
         url: '/admin/sessions/statistics',
         params,
       }),
     }),
 
     forceStopSession: builder.mutation({
-      query: (sessionId: string) => ({
+      query: (sessionId: string: any) => ({
         url: `/admin/sessions/${sessionId}/force-stop`,
         method: 'PUT',
       }),

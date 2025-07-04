@@ -82,7 +82,7 @@ const variantMap = {
  * <SectionHeader
  *   title="Button Components"
  *   description="Interactive elements for user actions"
- *   icon={CursorArrowRaysIcon}
+ *   
  *   size="lg"
  *   variant="primary"
  * />

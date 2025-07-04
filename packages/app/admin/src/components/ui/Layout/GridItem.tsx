@@ -177,7 +177,7 @@ const paddingMap = {
  * @example
  * ```tsx
  * <GridItem variant="floating" colorAccent="blue" padding="xl" showAccent>
- *   <SectionHeader title="My Section" icon={CursorArrowRaysIcon} />
+ *   <SectionHeader title="My Section"  />
  *   <div className="space-y-4">
  *     Content goes here
  *   </div>

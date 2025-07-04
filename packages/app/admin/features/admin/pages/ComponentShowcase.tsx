@@ -161,7 +161,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Buttons"
             description="Interactive elements with multiple variants and states"
-            icon={CursorArrowRaysIcon as IconComponent}
+            
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -247,7 +247,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form Components"
             description="Input fields, textareas, and form controls"
-            icon={DocumentTextIcon}
+            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -317,7 +317,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Selection Components"
             description="Toggles, dropdowns, and selection controls"
-            icon={AdjustmentsHorizontalIcon}
+            
           />
           <div className="grid grid-cols-1 gap-8">
             <div className="space-y-6">
@@ -387,7 +387,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Radio Group"
             description="Single selection from multiple options"
-            icon={Squares2X2Icon}
+            
           />
           <div className="max-w-2xl">
             <RadioGroup
@@ -405,7 +405,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Fieldset"
             description="Grouped form elements with legend"
-            icon={RectangleStackIcon}
+            
           />
           <div className="max-w-2xl">
             <Fieldset legend="Shipping Information">
@@ -430,7 +430,7 @@ const ComponentShowcase = () => {
           <SectionHeader
             title="Form State"
             description="Real-time form data visualization"
-            icon={CodeBracketIcon}
+            
           />
           <div className="bg-gray-900 rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-300 mb-4">

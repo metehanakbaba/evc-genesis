@@ -319,8 +319,8 @@ const StationsPage: React.FC = () => {
             <Button
               variant="primary"
               size="md"
-              icon={GasStationIcon}
-              iconPosition="left"
+              
+              
             >
               Add Station
             </Button>
@@ -355,7 +355,7 @@ const StationsPage: React.FC = () => {
                 key={stat.title}
                 title={stat.title}
                 value={stat.value}
-                icon={stat.icon as IconComponent}
+                
                 variant={stat.variant}
                 trend={stat.trend}
                 description={stat.description}

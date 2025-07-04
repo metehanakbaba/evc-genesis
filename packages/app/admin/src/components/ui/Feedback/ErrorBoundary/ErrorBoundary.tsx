@@ -114,7 +114,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <div className="mt-6 flex justify-center gap-4">
                   <Button
                     variant="secondary"
-                    styleType="outline"
+                    
                     onClick={this.handleReset}
                   >
                     Try again

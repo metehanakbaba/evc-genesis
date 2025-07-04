@@ -236,7 +236,7 @@ export const ModalFooter = {
       <Button variant="secondary" onClick={onCancel}>
         {cancelText}
       </Button>
-      <Button variant="danger" onClick={onDelete} loading={deleteLoading}>
+      <Button variant="destructive" onClick={onDelete} loading={deleteLoading}>
         {deleteText}
       </Button>
     </div>

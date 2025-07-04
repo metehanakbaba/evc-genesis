@@ -1,15 +1,8 @@
 import React from 'react';
-import { IntelligenceEvent } from './types';
 import {
-  UserIcon,
-  BoltIcon,
   CurrencyDollarIcon,
-  ShieldCheckIcon,
   ShieldExclamationIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
   ClockIcon,
-  MapPinIcon,
   ComputerDesktopIcon,
   BugAntIcon,
   CpuChipIcon,
@@ -17,14 +10,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type { IntelligenceEventCardProps } from './types';
-
-// Type for Heroicon components
-type IconComponent = React.ForwardRefExoticComponent<
-  Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
-    title?: string;
-    titleId?: string;
-  } & React.RefAttributes<SVGSVGElement>
->;
 
 const TYPE_ICONS = {
   anomaly: ShieldExclamationIcon,

@@ -529,8 +529,8 @@ const UsersPage: React.FC = () => {
                 /* Add user logic */
               }}
               className="bg-purple-600 hover:bg-purple-500 text-white"
-              icon={PlusIcon}
-              iconPosition="left"
+              
+              
             >
               New User
             </Button>
@@ -557,8 +557,8 @@ const UsersPage: React.FC = () => {
                   variant="ghost"
                   onClick={() => setIsFilterModalOpen(true)}
                   className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white border border-gray-600/30 min-w-[120px]"
-                  icon={FunnelIcon}
-                  iconPosition="left"
+                  
+                  
                 >
                   Filters
                   {(roleFilter !== 'all' || statusFilter !== 'all') && (
@@ -574,14 +574,14 @@ const UsersPage: React.FC = () => {
                   size="sm"
                   onClick={() => setViewMode('grid')}
                   className={`p-2 ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
-                  icon={ViewColumnsIcon}
+                  
                 />
                 <Button
                   variant={viewMode === 'table' ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('table')}
                   className={`p-2 ${viewMode === 'table' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
-                  icon={TableCellsIcon}
+                  
                 />
               </div>
             </div>
@@ -748,8 +748,8 @@ const UsersPage: React.FC = () => {
                                 size="sm"
                                 variant="ghost"
                                 className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white px-3 py-2"
-                                icon={EyeIcon}
-                                iconPosition="left"
+                                
+                                
                               >
                                 View
                               </Button>
@@ -757,13 +757,13 @@ const UsersPage: React.FC = () => {
                                 size="sm"
                                 variant="ghost"
                                 className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
-                                icon={PencilIcon}
+                                
                               />
                               <Button
                                 size="sm"
                                 variant="ghost"
                                 className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
-                                icon={TrashIcon}
+                                
                               />
                             </div>
                           </td>
@@ -879,8 +879,8 @@ const UsersPage: React.FC = () => {
                             size="sm"
                             variant="ghost"
                             className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white"
-                            icon={EyeIcon}
-                            iconPosition="left"
+                            
+                            
                           >
                             View Profile
                           </Button>
@@ -888,13 +888,13 @@ const UsersPage: React.FC = () => {
                             size="sm"
                             variant="ghost"
                             className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
-                            icon={PencilIcon}
+                            
                           />
                           <Button
                             size="sm"
                             variant="ghost"
                             className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
-                            icon={TrashIcon}
+                            
                           />
                         </div>
                       </div>

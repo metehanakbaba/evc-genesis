@@ -409,8 +409,8 @@ const DesignSystemDocs: React.FC = () => {
             <h4 className="font-semibold text-gray-200">Colors</h4>
             <div className="flex gap-2 mt-2">
               <Badge variant="primary">Primary</Badge>
-              <Badge variant="secondary">Secondary</Badge>
-              <Badge variant="outline">Success</Badge>
+              <Badge variant="warning">Secondary</Badge>
+              <Badge variant="success">Success</Badge>
               <Badge variant="danger">Danger</Badge>
               <Badge variant="warning">Warning</Badge>
             </div>
@@ -424,7 +424,7 @@ const DesignSystemDocs: React.FC = () => {
           <div>
             <h4 className="font-semibold text-gray-200">Animation</h4>
             <div className="flex items-center gap-2">
-              <Spinner size="sm" color="primary" />
+              <Spinner size="sm"  />
               <span className="text-gray-400">
                 Smooth transitions & micro-interactions
               </span>
@@ -452,7 +452,7 @@ const DesignSystemDocs: React.FC = () => {
               <div className="flex items-center gap-2 mb-3">
                 <BoltIcon className="w-5 h-5 text-yellow-400" />
                 <h4 className="font-semibold text-gray-200">Biome.js</h4>
-                <Badge variant="outline" size="sm">
+                <Badge variant="success" size="sm">
                   Fast
                 </Badge>
               </div>
@@ -533,7 +533,7 @@ const DesignSystemDocs: React.FC = () => {
               <div className="flex items-center gap-2 mb-3">
                 <CubeIcon className="w-5 h-5 text-green-400" />
                 <h4 className="font-semibold text-gray-200">Redux Toolkit</h4>
-                <Badge variant="secondary" size="sm">
+                <Badge variant="warning" size="sm">
                   RTK
                 </Badge>
               </div>
@@ -624,7 +624,7 @@ const DesignSystemDocs: React.FC = () => {
               <h4 className="font-semibold text-gray-200 text-lg">
                 React Patterns
               </h4>
-              <Badge variant="outline" size="sm">
+              <Badge variant="success" size="sm">
                 Modern
               </Badge>
             </div>
@@ -641,7 +641,7 @@ const DesignSystemDocs: React.FC = () => {
                 <span className="text-sm text-gray-300">
                   useCallback for handlers
                 </span>
-                <Badge variant="outline" size="sm">
+                <Badge variant="success" size="sm">
                   Required
                 </Badge>
               </div>
@@ -649,7 +649,7 @@ const DesignSystemDocs: React.FC = () => {
                 <span className="text-sm text-gray-300">
                   Memo for pure components
                 </span>
-                <Badge variant="outline" size="sm">
+                <Badge variant="success" size="sm">
                   Optimization
                 </Badge>
               </div>
@@ -662,7 +662,7 @@ const DesignSystemDocs: React.FC = () => {
               <h4 className="font-semibold text-gray-200 text-lg">
                 Styling Standards
               </h4>
-              <Badge variant="secondary" size="sm">
+              <Badge variant="warning" size="sm">
                 Design System
               </Badge>
             </div>
@@ -678,7 +678,7 @@ const DesignSystemDocs: React.FC = () => {
                   <Button variant="secondary" size="sm">
                     Secondary
                   </Button>
-                  <Button variant="danger" size="sm">
+                  <Button variant="destructive" size="sm">
                     Danger
                   </Button>
                 </div>
@@ -736,13 +736,13 @@ const DesignSystemDocs: React.FC = () => {
             <Badge variant="primary" size="lg">
               TypeScript
             </Badge>
-            <Badge variant="outline" size="lg">
+            <Badge variant="success" size="lg">
               React 18
             </Badge>
             <Badge variant="warning" size="lg">
               Tailwind CSS
             </Badge>
-            <Badge variant="secondary" size="lg">
+            <Badge variant="warning" size="lg">
               Headless UI
             </Badge>
           </div>
@@ -861,7 +861,7 @@ const DesignSystemDocs: React.FC = () => {
               Tailwind CSS, and Headless UI.
             </p>
             <div className="flex justify-center gap-4">
-              <Badge variant="secondary">v1.0.0</Badge>
+              <Badge variant="warning">v1.0.0</Badge>
               <Badge variant="primary">Live</Badge>
             </div>
           </div>
