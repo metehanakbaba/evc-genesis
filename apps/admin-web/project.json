@@ -199,6 +199,7 @@
     "@evc/shared-types",
     "@evc/shared-store", 
     "@evc/shared-utils",
-    "@evc/design-tokens"
+    "@evc/design-tokens",
+    "@evc/shared-business-logic"
   ]
 } 

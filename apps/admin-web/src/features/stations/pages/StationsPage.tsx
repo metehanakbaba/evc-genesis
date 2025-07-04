@@ -24,6 +24,11 @@ import { MainLayout } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
+// ✅ Import shared business logic
+import {
+  getStationStatusConfig,
+  filterStations,
+} from '@evc/shared-business-logic';
 
 // // Custom Gas Station Icon Component (better than PlusIcon)
 // const GasStationIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -224,57 +229,13 @@ const StationsPage: React.FC = () => {
     },
   ];
 
-  const getStatusConfig = (status: ChargingStation['status']) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return {
-          color: 'emerald',
-          icon: CheckCircleIcon,
-          text: 'Available',
-          bgColor: 'bg-emerald-500/10',
-          borderColor: 'border-emerald-500/20',
-          textColor: 'text-emerald-400',
-        };
-      case 'CHARGING':
-        return {
-          color: 'amber',
-          icon: BoltIcon,
-          text: 'Charging',
-          bgColor: 'bg-amber-500/10',
-          borderColor: 'border-amber-500/20',
-          textColor: 'text-amber-400',
-        };
-      case 'MAINTENANCE':
-        return {
-          color: 'orange',
-          icon: WrenchScrewdriverIcon,
-          text: 'Maintenance',
-          bgColor: 'bg-orange-500/10',
-          borderColor: 'border-orange-500/20',
-          textColor: 'text-orange-400',
-        };
-      case 'OFFLINE':
-        return {
-          color: 'red',
-          icon: XCircleIcon,
-          text: 'Offline',
-          bgColor: 'bg-red-500/10',
-          borderColor: 'border-red-500/20',
-          textColor: 'text-red-400',
-        };
-    }
-  };
+  // ✅ Status configuration now handled by shared business logic
 
-  const filteredStations = stations.filter((station) => {
-    const matchesSearch =
-      station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      station.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      statusFilter === 'all' || station.status === statusFilter;
-    const matchesConnector =
-      connectorFilter === 'all' || station.connectorType === connectorFilter;
-
-    return matchesSearch && matchesStatus && matchesConnector;
+  // ✅ Use shared business logic for filtering
+  const filteredStations = filterStations(stations, {
+    searchQuery,
+    statusFilter,
+    connectorFilter,
   });
 
   return (
@@ -452,7 +413,14 @@ const StationsPage: React.FC = () => {
             // Grid View - Cards
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredStations.map((station) => {
-                const statusConfig = getStatusConfig(station.status);
+                const statusConfigData = getStationStatusConfig(station.status);
+                // Map icon string to actual icon component
+                const statusConfig = {
+                  ...statusConfigData,
+                  icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
+                        statusConfigData.icon === 'BoltIcon' ? BoltIcon :
+                        statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
+                };
                 const StatusIcon = statusConfig.icon;
 
                 return (
@@ -563,7 +531,14 @@ const StationsPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-700/30">
                     {filteredStations.map((station) => {
-                      const statusConfig = getStatusConfig(station.status);
+                      const statusConfigData = getStationStatusConfig(station.status);
+                      // Map icon string to actual icon component
+                      const statusConfig = {
+                        ...statusConfigData,
+                        icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
+                              statusConfigData.icon === 'BoltIcon' ? BoltIcon :
+                              statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
+                      };
                       const StatusIcon = statusConfig.icon;
 
                       return (

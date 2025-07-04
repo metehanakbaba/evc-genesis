@@ -5,6 +5,8 @@ import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
+// ✅ Import shared business logic
+import { validateEmail, validatePassword } from '@evc/shared-business-logic';
 
 // React 19: Action state interface
 interface LoginState {
@@ -38,12 +40,20 @@ export const useAuthForm = () => {
           };
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        // ✅ Use shared business logic instead of inline validation
+        const emailValidation = validateEmail(email);
+        if (!emailValidation.isValid) {
           return {
             success: false,
-            error: 'Please enter a valid email address',
+            error: emailValidation.error,
+          };
+        }
+
+        const passwordValidation = validatePassword(password);
+        if (!passwordValidation.isValid) {
+          return {
+            success: false,
+            error: passwordValidation.error,
           };
         }
 

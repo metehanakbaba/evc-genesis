@@ -44,7 +44,8 @@
       "@evc/shared-types": ["../../packages/shared/types/src/index.ts"],
       "@evc/design-tokens": ["../../packages/design/tokens/src/index.ts"],
       "@evc/shared-store": ["../../packages/shared/store/src/index.ts"],
-      "@evc/shared-utils": ["../../packages/shared/utils/src/index.ts"]
+      "@evc/shared-utils": ["../../packages/shared/utils/src/index.ts"],
+      "@evc/shared-business-logic": ["../../packages/shared/business-logic/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

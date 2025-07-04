@@ -26,6 +26,12 @@ import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { SessionStatus } from '@/types/global.types';
+// ✅ Import shared business logic
+import {
+  getSessionStatusConfig,
+  filterSessions,
+  formatSessionDuration,
+} from '@evc/shared-business-logic';
 
 // Type for icon components - fixed for Heroicons
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -198,95 +204,12 @@ const SessionsPage: React.FC = () => {
     },
   ];
 
-  /**
-   * 🎨 Revolutionary Status Configuration
-   * Floating card design with sophisticated color mapping
-   */
-  const getSessionStatusConfig = (status: SessionStatus) => {
-    const configs = {
-      starting: {
-        color: 'amber',
-        icon: PlayIcon,
-        text: 'Starting',
-        bgColor:
-          'bg-gradient-to-br from-amber-500/15 via-amber-400/8 to-transparent',
-        borderColor: 'border-amber-400/25 hover:border-amber-300/40',
-        textColor: 'text-amber-400',
-        badgeColor: 'bg-amber-500/10 border border-amber-500/20',
-        pulseColor: 'bg-amber-500',
-      },
-      charging: {
-        color: 'emerald',
-        icon: BoltIcon,
-        text: 'Charging',
-        bgColor:
-          'bg-gradient-to-br from-emerald-500/15 via-emerald-400/8 to-transparent',
-        borderColor: 'border-emerald-400/25 hover:border-emerald-300/40',
-        textColor: 'text-emerald-400',
-        badgeColor: 'bg-emerald-500/10 border border-emerald-500/20',
-        pulseColor: 'bg-emerald-500',
-      },
-      completed: {
-        color: 'blue',
-        icon: CheckCircleIcon,
-        text: 'Completed',
-        bgColor:
-          'bg-gradient-to-br from-blue-500/15 via-blue-400/8 to-transparent',
-        borderColor: 'border-blue-400/25 hover:border-blue-300/40',
-        textColor: 'text-blue-400',
-        badgeColor: 'bg-blue-500/10 border border-blue-500/20',
-        pulseColor: 'bg-blue-500',
-      },
-      failed: {
-        color: 'red',
-        icon: XCircleIcon,
-        text: 'Failed',
-        bgColor:
-          'bg-gradient-to-br from-red-500/15 via-red-400/8 to-transparent',
-        borderColor: 'border-red-400/25 hover:border-red-300/40',
-        textColor: 'text-red-400',
-        badgeColor: 'bg-red-500/10 border border-red-500/20',
-        pulseColor: 'bg-red-500',
-      },
-      cancelled: {
-        color: 'gray',
-        icon: XCircleIcon,
-        text: 'Cancelled',
-        bgColor:
-          'bg-gradient-to-br from-gray-500/15 via-gray-400/8 to-transparent',
-        borderColor: 'border-gray-400/25 hover:border-gray-300/40',
-        textColor: 'text-gray-400',
-        badgeColor: 'bg-gray-500/10 border border-gray-500/20',
-        pulseColor: 'bg-gray-500',
-      },
-    };
-    return configs[status];
-  };
+  // ✅ Session status configuration now handled by shared business logic
 
-  /**
-   * 🕒 Enhanced Duration Formatter
-   */
-  const formatDuration = (startTime: string, endTime?: string): string => {
-    const start = new Date(startTime);
-    const end = endTime ? new Date(endTime) : new Date();
-    const diffMs = end.getTime() - start.getTime();
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
-  };
-
-  /**
-   * 🎯 Enhanced Session Filtering
-   */
-  const filteredSessions = sessions.filter((session) => {
-    const matchesSearch =
-      session.station_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      session.user_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      session.connector_type.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      statusFilter === 'all' || session.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
+  // ✅ Use shared business logic for filtering and formatting
+  const filteredSessions = filterSessions(sessions, {
+    searchQuery,
+    statusFilter,
   });
 
   /**
@@ -484,7 +407,14 @@ const SessionsPage: React.FC = () => {
         {viewMode === 'grid' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredSessions.map((session, index) => {
-              const statusConfig = getSessionStatusConfig(session.status);
+              const statusConfigData = getSessionStatusConfig(session.status);
+              // Map icon string to actual icon component
+              const statusConfig = {
+                ...statusConfigData,
+                icon: statusConfigData.icon === 'PlayIcon' ? PlayIcon :
+                      statusConfigData.icon === 'BoltIcon' ? BoltIcon :
+                      statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon : XCircleIcon,
+              };
               const isActive =
                 session.status === 'charging' || session.status === 'starting';
 
@@ -581,7 +511,7 @@ const SessionsPage: React.FC = () => {
                         <div className="flex items-center gap-1">
                           <ClockIcon className="w-4 h-4" />
                           <span>
-                            {formatDuration(
+                            {formatSessionDuration(
                               session.started_at,
                               session.ended_at,
                             )}

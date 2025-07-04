@@ -8,6 +8,7 @@ import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
+import { validateLoginForm, getFieldValidationState } from '@evc/shared-business-logic';
 
 // React 19 Ready: Enhanced form state interface
 interface EnhancedFormState {
@@ -59,26 +60,13 @@ export const useEnhancedAuthForm = () => {
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      // Client-side validation
-      const validationErrors: Record<string, string> = {};
+      const validation = validateLoginForm(email, password);
 
-      if (!email) {
-        validationErrors.email = 'Email is required';
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        validationErrors.email = 'Please enter a valid email address';
-      }
-
-      if (!password) {
-        validationErrors.password = 'Password is required';
-      } else if (password.length < 6) {
-        validationErrors.password = 'Password must be at least 6 characters';
-      }
-
-      if (Object.keys(validationErrors).length > 0) {
+      if (!validation.isValid) {
         setFormState({
           success: false,
           error: 'Please fix the validation errors',
-          validationErrors,
+          validationErrors: validation.errors,
           lastSubmission: new Date(),
           isPending: false,
         });
@@ -171,14 +159,17 @@ export const FieldValidation: React.FC<FieldValidationProps> = ({
   fieldName,
   formState,
 }) => {
-  const error = formState?.validationErrors?.[fieldName];
+  const validationState = getFieldValidationState(
+    fieldName, 
+    formState?.validationErrors || {}
+  );
 
-  if (!error) return null;
+  if (!validationState.hasError) return null;
 
   return (
     <div className="mt-1 text-sm text-red-400 flex items-center gap-1">
       <span className="text-red-400">⚠</span>
-      {error}
+      {validationState.errorMessage}
     </div>
   );
 };

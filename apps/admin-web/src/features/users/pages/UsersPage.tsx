@@ -31,6 +31,15 @@ import type React from 'react';
 import { useState } from 'react';
 import type { UserRole } from '@/types/global.types';
 import type { UserProfile } from '../types/user.types';
+// ✅ Import shared business logic
+import {
+  getRoleConfig,
+  getRoleOptions,
+  getStatusOptions,
+  filterUsers,
+  formatLastLogin,
+  getDefaultFilters,
+} from '@evc/shared-business-logic';
 
 // Type for icon components - fixed for Heroicons
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -74,18 +83,19 @@ const FilterModal: React.FC<FilterModalProps> = ({
   onStatusChange,
   onClearFilters,
 }) => {
-  const roleOptions = [
-    { id: 'all', label: 'All Roles', icon: UserGroupIcon, color: 'gray' },
-    { id: 'admin', label: 'Admin', icon: ShieldCheckIcon, color: 'purple' },
-    { id: 'operator', label: 'Field Worker', icon: CogIcon, color: 'teal' },
-    { id: 'user', label: 'Customer', icon: UserIcon, color: 'blue' },
-  ];
+  // ✅ Use shared business logic for filter options
+  const roleOptions = getRoleOptions().map(option => ({
+    ...option,
+    icon: option.icon === 'UserGroupIcon' ? UserGroupIcon :
+          option.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
+          option.icon === 'CogIcon' ? CogIcon : UserIcon,
+  }));
 
-  const statusOptions = [
-    { id: 'all', label: 'All Status', icon: UserIcon, color: 'gray' },
-    { id: 'active', label: 'Active', icon: CheckCircleIcon, color: 'emerald' },
-    { id: 'inactive', label: 'Inactive', icon: XCircleIcon, color: 'red' },
-  ];
+  const statusOptions = getStatusOptions().map(option => ({
+    ...option,
+    icon: option.icon === 'CheckCircleIcon' ? CheckCircleIcon :
+          option.icon === 'XCircleIcon' ? XCircleIcon : UserIcon,
+  }));
 
   return (
     <Modal
@@ -305,91 +315,24 @@ const UsersPage: React.FC = () => {
     },
   ];
 
-  /**
-   * 🎨 Revolutionary Role Configuration
-   * Purple theme with role-based color mapping
-   */
-  const getRoleConfig = (role: UserRole) => {
-    const configs = {
-      admin: {
-        color: 'purple',
-        icon: ShieldCheckIcon,
-        text: 'Admin',
-        bgColor:
-          'bg-gradient-to-br from-purple-500/15 via-purple-400/8 to-transparent',
-        borderColor: 'border-purple-400/25 hover:border-purple-300/40',
-        textColor: 'text-purple-400',
-        badgeColor: 'bg-purple-500/10 border border-purple-500/20',
-        pulseColor: 'bg-purple-500',
-      },
-      operator: {
-        color: 'teal',
-        icon: CogIcon,
-        text: 'Field Worker',
-        bgColor:
-          'bg-gradient-to-br from-teal-500/15 via-teal-400/8 to-transparent',
-        borderColor: 'border-teal-400/25 hover:border-teal-300/40',
-        textColor: 'text-teal-400',
-        badgeColor: 'bg-teal-500/10 border border-teal-500/20',
-        pulseColor: 'bg-teal-500',
-      },
-      user: {
-        color: 'blue',
-        icon: UserIcon,
-        text: 'Customer',
-        bgColor:
-          'bg-gradient-to-br from-blue-500/15 via-blue-400/8 to-transparent',
-        borderColor: 'border-blue-400/25 hover:border-blue-300/40',
-        textColor: 'text-blue-400',
-        badgeColor: 'bg-blue-500/10 border border-blue-500/20',
-        pulseColor: 'bg-blue-500',
-      },
-    };
-    return configs[role] || configs.user;
-  };
+  // ✅ Role configuration now handled by shared business logic
 
-  /**
-   * 🎯 Enhanced User Filtering
-   */
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.phone.includes(searchQuery);
-
-    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchesStatus =
-      statusFilter === 'all' ||
-      (statusFilter === 'active' && user.is_active) ||
-      (statusFilter === 'inactive' && !user.is_active);
-
-    return matchesSearch && matchesRole && matchesStatus;
+  // ✅ Use shared business logic for filtering
+  const filteredUsers = filterUsers(users, {
+    searchQuery,
+    roleFilter,
+    statusFilter,
   });
 
-  /**
-   * 🎨 Clear All Filters
-   */
+  // ✅ Use shared business logic for clearing filters
   const handleClearFilters = () => {
-    setRoleFilter('all');
-    setStatusFilter('all');
-    setSearchQuery('');
+    const defaultFilters = getDefaultFilters();
+    setRoleFilter(defaultFilters.roleFilter);
+    setStatusFilter(defaultFilters.statusFilter);
+    setSearchQuery(defaultFilters.searchQuery);
   };
 
-  /**
-   * 📅 Format Last Login Time
-   */
-  const formatLastLogin = (lastLogin?: string): string => {
-    if (!lastLogin) return 'Never';
-    const date = new Date(lastLogin);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 1) return 'Today';
-    if (diffDays === 2) return 'Yesterday';
-    if (diffDays <= 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
-  };
+  // ✅ formatLastLogin now handled by shared business logic
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -657,7 +600,13 @@ const UsersPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-700/30">
                     {filteredUsers.map((user) => {
-                      const roleConfig = getRoleConfig(user.role);
+                      const roleConfigData = getRoleConfig(user.role);
+                      // Map icon string to actual icon component
+                      const roleConfig = {
+                        ...roleConfigData,
+                        icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
+                              roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+                      };
                       return (
                         <tr
                           key={user.id}
@@ -781,7 +730,13 @@ const UsersPage: React.FC = () => {
           {viewMode === 'grid' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredUsers.map((user, index) => {
-                const roleConfig = getRoleConfig(user.role);
+                const roleConfigData = getRoleConfig(user.role);
+                // Map icon string to actual icon component
+                const roleConfig = {
+                  ...roleConfigData,
+                  icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
+                        roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+                };
 
                 return (
                   <div
