@@ -12,9 +12,15 @@ COPY package*.json ./
 COPY nx.json ./
 COPY tsconfig*.json ./
 
-# Copy workspace package files
-COPY packages/app/admin/package.json ./packages/app/admin/
-COPY packages/shared/*/package.json ./packages/shared/*/
+# Create workspace structure and copy package files
+RUN mkdir -p apps/admin-web packages/shared/api packages/shared/business-logic packages/shared/store packages/shared/types packages/shared/utils packages/design/tokens
+
+COPY apps/admin-web/package.json ./apps/admin-web/
+COPY packages/shared/api/package.json ./packages/shared/api/
+COPY packages/shared/business-logic/package.json ./packages/shared/business-logic/
+COPY packages/shared/store/package.json ./packages/shared/store/
+COPY packages/shared/types/package.json ./packages/shared/types/
+COPY packages/shared/utils/package.json ./packages/shared/utils/
 COPY packages/design/tokens/package.json ./packages/design/tokens/
 
 # Install dependencies (use npm install instead of ci for workspace compatibility)
@@ -41,7 +47,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 RUN npx nx run-many --target=build --projects=@evc/shared-api,@evc/shared-types,@evc/shared-store,@evc/shared-utils,@evc/design-tokens --parallel=3 --no-cloud
 
 # Build the admin app using NX
-RUN npx nx build @evc/app-admin --configuration=docker --skip-nx-cache --no-cloud
+RUN npx nx build admin-web --configuration=docker --skip-nx-cache --no-cloud
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -54,16 +60,16 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy the built application
-COPY --from=builder /app/packages/app/admin/public ./packages/app/admin/public
+COPY --from=builder /app/apps/admin-web/public ./apps/admin-web/public
 
 # Set the correct permission for prerender cache
-RUN mkdir -p packages/app/admin/.next
-RUN chown nextjs:nodejs packages/app/admin/.next
+RUN mkdir -p apps/admin-web/.next
+RUN chown nextjs:nodejs apps/admin-web/.next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/packages/app/admin/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/app/admin/.next/static ./packages/app/admin/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/admin-web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/admin-web/.next/static ./apps/admin-web/.next/static
 
 USER nextjs
 
@@ -73,4 +79,4 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Start the application
-CMD ["node", "packages/app/admin/server.js"] 
+CMD ["node", "apps/admin-web/server.js"] 

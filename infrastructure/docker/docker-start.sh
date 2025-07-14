@@ -83,7 +83,7 @@ case $COMMAND in
         ;;
     "test-build")
         log_info "Hızlı build test ediliyor (sadece admin app)..."
-        npx nx build @evc/app-admin --configuration=production --no-cloud --skip-nx-cache
+        npx nx build admin-web --configuration=production --no-cloud --skip-nx-cache
         log_success "Hızlı build test başarılı!"
         ;;
     "nx-build")
@@ -91,7 +91,7 @@ case $COMMAND in
         log_info "Shared packages build ediliyor..."
         npx nx run-many --target=build --projects=@evc/shared-api,@evc/shared-types,@evc/shared-store,@evc/shared-utils,@evc/design-tokens --parallel=3 --no-cloud
         log_info "Admin app build ediliyor (Docker config)..."
-        npx nx build @evc/app-admin --configuration=docker --no-cloud
+        npx nx build admin-web --configuration=docker --no-cloud
         log_success "Tam NX build tamamlandı!"
         ;;
     "nx-clean")

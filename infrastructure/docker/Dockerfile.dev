@@ -10,11 +10,14 @@ COPY package*.json ./
 COPY nx.json ./
 COPY tsconfig*.json ./
 
-# Copy all workspace package.json files for proper dependency resolution
-COPY packages/app/admin/package.json ./packages/app/admin/
+# Create workspace structure and copy package.json files for proper dependency resolution
+RUN mkdir -p apps/admin-web packages/shared/api packages/shared/business-logic packages/shared/store packages/shared/types packages/shared/utils packages/design/tokens
+
+COPY apps/admin-web/package.json ./apps/admin-web/
 COPY packages/shared/api/package.json ./packages/shared/api/
-COPY packages/shared/types/package.json ./packages/shared/types/
+COPY packages/shared/business-logic/package.json ./packages/shared/business-logic/
 COPY packages/shared/store/package.json ./packages/shared/store/
+COPY packages/shared/types/package.json ./packages/shared/types/
 COPY packages/shared/utils/package.json ./packages/shared/utils/
 COPY packages/design/tokens/package.json ./packages/design/tokens/
 
@@ -33,4 +36,4 @@ ENV NODE_ENV=development \
 EXPOSE 3000
 
 # Start development server using NX
-CMD ["npx", "nx", "dev", "@evc/app-admin", "--host", "0.0.0.0"] 
+CMD ["npx", "nx", "dev", "admin-web", "--host", "0.0.0.0"] 
