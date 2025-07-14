@@ -48,11 +48,10 @@ dependency-graph.html
 static/
 
 # Apps we don't need
-apps/
+apps/admin-mobile/
 apps-e2e/
-packages/app/mobile/
 
 # Keep only admin app and shared packages
-!packages/app/admin/
+!apps/admin-web/
 !packages/shared/
 !packages/design/ 
