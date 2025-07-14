@@ -42,7 +42,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "expo build",
+        "command": "echo 'Mobile app build skipped - use expo start for development or EAS Build for production'",
         "cwd": "apps/admin-mobile"
       }
     }

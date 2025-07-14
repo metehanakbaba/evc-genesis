@@ -52,5 +52,12 @@
   "exclude": [
     "node_modules"
   ],
-  "references": []
+  "references": [
+    {
+      "path": "../../packages/shared/api"
+    },
+    {
+      "path": "../../packages/shared/business-logic"
+    }
+  ]
 }

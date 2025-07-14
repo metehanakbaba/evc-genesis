@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { useMemo } from 'react';
+import { useDeepMemo } from '@/shared/ui/hooks/useReactCompilerOptimized';
 import { RevolutionaryStationIcon } from '@/features/admin/components/RevolutionaryStationIcon';
 
 interface NetworkStat {
@@ -65,7 +66,7 @@ interface DashboardData {
 }
 
 /**
- * Custom hook for dashboard data with memoization for performance
+ * Custom hook for dashboard data with enhanced performance optimization
  */
 export const useDashboardData = (): DashboardData => {
   const isDeveloperMode = useMemo(
@@ -76,7 +77,8 @@ export const useDashboardData = (): DashboardData => {
     [],
   );
 
-  const networkStats = useMemo<readonly NetworkStat[]>(
+  // ✅ Use useDeepMemo for complex data structures to prevent unnecessary re-renders
+  const networkStats = useDeepMemo<readonly NetworkStat[]>(
     () => [
       {
         title: 'Active Stations',
@@ -120,9 +122,18 @@ export const useDashboardData = (): DashboardData => {
       },
     ],
     [],
+    // Custom equality check for deep object comparison
+    (prev, next) => {
+      if (prev.length !== next.length) return false;
+      return prev.every((item, index) => 
+        item.title === next[index]?.title && 
+        item.value === next[index]?.value &&
+        item.variant === next[index]?.variant
+      );
+    }
   );
 
-  const coreManagement = useMemo<readonly CoreManagementItem[]>(
+  const coreManagement = useDeepMemo<readonly CoreManagementItem[]>(
     () => [
       {
         title: 'Charging Stations',
@@ -163,9 +174,10 @@ export const useDashboardData = (): DashboardData => {
       },
     ],
     [],
+    (prev, next) => prev.length === next.length && prev.every((item, index) => item.path === next[index]?.path)
   );
 
-  const activeOperations = useMemo<readonly ActiveOperation[]>(
+  const activeOperations = useDeepMemo<readonly ActiveOperation[]>(
     () => [
       {
         title: 'Live Charging Sessions',
@@ -182,7 +194,7 @@ export const useDashboardData = (): DashboardData => {
     [],
   );
 
-  const developerTools = useMemo<readonly DeveloperTool[]>(
+  const developerTools = useDeepMemo<readonly DeveloperTool[]>(
     () =>
       isDeveloperMode
         ? [
@@ -213,7 +225,7 @@ export const useDashboardData = (): DashboardData => {
     [isDeveloperMode],
   );
 
-  return useMemo(
+  return useDeepMemo(
     () => ({
       networkStats,
       coreManagement,

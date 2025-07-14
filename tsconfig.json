@@ -23,6 +23,9 @@
     },
     {
       "path": "./packages/design/tokens"
+    },
+    {
+      "path": "./packages/shared/business-logic"
     }
   ]
 }

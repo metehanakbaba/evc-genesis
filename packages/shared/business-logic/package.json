@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Business logic for EV Charging platform",
   "private": true,
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

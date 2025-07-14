@@ -5,10 +5,24 @@
   "description": "EV Charging Admin Panel - Next.js 15 + React 19",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:fast": "next dev --turbopack --experimental-https",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
+    "build:profile": "next build --profile",
+    "build:debug": "next build --debug",
     "start": "next start",
+    "start:prod": "NODE_ENV=production next start",
+    "preview": "next build && next start",
     "lint": "biome check --write src/",
-    "format": "biome format --write src/"
+    "lint:fix": "biome check --fix src/",
+    "format": "biome format --write src/",
+    "type-check": "tsc --noEmit",
+    "perf:analyze": "npm run build:analyze && npx webpack-bundle-analyzer .next/analyze/client.js",
+    "perf:lighthouse": "lighthouse http://localhost:3000 --view",
+    "perf:profile": "npm run build:profile && echo 'Check .next/profile-events.json for React profiling data'",
+    "clean": "rm -rf .next node_modules/.cache",
+    "clean:all": "rm -rf .next node_modules",
+    "preinstall": "npx only-allow npm"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -31,7 +45,19 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@next/bundle-analyzer": "^15.3.4",
+    "lighthouse": "^12.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }

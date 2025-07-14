@@ -128,7 +128,7 @@ export const getFieldValidationState = (
   const error = errors[fieldName];
   return {
     hasError: !!error,
-    errorMessage: error
+    ...(error && { errorMessage: error })
   };
 };
 

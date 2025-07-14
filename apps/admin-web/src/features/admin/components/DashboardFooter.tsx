@@ -1,7 +1,10 @@
-import { BoltIcon } from '@heroicons/react/24/outline';
+import { getOptimizedIcon } from '@/lib/utils/iconOptimization';
 import type React from 'react';
 // ✅ Import shared business logic
 import { formatBuildTimestamp, formatLiveUpdateTime } from '@evc/shared-business-logic';
+
+// ✅ Use optimized icon loading
+const BoltIcon = getOptimizedIcon('heroicons-outline', 'BoltIcon');
 
 /**
  * 🦶 Dashboard Footer
@@ -46,55 +49,58 @@ export const DashboardFooter: React.FC = () => {
             </h3>
             <div className="space-y-2">
               <a
-                href="/docs"
-                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+                href="/admin/users"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
-                Documentation
+                User Management
               </a>
               <a
-                href="/support"
-                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+                href="/admin/stations"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
-                Support Center
+                Charging Stations
               </a>
               <a
-                href="/api"
-                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+                href="/admin/sessions"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
-                API Reference
+                Active Sessions
               </a>
               <a
-                href="/status"
-                className="block text-sm text-gray-300 hover:text-blue-400 transition-colors"
+                href="/admin/wallets"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
-                System Status
+                Payment System
               </a>
             </div>
           </div>
 
-          {/* Company Info */}
+          {/* Build Info */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wide">
-              EV Charging Network
+              Build Information
             </h3>
             <div className="space-y-2">
-              <p className="text-sm text-gray-300">
-                Professional EV charging infrastructure management platform
-              </p>
-              <p className="text-xs text-gray-400">
-                © 2024 EV Charging Team. All rights reserved.
-              </p>
-              <div className="flex items-center gap-4 pt-2">
-                <span className="text-xs text-gray-500">Version 2.1.0</span>
-                <span className="text-xs text-gray-500">
-                  Build {formatBuildTimestamp()}
+              <div className="text-sm text-gray-300">
+                Version: <span className="text-gray-100">2.1.0</span>
+              </div>
+              <div className="text-sm text-gray-300">
+                Build: <span className="text-gray-100">{formatBuildTimestamp()}</span>
+              </div>
+              <div className="text-sm text-gray-300">
+                Environment:{' '}
+                <span className="text-gray-100">
+                  {process.env.NODE_ENV || 'production'}
                 </span>
+              </div>
+              <div className="text-sm text-gray-300">
+                Deploy: <span className="text-gray-100">Stable</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Section */}
         <div className="border-t border-gray-700/30 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
