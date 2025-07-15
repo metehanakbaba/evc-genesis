@@ -9,13 +9,13 @@ export interface MinimalStatCardProps {
   value: string;
   /** Icon component */
   icon: React.ComponentType<{ className?: string }>;
-  /** Trend information */
+  /** Trend percentage or text */
   trend: string;
-  /** Description text */
+  /** Brief description */
   description: string;
   /** Color variant */
   variant: 'blue' | 'emerald' | 'purple' | 'teal';
-  /** Additional CSS classes */
+  /** Custom className */
   className?: string;
 }
 
@@ -74,8 +74,9 @@ export const MinimalStatCard: React.FC<MinimalStatCardProps> = ({
   return (
     <div
       className={cn(
-        // Base GridItem-compatible styling
+        // Base GridItem-compatible styling with fixed height
         'backdrop-blur-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 border p-6 group relative',
+        'min-h-[180px] max-h-[200px] flex flex-col overflow-hidden',
         // Color accent styling consistent with GridItem
         variantClasses[variant].background,
         variantClasses[variant].border,
@@ -97,32 +98,32 @@ export const MinimalStatCard: React.FC<MinimalStatCardProps> = ({
         )}
       />
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-shrink-0">
         <div
           className={cn(
-            'w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300',
+            'w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0',
             variantClasses[variant].background,
           )}
         >
           <Icon className={cn('w-7 h-7', variantClasses[variant].icon)} />
         </div>
-        <div className="text-right">
-          <div className="text-3xl font-bold text-white mb-1">{value}</div>
+        <div className="text-right flex-shrink-0">
+          <div className="text-3xl font-bold text-white mb-1 text-truncate-title">{value}</div>
           <div
             className={cn(
-              'text-xs flex items-center gap-1',
+              'text-xs flex items-center gap-1 justify-end',
               variantClasses[variant].accent,
             )}
           >
             <ArrowTrendingUpIcon className="w-3 h-3" />
-            {trend}
+            <span className="text-truncate-title max-w-[60px]">{trend}</span>
           </div>
         </div>
       </div>
 
-      <div>
-        <h3 className="text-white font-medium mb-1">{title}</h3>
-        <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="flex-1 flex flex-col min-h-0">
+        <h3 className="text-white font-medium mb-1 text-truncate-title">{title}</h3>
+        <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-truncate-multi">
           {description}
         </p>
       </div>
