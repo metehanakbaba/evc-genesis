@@ -1,17 +1,18 @@
+'use client';
 
-import { MainLayout } from '@ui/layout';
+import { BoltIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import {
   CoreManagementSection,
   DeveloperToolsSection,
   LiveOperationsSection,
   RevolutionaryStatCard,
-  RevolutionaryStationIcon,
 } from '@/features/admin/components';
 import { useDashboardData } from '@/features/admin/hooks/useDashboardData';
+import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
 
 /**
- * Revolutionary Admin Dashboard - Optimized & Type-safe
+ * Revolutionary Admin Dashboard - Main Page (Root Path)
  */
 const DashboardPage: React.FC = React.memo(() => {
   const {
@@ -21,8 +22,6 @@ const DashboardPage: React.FC = React.memo(() => {
     developerTools,
     isDeveloperMode,
   } = useDashboardData();
-
-
 
   return (
     <MainLayout
@@ -54,8 +53,8 @@ const DashboardPage: React.FC = React.memo(() => {
           </div>
         </header>
 
-        {/* Network Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
+        {/* Network Stats with fixed grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 grid-align-stretch">
           {networkStats.map((stat) => (
             <RevolutionaryStatCard key={stat.title} {...stat} />
           ))}
@@ -80,3 +79,42 @@ const DashboardPage: React.FC = React.memo(() => {
 DashboardPage.displayName = 'DashboardPage';
 
 export default DashboardPage;
+
+/**
+ * Revolutionary Station Icon Component
+ */
+const RevolutionaryStationIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12 2L2 7V12C2 16.5 4.23 20.68 7.62 23.15L12 24L16.38 23.15C19.77 20.68 22 16.5 22 12V7L12 2Z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M12 7V17"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M8 12H16"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="3"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+  </svg>
+);
