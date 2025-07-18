@@ -1,6 +1,6 @@
-# 🎯 Linear API Automation Tools
+# 🛠️ Development Tools & API Automation
 
-Automated setup for EV Charging Multi-Repo Migration workspace in Linear using APIs.
+Comprehensive toolset for EV Charging project automation including Linear workspace setup and Notion API integration.
 
 ## 🚀 Quick Setup (5 minutes)
 
@@ -142,19 +142,180 @@ const slackIntegration = {
 };
 ```
 
-### **Notion Integration**
+### **Notion Production Integration**
 ```javascript
-// Sync documentation
-const notionIntegration = {
-  database_id: "your-notion-database-id",
-  sync_fields: [
-    "project_roadmap",
-    "team_documentation", 
-    "release_notes",
-    "architecture_decisions"
-  ]
+// Production Notion integration with live databases
+const { notionHelpers, NOTION_CONFIG } = require('./notion/config');
+
+// Test connection to production databases
+await notionHelpers.testConnection();
+
+// Sync documentation to Engineering Docs database
+await syncDocumentationToNotion();
+
+// Update KPIs in Goals Tracker database
+await updateKPIs();
+```
+
+**Production Integration:**
+```bash
+cd tools/notion
+npm install
+npm run test        # Test connection to 4 production databases
+npm run sync-docs   # Sync docs/ folder to Notion
+npm run update-kpis # Update project metrics
+npm run explore     # Explore database contents
+```
+
+**API Testing & Development:**
+```bash
+cd tools/notion-test
+npm install
+npm test  # Test API capabilities and explore workspace
+```
+
+---
+
+## 🔗 Notion Production Integration
+
+### **Overview**
+The `tools/notion` directory contains the production-ready Notion integration that connects to 4 live databases in your Notion workspace. This integration provides automated documentation sync, KPI tracking, and project management capabilities.
+
+### **Connected Databases**
+1. **Issue Tracking** (`21c0c129-40cf-8066-967a-d82ad57cfe5f`)
+   - Project issues and task management
+   - GitHub integration for issue tracking
+   - Status and priority management
+
+2. **Engineering Docs** (`2180c129-40cf-8068-920d-c37c7f4a1ee0`)
+   - Centralized documentation hub
+   - Auto-sync from `docs/` folder
+   - Categorized by document type (Architecture, API, Mobile, etc.)
+
+3. **Goals Tracker** (`2180c129-40cf-80c0-b957-d70bdc1357ce`)
+   - KPI and metrics tracking
+   - Progress monitoring and reporting
+   - Automated metric collection from codebase
+
+4. **Projects** (`2180c129-40cf-80c6-9431-e89a1ea27890`)
+   - High-level project planning
+   - Team assignment and progress tracking
+   - Repository and milestone management
+
+### **Available Commands**
+```bash
+cd tools/notion
+
+# Test connection and database access
+npm run test
+
+# Sync all documentation from docs/ folder
+npm run sync-docs
+
+# Update project metrics and KPIs
+npm run update-kpis
+
+# Explore database contents and schemas
+npm run explore
+```
+
+### **Automated Features**
+- **Documentation Sync**: Automatically converts and syncs all `.md` files from `docs/` to Engineering Docs database
+- **KPI Collection**: Gathers project metrics including TypeScript errors, code coverage, build performance
+- **Smart Categorization**: Auto-categorizes documents based on filename patterns
+- **Progress Tracking**: Calculates and updates goal progress percentages
+- **Error Handling**: Robust error handling with retry logic and clear error messages
+
+### **Integration Workflow**
+```javascript
+// Daily development workflow
+await notionHelpers.testConnection();           // Verify connectivity
+await syncDocumentationToNotion();             // Sync latest docs
+await updateKPIs();                             // Update project metrics
+```
+
+### **Configuration**
+The integration is pre-configured with your workspace settings in `config.js`:
+```javascript
+const NOTION_CONFIG = {
+  apiKey: 'ntn_your_api_key_here',
+  databases: {
+    issueTracking: '21c0c129-40cf-8066-967a-d82ad57cfe5f',
+    engineeringDocs: '2180c129-40cf-8068-920d-c37c7f4a1ee0',
+    goalsTracker: '2180c129-40cf-80c0-b957-d70bdc1357ce',
+    projects: '2180c129-40cf-80c6-9431-e89a1ea27890'
+  },
+  sync: {
+    documentationPath: 'docs/',
+    githubRepo: 'evc-frontend-admin'
+  }
 };
 ```
+
+---
+
+## 🧪 Notion API Testing Tool
+
+### **Overview**
+The `tools/notion-test` directory contains a comprehensive Notion API testing utility that helps you:
+- Test API connection and authentication
+- Explore available databases and pages in your workspace
+- Understand database schemas and properties
+- Validate permissions and capabilities
+
+### **Features**
+- ✅ **Connection Testing**: Verify API key and workspace access
+- ✅ **Database Discovery**: List all accessible databases with schemas
+- ✅ **Page Exploration**: Browse pages and their content structure
+- ✅ **Permission Validation**: Check what operations are available
+- ✅ **Capability Assessment**: Understand API limits and possibilities
+
+### **Quick Start**
+```bash
+# Navigate to the testing tool
+cd tools/notion-test
+
+# Install dependencies
+npm install
+
+# Run comprehensive API test
+npm test
+
+# Expected output:
+# 🧪 Testing Notion API Capabilities...
+# 1️⃣ Testing connection...
+# ✅ Connected as: [Your Name]
+# 2️⃣ Searching for databases...
+# ✅ Found X databases
+# 3️⃣ Searching for pages...
+# ✅ Found X pages
+# ... and more detailed analysis
+```
+
+### **What Gets Tested**
+1. **Basic Authentication**: Validates API key and user permissions
+2. **Database Access**: Lists all databases you can read/write
+3. **Page Access**: Shows available pages and their hierarchy
+4. **Schema Analysis**: Examines database properties and types
+5. **Operation Permissions**: Tests what CRUD operations are possible
+6. **Content Reading**: Verifies ability to read page blocks and content
+
+### **Configuration**
+Update the API key in `test-api.js`:
+```javascript
+const NOTION_API_KEY = "your-notion-api-key-here";
+```
+
+### **Integration with Project Specs**
+This testing tool supports the implementation of:
+- **Notion Integration System** (`.kiro/specs/notion-integration-system/`)
+- **Documentation Sync System** (`.kiro/specs/documentation-sync-system/`)
+
+The test results help determine what databases and pages are available for:
+- Project management and issue tracking
+- Documentation synchronization
+- KPI and metrics tracking
+- Team collaboration workflows
 
 ---
 

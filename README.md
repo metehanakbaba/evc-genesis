@@ -85,6 +85,11 @@ npm run docker:build    # Docker production build
 npm run test            # Run all tests
 npm run lint            # Lint all projects
 npm run typecheck       # TypeScript validation
+
+# Notion Integration
+cd tools/notion && npm run test        # Test Notion connection
+cd tools/notion && npm run sync-docs   # Sync documentation with full content
+cd tools/notion && npm run update-kpis # Update project metrics
 ```
 
 ### Development Workflow
@@ -192,6 +197,8 @@ docker system prune -a
 - Admin web application
 - Shared business logic
 - Docker deployment setup
+- Notion integration with full content sync
+- Automated documentation and KPI tracking
 
 ### In Progress 🔄
 - Mobile application development

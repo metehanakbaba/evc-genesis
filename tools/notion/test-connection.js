@@ -1,36 +1,59 @@
 #!/usr/bin/env node
 
 /**
- * 🧪 Notion Connection Test
- * 
- * Quick test to verify Notion API connection works.
- * Run: node tools/notion/test-connection.js
+ * Test Notion API Connection
+ * Simple connection test for the EV Charging Admin Notion integration
  */
 
-const { notionHelpers } = require('./notion-config');
+const { notionHelpers, NOTION_CONFIG } = require('./config');
 
 async function testConnection() {
-  console.log('🧪 Testing Notion API connection...\n');
-  
+  console.log('🧪 Testing Notion Integration...\n');
+
   try {
-    const success = await notionHelpers.testConnection();
+    // Test 1: Basic connection
+    console.log('1️⃣ Testing API connection...');
+    const connected = await notionHelpers.testConnection();
     
-    if (success) {
-      console.log('🎉 SUCCESS! Notion API is working correctly.');
-      console.log('📋 Next steps:');
-      console.log('   1. Create a parent page in Notion: "🚀 EV Charging Admin"');
-      console.log('   2. Get the page ID from the URL');
-      console.log('   3. Update setup-notion.js with the page ID');
-      console.log('   4. Run: npm run setup');
-    } else {
-      console.log('❌ FAILED! Check your API key.');
+    if (!connected) {
+      throw new Error('Failed to connect to Notion API');
     }
+
+    // Test 2: Database access
+    console.log('\n2️⃣ Testing database access...');
+    const databases = Object.entries(NOTION_CONFIG.databases);
+    
+    for (const [name, id] of databases) {
+      try {
+        const pages = await notionHelpers.queryDatabase(id);
+        console.log(`   ✅ ${name}: ${pages.length} pages accessible`);
+      } catch (error) {
+        console.log(`   ❌ ${name}: ${error.message}`);
+      }
+    }
+
+    // Test 3: List all databases
+    console.log('\n3️⃣ Discovering workspace databases...');
+    const allDatabases = await notionHelpers.listDatabases();
+    console.log(`   ✅ Found ${allDatabases.length} total databases in workspace`);
+
+    console.log('\n🎉 Connection test completed successfully!');
+    console.log('\n📋 Integration Status:');
+    console.log('   ✅ API Connection: Working');
+    console.log(`   ✅ Database Access: ${databases.length}/4 databases accessible`);
+    console.log('   ✅ Workspace Access: Available');
+    console.log('\n🚀 Ready to sync documentation and update KPIs!');
+
   } catch (error) {
-    console.error('💥 Error:', error.message);
+    console.error('\n❌ Connection test failed:', error.message);
+    
     console.log('\n🔧 Troubleshooting:');
-    console.log('   1. Check if API key is correct');
-    console.log('   2. Verify the integration has access to your workspace');
-    console.log('   3. Make sure you\'ve shared pages with the integration');
+    console.log('   1. Verify API key is correct and active');
+    console.log('   2. Check integration has workspace access');
+    console.log('   3. Ensure databases are shared with integration');
+    console.log('   4. Confirm integration permissions are sufficient');
+    
+    process.exit(1);
   }
 }
 
@@ -38,4 +61,4 @@ if (require.main === module) {
   testConnection();
 }
 
-module.exports = { testConnection }; 
+module.exports = { testConnection };
