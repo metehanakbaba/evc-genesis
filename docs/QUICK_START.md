@@ -1,6 +1,6 @@
 # ⚡ EV Charging Admin Panel - Quick Start
 
-> **Fast track to get the EV Charging Admin Panel running with NX optimization**
+> **Fast track to get the EV Charging Admin Panel running with NX optimization and Notion integration**
 
 ## 🚀 **Instant Setup**
 
@@ -11,14 +11,14 @@ cd evc-frontend-admin
 npm install
 
 # 2. Start development
-cd packages/app/admin && npm run dev
+cd apps/admin-web && npm run dev
 # → http://localhost:3000
 
-# 3. Test NX build system
-./docker-start.sh test-build
+# 3. Setup Notion integration (optional)
+cd tools/notion && npm install && npm run test
 
 # 4. Production Docker
-./docker-start.sh prod
+./infrastructure/docker/docker-start.sh prod
 ```
 
 ## 🎯 **Essential Commands**
@@ -26,34 +26,49 @@ cd packages/app/admin && npm run dev
 ### **Development**
 ```bash
 # Local development with hot reload
-cd packages/app/admin && npm run dev
+cd apps/admin-web && npm run dev
 
 # Quick build test (NX optimized)
-./docker-start.sh test-build
+./infrastructure/docker/docker-start.sh dev
 ```
 
 ### **Docker Deployment**
 ```bash
 # Production deployment
-./docker-start.sh prod
+./infrastructure/docker/docker-start.sh prod
 
 # Standalone build
-./docker-build.sh production evc-admin:v1.0
+./infrastructure/docker/docker-build.sh production evc-admin:v1.0
 
 # Clean everything
-./docker-start.sh clean
+./infrastructure/docker/docker-start.sh clean
 ```
 
 ### **NX Build System**
 ```bash
 # Full workspace build
-./docker-start.sh nx-build
+npm run build
 
 # Clean NX cache
-./docker-start.sh nx-clean
+npx nx reset
 
 # Show dependency graph
 npx nx graph
+```
+
+### **Notion Integration**
+```bash
+# Test Notion connection
+cd tools/notion && npm run test
+
+# Sync documentation with intelligent caching and full content conversion
+cd tools/notion && npm run sync-docs
+
+# Update project metrics
+cd tools/notion && npm run update-kpis
+
+# Analyze and sync comprehensive project structure
+cd tools/notion && npm run analyze
 ```
 
 ## 📊 **Performance at a Glance**
@@ -67,23 +82,25 @@ npx nx graph
 
 ## 🛠️ **Key Scripts**
 
-### **docker-start.sh**
-- `dev` - Development mode (hot reload)
-- `prod` - Production deployment
-- `test-build` - Quick build test
-- `nx-build` - Full NX build
-- `clean` - Clean all caches
+### **Infrastructure Scripts**
+- `./infrastructure/docker/docker-start.sh dev` - Development mode (hot reload)
+- `./infrastructure/docker/docker-start.sh prod` - Production deployment
+- `./infrastructure/docker/docker-build.sh` - Build Docker images
+- `npm run build` - Full NX workspace build
+- `npx nx reset` - Clean NX cache
 
-### **docker-build.sh**
-- `production` - Production Docker image
-- `development` - Development Docker image
+### **Notion Integration Scripts**
+- `cd tools/notion && npm run test` - Test API connection
+- `cd tools/notion && npm run sync-docs` - Sync documentation with full content conversion
+- `cd tools/notion && npm run update-kpis` - Update project metrics
+- `cd tools/notion && npm run explore` - Explore database contents
 
 ## 🔗 **Quick Access**
 
 - **Admin Panel**: http://localhost:3000
 - **NX Graph**: `npx nx graph`
-- **Container Logs**: `./docker-start.sh logs`
-- **Shell Access**: `./docker-start.sh shell`
+- **Notion Workspace**: Connected to 4 production databases
+- **Documentation**: Auto-synced to Notion Engineering Docs
 
 ## 📚 **Full Documentation**
 

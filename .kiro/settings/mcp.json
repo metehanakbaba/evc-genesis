@@ -1,4 +1,13 @@
 {
   "mcpServers": {
+    "Context7": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && nvm use v22.16.0 && npx -y @upstash/context7-mcp"
+      ],
+      "disabled": false,
+      "autoApprove": ["resolve-library-id", "get-library-docs"]
+    }
   }
 }
