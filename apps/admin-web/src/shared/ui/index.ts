@@ -2,13 +2,28 @@
  * Centralized UI component exports
  * All UI components should be imported from this file
  *
- * 📁 Organized by Category:
- * - Forms: Interactive form elements
- * - Navigation: Navigation components
- * - Display: Content display components
- * - Layout: Layout and structure components
- * - Feedback: User feedback components
+ * 📁 Organized by Atomic Design Principles:
+ * - Atoms: Basic building blocks
+ * - Molecules: Simple combinations of atoms
+ * - Organisms: Complex combinations of molecules
+ * - Templates: Page-level layouts
+ * - Legacy Components: Existing components (to be migrated)
+ * - Hooks: Shared UI hooks
+ * - Utils: Utility functions
+ * - Theme: Design tokens and theming
  */
+
+// ==================== ATOMIC DESIGN SYSTEM ====================
+export * from './atoms';
+export * from './molecules';
+export * from './organisms';
+export * from './templates';
+
+// ==================== HOOKS ====================
+export * from './hooks';
+
+// ==================== UTILITIES ====================
+export * from './utils';
 
 export type { BadgeProps } from './components/Display/Badge/Badge';
 export { Badge } from './components/Display/Badge/Badge';

@@ -333,13 +333,101 @@ export const theme = {
   zIndex: designTokens.zIndex,
 } as const;
 
+// Atomic Design System Tokens
+export const atomicTokens = {
+  // Variant system for atomic components
+  variants: {
+    blue: {
+      primary: 'blue-500',
+      secondary: 'blue-400',
+      accent: 'blue-300',
+      background: 'blue-500/15',
+      border: 'blue-400/60',
+      text: 'blue-200',
+      glow: 'blue-400/15',
+    },
+    emerald: {
+      primary: 'emerald-500',
+      secondary: 'emerald-400',
+      accent: 'emerald-300',
+      background: 'emerald-500/15',
+      border: 'emerald-400/60',
+      text: 'emerald-200',
+      glow: 'emerald-400/15',
+    },
+    purple: {
+      primary: 'purple-500',
+      secondary: 'purple-400',
+      accent: 'purple-300',
+      background: 'purple-500/15',
+      border: 'purple-400/60',
+      text: 'purple-200',
+      glow: 'purple-400/15',
+    },
+    teal: {
+      primary: 'teal-500',
+      secondary: 'teal-400',
+      accent: 'teal-300',
+      background: 'teal-500/15',
+      border: 'teal-400/60',
+      text: 'teal-200',
+      glow: 'teal-400/15',
+    },
+  },
+  
+  // Size system for atomic components
+  sizes: {
+    xs: { scale: '0.75', spacing: '0.25rem', text: 'text-xs' },
+    sm: { scale: '0.875', spacing: '0.5rem', text: 'text-sm' },
+    md: { scale: '1', spacing: '0.75rem', text: 'text-base' },
+    lg: { scale: '1.125', spacing: '1rem', text: 'text-lg' },
+    xl: { scale: '1.25', spacing: '1.25rem', text: 'text-xl' },
+  },
+  
+  // Animation system for atomic components
+  animations: {
+    durations: {
+      fast: '150ms',
+      normal: '300ms',
+      slow: '500ms',
+      slowest: '1000ms',
+    },
+    easings: {
+      linear: 'linear',
+      easeIn: 'ease-in',
+      easeOut: 'ease-out',
+      easeInOut: 'ease-in-out',
+      bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+      smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+  },
+  
+  // Effect system for visual components
+  effects: {
+    blur: {
+      sm: 'blur-sm',
+      md: 'blur-md',
+      lg: 'blur-lg',
+      xl: 'blur-xl',
+    },
+    intensity: {
+      subtle: '0.1',
+      medium: '0.25',
+      strong: '0.5',
+    },
+  },
+} as const;
+
 // Type exports for TypeScript safety
 export type DesignTokens = typeof designTokens;
 export type ComponentTokens = typeof componentTokens;
+export type AtomicTokens = typeof atomicTokens;
 export type Theme = typeof theme;
 
 // Size type for component props
 export type ComponentSize = keyof typeof designTokens.size;
+export type AtomicVariant = keyof typeof atomicTokens.variants;
+export type AtomicSize = keyof typeof atomicTokens.sizes;
 
 // Utility functions for getting token values
 export const getComponentSize = <T extends keyof ComponentTokens>(

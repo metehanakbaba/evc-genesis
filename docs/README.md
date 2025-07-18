@@ -175,7 +175,8 @@ npm run start
 - **`apps/admin-web/src/features/`**: Feature-specific components
 - **`packages/shared/business-logic/`**: Domain business rules
 - **`packages/shared/api/`**: API client and endpoints
-- **`apps/admin-web/src/components/ui/`**: Reusable UI components
+- **`apps/admin-web/src/shared/ui/`**: Atomic design system components
+- **`apps/admin-web/src/components/ui/`**: Legacy UI components (being migrated)
 - **`tools/`**: Development automation and API integration tools
 
 ### Development Tools & API Integration

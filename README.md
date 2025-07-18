@@ -94,10 +94,32 @@ cd tools/notion && npm run update-kpis # Update project metrics
 
 ### Development Workflow
 1. **Feature Development**: Create in appropriate domain package
-2. **Component Development**: Add to shared UI components
+2. **Component Development**: Use atomic design system in `apps/admin-web/src/shared/ui/`
 3. **API Integration**: Use RTK Query endpoints
 4. **Testing**: Write unit and integration tests
 5. **Documentation**: Update relevant docs
+
+### Component Architecture
+The project now uses an **Atomic Design System** for UI components:
+
+- **Atoms** (`src/shared/ui/atoms/`): Basic building blocks (GlowOrb, AccentDot, IconContainer)
+- **Molecules** (`src/shared/ui/molecules/`): Simple combinations (StatValue, TrendIndicator)
+- **Organisms** (`src/shared/ui/organisms/`): Complex components (StatCard, RouteTransition)
+- **Templates** (`src/shared/ui/templates/`): Page-level layouts
+
+```typescript
+// Example: Composing components atomically
+<StatCard>
+  <StatCard.Background>
+    <GlowOrb variant="blue" size="lg" />
+    <AccentDot position="top-right" animated />
+  </StatCard.Background>
+  <StatCard.Content>
+    <StatValue value="1,234" title="Active Sessions" />
+    <TrendIndicator trend="+12%" status="live" />
+  </StatCard.Content>
+</StatCard>
+```
 
 ## 🐳 Docker & Deployment
 
