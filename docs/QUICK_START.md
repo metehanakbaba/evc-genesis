@@ -89,6 +89,43 @@ cd tools/notion && npm run analyze
 - `npm run build` - Full NX workspace build
 - `npx nx reset` - Clean NX cache
 
+### **Component Development**
+- Components use **Atomic Design System** in `apps/admin-web/src/shared/ui/`
+- **Atoms**: Basic building blocks (✅ GlowOrb, 🔄 AccentDot, IconContainer)
+- **Molecules**: Simple combinations (StatValue, TrendIndicator)
+- **Organisms**: Complex components (StatCard, RouteTransition)
+
+```typescript
+// Example: Using atomic components (GlowOrb now available!)
+import { GlowOrb } from '@/shared/ui';
+
+// Basic usage
+<GlowOrb variant="blue" size="lg" animated />
+
+// Advanced configuration
+<GlowOrb 
+  variant="emerald" 
+  size="md" 
+  intensity="strong" 
+  blur="lg"
+  animated
+  animationSpeed={1.5}
+  animationDelay={200}
+  position="background"
+/>
+
+// Future: Full atomic composition
+<StatCard variant="blue" size="lg">
+  <StatCard.Background>
+    <GlowOrb variant="blue" animated />
+    <AccentDot position="top-right" />
+  </StatCard.Background>
+  <StatCard.Content>
+    <StatValue value="1,234" title="Active Sessions" />
+  </StatCard.Content>
+</StatCard>
+```
+
 ### **Notion Integration Scripts**
 - `cd tools/notion && npm run test` - Test API connection
 - `cd tools/notion && npm run sync-docs` - Sync documentation with full content conversion
