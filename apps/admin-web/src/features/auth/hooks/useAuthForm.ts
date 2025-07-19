@@ -1,5 +1,7 @@
+"use client";
+
 import { useActionState, useCallback } from 'react'; // React 19: New hook!
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
@@ -18,7 +20,7 @@ interface LoginState {
 
 
 export const useAuthForm = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { showToast } = useToast();
   const [login] = useLoginMutation();
@@ -75,7 +77,7 @@ export const useAuthForm = () => {
           });
 
           // Navigate to dashboard
-          navigate('/');
+          router.push('/');
 
           return {
             success: true,

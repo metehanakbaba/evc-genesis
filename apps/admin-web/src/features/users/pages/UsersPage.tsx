@@ -25,7 +25,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Modal } from '@ui/display';
 import { Button, Input } from '@ui/forms';
-import { AppHeader } from '@ui/layout';
+import { MainLayout, PageHeader } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
@@ -110,14 +110,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
           <Button
             variant="ghost"
             onClick={onClearFilters}
-            className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300"
+            className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 flex items-center"
           >
             Clear All
           </Button>
           <Button
             variant="primary"
             onClick={onClose}
-            className="bg-purple-600 hover:bg-purple-500 text-white"
+            className="bg-purple-600 hover:bg-purple-500 text-white flex items-center"
           >
             Apply Filters
           </Button>
@@ -335,39 +335,48 @@ const UsersPage: React.FC = () => {
   // ✅ formatLastLogin now handled by shared business logic
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <AppHeader />
-
+    <MainLayout
+      showNotifications={true}
+      notificationCount={3}
+      headerVariant="default"
+    >
       {/* Revolutionary Page Header with Purple Theme */}
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
+        {/* Revolutionary Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => router.push('/')}
-            className="p-2 hover:bg-gray-700/30"
+            className="
+              p-2 hover:bg-gray-700/30 flex items-center gap-1
+              bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              hover:from-gray-600/40 hover:via-gray-500/30 hover:to-gray-600/40
+              border border-gray-600/20 hover:border-gray-500/40
+              transition-all duration-300 ease-out
+              hover:scale-[1.02] active:scale-[0.98]
+            "
           >
             <HomeIcon className="w-4 h-4" />
+            <span className="font-medium">Dashboard</span>
           </Button>
           <ChevronRightIcon className="w-4 h-4" />
           <span className="text-purple-400 font-medium">User Management</span>
-        </div>
+        </nav>
 
-        {/* Page Title */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-4 h-12 bg-gradient-to-b from-purple-400 to-purple-300 rounded-full"></div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">
-                User Management
-              </h1>
-              <p className="text-gray-300 text-lg">
-                Role-based access control & account administration
-              </p>
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          title="User Management"
+          description="Role-based access control & account administration"
+          variant="purple"
+          actionButton={{
+            label: "New User",
+            onClick: () => {
+              /* Add user logic */
+            },
+            icon: UserPlusIcon,
+            iconAnimation: "rotate-90"
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-10">
@@ -454,27 +463,14 @@ const UsersPage: React.FC = () => {
 
         {/* User Management Section */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-8 bg-gradient-to-b from-purple-400 to-purple-300 rounded-full"></div>
-              <div>
-                <h2 className="text-xl font-bold text-white">User Directory</h2>
-                <p className="text-gray-400">
-                  Search, filter and manage user accounts
-                </p>
-              </div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-3 h-8 bg-gradient-to-b from-purple-400 to-purple-300 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-bold text-white">User Directory</h2>
+              <p className="text-gray-400">
+                Search, filter and manage user accounts
+              </p>
             </div>
-
-            <Button
-              variant="primary"
-              onClick={() => {
-                /* Add user logic */
-              }}
-              className="bg-purple-600 hover:bg-purple-500 text-white"
-            >
-              <UserPlusIcon className="w-4 h-4 mr-2" />
-              New User
-            </Button>
           </div>
 
           {/* Search & Filter Controls */}
@@ -497,7 +493,7 @@ const UsersPage: React.FC = () => {
                 <Button
                   variant="ghost"
                   onClick={() => setIsFilterModalOpen(true)}
-                  className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white border border-gray-600/30 min-w-[120px]"
+                  className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white border border-gray-600/30 min-w-[120px] flex items-center"
                 >
                   <FunnelIcon className="w-4 h-4 mr-2" />
                   Filters
@@ -513,7 +509,7 @@ const UsersPage: React.FC = () => {
                   variant={viewMode === 'grid' ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-2 flex items-center ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                   <ViewColumnsIcon className="w-4 h-4" />
                 </Button>
@@ -521,7 +517,7 @@ const UsersPage: React.FC = () => {
                   variant={viewMode === 'table' ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('table')}
-                  className={`p-2 ${viewMode === 'table' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-2 flex items-center ${viewMode === 'table' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                   <TableCellsIcon className="w-4 h-4" />
                 </Button>
@@ -562,7 +558,7 @@ const UsersPage: React.FC = () => {
                   variant="ghost"
                   size="sm"
                   onClick={handleClearFilters}
-                  className="text-gray-400 hover:text-white text-sm"
+                  className="text-gray-400 hover:text-white text-sm flex items-center"
                 >
                   <XMarkIcon className="w-3 h-3 mr-1" />
                   Clear all
@@ -696,7 +692,7 @@ const UsersPage: React.FC = () => {
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white px-3 py-2"
+                                className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white px-3 py-2 flex items-center"
                               >
                                 <EyeIcon className="w-4 h-4 mr-2" />
                                 View
@@ -704,14 +700,14 @@ const UsersPage: React.FC = () => {
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
+                                className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20 flex items-center"
                               >
                                 <PencilIcon className="w-4 h-4" />
                               </Button>
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
+                                className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 flex items-center"
                               >
                                 <TrashIcon className="w-4 h-4" />
                               </Button>
@@ -834,7 +830,7 @@ const UsersPage: React.FC = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white"
+                            className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white flex items-center"
                           >
                             <EyeIcon className="w-4 h-4 mr-2" />
                             View Profile
@@ -842,14 +838,14 @@ const UsersPage: React.FC = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20"
+                            className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20 flex items-center"
                           >
                             <PencilIcon className="w-4 h-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
+                            className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 flex items-center"
                           >
                             <TrashIcon className="w-4 h-4" />
                           </Button>
@@ -877,7 +873,7 @@ const UsersPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={handleClearFilters}
-                className="bg-purple-600 hover:bg-purple-500 text-white"
+                className="bg-purple-600 hover:bg-purple-500 text-white flex items-center"
               >
                 <XMarkIcon className="w-4 h-4 mr-2" />
                 Clear Filters
@@ -897,7 +893,7 @@ const UsersPage: React.FC = () => {
         onStatusChange={setStatusFilter}
         onClearFilters={handleClearFilters}
       />
-    </div>
+    </MainLayout>
   );
 };
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useMemo, useState } from 'react';
 import { EVENT_TYPES, MOCK_EVENTS } from './constants';
 import { IntelligenceEventCard } from './IntelligenceEventCard';

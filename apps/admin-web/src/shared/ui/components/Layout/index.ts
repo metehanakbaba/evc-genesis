@@ -19,8 +19,13 @@ export type { GridItemProps } from './GridItem';
 export { IntelligenceSidebar } from './IntelligenceSidebar';
 export type { IntelligenceSidebarProps } from './IntelligenceSidebar';
 
+export { IntelligenceBottomModal } from './IntelligenceBottomModal';
+export type { IntelligenceBottomModalProps } from './IntelligenceBottomModal';
+
 export { MainLayout } from './MainLayout';
+export { PageHeader } from './PageHeader';
 export type { MainLayoutProps } from './MainLayout';
+export type { PageHeaderProps } from './PageHeader';
 
 export { NotificationSidebar } from './NotificationSidebar';
 export type { NotificationSidebarProps } from './NotificationSidebar';

@@ -6,6 +6,7 @@ import { DashboardFooter } from '@/features/admin/components/DashboardFooter';
 import { FloatingOrbs } from '@/features/admin/components/FloatingOrbs';
 import { AppHeader } from './AppHeader';
 import { IntelligenceSidebar } from './IntelligenceSidebar';
+import { IntelligenceBottomModal } from './IntelligenceBottomModal';
 import { NotificationSidebar } from './NotificationSidebar';
 
 export interface MainLayoutProps {
@@ -17,6 +18,8 @@ export interface MainLayoutProps {
   notificationCount?: number;
   headerVariant?: 'default' | 'compact';
   className?: string;
+  /** AI Intelligence açılış stili: 'sidebar' (soldan sağa) veya 'bottom' (aşağıdan yukarı) */
+  intelligenceStyle?: 'sidebar' | 'bottom';
 }
 
 /**
@@ -32,6 +35,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   notificationCount = 0,
   headerVariant = 'default',
   className = '',
+  intelligenceStyle = 'bottom',
 }) => {
   const [isIntelligenceSidebarOpen, setIsIntelligenceSidebarOpen] =
     useState(false);
@@ -61,11 +65,18 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         />
       )}
 
-      {/* Sidebars */}
-      <IntelligenceSidebar
-        isOpen={isIntelligenceSidebarOpen}
-        onClose={() => setIsIntelligenceSidebarOpen(false)}
-      />
+      {/* Sidebars and Modals */}
+      {intelligenceStyle === 'sidebar' ? (
+        <IntelligenceSidebar
+          isOpen={isIntelligenceSidebarOpen}
+          onClose={() => setIsIntelligenceSidebarOpen(false)}
+        />
+      ) : (
+        <IntelligenceBottomModal
+          isOpen={isIntelligenceSidebarOpen}
+          onClose={() => setIsIntelligenceSidebarOpen(false)}
+        />
+      )}
 
       <NotificationSidebar
         isOpen={isNotificationSidebarOpen}

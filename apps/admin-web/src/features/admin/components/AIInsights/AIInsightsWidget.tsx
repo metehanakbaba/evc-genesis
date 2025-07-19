@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { AIInsightCard } from './AIInsightCard';
 import { AIInsightsFooter } from './AIInsightsFooter';

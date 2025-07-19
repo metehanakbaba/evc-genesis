@@ -24,7 +24,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Modal } from '@ui/display';
 import { Button, Input } from '@ui/forms';
-import { AppHeader } from '@ui/layout';
+import { MainLayout, PageHeader } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
@@ -81,19 +81,19 @@ const FilterModal: React.FC<FilterModalProps> = ({
   onClearFilters,
 }) => {
   const typeOptions = [
-    { id: 'all', label: 'All Types', icon: WalletIcon },
-    { id: 'ADD_PLN_FUNDS', label: 'Top-up', icon: ArrowDownTrayIcon },
-    { id: 'CHARGING_PAYMENT', label: 'Charging', icon: BoltIcon },
-    { id: 'REFUND', label: 'Refund', icon: ReceiptRefundIcon },
-    { id: 'TRANSFER', label: 'Transfer', icon: ArrowUpIcon },
+    { id: 'all', label: 'All Types', icon: WalletIcon, color: 'gray' },
+    { id: 'ADD_PLN_FUNDS', label: 'Top-up', icon: ArrowDownTrayIcon, color: 'emerald' },
+    { id: 'CHARGING_PAYMENT', label: 'Charging', icon: BoltIcon, color: 'blue' },
+    { id: 'REFUND', label: 'Refund', icon: ReceiptRefundIcon, color: 'amber' },
+    { id: 'TRANSFER', label: 'Transfer', icon: ArrowUpIcon, color: 'purple' },
   ];
 
   const statusOptions = [
-    { id: 'all', label: 'All Status', icon: ViewColumnsIcon },
-    { id: 'COMPLETED', label: 'Completed', icon: CheckCircleIcon },
-    { id: 'PENDING', label: 'Pending', icon: ClockIcon },
-    { id: 'FAILED', label: 'Failed', icon: XCircleIcon },
-    { id: 'CANCELLED', label: 'Cancelled', icon: XMarkIcon },
+    { id: 'all', label: 'All Status', icon: ViewColumnsIcon, color: 'gray' },
+    { id: 'COMPLETED', label: 'Completed', icon: CheckCircleIcon, color: 'emerald' },
+    { id: 'PENDING', label: 'Pending', icon: ClockIcon, color: 'amber' },
+    { id: 'FAILED', label: 'Failed', icon: XCircleIcon, color: 'red' },
+    { id: 'CANCELLED', label: 'Cancelled', icon: XMarkIcon, color: 'gray' },
   ];
 
   return (
@@ -109,61 +109,160 @@ const FilterModal: React.FC<FilterModalProps> = ({
           <Button
             variant="ghost"
             onClick={onClearFilters}
-            className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300"
+            className="
+              relative overflow-hidden group/clear
+              bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+              hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+              text-gray-300 hover:text-white
+              border border-gray-600/30 hover:border-gray-500/50
+              transition-all duration-300 ease-out
+              hover:scale-[1.02] active:scale-[0.98]
+              flex items-center
+              before:absolute before:inset-0 before:bg-gradient-to-r 
+              before:from-transparent before:via-white/10 before:to-transparent
+              before:translate-x-[-100%] hover:before:translate-x-[100%]
+              before:transition-transform before:duration-500
+            "
           >
-            <XMarkIcon className="w-4 h-4 mr-2" />
-            Clear All
+            <div className="flex items-center gap-2 relative z-10">
+              <XMarkIcon className="w-4 h-4 group-hover/clear:rotate-90 transition-transform duration-300" />
+              <span className="font-medium">Clear All</span>
+            </div>
           </Button>
           <Button
             variant="primary"
             onClick={onClose}
-            className="bg-teal-600 hover:bg-teal-500 text-white"
+            className="
+              relative overflow-hidden group/apply
+              bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600
+              hover:from-teal-500 hover:via-teal-400 hover:to-teal-500
+              text-white font-semibold
+              shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30
+              border border-teal-400/20 hover:border-teal-300/40
+              transition-all duration-300 ease-out
+              hover:scale-[1.02] active:scale-[0.98]
+              flex items-center
+              before:absolute before:inset-0 before:bg-gradient-to-r 
+              before:from-transparent before:via-white/20 before:to-transparent
+              before:translate-x-[-100%] hover:before:translate-x-[100%]
+              before:transition-transform before:duration-700
+            "
           >
-            Apply Filters
+            <span className="relative z-10 font-medium">Apply Filters</span>
           </Button>
         </div>
       }
     >
       <div className="space-y-8">
-        {/* Transaction Type Selection */}
+        {/* Revolutionary Transaction Type Selection */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Transaction Type</h3>
           <div className="grid grid-cols-2 gap-3">
-            {typeOptions.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => onTypeChange(type.id)}
-                className={`p-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
-                  typeFilter === type.id
-                    ? 'bg-teal-500/20 border-teal-400/50 text-teal-300'
-                    : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-600/40'
-                }`}
-              >
-                <type.icon className="w-5 h-5" />
-                <span className="font-medium">{type.label}</span>
-              </button>
-            ))}
+            {typeOptions.map((type) => {
+              const isSelected = typeFilter === type.id;
+              const IconComponent = type.icon;
+              return (
+                <button
+                  key={type.id}
+                  onClick={() => onTypeChange(type.id)}
+                  className={`
+                    group relative p-4 rounded-xl border transition-all duration-300 ease-out
+                    ${isSelected
+                      ? `bg-gradient-to-r from-${type.color}-500/20 via-${type.color}-400/15 to-${type.color}-500/20 
+                         border-${type.color}-400/50 text-${type.color}-300 shadow-lg shadow-${type.color}-500/20
+                         scale-[1.02]`
+                      : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+                         border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
+                         hover:scale-[1.01]`
+                    }
+                    overflow-hidden
+                    before:absolute before:inset-0 before:bg-gradient-to-r 
+                    before:from-transparent before:via-white/5 before:to-transparent
+                    before:translate-x-[-100%] hover:before:translate-x-[100%]
+                    before:transition-transform before:duration-700
+                  `}
+                >
+                  <div className="flex items-center gap-3 relative z-10">
+                    <div
+                      className={`
+                        w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
+                        ${isSelected
+                          ? `bg-${type.color}-500/20 border border-${type.color}-400/30`
+                          : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+                        }
+                      `}
+                    >
+                      <IconComponent 
+                        className={`
+                          w-5 h-5 transition-transform duration-300
+                          ${isSelected 
+                            ? `text-${type.color}-400 scale-110` 
+                            : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                          }
+                        `} 
+                      />
+                    </div>
+                    <span className="font-medium text-sm">{type.label}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Transaction Status Selection */}
+        {/* Revolutionary Transaction Status Selection */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Status</h3>
           <div className="grid grid-cols-2 gap-3">
-            {statusOptions.map((status) => (
-              <button
-                key={status.id}
-                onClick={() => onStatusChange(status.id)}
-                className={`p-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
-                  statusFilter === status.id
-                    ? 'bg-teal-500/20 border-teal-400/50 text-teal-300'
-                    : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-600/40'
-                }`}
-              >
-                <status.icon className="w-5 h-5" />
-                <span className="font-medium">{status.label}</span>
-              </button>
-            ))}
+            {statusOptions.map((status) => {
+              const isSelected = statusFilter === status.id;
+              const IconComponent = status.icon;
+              return (
+                <button
+                  key={status.id}
+                  onClick={() => onStatusChange(status.id)}
+                  className={`
+                    group relative p-4 rounded-xl border transition-all duration-300 ease-out
+                    ${isSelected
+                      ? `bg-gradient-to-r from-${status.color}-500/20 via-${status.color}-400/15 to-${status.color}-500/20 
+                         border-${status.color}-400/50 text-${status.color}-300 shadow-lg shadow-${status.color}-500/20
+                         scale-[1.02]`
+                      : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+                         border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
+                         hover:scale-[1.01]`
+                    }
+                    overflow-hidden
+                    before:absolute before:inset-0 before:bg-gradient-to-r 
+                    before:from-transparent before:via-white/5 before:to-transparent
+                    before:translate-x-[-100%] hover:before:translate-x-[100%]
+                    before:transition-transform before:duration-700
+                  `}
+                >
+                  <div className="flex items-center gap-3 relative z-10">
+                    <div
+                      className={`
+                        w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
+                        ${isSelected
+                          ? `bg-${status.color}-500/20 border border-${status.color}-400/30`
+                          : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+                        }
+                      `}
+                    >
+                      <IconComponent 
+                        className={`
+                          w-5 h-5 transition-transform duration-300
+                          ${isSelected 
+                            ? `text-${status.color}-400 scale-110` 
+                            : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                          }
+                        `} 
+                      />
+                    </div>
+                    <span className="font-medium text-sm">{status.label}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -306,6 +405,22 @@ const WalletsPage: React.FC = () => {
     statusFilter,
   });
 
+  // Icon mapping for transaction types
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'ADD_PLN_FUNDS':
+        return ArrowDownTrayIcon;
+      case 'CHARGING_PAYMENT':
+        return BoltIcon;
+      case 'REFUND':
+        return ReceiptRefundIcon;
+      case 'TRANSFER':
+        return ArrowUpIcon;
+      default:
+        return WalletIcon;
+    }
+  };
+
   /**
    * 🎨 Clear All Filters
    */
@@ -316,39 +431,48 @@ const WalletsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <AppHeader />
-
+    <MainLayout
+      showNotifications={true}
+      notificationCount={3}
+      headerVariant="default"
+    >
       {/* Revolutionary Page Header with Teal Theme */}
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
+        {/* Revolutionary Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => router.push('/')}
-            className="p-2 hover:bg-gray-700/30"
+            className="
+              p-2 hover:bg-gray-700/30 flex items-center gap-1
+              bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              hover:from-gray-600/40 hover:via-gray-500/30 hover:to-gray-600/40
+              border border-gray-600/20 hover:border-gray-500/40
+              transition-all duration-300 ease-out
+              hover:scale-[1.02] active:scale-[0.98]
+            "
           >
             <HomeIcon className="w-4 h-4" />
+            <span className="font-medium">Dashboard</span>
           </Button>
           <ChevronRightIcon className="w-4 h-4" />
           <span className="text-teal-400 font-medium">PLN Wallet</span>
-        </div>
+        </nav>
 
-        {/* Page Title */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-4 h-12 bg-gradient-to-b from-teal-400 to-cyan-400 rounded-full"></div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">
-                PLN Wallet Management
-              </h1>
-              <p className="text-gray-300 text-lg">
-                Financial operations & transaction processing
-              </p>
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          title="PLN Wallet Management"
+          description="Financial operations & transaction processing"
+          variant="teal"
+          actionButton={{
+            label: "New Transaction",
+            onClick: () => {
+              /* Add transaction logic */
+            },
+            icon: PlusIcon,
+            iconAnimation: "rotate-90"
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-10">
@@ -424,16 +548,39 @@ const WalletsPage: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Interactive Elements */}
-                    <div className="mt-4 flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className={`text-${stat.variant}-400 hover:text-${stat.variant}-300 hover:bg-${stat.variant}-500/10 border border-${stat.variant}-500/20 hover:border-${stat.variant}-400/30`}
-                      >
-                        <EyeIcon className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
+                    {/* Revolutionary Interactive Elements */}
+                    <div className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="relative overflow-hidden rounded-lg">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className={`
+                            w-full relative overflow-hidden backdrop-blur-sm
+                            bg-gradient-to-r from-${stat.variant}-500/15 via-${stat.variant}-400/10 to-${stat.variant}-500/15
+                            border border-${stat.variant}-400/30 hover:border-${stat.variant}-300/50
+                            text-${stat.variant}-300 hover:text-white
+                            shadow-lg hover:shadow-${stat.variant}-500/25 hover:shadow-xl
+                            transition-all duration-300 ease-out
+                            hover:scale-[1.02] active:scale-[0.98]
+                            group/button flex items-center justify-center
+                          `}
+                        >
+                          {/* Shine Effect */}
+                          <div className={`
+                            absolute inset-0 z-0
+                            bg-gradient-to-r from-transparent via-white/15 to-transparent
+                            translate-x-[-100%] group-hover/button:translate-x-[100%]
+                            transition-transform duration-700 ease-out
+                          `}></div>
+                          
+                          {/* Button Content */}
+                          <div className="flex items-center gap-2 relative z-10">
+                            <EyeIcon className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`} />
+                            <span className="font-medium text-sm">View Details</span>
+                            <div className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}></div>
+                          </div>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -444,29 +591,16 @@ const WalletsPage: React.FC = () => {
 
         {/* Revolutionary Transaction Management Section */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
-              <div>
-                <h2 className="text-xl font-bold text-white">
-                  Transaction Management
-                </h2>
-                <p className="text-gray-400">
-                  Search, filter and manage PLN transactions
-                </p>
-              </div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                Transaction Management
+              </h2>
+              <p className="text-gray-400">
+                Search, filter and manage PLN transactions
+              </p>
             </div>
-
-            <Button
-              variant="primary"
-              onClick={() => {
-                /* Add transaction logic */
-              }}
-              className="bg-teal-600 hover:bg-teal-500 text-white"
-            >
-              <PlusIcon className="w-4 h-4 mr-2" />
-              New Transaction
-            </Button>
           </div>
 
           {/* Search & Filter Controls */}
@@ -475,53 +609,93 @@ const WalletsPage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 flex-1">
                 {/* Search Input */}
                 <div className="relative flex-1 max-w-md">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
+                    <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <input
                     type="text"
                     placeholder="Search transactions, amounts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-gray-700/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-teal-500/50 focus:ring-teal-500/20"
+                    className="
+                      pl-11 pr-4 py-3 w-full
+                      bg-gray-700/50 border border-gray-600/50 
+                      text-white placeholder:text-gray-400 
+                      focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 focus:outline-none
+                      rounded-xl
+                      transition-all duration-200
+                    "
                   />
                 </div>
 
                 {/* Revolutionary Filter Button */}
-                <Button
-                  variant="ghost"
+                <button
                   onClick={() => setIsFilterModalOpen(true)}
-                  className="bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white border border-gray-600/30 min-w-[120px]"
+                  className="
+                    relative overflow-hidden group/filter 
+                    px-4 py-3 min-w-[140px]
+                    bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                    hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                    border border-gray-600/40 hover:border-gray-500/60
+                    text-gray-300 hover:text-white
+                    backdrop-blur-sm shadow-md hover:shadow-lg
+                    transition-all duration-300 ease-out
+                    hover:scale-[1.01] active:scale-[0.99]
+                    rounded-xl
+                    flex items-center justify-center gap-2
+                    before:absolute before:inset-0 before:bg-gradient-to-r 
+                    before:from-transparent before:via-white/10 before:to-transparent
+                    before:translate-x-[-100%] hover:before:translate-x-[100%]
+                    before:transition-transform before:duration-500
+                  "
                 >
-                  <FunnelIcon className="w-4 h-4 mr-2" />
-                  Filters
+                  <FunnelIcon className="w-4 h-4 group-hover/filter:rotate-12 transition-transform duration-300 relative z-10" />
+                  <span className="font-medium relative z-10">Filters</span>
                   {(typeFilter !== 'all' || statusFilter !== 'all') && (
-                    <div className="ml-2 w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse shadow-sm shadow-teal-400/50 relative z-10"></div>
                   )}
-                </Button>
+                </button>
               </div>
 
-              {/* View Mode Toggle - Fixed Icons Only */}
-              <div className="flex gap-2">
+              {/* Revolutionary View Mode Toggle */}
+              <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
                 <Button
                   variant="ghost"
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 ${
-                    viewMode === 'grid'
-                      ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                      : 'bg-gray-700/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
-                  }`}
+                  className={`
+                    relative overflow-hidden p-3 transition-all duration-300 ease-out
+                    ${viewMode === 'grid'
+                      ? `bg-gradient-to-r from-teal-500/25 via-teal-400/20 to-teal-500/25 
+                         text-teal-300 border border-teal-400/40 shadow-lg shadow-teal-500/20
+                         scale-[1.05]`
+                      : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                         hover:scale-[1.02] border border-transparent`
+                    }
+                    group/toggle flex items-center
+                  `}
                 >
-                  <ViewColumnsIcon className="w-4 h-4" />
+                  <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                    viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                  }`} />
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() => setViewMode('table')}
-                  className={`p-2 ${
-                    viewMode === 'table'
-                      ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                      : 'bg-gray-700/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
-                  }`}
+                  className={`
+                    relative overflow-hidden p-3 transition-all duration-300 ease-out
+                    ${viewMode === 'table'
+                      ? `bg-gradient-to-r from-teal-500/25 via-teal-400/20 to-teal-500/25 
+                         text-teal-300 border border-teal-400/40 shadow-lg shadow-teal-500/20
+                         scale-[1.05]`
+                      : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                         hover:scale-[1.02] border border-transparent`
+                    }
+                    group/toggle flex items-center
+                  `}
                 >
-                  <TableCellsIcon className="w-4 h-4" />
+                  <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                    viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                  }`} />
                 </Button>
               </div>
             </div>
@@ -561,6 +735,7 @@ const WalletsPage: React.FC = () => {
                         transaction.type,
                         transaction.status,
                       );
+                      const TransactionIcon = getTransactionIcon(transaction.type);
                       return (
                         <tr
                           key={transaction.id}
@@ -571,10 +746,7 @@ const WalletsPage: React.FC = () => {
                               <div
                                 className={`w-8 h-8 rounded-lg ${config.badgeColor} flex items-center justify-center`}
                               >
-                                {/* Note: Icon rendering would need to be handled separately in a real implementation */}
-                                <span className={`text-sm ${config.textColor}`}>
-                                  {config.icon}
-                                </span>
+                                <TransactionIcon className={`w-4 h-4 ${config.textColor}`} />
                               </div>
                               <span
                                 className={`text-sm font-medium ${config.textColor}`}
@@ -625,22 +797,41 @@ const WalletsPage: React.FC = () => {
                             </span>
                           </td>
                           <td className="py-4 px-6">
-                            <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-all duration-300">
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="p-2 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white"
+                                className="
+                                  relative overflow-hidden p-2 group/action
+                                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                                  text-gray-300 hover:text-white
+                                  border border-gray-600/30 hover:border-gray-500/50
+                                  transition-all duration-300 ease-out
+                                  hover:scale-110 active:scale-95
+                                  flex items-center
+                                "
                               >
-                                <EyeIcon className="w-4 h-4" />
+                                <EyeIcon className="w-4 h-4 group-hover/action:scale-110 transition-transform duration-300" />
                               </Button>
                               {transaction.type === 'CHARGING_PAYMENT' &&
                                 transaction.status === 'FAILED' && (
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="p-2 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 hover:text-teal-300 border border-teal-500/20"
+                                    className="
+                                      relative overflow-hidden p-2 group/retry
+                                      bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
+                                      hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
+                                      text-teal-400 hover:text-teal-300
+                                      border border-teal-500/30 hover:border-teal-400/50
+                                      shadow-sm shadow-teal-500/10 hover:shadow-md hover:shadow-teal-500/20
+                                      transition-all duration-300 ease-out
+                                      hover:scale-110 active:scale-95
+                                      flex items-center
+                                    "
                                   >
-                                    <ArrowPathIcon className="w-4 h-4" />
+                                    <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
                                   </Button>
                                 )}
                             </div>
@@ -663,6 +854,7 @@ const WalletsPage: React.FC = () => {
                   transaction.type,
                   transaction.status,
                 );
+                const TransactionIcon = getTransactionIcon(transaction.type);
                 const isPending = transaction.status === 'PENDING';
 
                 return (
@@ -692,10 +884,7 @@ const WalletsPage: React.FC = () => {
                             <div
                               className={`w-12 h-12 rounded-xl ${config.badgeColor} flex items-center justify-center`}
                             >
-                              {/* Note: Icon rendering would need to be handled separately in a real implementation */}
-                              <span className={`text-lg ${config.textColor}`}>
-                                {config.icon}
-                              </span>
+                              <TransactionIcon className={`w-6 h-6 ${config.textColor}`} />
                             </div>
                             <div>
                               <div
@@ -764,24 +953,50 @@ const WalletsPage: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Action Buttons - Fixed spacing */}
-                        <div className="flex gap-2">
+                        {/* Revolutionary Action Buttons */}
+                        <div className="flex gap-2 mt-4">
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white flex items-center justify-center gap-2"
+                            className="
+                              flex-1 relative overflow-hidden group/view
+                              bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                              hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                              text-gray-300 hover:text-white
+                              border border-gray-600/30 hover:border-gray-500/50
+                              shadow-md hover:shadow-lg
+                              transition-all duration-300 ease-out
+                              hover:scale-[1.02] active:scale-[0.98]
+                              flex items-center justify-center gap-2
+                              before:absolute before:inset-0 before:bg-gradient-to-r 
+                              before:from-transparent before:via-white/10 before:to-transparent
+                              before:translate-x-[-100%] hover:before:translate-x-[100%]
+                              before:transition-transform before:duration-500
+                            "
                           >
-                            <EyeIcon className="w-4 h-4" />
-                            <span>View Details</span>
+                            <div className="flex items-center gap-2 relative z-10">
+                              <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
+                              <span className="font-medium">View Details</span>
+                            </div>
                           </Button>
                           {transaction.type === 'CHARGING_PAYMENT' &&
                             transaction.status === 'FAILED' && (
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="p-2 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 hover:text-teal-300 border border-teal-500/20"
+                                className="
+                                  relative overflow-hidden p-3 group/retry
+                                  bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
+                                  hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
+                                  text-teal-400 hover:text-teal-300
+                                  border border-teal-500/30 hover:border-teal-400/50
+                                  shadow-sm shadow-teal-500/10 hover:shadow-lg hover:shadow-teal-500/20
+                                  transition-all duration-300 ease-out
+                                  hover:scale-110 active:scale-95
+                                  flex items-center
+                                "
                               >
-                                <ArrowPathIcon className="w-4 h-4" />
+                                <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
                               </Button>
                             )}
                         </div>
@@ -808,10 +1023,26 @@ const WalletsPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={handleClearFilters}
-                className="bg-teal-600 hover:bg-teal-500 text-white"
+                className="
+                  relative overflow-hidden group/empty
+                  bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600
+                  hover:from-teal-500 hover:via-teal-400 hover:to-teal-500
+                  text-white font-semibold
+                  shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30
+                  border border-teal-400/20 hover:border-teal-300/40
+                  transition-all duration-300 ease-out
+                  hover:scale-[1.05] active:scale-[0.95]
+                  flex items-center
+                  before:absolute before:inset-0 before:bg-gradient-to-r 
+                  before:from-transparent before:via-white/20 before:to-transparent
+                  before:translate-x-[-100%] hover:before:translate-x-[100%]
+                  before:transition-transform before:duration-700
+                "
               >
-                <XMarkIcon className="w-4 h-4 mr-2" />
-                Clear Filters
+                <div className="flex items-center gap-2 relative z-10">
+                  <XMarkIcon className="w-4 h-4 group-hover/empty:rotate-90 transition-transform duration-300" />
+                  <span>Clear Filters</span>
+                </div>
               </Button>
             </div>
           )}
@@ -828,7 +1059,7 @@ const WalletsPage: React.FC = () => {
         onStatusChange={setStatusFilter}
         onClearFilters={handleClearFilters}
       />
-    </div>
+    </MainLayout>
   );
 };
 
