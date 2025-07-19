@@ -8,8 +8,13 @@
 // Export molecule types
 export * from './types';
 
-// Export molecule components
+// Existing Molecule components
 export * from './StatValue';
 export * from './TrendIndicator';
 export * from './BackgroundEffects';
 export * from './FloatingAccents';
+
+// New Data Management Molecule Components
+export { SearchFilterBar, type SearchFilterBarProps } from './SearchFilterBar/SearchFilterBar';
+export { EmptyState, type EmptyStateProps } from './EmptyState/EmptyState';
+export { DataGridCard, type DataGridCardProps, type DataGridCardAction, type DataGridCardStatus } from './DataGridCard/DataGridCard';

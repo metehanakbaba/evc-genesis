@@ -22,6 +22,7 @@ import {
   XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Modal } from '@ui/display';
 import { Button, Input } from '@ui/forms';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
@@ -589,103 +590,19 @@ const WalletsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Search & Filter Controls */}
-          <div className="bg-gray-800/40 border border-gray-700/50 rounded-2xl p-6 mb-8 backdrop-blur-xl">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                {/* Search Input */}
-                <div className="relative flex-1 max-w-md">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
-                    <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search transactions, amounts..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="
-                      pl-11 pr-4 py-3 w-full
-                      bg-gray-700/50 border border-gray-600/50 
-                      text-white placeholder:text-gray-400 
-                      focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 focus:outline-none
-                      rounded-xl
-                      transition-all duration-200
-                    "
-                  />
-                </div>
-
-                {/* Revolutionary Filter Button */}
-                <button
-                  onClick={() => setIsFilterModalOpen(true)}
-                  className="
-                    relative overflow-hidden group/filter 
-                    px-4 py-3 min-w-[140px]
-                    bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                    hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                    border border-gray-600/40 hover:border-gray-500/60
-                    text-gray-300 hover:text-white
-                    backdrop-blur-sm shadow-md hover:shadow-lg
-                    transition-all duration-300 ease-out
-                    hover:scale-[1.01] active:scale-[0.99]
-                    rounded-xl
-                    flex items-center justify-center gap-2
-                    before:absolute before:inset-0 before:bg-gradient-to-r 
-                    before:from-transparent before:via-white/10 before:to-transparent
-                    before:translate-x-[-100%] hover:before:translate-x-[100%]
-                    before:transition-transform before:duration-500
-                  "
-                >
-                  <FunnelIcon className="w-4 h-4 group-hover/filter:rotate-12 transition-transform duration-300 relative z-10" />
-                  <span className="font-medium relative z-10">Filters</span>
-                  {(typeFilter !== 'all' || statusFilter !== 'all') && (
-                    <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse shadow-sm shadow-teal-400/50 relative z-10"></div>
-                  )}
-                </button>
-              </div>
-
-              {/* Revolutionary View Mode Toggle */}
-              <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
-                <Button
-                  variant="ghost"
-                  onClick={() => setViewMode('grid')}
-                  className={`
-                    relative overflow-hidden p-3 transition-all duration-300 ease-out
-                    ${viewMode === 'grid'
-                      ? `bg-gradient-to-r from-teal-500/25 via-teal-400/20 to-teal-500/25 
-                         text-teal-300 border border-teal-400/40 shadow-lg shadow-teal-500/20
-                         scale-[1.05]`
-                      : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                         hover:scale-[1.02] border border-transparent`
-                    }
-                    group/toggle flex items-center
-                  `}
-                >
-                  <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                    viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                  }`} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setViewMode('table')}
-                  className={`
-                    relative overflow-hidden p-3 transition-all duration-300 ease-out
-                    ${viewMode === 'table'
-                      ? `bg-gradient-to-r from-teal-500/25 via-teal-400/20 to-teal-500/25 
-                         text-teal-300 border border-teal-400/40 shadow-lg shadow-teal-500/20
-                         scale-[1.05]`
-                      : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                         hover:scale-[1.02] border border-transparent`
-                    }
-                    group/toggle flex items-center
-                  `}
-                >
-                  <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                    viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                  }`} />
-                </Button>
-              </div>
-            </div>
-          </div>
+          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
+          <SearchFilterBar
+            searchValue={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Search transactions, amounts..."
+            onFilterClick={() => setIsFilterModalOpen(true)}
+            isFilterActive={typeFilter !== 'all' || statusFilter !== 'all'}
+            filterLabel="Filters"
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            variant="primary"
+            className="mb-8"
+          />
 
           {/* Revolutionary Transactions Table */}
           {viewMode === 'table' && (
@@ -994,43 +911,16 @@ const WalletsPage: React.FC = () => {
             </div>
           )}
 
-          {/* Empty State */}
+          {/* Empty State - Using New EmptyState Component */}
           {filteredTransactions.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-700/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <BanknotesIcon className="w-12 h-12 text-gray-500" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                No transactions found
-              </h3>
-              <p className="text-gray-400 mb-6">
-                Try adjusting your search or filter criteria
-              </p>
-              <Button
-                variant="primary"
-                onClick={handleClearFilters}
-                className="
-                  relative overflow-hidden group/empty
-                  bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600
-                  hover:from-teal-500 hover:via-teal-400 hover:to-teal-500
-                  text-white font-semibold
-                  shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30
-                  border border-teal-400/20 hover:border-teal-300/40
-                  transition-all duration-300 ease-out
-                  hover:scale-[1.05] active:scale-[0.95]
-                  flex items-center
-                  before:absolute before:inset-0 before:bg-gradient-to-r 
-                  before:from-transparent before:via-white/20 before:to-transparent
-                  before:translate-x-[-100%] hover:before:translate-x-[100%]
-                  before:transition-transform before:duration-700
-                "
-              >
-                <div className="flex items-center gap-2 relative z-10">
-                  <XMarkIcon className="w-4 h-4 group-hover/empty:rotate-90 transition-transform duration-300" />
-                  <span>Clear Filters</span>
-                </div>
-              </Button>
-            </div>
+            <EmptyState
+              icon={BanknotesIcon}
+              title="No transactions found"
+              description="Try adjusting your search or filter criteria"
+              actionLabel="Clear Filters"
+              onAction={handleClearFilters}
+              variant="teal"
+            />
           )}
         </section>
       </PageContainer>
