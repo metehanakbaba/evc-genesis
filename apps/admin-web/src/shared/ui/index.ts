@@ -46,9 +46,9 @@ export { FloatingCard } from './components/Display/FloatingCard/FloatingCard';
 export type { MinimalStatCardProps } from './components/Display/MinimalStatCard/MinimalStatCard';
 export { MinimalStatCard } from './components/Display/MinimalStatCard/MinimalStatCard';
 export type { RevolutionaryLoaderProps } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
-export { RevolutionaryLoader } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
+export { default as RevolutionaryLoader } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
 export type { RevolutionaryLoadingVisualProps } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
-export { RevolutionaryLoadingVisual } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
+export { default as RevolutionaryLoadingVisual } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
 export type { ModalProps } from './components/Display/Modal/Modal';
 export { Modal } from './components/Display/Modal/Modal';
 // ==================== FORMS ====================
@@ -98,6 +98,7 @@ export type {
   GridItemProps,
   GridProps,
   IconComponent,
+  PageHeaderProps,
   SectionHeaderProps,
 } from './components/Layout';
 // ==================== LAYOUT ====================
@@ -117,7 +118,9 @@ export {
   isValidGridGap,
   isValidGridItemVariant,
   isValidPadding,
+  MainLayout,
   Padding,
+  PageHeader,
   SectionHeader,
   SectionHeaderSize,
   SectionHeaderVariant,

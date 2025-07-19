@@ -20,7 +20,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { MinimalStatCard } from '@ui/display';
 import { Button, Input, Select } from '@ui/forms';
-import { MainLayout } from '@ui/layout';
+import { MainLayout, PageHeader } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
@@ -246,36 +246,41 @@ const StationsPage: React.FC = () => {
       showFooter={false}
     >
       <div className="space-y-10">
-        {/* Breadcrumb Navigation */}
+        {/* Revolutionary Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => router.push('/')}
-            className="flex items-center gap-1 hover:text-white transition-colors"
+            className="
+              p-2 hover:bg-gray-700/30 flex items-center gap-1
+              bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              hover:from-gray-600/40 hover:via-gray-500/30 hover:to-gray-600/40
+              border border-gray-600/20 hover:border-gray-500/40
+              transition-all duration-300 ease-out
+              hover:scale-[1.02] active:scale-[0.98]
+            "
           >
             <HomeIcon className="w-4 h-4" />
-            Dashboard
-          </button>
+            <span className="font-medium">Dashboard</span>
+          </Button>
           <ChevronRightIcon className="w-4 h-4" />
           <span className="text-blue-400 font-medium">Charging Stations</span>
         </nav>
 
-        {/* Header Section - Infrastructure Theme */}
-        <header className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Charging Stations
-            </h1>
-            <p className="text-gray-400">
-              Infrastructure management & real-time monitoring
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button variant="primary" size="md">
-              Add Station
-            </Button>
-          </div>
-        </header>
+        <PageHeader
+          title="Charging Stations"
+          description="Infrastructure management & real-time monitoring"
+          variant="blue"
+          actionButton={{
+            label: "Add Station",
+            onClick: () => {
+              /* Add station logic */
+            },
+            icon: BoltIcon,
+            iconAnimation: "rotate-12"
+          }}
+        />
 
         {/* Infrastructure Statistics */}
         <section>
@@ -329,27 +334,46 @@ const StationsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
+            {/* Revolutionary View Mode Toggle */}
+            <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
+              <Button
+                variant="ghost"
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400'
-                    : 'bg-gray-800/50 border border-gray-700/50 text-gray-400 hover:text-white'
-                }`}
+                className={`
+                  relative overflow-hidden p-3 transition-all duration-300 ease-out
+                  ${viewMode === 'grid'
+                    ? `bg-gradient-to-r from-blue-500/25 via-blue-400/20 to-blue-500/25 
+                       text-blue-300 border border-blue-400/40 shadow-lg shadow-blue-500/20
+                       scale-[1.05]`
+                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                       hover:scale-[1.02] border border-transparent`
+                  }
+                  group/toggle flex items-center
+                `}
               >
-                <ViewColumnsIcon className="w-4 h-4" />
-              </button>
-              <button
+                <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                  viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                }`} />
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => setViewMode('table')}
-                className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'table'
-                    ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400'
-                    : 'bg-gray-800/50 border border-gray-700/50 text-gray-400 hover:text-white'
-                }`}
+                className={`
+                  relative overflow-hidden p-3 transition-all duration-300 ease-out
+                  ${viewMode === 'table'
+                    ? `bg-gradient-to-r from-blue-500/25 via-blue-400/20 to-blue-500/25 
+                       text-blue-300 border border-blue-400/40 shadow-lg shadow-blue-500/20
+                       scale-[1.05]`
+                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                       hover:scale-[1.02] border border-transparent`
+                  }
+                  group/toggle flex items-center
+                `}
               >
-                <TableCellsIcon className="w-4 h-4" />
-              </button>
+                <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                  viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                }`} />
+              </Button>
             </div>
           </div>
 
@@ -483,17 +507,66 @@ const StationsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <button className="flex-1 py-2 px-3 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/50 text-xs text-gray-400 hover:text-white transition-colors">
-                        <EyeIcon className="w-4 h-4 inline mr-1" />
-                        View
-                      </button>
-                      <button className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/50 transition-colors">
-                        <PencilIcon className="w-4 h-4 text-gray-400 hover:text-white" />
-                      </button>
-                      <button className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors">
-                        <TrashIcon className="w-4 h-4 text-red-400 hover:text-red-300" />
-                      </button>
+                    {/* Revolutionary Action Buttons */}
+                    <div className="flex items-center gap-2 mt-4">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="
+                          flex-1 relative overflow-hidden group/view
+                          bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                          hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                          text-gray-300 hover:text-white
+                          border border-gray-600/30 hover:border-gray-500/50
+                          shadow-md hover:shadow-lg
+                          transition-all duration-300 ease-out
+                          hover:scale-[1.02] active:scale-[0.98]
+                          flex items-center justify-center gap-2
+                          before:absolute before:inset-0 before:bg-gradient-to-r 
+                          before:from-transparent before:via-white/10 before:to-transparent
+                          before:translate-x-[-100%] hover:before:translate-x-[100%]
+                          before:transition-transform before:duration-500
+                        "
+                      >
+                        <div className="flex items-center gap-1 relative z-10">
+                          <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
+                          <span className="text-xs font-medium">View</span>
+                        </div>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="
+                          relative overflow-hidden p-2 group/edit
+                          bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
+                          hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
+                          text-blue-400 hover:text-blue-300
+                          border border-blue-500/30 hover:border-blue-400/50
+                          shadow-sm shadow-blue-500/10 hover:shadow-lg hover:shadow-blue-500/20
+                          transition-all duration-300 ease-out
+                          hover:scale-110 active:scale-95
+                          flex items-center
+                        "
+                      >
+                        <PencilIcon className="w-4 h-4 group-hover/edit:rotate-12 transition-transform duration-300" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="
+                          relative overflow-hidden p-2 group/delete
+                          bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
+                          hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
+                          text-red-400 hover:text-red-300
+                          border border-red-500/30 hover:border-red-400/50
+                          shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20
+                          transition-all duration-300 ease-out
+                          hover:scale-110 active:scale-95
+                          flex items-center
+                        "
+                      >
+                        <TrashIcon className="w-4 h-4 group-hover/delete:scale-110 transition-transform duration-300" />
+                      </Button>
                     </div>
                   </div>
                 );
@@ -589,16 +662,57 @@ const StationsPage: React.FC = () => {
                             {new Date(station.lastHeartbeat).toLocaleString()}
                           </td>
                           <td className="py-4 px-6">
-                            <div className="flex items-center justify-end gap-2">
-                              <button className="p-1.5 rounded-lg hover:bg-gray-700/50 transition-colors">
-                                <EyeIcon className="w-4 h-4 text-gray-400 hover:text-white" />
-                              </button>
-                              <button className="p-1.5 rounded-lg hover:bg-gray-700/50 transition-colors">
-                                <PencilIcon className="w-4 h-4 text-gray-400 hover:text-white" />
-                              </button>
-                              <button className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors">
-                                <TrashIcon className="w-4 h-4 text-red-400 hover:text-red-300" />
-                              </button>
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="
+                                  relative overflow-hidden p-2 group/action
+                                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                                  text-gray-300 hover:text-white
+                                  border border-gray-600/30 hover:border-gray-500/50
+                                  transition-all duration-300 ease-out
+                                  hover:scale-110 active:scale-95
+                                  flex items-center
+                                "
+                              >
+                                <EyeIcon className="w-4 h-4 group-hover/action:scale-110 transition-transform duration-300" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="
+                                  relative overflow-hidden p-2 group/edit
+                                  bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
+                                  hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
+                                  text-blue-400 hover:text-blue-300
+                                  border border-blue-500/30 hover:border-blue-400/50
+                                  shadow-sm shadow-blue-500/10 hover:shadow-md hover:shadow-blue-500/20
+                                  transition-all duration-300 ease-out
+                                  hover:scale-110 active:scale-95
+                                  flex items-center
+                                "
+                              >
+                                <PencilIcon className="w-4 h-4 group-hover/edit:rotate-12 transition-transform duration-300" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="
+                                  relative overflow-hidden p-2 group/delete
+                                  bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
+                                  hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
+                                  text-red-400 hover:text-red-300
+                                  border border-red-500/30 hover:border-red-400/50
+                                  shadow-sm shadow-red-500/10 hover:shadow-md hover:shadow-red-500/20
+                                  transition-all duration-300 ease-out
+                                  hover:scale-110 active:scale-95
+                                  flex items-center
+                                "
+                              >
+                                <TrashIcon className="w-4 h-4 group-hover/delete:scale-110 transition-transform duration-300" />
+                              </Button>
                             </div>
                           </td>
                         </tr>
@@ -637,15 +751,54 @@ const StationsPage: React.FC = () => {
               <span>Last sync: Just now</span>
             </div>
             <div className="flex items-center gap-3">
-              <button
+              <Button
+                size="sm"
+                variant="ghost"
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 text-sm bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/50 rounded-lg text-gray-300 hover:text-white transition-colors"
+                className="
+                  relative overflow-hidden group/refresh
+                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                  text-gray-300 hover:text-white
+                  border border-gray-600/30 hover:border-gray-500/50
+                  transition-all duration-300 ease-out
+                  hover:scale-[1.02] active:scale-[0.98]
+                  flex items-center gap-2
+                  before:absolute before:inset-0 before:bg-gradient-to-r 
+                  before:from-transparent before:via-white/10 before:to-transparent
+                  before:translate-x-[-100%] hover:before:translate-x-[100%]
+                  before:transition-transform before:duration-500
+                "
               >
-                Refresh Data
-              </button>
-              <button className="px-4 py-2 text-sm bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg text-blue-400 hover:text-blue-300 transition-colors">
-                Export Report
-              </button>
+                <div className="flex items-center gap-2 relative z-10">
+                  <SignalIcon className="w-4 h-4 group-hover/refresh:rotate-180 transition-transform duration-300" />
+                  <span className="font-medium">Refresh Data</span>
+                </div>
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="
+                  relative overflow-hidden group/export
+                  bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
+                  hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
+                  text-blue-400 hover:text-blue-300
+                  border border-blue-500/30 hover:border-blue-400/50
+                  shadow-sm shadow-blue-500/10 hover:shadow-md hover:shadow-blue-500/20
+                  transition-all duration-300 ease-out
+                  hover:scale-[1.02] active:scale-[0.98]
+                  flex items-center gap-2
+                  before:absolute before:inset-0 before:bg-gradient-to-r 
+                  before:from-transparent before:via-blue-300/10 before:to-transparent
+                  before:translate-x-[-100%] hover:before:translate-x-[100%]
+                  before:transition-transform before:duration-500
+                "
+              >
+                <div className="flex items-center gap-2 relative z-10">
+                  <CurrencyDollarIcon className="w-4 h-4 group-hover/export:scale-110 transition-transform duration-300" />
+                  <span className="font-medium">Export Report</span>
+                </div>
+              </Button>
             </div>
           </div>
         </footer>

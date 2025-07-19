@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Input } from '@ui/forms';
 import type React from 'react';
 import { useAuthForm } from '../hooks/useAuthForm';
