@@ -9,6 +9,7 @@ This design outlines the refactoring of the admin-web component system to elimin
 ### Current State Analysis
 
 The current architecture has several issues:
+
 1. **Duplication**: Identical components exist in both `src/components/ui` and `src/shared/ui/components`
 2. **Monolithic Components**: Complex components like `RevolutionaryStatCard` and `RouteTransition` contain multiple responsibilities
 3. **Inconsistent Exports**: Different export patterns across similar components
@@ -34,6 +35,7 @@ src/shared/ui/
 ### Atomic Design Hierarchy
 
 #### Atoms (Basic Building Blocks)
+
 - **GlowOrb**: Animated gradient orbs used in backgrounds
 - **AccentDot**: Small floating accent elements
 - **GradientOverlay**: Reusable gradient overlay effects
@@ -43,6 +45,7 @@ src/shared/ui/
 - **GeometricDecoration**: Reusable geometric shapes
 
 #### Molecules (Simple Combinations)
+
 - **StatValue**: Value display with icon and trend
 - **CardHeader**: Standardized card header with title/description
 - **CardBody**: Card content wrapper
@@ -52,6 +55,7 @@ src/shared/ui/
 - **BackgroundEffects**: Animated background element collections
 
 #### Organisms (Complex Combinations)
+
 - **StatCard**: Complete stat card composed from atoms/molecules
 - **RevolutionaryCard**: Enhanced card with all effects
 - **RouteTransition**: Page transition system
@@ -70,7 +74,7 @@ Current monolithic component will be broken into:
 <IconContainer variant="blue" size="md" glowEffect />
 <GeometricDecoration variant="circles" position="bottom-right" />
 
-// Molecules  
+// Molecules
 <TrendIndicator status="live" trend="+12%" />
 <StatValue value="1,234" title="Active Sessions" />
 
@@ -134,15 +138,15 @@ Current monolithic component will be broken into:
 interface BaseComponentProps {
   className?: string;
   children?: React.ReactNode;
-  'data-testid'?: string;
+  "data-testid"?: string;
 }
 
 interface VariantProps {
-  variant?: 'blue' | 'emerald' | 'purple' | 'teal';
+  variant?: "blue" | "emerald" | "purple" | "teal";
 }
 
 interface SizeProps {
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
 interface AnimationProps {
@@ -153,13 +157,13 @@ interface AnimationProps {
 
 // Atom-specific interfaces
 interface GlowOrbProps extends BaseComponentProps, VariantProps, SizeProps {
-  position?: 'background' | 'foreground';
-  intensity?: 'subtle' | 'medium' | 'strong';
-  blur?: 'sm' | 'md' | 'lg' | 'xl';
+  position?: "background" | "foreground";
+  intensity?: "subtle" | "medium" | "strong";
+  blur?: "sm" | "md" | "lg" | "xl";
 }
 
 interface AccentDotProps extends BaseComponentProps, VariantProps, SizeProps, AnimationProps {
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   opacity?: number;
 }
 
@@ -174,11 +178,11 @@ interface StatValueProps extends BaseComponentProps {
   value: string;
   title: string;
   icon?: React.ComponentType<{ className?: string }>;
-  variant?: 'blue' | 'emerald' | 'purple' | 'teal';
+  variant?: "blue" | "emerald" | "purple" | "teal";
 }
 
 interface TrendIndicatorProps extends BaseComponentProps {
-  status?: 'live' | 'offline' | 'warning';
+  status?: "live" | "offline" | "warning";
   trend?: string;
   animated?: boolean;
 }
@@ -250,7 +254,7 @@ interface ComponentErrorBoundaryProps {
 // Usage
 <ComponentErrorBoundary fallback={StatCardFallback}>
   <StatCard {...props} />
-</ComponentErrorBoundary>
+</ComponentErrorBoundary>;
 ```
 
 ### Prop Validation
@@ -260,12 +264,12 @@ All components will include comprehensive prop validation:
 ```typescript
 // Runtime prop validation for development
 const validateProps = (props: StatCardProps): void => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     if (!props.title) {
-      console.warn('StatCard: title prop is required');
+      console.warn("StatCard: title prop is required");
     }
     if (!props.value) {
-      console.warn('StatCard: value prop is required');
+      console.warn("StatCard: value prop is required");
     }
     // Additional validations...
   }
@@ -277,13 +281,7 @@ const validateProps = (props: StatCardProps): void => {
 Components will gracefully handle missing or invalid props:
 
 ```typescript
-const StatCard: React.FC<StatCardProps> = ({
-  title = 'Untitled',
-  value = '0',
-  variant = 'blue',
-  icon: Icon = DefaultIcon,
-  ...props
-}) => {
+const StatCard: React.FC<StatCardProps> = ({ title = "Untitled", value = "0", variant = "blue", icon: Icon = DefaultIcon, ...props }) => {
   // Component implementation with safe defaults
 };
 ```
@@ -296,18 +294,18 @@ Each atomic component will have comprehensive unit tests:
 
 ```typescript
 // atoms/GlowOrb.test.tsx
-describe('GlowOrb', () => {
-  it('renders with correct variant classes', () => {
+describe("GlowOrb", () => {
+  it("renders with correct variant classes", () => {
     render(<GlowOrb variant="blue" />);
-    expect(screen.getByTestId('glow-orb')).toHaveClass('bg-blue-500/15');
+    expect(screen.getByTestId("glow-orb")).toHaveClass("bg-blue-500/15");
   });
 
-  it('applies size classes correctly', () => {
+  it("applies size classes correctly", () => {
     render(<GlowOrb size="lg" />);
-    expect(screen.getByTestId('glow-orb')).toHaveClass('w-32', 'h-32');
+    expect(screen.getByTestId("glow-orb")).toHaveClass("w-32", "h-32");
   });
 
-  it('handles animation props', () => {
+  it("handles animation props", () => {
     render(<GlowOrb animated animationSpeed={2} />);
     // Test animation behavior
   });
@@ -320,21 +318,14 @@ Molecule and organism components will have integration tests:
 
 ```typescript
 // organisms/StatCard.test.tsx
-describe('StatCard Integration', () => {
-  it('composes atoms and molecules correctly', () => {
-    render(
-      <StatCard
-        title="Test Stat"
-        value="123"
-        icon={TestIcon}
-        variant="blue"
-      />
-    );
-    
+describe("StatCard Integration", () => {
+  it("composes atoms and molecules correctly", () => {
+    render(<StatCard title="Test Stat" value="123" icon={TestIcon} variant="blue" />);
+
     // Verify all sub-components are rendered
-    expect(screen.getByTestId('stat-value')).toBeInTheDocument();
-    expect(screen.getByTestId('icon-container')).toBeInTheDocument();
-    expect(screen.getByTestId('glow-orb')).toBeInTheDocument();
+    expect(screen.getByTestId("stat-value")).toBeInTheDocument();
+    expect(screen.getByTestId("icon-container")).toBeInTheDocument();
+    expect(screen.getByTestId("glow-orb")).toBeInTheDocument();
   });
 });
 ```
@@ -361,18 +352,18 @@ Components will be tested for performance:
 
 ```typescript
 // Performance tests
-describe('StatCard Performance', () => {
-  it('renders within performance budget', async () => {
+describe("StatCard Performance", () => {
+  it("renders within performance budget", async () => {
     const startTime = performance.now();
     render(<StatCard {...defaultProps} />);
     const endTime = performance.now();
-    
+
     expect(endTime - startTime).toBeLessThan(16); // 60fps budget
   });
 
-  it('handles re-renders efficiently', () => {
+  it("handles re-renders efficiently", () => {
     const { rerender } = render(<StatCard {...defaultProps} />);
-    
+
     // Test multiple re-renders don't cause performance issues
     for (let i = 0; i < 100; i++) {
       rerender(<StatCard {...defaultProps} value={`${i}`} />);
@@ -384,24 +375,28 @@ describe('StatCard Performance', () => {
 ## Migration Strategy
 
 ### Phase 1: Create Atomic Components
+
 1. Extract atoms from existing components
 2. Create comprehensive prop interfaces
 3. Add unit tests for each atom
 4. Document usage patterns
 
 ### Phase 2: Build Molecules
+
 1. Compose atoms into molecules
 2. Create integration tests
 3. Ensure backward compatibility
 4. Update documentation
 
 ### Phase 3: Refactor Organisms
+
 1. Replace monolithic components with composed versions
 2. Maintain existing APIs for backward compatibility
 3. Add deprecation warnings for old patterns
 4. Update all usage sites
 
 ### Phase 4: Cleanup and Optimization
+
 1. Remove duplicate components
 2. Consolidate export patterns
 3. Optimize bundle size

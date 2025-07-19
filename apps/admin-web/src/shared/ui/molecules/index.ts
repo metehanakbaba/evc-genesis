@@ -5,5 +5,11 @@
  * while maintaining a single, focused responsibility.
  */
 
-// Molecules will be exported from here as they are created
+// Export molecule types
 export * from './types';
+
+// Export molecule components
+export * from './StatValue';
+export * from './TrendIndicator';
+export * from './BackgroundEffects';
+export * from './FloatingAccents';

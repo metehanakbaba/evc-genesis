@@ -171,12 +171,12 @@ The project now implements a comprehensive **Atomic Design System** for building
 
 ```
 src/shared/ui/
-├── atoms/           # Basic building blocks (GlowOrb, AccentDot, IconContainer)
-├── molecules/       # Simple combinations (StatValue, TrendIndicator)
-├── organisms/       # Complex components (StatCard, RouteTransition)
+├── atoms/           # Basic building blocks (GlowOrb, AccentDot, IconContainer, GeometricDecoration, TextElement)
+├── molecules/       # Simple combinations (StatValue ✅, TrendIndicator, BackgroundEffects, FloatingAccents)
+├── organisms/       # Complex components (StatCard, RouteTransition, Card)
 ├── templates/       # Page-level layouts
-├── hooks/          # Shared UI hooks (useComponentTheme, useAnimation)
-├── utils/          # Utility functions (theme-utils, class-utils)
+├── hooks/          # Shared UI hooks (useComponentTheme, useAnimation, useComposition)
+├── utils/          # Utility functions (theme-utils, animation-utils, class-utils, composition)
 └── theme/          # Design tokens and theming
 ```
 
@@ -621,7 +621,7 @@ DEBUG=notion:* npm test
 
 ### In Progress 🔄
 
-- Atomic design system molecules (StatValue, TrendIndicator)
+- Atomic design system molecules (TrendIndicator, BackgroundEffects, FloatingAccents)
 - Mobile application development
 - API endpoint completion
 - Enhanced Notion workflow automation
@@ -659,11 +659,15 @@ DEBUG=notion:* npm test
 
 #### 🧩 Complete Atomic Components Library
 
+**Atoms - Basic Building Blocks:**
 - ✅ **GlowOrb Atom**: Complete implementation with animated gradient orbs, variant-specific colors (blue, emerald, purple, teal), multiple blur levels (sm, md, lg, xl), intensity settings (subtle, medium, strong), customizable animations with speed/delay control, and position management
 - ✅ **AccentDot Atom**: Small floating accent elements with positioning options, animation support, and variant-specific styling
 - ✅ **IconContainer Atom**: Standardized icon wrapper with interactive states, hover effects, glow effects, and accessibility features
 - ✅ **GeometricDecoration Atom**: Reusable geometric shapes (circles, rings, lines, arcs, dots) with pattern variants and positioning
 - ✅ **TextElement Atom**: Typography atoms with semantic HTML support, truncation options, and responsive text handling
+
+**Molecules - Composed Components:**
+- ✅ **StatValue Molecule**: Statistical value display component composed from TextElement and IconContainer atoms with interactive states, trend indicators, and custom formatting support
 
 #### 🎯 GlowOrb Component Features
 

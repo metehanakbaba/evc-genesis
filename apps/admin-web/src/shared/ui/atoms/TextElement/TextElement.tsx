@@ -29,6 +29,8 @@ export interface TextElementProps
   opacity?: 'low' | 'medium' | 'high' | 'full';
   /** Text content */
   children: React.ReactNode;
+  /** HTML for attribute (when as="label") */
+  htmlFor?: string;
 }
 
 /**
