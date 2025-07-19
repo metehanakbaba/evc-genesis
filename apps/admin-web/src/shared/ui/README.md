@@ -146,10 +146,10 @@ Basic building blocks that cannot be broken down further:
 
 Simple combinations of atoms:
 
-- `StatValue` - Value display with icon and formatting
-- `TrendIndicator` - Status and trend display
-- `BackgroundEffects` - Collections of animated background elements
-- `FloatingAccents` - Coordinated floating accent collections
+- `StatValue` - Value display with icon and formatting ✅ Complete
+- `BackgroundEffects` - Collections of animated background elements with 5 positioning patterns ✅ Complete
+- `FloatingAccents` - Coordinated floating accent collections ✅ Complete
+- `TrendIndicator` - Status and trend display (Planned)
 
 ### Organisms
 
