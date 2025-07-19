@@ -145,6 +145,7 @@ interface GlowOrbProps extends BaseComponentProps, VariantProps, SizeProps {
 **Performance Optimization:**
 
 The GlowOrb component has been optimized to use inline CSS gradients instead of CSS variables, providing:
+
 - Better browser compatibility
 - Improved rendering performance
 - Reduced dependency on theme configuration
@@ -157,12 +158,12 @@ Molecules are simple combinations of atoms that work together as a unit.
 **Implemented Molecules:**
 
 - ✅ `StatValue` - Value display with icon, formatting, and trend indicators
+- ✅ `BackgroundEffects` - Collections of animated background elements with orchestrated positioning
+- ✅ `FloatingAccents` - Coordinated floating accent collections
 
 **Planned Molecules:**
 
 - `TrendIndicator` - Status and trend display
-- `BackgroundEffects` - Collections of animated background elements
-- `FloatingAccents` - Coordinated floating accent collections
 
 **StatValue Molecule - Complete Implementation:**
 
@@ -175,7 +176,7 @@ interface StatValueProps extends BaseComponentProps, VariantProps, SizeProps {
   icon?: React.ComponentType<{ className?: string }>;
   trend?: string;
   description?: string;
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: "horizontal" | "vertical";
   formatValue?: (value: string) => string;
   onClick?: () => void;
 }
@@ -195,37 +196,114 @@ interface StatValueProps extends BaseComponentProps, VariantProps, SizeProps {
 
 ```typescript
 // Basic statistical display
-<StatValue 
-  value="1,234" 
-  title="Active Sessions" 
-  variant="blue" 
-  size="md" 
+<StatValue
+  value="1,234"
+  title="Active Sessions"
+  variant="blue"
+  size="md"
 />
 
 // With icon and trend
-<StatValue 
-  value="1,234" 
-  title="Active Sessions" 
+<StatValue
+  value="1,234"
+  title="Active Sessions"
   icon={UserIcon}
   trend="+12%"
-  variant="blue" 
-  size="md" 
+  variant="blue"
+  size="md"
 />
 
 // Interactive with custom formatting
-<StatValue 
-  value="1234.56" 
-  title="Revenue" 
+<StatValue
+  value="1234.56"
+  title="Revenue"
   icon={DollarIcon}
   trend="+5.2%"
   description="Last 30 days"
   formatValue={(val) => `$${parseFloat(val).toLocaleString()}`}
   onClick={() => console.log('Stat clicked')}
-  variant="emerald" 
+  variant="emerald"
   size="lg"
   orientation="horizontal"
 />
 ```
+
+**BackgroundEffects Molecule - Complete Implementation:**
+
+The `BackgroundEffects` component demonstrates advanced atomic composition by orchestrating multiple `GlowOrb` atoms into coordinated background collections with various positioning patterns and animation sequences.
+
+```typescript
+interface BackgroundEffectsProps extends BaseComponentProps, VariantProps, SizeProps {
+  orbCount?: number;
+  intensity?: "subtle" | "medium" | "strong";
+  blur?: "sm" | "md" | "lg" | "xl";
+  animated?: boolean;
+  animationSpeed?: number;
+  pattern?: "random" | "grid" | "corners" | "center" | "edges";
+  containerWidth?: string;
+  containerHeight?: string;
+  responsive?: boolean;
+  customOrbs?: Array<{
+    variant?: "blue" | "emerald" | "purple" | "teal";
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
+    position?: { top?: string; left?: string; right?: string; bottom?: string };
+    animationDelay?: number;
+    intensity?: "subtle" | "medium" | "strong";
+  }>;
+}
+```
+
+**Key Features:**
+
+- **Atomic Composition**: Built from multiple `GlowOrb` atoms with orchestrated positioning
+- **Pattern System**: Five positioning patterns (random, grid, corners, center, edges)
+- **Dynamic Configuration**: Customizable orb count, sizes, and individual orb properties
+- **Animation Coordination**: Staggered animation delays for natural movement
+- **Responsive Design**: Container-aware sizing and positioning
+- **Performance Optimized**: Efficient rendering with minimal re-calculations
+
+**Usage Examples:**
+
+```typescript
+// Basic background effects with random pattern
+<BackgroundEffects
+  variant="blue"
+  size="md"
+  pattern="random"
+  animated
+/>
+
+// Advanced configuration with custom orbs
+<BackgroundEffects
+  orbCount={6}
+  intensity="strong"
+  pattern="corners"
+  animationSpeed={1.2}
+  customOrbs={[
+    { variant: 'emerald', size: 'lg', position: { top: '20%', left: '30%' } },
+    { variant: 'purple', size: 'md', position: { bottom: '10%', right: '20%' } }
+  ]}
+/>
+
+// Grid pattern with responsive container
+<BackgroundEffects
+  variant="teal"
+  size="lg"
+  pattern="grid"
+  orbCount={9}
+  containerWidth="100%"
+  containerHeight="400px"
+  responsive
+/>
+```
+
+**Pattern System:**
+
+- **Random**: Dynamic positioning with Math.random() for unique layouts
+- **Grid**: Organized grid layout based on orb count
+- **Corners**: Strategic corner positioning for frame effects
+- **Center**: Circular arrangement around center point
+- **Edges**: Positioned along container edges for border effects
 
 ### Organisms - Complex Combinations
 
@@ -532,10 +610,10 @@ The atomic design system is being implemented alongside existing components in p
 - ✅ Implement `GeometricDecoration` atom component
 - ✅ Implement `TextElement` atom component
 
-### Phase 3: Compose Molecules 🔄 In Progress
+### Phase 3: Compose Molecules ✅ Nearly Complete
 
 - [x] Build `StatValue` from atoms ✅ Complete
-- [x] Build `BackgroundEffects` from atoms ✅ Complete
+- [x] Build `BackgroundEffects` from atoms ✅ Complete - Enhanced with 5 positioning patterns
 - [x] Build `FloatingAccents` from atoms ✅ Complete
 - [ ] Build `TrendIndicator` from atoms
 
@@ -803,6 +881,74 @@ const useComposition = (props: CompositionProps) => {
   };
 };
 ```
+
+### Molecule Components API
+
+#### BackgroundEffects Component
+
+Orchestrates multiple GlowOrb atoms into coordinated background collections with various positioning patterns.
+
+```typescript
+interface BackgroundEffectsProps extends BaseComponentProps, VariantProps, SizeProps {
+  orbCount?: number;
+  intensity?: 'subtle' | 'medium' | 'strong';
+  blur?: 'sm' | 'md' | 'lg' | 'xl';
+  animated?: boolean;
+  animationSpeed?: number;
+  pattern?: 'random' | 'grid' | 'corners' | 'center' | 'edges';
+  containerWidth?: string;
+  containerHeight?: string;
+  responsive?: boolean;
+  customOrbs?: Array<{
+    variant?: 'blue' | 'emerald' | 'purple' | 'teal';
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    position?: { top?: string; left?: string; right?: string; bottom?: string };
+    animationDelay?: number;
+    intensity?: 'subtle' | 'medium' | 'strong';
+  }>;
+}
+
+// Usage Examples
+<BackgroundEffects variant="blue" size="md" pattern="random" animated />
+<BackgroundEffects orbCount={6} pattern="corners" customOrbs={[...]} />
+```
+
+**Features:**
+
+- **5 Positioning Patterns**: random, grid, corners, center, edges
+- **Dynamic Configuration**: Customizable orb count and individual properties
+- **Animation Coordination**: Staggered delays for natural movement
+- **Responsive Design**: Container-aware sizing and positioning
+- **Performance Optimized**: Efficient rendering with minimal re-calculations
+
+#### StatValue Component
+
+Composes TextElement and IconContainer atoms into statistical displays.
+
+```typescript
+interface StatValueProps extends BaseComponentProps, VariantProps, SizeProps {
+  value: string;
+  title: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  trend?: string;
+  description?: string;
+  orientation?: 'horizontal' | 'vertical';
+  formatValue?: (value: string) => string;
+  onClick?: () => void;
+}
+
+// Usage Examples
+<StatValue value="1,234" title="Active Sessions" variant="blue" />
+<StatValue value="1,234" icon={UserIcon} trend="+12%" onClick={handleClick} />
+```
+
+**Features:**
+
+- **Atomic Composition**: Built from TextElement and IconContainer atoms
+- **Interactive States**: Full onClick support with keyboard navigation
+- **Trend Indicators**: Automatic styling for positive/negative trends
+- **Layout Options**: Horizontal and vertical orientations
+- **Value Formatting**: Custom formatting functions
 
 ### Utilities
 
