@@ -13,7 +13,7 @@ const MockIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 describe('IconContainer', () => {
   // Default props for testing
-  const defaultProps: Partial<IconContainerProps> = {
+  const defaultProps: IconContainerProps = {
     icon: MockIcon,
     'data-testid': 'test-icon-container',
   };
