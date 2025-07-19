@@ -5,5 +5,12 @@
  * They serve as the foundation for all other components in the system.
  */
 
-// Atoms will be exported from here as they are created
+// Base types and interfaces
 export * from './types';
+
+// Atom components
+export * from './GlowOrb';
+export * from './AccentDot';
+export * from './IconContainer';
+export * from './GeometricDecoration';
+export * from './TextElement';

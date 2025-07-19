@@ -158,10 +158,89 @@ npm run start
 ### Development Workflow
 
 1. **Feature Development**: Create in appropriate domain package
-2. **Component Development**: Add to shared UI components
+2. **Component Development**: Use atomic design system in `apps/admin-web/src/shared/ui/`
 3. **API Integration**: Use RTK Query endpoints
 4. **Testing**: Write unit and integration tests
 5. **Documentation**: Update relevant docs
+
+### Atomic Design System
+
+The project now implements a comprehensive **Atomic Design System** for building UI components through composition of smaller, focused pieces. This eliminates component duplication and creates a maintainable, reusable component architecture.
+
+#### Component Hierarchy
+
+```
+src/shared/ui/
+├── atoms/           # Basic building blocks (GlowOrb, AccentDot, IconContainer)
+├── molecules/       # Simple combinations (StatValue, TrendIndicator)
+├── organisms/       # Complex components (StatCard, RouteTransition)
+├── templates/       # Page-level layouts
+├── hooks/          # Shared UI hooks (useComponentTheme, useAnimation)
+├── utils/          # Utility functions (theme-utils, class-utils)
+└── theme/          # Design tokens and theming
+```
+
+#### Design Principles
+
+- **Composition Over Inheritance**: Build complex components from simple, reusable pieces
+- **Consistent Theming**: Unified variant system (`blue`, `emerald`, `purple`, `teal`) and size scale (`xs`, `sm`, `md`, `lg`, `xl`)
+- **Type Safety**: Comprehensive TypeScript interfaces for all component levels
+- **Performance**: Optimized hooks with proper memoization
+- **Accessibility**: Built-in accessibility attributes and WCAG compliance
+
+#### Usage Examples
+
+```typescript
+// Atomic composition approach
+import { GlowOrb, AccentDot, StatValue, TrendIndicator } from "@/shared/ui";
+
+function DashboardCard() {
+  return (
+    <StatCard variant="blue" size="lg">
+      <StatCard.Background>
+        <GlowOrb variant="blue" size="lg" animated />
+        <AccentDot position="top-right" animated />
+      </StatCard.Background>
+      <StatCard.Content>
+        <StatValue value="1,234" title="Active Sessions" />
+        <TrendIndicator trend="+12%" status="live" />
+      </StatCard.Content>
+    </StatCard>
+  );
+}
+
+// Theme and animation hooks
+import { useComponentTheme, useAnimation } from "@/shared/ui";
+
+function ThemedComponent({ variant = "blue", animated = true }) {
+  const { classes, tokens } = useComponentTheme(variant, "md");
+  const { animationClasses } = useAnimation({ animated, speed: 1.2 });
+
+  return (
+    <div className={`${classes.base} ${animationClasses}`}>
+      <span style={{ color: tokens.colors.primary }}>Themed Content</span>
+    </div>
+  );
+}
+```
+
+#### Migration Strategy
+
+The atomic design system is being implemented alongside existing components:
+
+1. **Phase 1**: ✅ Create atomic structure and base types
+2. **Phase 2**: 🔄 Build individual atoms (GlowOrb, AccentDot, etc.)
+3. **Phase 3**: 🔄 Compose molecules from atoms
+4. **Phase 4**: 🔄 Replace existing components with atomic versions
+5. **Phase 5**: 🔄 Remove duplicate components and optimize
+
+#### Key Features
+
+- **Unified Component System**: Single source of truth for all UI components
+- **Granular Reusability**: Use individual atoms or composed organisms as needed
+- **Consistent API**: Standardized props and interfaces across all components
+- **Theme Integration**: Built-in support for variants, sizes, and animations
+- **Developer Experience**: Comprehensive TypeScript support and documentation
 
 ### Code Standards
 
@@ -557,33 +636,63 @@ DEBUG=notion:* npm test
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.1.0  
-**License**: MIT  
+**Version**: 1.0.0  
 **Maintainers**: EV Charging Development Team
 
 ## 🔗 Recent Updates
 
-### January 2025 - Notion Integration v2.5
-- ✅ **Production Notion Integration**: Live connection to 4 databases
-- ✅ **Full Content Sync Implementation**: Complete markdown-to-Notion block conversion now active
-- ✅ **Enhanced File Metadata Tracking**: Comprehensive file modification times, sizes, and paths collection
-- ✅ **Enhanced Content Processing**: Smart content length management with 2000-char API limit handling
-- ✅ **Intelligent Code Block Splitting**: Large code blocks automatically split with continuation markers
-- ✅ **Advanced Language Detection**: Preserves syntax highlighting from markdown code blocks
-- ✅ **Smart Language Mapping**: Automatically maps unsupported languages (tsx, jsx, sh, vue, etc.) to Notion-compatible equivalents
-- ✅ **Smart Content Chunking**: Splits long content at logical boundaries to preserve formatting
-- ✅ **Content Replacement System**: Updates existing Notion pages with fresh markdown content
-- ✅ **Batch Processing**: Handles large documents with 100-block API batching
-- ✅ **Automated Documentation Sync**: Real-time sync from docs/ to Notion with full content conversion
-- ✅ **Enhanced Sync Reporting**: Detailed statistics including file sizes (KB), block counts, and modification dates
-- ✅ **Intelligent Sync Caching**: Smart file change detection with persistent cache to avoid unnecessary syncs
-- ✅ **Performance Optimization**: Only syncs modified files based on timestamps, size changes, and Notion page existence
-- ✅ **Corrected KPI Tracking System**: Automated project metrics with proper database schema alignment
-- ✅ **Enhanced Development Tools**: Comprehensive API testing and validation
-- ✅ **Streamlined Workflows**: One-command sync and update operations
-- ✅ **Database Schema Validation**: Proper field mapping for Goals Tracker database
-- ✅ **Comprehensive Project Analysis**: Complete project portfolio analysis with 10+ major projects
-- ✅ **Multi-Category Project Organization**: Automatic categorization by Frontend, Backend, Mobile, DevOps, Infrastructure, and Documentation
-- ✅ **Budget and Timeline Management**: Tracks $260K+ total project budget with progress monitoring
-- ✅ **Portfolio Insights**: Real-time project status, priority assessment, and completion tracking
-- ✅ **AI-Generated Project Summaries**: Rich project descriptions with technical details and current status
+### January 2025 - Atomic Design System v1.0
+
+#### 🎨 Atomic Design System Implementation
+
+- ✅ **Complete Foundation Setup**: Atomic design system structure with atoms, molecules, organisms, and templates
+- ✅ **Comprehensive Type System**: Full TypeScript interfaces for all component levels with BaseComponentProps, VariantProps, SizeProps, and AnimationProps
+- ✅ **Theme Integration**: Unified variant system (blue, emerald, purple, teal) with consistent size scale (xs, sm, md, lg, xl)
+- ✅ **Advanced Hooks System**: useComponentTheme, useAnimation, and useComposition hooks for component development
+- ✅ **Utility Functions**: Complete set of theme-utils, animation-utils, class-utils, and composition helpers
+- ✅ **Component Architecture**: Structured approach eliminating duplication between src/components/ui and src/shared/ui
+- ✅ **Migration Strategy**: Phased approach to replace existing monolithic components with atomic compositions
+- ✅ **Developer Experience**: Comprehensive documentation, validation tools, and development guidelines
+- ✅ **Performance Optimization**: Memoized hooks and optimized rendering for complex component compositions
+- ✅ **Accessibility Ready**: Built-in WCAG compliance and accessibility attributes in base component props
+
+#### 🧩 First Atomic Components
+
+- ✅ **GlowOrb Atom**: Complete implementation with animated gradient orbs, variant-specific colors (blue, emerald, purple, teal), multiple blur levels (sm, md, lg, xl), intensity settings (subtle, medium, strong), customizable animations with speed/delay control, and position management
+- 🔄 **AccentDot Atom**: Small floating accent elements (in progress)
+- 🔄 **IconContainer Atom**: Standardized icon wrapper with effects (in progress)
+- 🔄 **GeometricDecoration Atom**: Reusable geometric shapes (in progress)
+- 🔄 **TextElement Atom**: Typography atoms with variants (in progress)
+
+#### 🎯 GlowOrb Component Features
+
+The `GlowOrb` component demonstrates the full atomic design system implementation:
+
+```typescript
+// Basic usage
+<GlowOrb variant="blue" size="lg" animated />
+
+// Advanced configuration with all features
+<GlowOrb 
+  variant="emerald" 
+  size="md" 
+  intensity="strong" 
+  blur="lg"
+  animated
+  animationSpeed={1.5}
+  animationDelay={200}
+  position="background"
+  className="top-4 right-4"
+  style={{ opacity: 0.8 }}
+/>
+```
+
+**Key Features:**
+- **4 Color Variants**: Blue, emerald, purple, teal with consistent theming
+- **5 Size Options**: xs, sm, md, lg, xl with proportional scaling
+- **4 Blur Levels**: sm, md, lg, xl for different visual effects
+- **3 Intensity Levels**: Subtle (0.1), medium (0.25), strong (0.5) opacity
+- **Animation Control**: Customizable speed, delay, and timing
+- **Position Management**: Background/foreground z-index handling
+- **Type Safety**: Full TypeScript interfaces with comprehensive validation
+- **Performance**: Optimized rendering with proper memoization

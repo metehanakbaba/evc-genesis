@@ -116,14 +116,30 @@
       "dependsOn": ["^build"],
       "inputs": [
         "default",
-        "^production"
+        "^production",
+        "{projectRoot}/jest.config.js",
+        "{projectRoot}/src/test-setup.ts"
       ],
       "outputs": [
-        "{projectRoot}/test-output"
+        "{projectRoot}/coverage"
       ],
       "options": {
-        "command": "echo 'Tests will be added in future iterations'",
+        "command": "jest",
         "cwd": "apps/admin-web"
+      },
+      "configurations": {
+        "watch": {
+          "command": "jest --watch",
+          "cwd": "apps/admin-web"
+        },
+        "coverage": {
+          "command": "jest --coverage",
+          "cwd": "apps/admin-web"
+        },
+        "ci": {
+          "command": "jest --ci --coverage --watchAll=false",
+          "cwd": "apps/admin-web"
+        }
       }
     },
     "clean": {
