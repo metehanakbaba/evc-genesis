@@ -20,7 +20,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { MinimalStatCard } from '@ui/display';
 import { Button, Input, Select } from '@ui/forms';
-import { MainLayout, PageHeader } from '@ui/layout';
+import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
@@ -245,28 +246,11 @@ const StationsPage: React.FC = () => {
       headerVariant="default"
       showFooter={false}
     >
-      <div className="space-y-10">
-        {/* Revolutionary Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push('/')}
-            className="
-              p-2 hover:bg-gray-700/30 flex items-center gap-1
-              bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
-              hover:from-gray-600/40 hover:via-gray-500/30 hover:to-gray-600/40
-              border border-gray-600/20 hover:border-gray-500/40
-              transition-all duration-300 ease-out
-              hover:scale-[1.02] active:scale-[0.98]
-            "
-          >
-            <HomeIcon className="w-4 h-4" />
-            <span className="font-medium">Dashboard</span>
-          </Button>
-          <ChevronRightIcon className="w-4 h-4" />
-          <span className="text-blue-400 font-medium">Charging Stations</span>
-        </nav>
+      <PageContainer>
+        <Breadcrumb
+          currentPageLabel="Charging Stations"
+          variant="blue"
+        />
 
         <PageHeader
           title="Charging Stations"
@@ -320,7 +304,7 @@ const StationsPage: React.FC = () => {
         </section>
 
         {/* Search & Filters */}
-        <section>
+        <section className="mt-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-3 h-8 bg-gradient-to-b from-blue-400 to-blue-300 rounded-full"></div>
@@ -802,7 +786,7 @@ const StationsPage: React.FC = () => {
             </div>
           </div>
         </footer>
-      </div>
+      </PageContainer>
     </MainLayout>
   );
 };

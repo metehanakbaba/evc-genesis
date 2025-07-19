@@ -80,9 +80,12 @@ export type { SwitchProps } from './components/Forms/Switch/Switch';
 export { Switch } from './components/Forms/Switch/Switch';
 export type { TextareaProps } from './components/Forms/Textarea/Textarea';
 export { Textarea } from './components/Forms/Textarea/Textarea';
-export type { NavigationCardProps } from './components/Navigation/NavigationCard/NavigationCard';
+
 // ==================== NAVIGATION ====================
+export type { NavigationCardProps } from './components/Navigation/NavigationCard/NavigationCard';
 export { NavigationCard } from './components/Navigation/NavigationCard/NavigationCard';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/Navigation';
+export { Breadcrumb } from './components/Navigation';
 
 // ==================== FEEDBACK ====================
 export { ErrorBoundary } from './components/Feedback/ErrorBoundary/ErrorBoundary';
