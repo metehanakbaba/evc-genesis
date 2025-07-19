@@ -131,11 +131,16 @@ function ThemedComponent({ variant = 'blue', size = 'md' }) {
 
 Basic building blocks that cannot be broken down further:
 
-- `GlowOrb` - Animated gradient orbs for backgrounds
-- `AccentDot` - Small floating accent elements
-- `IconContainer` - Standardized icon wrapper with effects
-- `GeometricDecoration` - Reusable geometric shapes
-- `TextElement` - Typography atoms with variants
+- `GlowOrb` - Animated gradient orbs with inline CSS gradients for optimal performance
+- `AccentDot` - Small floating accent elements with positioning and animation
+- `IconContainer` - Interactive icon wrapper with hover effects and accessibility
+- `GeometricDecoration` - Reusable geometric shapes with pattern variants
+- `TextElement` - Typography atoms with semantic HTML and truncation support
+
+**Recent Updates:**
+- ✅ **GlowOrb Performance Optimization**: Removed dependency on `atomicTokens` and implemented inline gradient definitions for better compatibility and performance
+- ✅ **Complete Type Safety**: All atoms include comprehensive TypeScript interfaces
+- ✅ **Full Test Coverage**: 181 unit tests covering all atomic components
 
 ### Molecules
 

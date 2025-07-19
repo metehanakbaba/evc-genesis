@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../../utils/class-utils';
-import { atomicTokens } from '../../theme/theme.config';
+
 import type { 
   BaseComponentProps, 
   VariantProps, 

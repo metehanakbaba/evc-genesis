@@ -6,7 +6,7 @@ import type { TextElementProps } from './TextElement';
 
 describe('TextElement', () => {
   // Default props for testing
-  const defaultProps: Partial<TextElementProps> = {
+  const defaultProps: TextElementProps = {
     'data-testid': 'test-text-element',
     children: 'Test text content',
   };
