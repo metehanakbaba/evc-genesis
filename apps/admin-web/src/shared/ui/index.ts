@@ -41,6 +41,16 @@ export type { SpinnerProps } from './components/Display/Spinner/Spinner';
 export { Spinner } from './components/Display/Spinner/Spinner';
 export type { StatCardProps } from './components/Display/StatCard/StatCard';
 export { StatCard } from './components/Display/StatCard/StatCard';
+export type { FloatingCardProps } from './components/Display/FloatingCard/FloatingCard';
+export { FloatingCard } from './components/Display/FloatingCard/FloatingCard';
+export type { MinimalStatCardProps } from './components/Display/MinimalStatCard/MinimalStatCard';
+export { MinimalStatCard } from './components/Display/MinimalStatCard/MinimalStatCard';
+export type { RevolutionaryLoaderProps } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
+export { RevolutionaryLoader } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
+export type { RevolutionaryLoadingVisualProps } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
+export { RevolutionaryLoadingVisual } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
+export type { ModalProps } from './components/Display/Modal/Modal';
+export { Modal } from './components/Display/Modal/Modal';
 // ==================== FORMS ====================
 export type { ButtonProps } from './components/Forms/Button/Button';
 export { Button } from './components/Forms/Button/Button';
@@ -73,8 +83,6 @@ export { Textarea } from './components/Forms/Textarea/Textarea';
 export type { NavigationCardProps } from './components/Navigation/NavigationCard/NavigationCard';
 // ==================== NAVIGATION ====================
 export { NavigationCard } from './components/Navigation/NavigationCard/NavigationCard';
-
-// Modal is not exported yet - will need to add when ready
 
 // ==================== FEEDBACK ====================
 export { ErrorBoundary } from './components/Feedback/ErrorBoundary/ErrorBoundary';
