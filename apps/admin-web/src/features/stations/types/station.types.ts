@@ -44,6 +44,8 @@ export interface AdminStationsQueryParams {
   readonly page?: number;
   readonly limit?: number;
   readonly status?: StationStatus;
+  readonly search?: string;
+  readonly connectorType?: string;
 }
 
 export interface CreateStationRequest {
