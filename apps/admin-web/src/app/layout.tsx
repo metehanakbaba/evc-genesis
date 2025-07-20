@@ -18,13 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'EV Charging Admin Panel',
   description:
-    'Professional EV charging station management platform with React 19',
+    'Professional EV charging station management platform v1.0.0',
   keywords: [
     'EV charging',
     'admin panel',
-    'React 19',
-    'Next.js 15',
     'electric vehicles',
+    'management platform',
+    'version 1.0.0',
   ],
   authors: [{ name: 'EV Charging Team' }],
 };

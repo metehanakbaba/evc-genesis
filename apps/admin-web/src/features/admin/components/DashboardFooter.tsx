@@ -39,7 +39,7 @@ export const DashboardFooter: React.FC = () => {
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full" />
                 <span className="text-sm text-gray-300">
-                  React 19 + Next.js 15
+                  Version 1.0.0
                 </span>
               </div>
             </div>

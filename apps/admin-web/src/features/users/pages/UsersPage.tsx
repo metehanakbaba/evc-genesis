@@ -26,12 +26,10 @@ import {
   UserFilterModal,
   UserGridSkeleton,
   UserTableSkeleton,
-  LoadMoreSkeleton,
-  EndOfListIndicator
 } from '../components';
 
 // ✅ Import API hooks and types
-import {
+import { 
   useUserStatistics,
   useUserActions,
   useInfiniteUsers,
@@ -100,7 +98,6 @@ const UsersPage: React.FC = () => {
     hasNextPage,
     loadMore,
     refresh,
-    total,
     error,
   } = useInfiniteUsers({
     filters: {
@@ -372,7 +369,7 @@ const UsersPage: React.FC = () => {
                       onLoadMore={loadMore}
                       isLoadingMore={isLoadingMore}
                       hasNextPage={hasNextPage}
-                      total={total}
+                      total={totalUsers.count}
                       variant="purple"
                     />
                   ) : (
@@ -405,7 +402,7 @@ const UsersPage: React.FC = () => {
                       onLoadMore={loadMore}
                       isLoadingMore={isLoadingMore}
                       hasNextPage={hasNextPage}
-                      total={total}
+                      total={totalUsers.count}
                       variant="purple"
                     />
                   ) : (

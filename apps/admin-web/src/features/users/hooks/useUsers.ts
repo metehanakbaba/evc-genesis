@@ -163,7 +163,6 @@ export const useInfiniteUsers = ({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [total, setTotal] = useState(0);
   const [error, setError] = useState<Error | null>(null);
 
   // ✅ Generate more mock users for pagination testing
@@ -243,7 +242,6 @@ export const useInfiniteUsers = ({
       const initialUsers = await fetchUsers(0);
       
       setUsers(initialUsers);
-      setTotal(filteredUsers.length);
       setCurrentPage(0);
       setHasNextPage(initialUsers.length === pageSize && filteredUsers.length > pageSize);
     } catch (err) {
@@ -290,6 +288,7 @@ export const useInfiniteUsers = ({
   // ✅ Load initial data on mount
   useEffect(() => {
     loadInitialData();
+    return undefined; // Explicit return for TypeScript
   }, []); // Only run once on mount
 
   // ✅ Reload when filters change
@@ -306,6 +305,7 @@ export const useInfiniteUsers = ({
 
       return () => clearTimeout(timeoutId);
     }
+    return undefined; // Explicit return for all code paths
   }, [filters.searchQuery, filters.roleFilter, filters.statusFilter]);
 
   return {
@@ -315,7 +315,6 @@ export const useInfiniteUsers = ({
     hasNextPage,
     loadMore,
     refresh,
-    total: filteredUsers.length,
     error,
   };
 }; 

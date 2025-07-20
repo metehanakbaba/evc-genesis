@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { PLNTransaction, TransactionQueryParams } from '../types/wallet.types';
+import type { PLNTransaction } from '../types/wallet.types';
 import { generateMockTransactions } from '../api/walletApi';
 
 interface InfiniteTransactionsResult {
@@ -215,6 +215,7 @@ export const useInfiniteTransactions = (
       isInitializedRef.current = true;
       loadInitialData(filters);
     }
+    return undefined; // Explicit return for TypeScript
   }, [enabled]); // Only depend on enabled
 
   /**
@@ -234,6 +235,7 @@ export const useInfiniteTransactions = (
 
       return () => clearTimeout(timeoutId);
     }
+    return undefined; // Explicit return for all code paths
   }, [filterString]); // Use memoized filter string
 
   /**
