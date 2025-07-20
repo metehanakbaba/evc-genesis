@@ -18,7 +18,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         <PerformanceMonitor 
           enabled={process.env.NODE_ENV === 'development'}
           position="bottom-right"
-          showDetails={false}
+          showDetails={true}
         />
       </ToastProvider>
     </Provider>
