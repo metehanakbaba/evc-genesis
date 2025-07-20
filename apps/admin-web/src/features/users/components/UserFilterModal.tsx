@@ -148,8 +148,8 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="User Filters"
-      description="Select user roles and status to filter results"
+      title="Identity Access Control Filters"
+      description="Configure role-based access criteria and account status parameters"
       size="lg"
       variant="default"
       footer={
@@ -174,7 +174,7 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
           >
             <div className="flex items-center gap-2 relative z-10">
               <XMarkIcon className="w-4 h-4 group-hover/clear:rotate-90 transition-transform duration-300" />
-              <span className="font-medium">Clear All</span>
+              <span className="font-medium">Reset Criteria</span>
             </div>
           </Button>
           <Button
@@ -196,7 +196,7 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
               before:transition-transform before:duration-700
             `}
           >
-            <span className="relative z-10 font-medium">Apply Filters</span>
+            <span className="relative z-10 font-medium">Apply Configuration</span>
           </Button>
         </div>
       }
@@ -206,7 +206,7 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
         <div>
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <UserGroupIcon className={`w-5 h-5 text-${variant}-400`} />
-            User Role
+            Organizational Role Classification
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {roleOptions.map((role) =>
@@ -223,7 +223,7 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
         <div>
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <CheckCircleIcon className={`w-5 h-5 text-${variant}-400`} />
-            Account Status
+            Authentication Status Classification
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {statusOptions.map((status) =>
