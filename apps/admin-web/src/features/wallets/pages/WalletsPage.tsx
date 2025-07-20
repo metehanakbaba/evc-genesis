@@ -13,9 +13,8 @@ import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Button } from '@ui/forms';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
-import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 // ✅ Import new reusable components
 import { 
@@ -28,7 +27,6 @@ import {
 import { 
   useWalletStatistics,
   useTransactionActions,
-  type PLNTransaction,
 } from '../api/walletApi';
 
 // ✅ Import infinite scroll hooks
@@ -71,7 +69,6 @@ interface WalletStats {
  * - ✅ Clean separation of concerns
  */
 const WalletsPage: React.FC = () => {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');

@@ -3,10 +3,8 @@
 import {
   BoltIcon,
   CheckCircleIcon,
-  ClockIcon,
-  PlusIcon,
   EyeIcon,
-  MapPinIcon,
+  PlusIcon,
   SignalIcon,
   WrenchScrewdriverIcon,
   XCircleIcon,
@@ -17,20 +15,20 @@ import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 // ✅ Import new reusable components
-import { 
-  StationGrid, 
-  StationTable, 
-  StationFilterModal 
+import {
+  StationGrid,
+  StationTable,
+  StationFilterModal,
 } from '../components';
 
 // ✅ Import skeleton components
 import { StationGridSkeleton, StationTableSkeleton } from '../components/StationSkeleton';
 
 // ✅ Import hooks for demo data
-import { 
+import {
   useStationStatistics,
   useStationActions,
   useInfiniteStations,
@@ -99,13 +97,19 @@ const StationsPage: React.FC = () => {
   const { 
     totalStations,
     activeStations,
-    offlineStations,
     maintenanceStations,
     totalConnectors,
     availableConnectors,
   } = useStationStatistics();
 
-  const { viewDetails, editStation } = useStationActions();
+  const { 
+    handleViewDetails, 
+    handleEdit,
+  } = useStationActions();
+
+  // Wrapper functions to match component expectations
+  const viewDetails = (station: any) => handleViewDetails(station.id);
+  const editStation = (station: any) => handleEdit(station);
 
   // Revolutionary floating stats with station data
   const stationStats: StationStats[] = [
