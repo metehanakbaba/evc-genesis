@@ -19,7 +19,7 @@ export interface SearchFilterBarProps {
   readonly onViewModeChange: (mode: ViewMode) => void;
   
   // Layout
-  readonly variant?: 'default' | 'primary';
+  readonly variant?: 'default' | 'primary' | 'teal' | 'blue' | 'purple' | 'emerald';
   readonly className?: string;
   readonly showViewToggle?: boolean;
 }
@@ -39,7 +39,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   filterLabel = "Filters",
   viewMode,
   onViewModeChange,
-  variant = "default",
+  variant = "purple",
   className = "",
   showViewToggle = true,
 }) => {

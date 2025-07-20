@@ -7,7 +7,7 @@ export interface ViewModeToggleProps {
   readonly viewMode: ViewMode;
   readonly onViewModeChange: (mode: ViewMode) => void;
   readonly size?: 'sm' | 'md' | 'lg';
-  readonly variant?: 'default' | 'primary';
+  readonly variant?: 'default' | 'primary' | 'teal' | 'blue' | 'purple' | 'emerald';
   readonly className?: string;
   readonly disabled?: boolean;
 }
@@ -39,21 +39,29 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
   };
 
   const getVariantClasses = (isActive: boolean) => {
-    if (variant === 'primary') {
-      return isActive
-        ? `bg-gradient-to-r from-teal-500/25 via-teal-400/20 to-teal-500/25 
-           text-teal-300 border border-teal-400/40 shadow-lg shadow-teal-500/20
-           scale-[1.05]`
-        : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-           hover:scale-[1.02] border border-transparent`;
-    }
+    const getActiveClasses = (color: string) => 
+      `bg-gradient-to-r from-${color}-500/25 via-${color}-400/20 to-${color}-500/25 
+       text-${color}-300 border border-${color}-400/40 shadow-lg shadow-${color}-500/20
+       scale-[1.05]`;
     
-    return isActive
-      ? `bg-gradient-to-r from-blue-500/25 via-blue-400/20 to-blue-500/25 
-         text-blue-300 border border-blue-400/40 shadow-lg shadow-blue-500/20
-         scale-[1.05]`
-      : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-         hover:scale-[1.02] border border-transparent`;
+    const inactiveClasses = `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                            hover:scale-[1.02] border border-transparent`;
+
+    if (!isActive) return inactiveClasses;
+
+    switch (variant) {
+      case 'primary':
+      case 'teal':
+        return getActiveClasses('teal');
+      case 'blue':
+        return getActiveClasses('blue');
+      case 'purple':
+        return getActiveClasses('purple');
+      case 'emerald':
+        return getActiveClasses('emerald');
+      default:
+        return getActiveClasses('blue');
+    }
   };
 
   return (
