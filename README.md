@@ -85,14 +85,51 @@ npm run docker:build    # Docker production build
 npm run test            # Run all tests
 npm run lint            # Lint all projects
 npm run typecheck       # TypeScript validation
+
+# Notion Integration
+cd tools/notion && npm run test        # Test Notion connection
+cd tools/notion && npm run sync-docs   # Sync documentation with full content
+cd tools/notion && npm run update-kpis # Update project metrics
 ```
 
 ### Development Workflow
 1. **Feature Development**: Create in appropriate domain package
-2. **Component Development**: Add to shared UI components
+2. **Component Development**: Use atomic design system in `apps/admin-web/src/shared/ui/`
 3. **API Integration**: Use RTK Query endpoints
 4. **Testing**: Write unit and integration tests
 5. **Documentation**: Update relevant docs
+
+### Component Architecture
+The project uses a comprehensive **Atomic Design System** for UI components:
+
+- **Atoms** (`src/shared/ui/atoms/`): Basic building blocks (GlowOrb, AccentDot, IconContainer, GeometricDecoration, TextElement)
+- **Molecules** (`src/shared/ui/molecules/`): Simple combinations (StatValue, TrendIndicator, BackgroundEffects)
+- **Organisms** (`src/shared/ui/organisms/`): Complex components (StatCard, RouteTransition, Card)
+- **Templates** (`src/shared/ui/templates/`): Page-level layouts
+
+**Recent Updates:**
+- ✅ **All 5 Atomic Components** fully implemented with comprehensive TypeScript interfaces
+- ✅ **RouteTransition Organism** complete with dynamic pattern generation using atomic composition
+- ✅ **BackgroundEffects & FloatingAccents Molecules** implemented with 5 positioning patterns (random, grid, corners, center, edges)
+- ✅ **Performance Optimized** GlowOrb component with inline gradient definitions
+- ✅ **206+ Unit Tests** covering all atomic components with full accessibility compliance
+- ✅ **StatValue & BackgroundEffects Molecules** complete - demonstrating atomic composition principles
+- ✅ **Documentation Consistency** - All component index files now include comprehensive JSDoc headers following atomic design standards
+
+```typescript
+// Example: Composing components atomically
+<StatCard>
+  <StatCard.Background>
+    <GlowOrb variant="blue" size="lg" intensity="strong" animated />
+    <AccentDot position="top-right" animated />
+    <GeometricDecoration shape="circle" variant="emerald" />
+  </StatCard.Background>
+  <StatCard.Content>
+    <StatValue value="1,234" title="Active Sessions" icon={UserIcon} trend="+12%" />
+    <TrendIndicator trend="+12%" status="live" />
+  </StatCard.Content>
+</StatCard>
+```
 
 ## 🐳 Docker & Deployment
 
@@ -138,6 +175,8 @@ expo start
 ### Quick Links
 - **[📖 Complete Documentation](./docs/README.md)** - Comprehensive system guide
 - **[🚀 Quick Start](./docs/QUICK_START.md)** - Fast setup guide
+- **[🔄 Recent Updates](./docs/RECENT_UPDATES.md)** - Latest changes and optimizations
+- **[🎨 Atomic Design System](./docs/ATOMIC_DESIGN_SYSTEM.md)** - Component architecture guide
 - **[🐳 Docker Guide](./docs/README_DOCKER.md)** - Complete Docker setup
 - **[⚡ NX Optimization](./docs/README_NX_OPTIMIZATION.md)** - Build system optimization
 - **[📱 Mobile Plan](./docs/EXPO_MIGRATION_PLAN.md)** - Mobile development roadmap
@@ -192,6 +231,9 @@ docker system prune -a
 - Admin web application
 - Shared business logic
 - Docker deployment setup
+- **Atomic Design System Foundation** with comprehensive type system
+- **Notion integration** with full content sync and live database connections
+- Automated documentation and KPI tracking
 
 ### In Progress 🔄
 - Mobile application development

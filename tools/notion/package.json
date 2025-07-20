@@ -1,0 +1,26 @@
+{
+  "name": "@evc/notion-integration",
+  "version": "2.0.0",
+  "description": "Simple Notion integration for EV Charging Admin project",
+  "main": "config.js",
+  "scripts": {
+    "test": "node test-connection.js",
+    "sync-docs": "node sync-docs.js",
+    "explore": "node explore-databases.js",
+    "update-kpis": "node update-kpis.js",
+    "analyze": "node analyze-projects.js",
+    "analyze-projects": "node analyze-projects.js",
+    "project-report": "node project-status-report.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  },
+  "keywords": [
+    "notion",
+    "documentation",
+    "project-management",
+    "ev-charging"
+  ],
+  "author": "EV Charging Team",
+  "license": "MIT"
+}

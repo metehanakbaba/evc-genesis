@@ -43,12 +43,10 @@ export const store = configureStore({
       actionCreatorCheck: process.env.NODE_ENV === 'development',
     });
 
-    // Safely add evChargingApi middleware if it exists
-    if (evChargingApi.middleware) {
-      middleware.concat(evChargingApi.middleware);
-    }
-
-    return middleware.prepend(listenerMiddleware.middleware);
+    // Add RTK Query middleware
+    return middleware
+      .concat(evChargingApi.middleware)
+      .prepend(listenerMiddleware.middleware);
   },
 
   // Performance: Enable DevTools only in development

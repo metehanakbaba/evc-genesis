@@ -29,15 +29,15 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
       variant,
     }) => {
       return (
-        <div className="group relative">
+        <div className="group relative h-full">
           {/* Floating background glow */}
           <div
             className={`absolute -inset-4 bg-gradient-to-r ${gradient} rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-all duration-700`}
           />
 
-          {/* Main card */}
+          {/* Main card with fixed height */}
           <div
-            className={`relative p-8 bg-gradient-to-br ${gradient} backdrop-blur-xl border border-white/10 rounded-3xl hover:border-white/20 transition-all duration-700 ease-out transform hover:scale-105 hover:-translate-y-3 shadow-2xl hover:shadow-4xl`}
+            className={`relative h-full min-h-[200px] max-h-[240px] p-6 bg-gradient-to-br ${gradient} backdrop-blur-xl border border-white/10 rounded-3xl hover:border-white/20 transition-all duration-700 ease-out transform hover:scale-105 hover:-translate-y-3 shadow-2xl hover:shadow-4xl flex flex-col overflow-hidden`}
           >
             {/* Floating accent orbs */}
             <div
@@ -65,9 +65,9 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
             />
 
             {/* Icon container with revolutionary glow */}
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-4 flex-shrink-0">
               <div
-                className={`relative w-16 h-16 rounded-2xl ${
+                className={`relative w-14 h-14 rounded-2xl ${
                   variant === 'blue'
                     ? 'bg-gradient-to-br from-blue-500/30 to-blue-400/20 border-blue-400/40'
                     : variant === 'emerald'
@@ -78,7 +78,7 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
                 } border flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}
               >
                 <IconComponent
-                  className={`w-8 h-8 ${
+                  className={`w-7 h-7 ${
                     variant === 'blue'
                       ? 'text-blue-300'
                       : variant === 'emerald'
@@ -103,28 +103,28 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
               </div>
 
               {/* Trend indicator */}
-              <div className="text-right transform group-hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium mb-1">
+              <div className="text-right transform group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <div className="flex items-center gap-1 text-emerald-400 text-xs font-medium mb-1">
                   <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
                   <span>Live</span>
                 </div>
-                <div className="text-xs text-gray-400">{trend}</div>
+                <div className="text-xs text-gray-400 text-truncate-title max-w-[80px]">{trend}</div>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-white">{value}</div>
-              <div className="text-sm font-medium text-gray-300">{title}</div>
-              <div className="overflow-hidden">
-                <p className="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-100">
+            {/* Content with proper overflow handling */}
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="text-2xl font-bold text-white mb-1 text-truncate-title">{value}</div>
+              <div className="text-sm font-medium text-gray-300 mb-2 text-truncate-title">{title}</div>
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <p className="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-100 text-truncate-multi">
                   {description}
                 </p>
               </div>
             </div>
 
             {/* Floating geometric decoration */}
-            <div className="absolute bottom-4 right-4 w-20 h-20 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
+            <div className="absolute bottom-3 right-3 w-16 h-16 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
               <div
                 className={`w-full h-full border ${
                   variant === 'blue'

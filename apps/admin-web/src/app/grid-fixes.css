@@ -1,0 +1,375 @@
+/* ========================================
+   Grid & Layout Fixes for EV Admin Dashboard
+   Comprehensive UI/UX Improvements
+   ======================================== */
+
+/* ========================================
+   1. Grid System Fixes
+   ======================================== */
+
+/* Ensure consistent grid heights with auto-fit rows */
+.grid-auto-rows-fr {
+  grid-auto-rows: 1fr;
+}
+
+.grid-auto-rows-min {
+  grid-auto-rows: minmax(200px, auto);
+}
+
+/* Fixed height grid containers */
+.grid-fixed-height {
+  grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Ensure all grid items stretch to full height */
+.grid > * {
+  height: 100%;
+}
+
+/* Grid alignment fixes */
+.grid-align-stretch {
+  align-items: stretch;
+}
+
+/* ========================================
+   2. Card Height Consistency
+   ======================================== */
+
+/* Base card fixes - ensure minimum heights */
+.card-fixed {
+  min-height: 200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stat card specific fixes */
+.stat-card-fixed {
+  min-height: 180px;
+  max-height: 220px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Management card fixes */
+.management-card-fixed {
+  min-height: 320px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card content should flex to fill available space */
+.card-content-flex {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ========================================
+   3. Text Overflow & Content Management
+   ======================================== */
+
+/* Title truncation */
+.text-truncate-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Multi-line truncation for descriptions */
+.text-truncate-multi {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3em; /* 2 lines * 1.5 line-height */
+  line-height: 1.5;
+}
+
+/* Description container with fixed height */
+.description-container {
+  min-height: 3em;
+  max-height: 3em;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Fade out effect for long text */
+.text-fade-out {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-fade-out::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: 1.5em;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: 0.1;
+}
+
+/* ========================================
+   4. Container & Spacing Fixes
+   ======================================== */
+
+/* Consistent container padding */
+.container-consistent {
+  padding: 1.5rem;
+}
+
+/* Fixed spacing system */
+.space-y-fixed > * + * {
+  margin-top: 1rem;
+}
+
+/* Gap consistency for grids */
+.gap-consistent {
+  gap: 1.5rem;
+}
+
+/* ========================================
+   5. Image & Icon Fixes
+   ======================================== */
+
+/* Fixed icon containers */
+.icon-container-fixed {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive images with aspect ratio */
+.image-responsive {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 16/9;
+}
+
+/* ========================================
+   6. Responsive Breakpoint Fixes
+   ======================================== */
+
+/* Mobile-first grid fixes */
+@media (max-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  .stat-card-fixed {
+    min-height: 160px;
+    max-height: 180px;
+  }
+  
+  .management-card-fixed {
+    min-height: 280px;
+  }
+}
+
+/* Tablet fixes */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Desktop fixes */
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* ========================================
+   7. Animation & Transition Fixes
+   ======================================== */
+
+/* Prevent layout shift during animations */
+.animation-stable {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Smooth height transitions */
+.transition-height {
+  transition: height 0.3s ease-out, min-height 0.3s ease-out;
+}
+
+/* ========================================
+   8. Overflow Control
+   ======================================== */
+
+/* Prevent content from breaking out */
+.overflow-control {
+  overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Scrollable content areas */
+.content-scrollable {
+  overflow-y: auto;
+  max-height: 300px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.content-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.content-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+/* ========================================
+   9. Z-Index Management
+   ======================================== */
+
+/* Proper stacking context */
+.z-index-card {
+  z-index: 1;
+  position: relative;
+}
+
+.z-index-card-hover {
+  z-index: 10;
+}
+
+.z-index-decoration {
+  z-index: 0;
+}
+
+/* ========================================
+   10. Performance Optimizations
+   ======================================== */
+
+/* GPU acceleration for transforms */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Contain layout reflows */
+.contain-layout {
+  contain: layout style;
+}
+
+/* ========================================
+   11. Typography Scale Fixes
+   ======================================== */
+
+/* Consistent heading sizes */
+.heading-scale-xl {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 1.2;
+}
+
+.heading-scale-lg {
+  font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+  line-height: 1.3;
+}
+
+.heading-scale-md {
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  line-height: 1.4;
+}
+
+/* Body text consistency */
+.text-scale-base {
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  line-height: 1.5;
+}
+
+.text-scale-sm {
+  font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+  line-height: 1.5;
+}
+
+/* ========================================
+   12. Accessibility Improvements
+   ======================================== */
+
+/* Focus visible improvements */
+.focus-visible-enhanced:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-fixed {
+    border-width: 2px;
+  }
+  
+  .text-truncate-multi {
+    -webkit-line-clamp: 3;
+    max-height: 4.5em;
+  }
+}
+
+/* ========================================
+   13. Loading State Fixes
+   ======================================== */
+
+/* Skeleton loader with fixed height */
+.skeleton-fixed {
+  min-height: inherit;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ========================================
+   14. Print Media Fixes
+   ======================================== */
+
+@media print {
+  .grid-responsive {
+    display: block !important;
+  }
+  
+  .card-fixed {
+    page-break-inside: avoid;
+    min-height: auto;
+    max-height: none;
+  }
+  
+  .text-truncate-multi {
+    -webkit-line-clamp: unset;
+    max-height: none;
+  }
+} 

@@ -1,3 +1,5 @@
+"use client";
+
 import { MainLayout } from '@ui/layout';
 import type React from 'react'; // React 19: use hook!
 import { Suspense, use } from 'react';
@@ -21,7 +23,7 @@ const ThemeInfo: React.FC = () => {
   );
 };
 
-export const LoginPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   return (
     <MainLayout
       showHeader={false}
@@ -68,3 +70,5 @@ export const LoginPage: React.FC = () => {
     </MainLayout>
   );
 };
+
+export default LoginPage;

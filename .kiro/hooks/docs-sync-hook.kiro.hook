@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "name": "Documentation Sync",
+  "description": "Monitors TypeScript source files, React components, configuration files, and package.json changes to automatically update project documentation in README.md and /docs folder",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/package.json",
+      "**/tsconfig.json",
+      "**/nx.json",
+      "**/*.config.ts",
+      "**/*.config.js",
+      "**/project.json",
+      "**/*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Source files have been modified in this TypeScript/React monorepo project. Please analyze the changes and update the documentation accordingly. Focus on:\n\n1. Update the main README.md with any new features, components, or architectural changes\n2. Update relevant documentation in the /docs folder, particularly:\n   - API documentation for any new endpoints or types\n   - Architecture documentation for structural changes\n   - Quick start guide for new setup requirements\n3. Ensure package documentation reflects any new dependencies or scripts\n4. Update any component documentation for UI changes\n5. Maintain consistency across all documentation files\n\nPlease review the changed files and provide comprehensive documentation updates that reflect the current state of the codebase."
+  }
+}

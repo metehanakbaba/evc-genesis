@@ -2,13 +2,28 @@
  * Centralized UI component exports
  * All UI components should be imported from this file
  *
- * 📁 Organized by Category:
- * - Forms: Interactive form elements
- * - Navigation: Navigation components
- * - Display: Content display components
- * - Layout: Layout and structure components
- * - Feedback: User feedback components
+ * 📁 Organized by Atomic Design Principles:
+ * - Atoms: Basic building blocks
+ * - Molecules: Simple combinations of atoms
+ * - Organisms: Complex combinations of molecules
+ * - Templates: Page-level layouts
+ * - Legacy Components: Existing components (to be migrated)
+ * - Hooks: Shared UI hooks
+ * - Utils: Utility functions
+ * - Theme: Design tokens and theming
  */
+
+// ==================== ATOMIC DESIGN SYSTEM ====================
+export * from './atoms';
+export * from './molecules';
+export * from './organisms';
+export * from './templates';
+
+// ==================== HOOKS ====================
+export * from './hooks';
+
+// ==================== UTILITIES ====================
+export * from './utils';
 
 export type { BadgeProps } from './components/Display/Badge/Badge';
 export { Badge } from './components/Display/Badge/Badge';
@@ -26,6 +41,16 @@ export type { SpinnerProps } from './components/Display/Spinner/Spinner';
 export { Spinner } from './components/Display/Spinner/Spinner';
 export type { StatCardProps } from './components/Display/StatCard/StatCard';
 export { StatCard } from './components/Display/StatCard/StatCard';
+export type { FloatingCardProps } from './components/Display/FloatingCard/FloatingCard';
+export { FloatingCard } from './components/Display/FloatingCard/FloatingCard';
+export type { MinimalStatCardProps } from './components/Display/MinimalStatCard/MinimalStatCard';
+export { MinimalStatCard } from './components/Display/MinimalStatCard/MinimalStatCard';
+export type { RevolutionaryLoaderProps } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
+export { default as RevolutionaryLoader } from './components/Display/RevolutionaryLoader/RevolutionaryLoader';
+export type { RevolutionaryLoadingVisualProps } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
+export { default as RevolutionaryLoadingVisual } from './components/Display/RevolutionaryLoadingVisual/RevolutionaryLoadingVisual';
+export type { ModalProps } from './components/Display/Modal/Modal';
+export { Modal } from './components/Display/Modal/Modal';
 // ==================== FORMS ====================
 export type { ButtonProps } from './components/Forms/Button/Button';
 export { Button } from './components/Forms/Button/Button';
@@ -55,11 +80,12 @@ export type { SwitchProps } from './components/Forms/Switch/Switch';
 export { Switch } from './components/Forms/Switch/Switch';
 export type { TextareaProps } from './components/Forms/Textarea/Textarea';
 export { Textarea } from './components/Forms/Textarea/Textarea';
-export type { NavigationCardProps } from './components/Navigation/NavigationCard/NavigationCard';
-// ==================== NAVIGATION ====================
-export { NavigationCard } from './components/Navigation/NavigationCard/NavigationCard';
 
-// Modal is not exported yet - will need to add when ready
+// ==================== NAVIGATION ====================
+export type { NavigationCardProps } from './components/Navigation/NavigationCard/NavigationCard';
+export { NavigationCard } from './components/Navigation/NavigationCard/NavigationCard';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/Navigation';
+export { Breadcrumb } from './components/Navigation';
 
 // ==================== FEEDBACK ====================
 export { ErrorBoundary } from './components/Feedback/ErrorBoundary/ErrorBoundary';
@@ -75,6 +101,7 @@ export type {
   GridItemProps,
   GridProps,
   IconComponent,
+  PageHeaderProps,
   SectionHeaderProps,
 } from './components/Layout';
 // ==================== LAYOUT ====================
@@ -94,7 +121,9 @@ export {
   isValidGridGap,
   isValidGridItemVariant,
   isValidPadding,
+  MainLayout,
   Padding,
+  PageHeader,
   SectionHeader,
   SectionHeaderSize,
   SectionHeaderVariant,

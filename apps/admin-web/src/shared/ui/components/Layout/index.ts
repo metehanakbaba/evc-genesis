@@ -1,16 +1,47 @@
 /**
- * Layout Category - Structural components for organizing content
- * Components for page structure, grids, containers, and spatial organization
+ * Layout Component Exports
+ * Central export file for all layout-related components
  */
 
-export type { AppHeaderProps } from './AppHeader';
-// Header Components
+// Layout component exports
 export { AppHeader } from './AppHeader';
-export type { ContainerProps } from './Container';
-// Container Components
+export type { AppHeaderProps } from './AppHeader';
+
 export { Container } from './Container';
-// Layout Enums
-// Export type guards
+export type { ContainerProps } from './Container';
+
+export { Grid } from './Grid';
+export type { GridProps } from './Grid';
+
+export { GridItem } from './GridItem';
+export type { GridItemProps } from './GridItem';
+
+export { IntelligenceSidebar } from './IntelligenceSidebar';
+export type { IntelligenceSidebarProps } from './IntelligenceSidebar';
+
+export { IntelligenceBottomModal } from './IntelligenceBottomModal';
+export type { IntelligenceBottomModalProps } from './IntelligenceBottomModal';
+
+export { MainLayout } from './MainLayout';
+export { PageHeader } from './PageHeader';
+export type { MainLayoutProps } from './MainLayout';
+export type { PageHeaderProps } from './PageHeader';
+
+export { PageContainer } from './PageContainer';
+export type { PageContainerProps } from './PageContainer';
+
+export { NotificationSidebar } from './NotificationSidebar';
+export type { NotificationSidebarProps } from './NotificationSidebar';
+
+export { SectionHeader } from './SectionHeader';
+export type { SectionHeaderProps, IconComponent } from './SectionHeader';
+
+export { ScrollToTop } from './ScrollToTop';
+
+export { FixedCard, FixedCardHeader, FixedCardContent, FixedCardFooter } from './FixedCard';
+export type { FixedCardProps } from './FixedCard';
+
+// Layout enums and types
 export {
   ContainerSize,
   GridColumns,
@@ -18,31 +49,12 @@ export {
   GridItemSpan,
   GridItemVariant,
   HeadingLevel,
+  Padding,
+  SectionHeaderSize,
+  SectionHeaderVariant,
   isValidContainerSize,
   isValidGridColumns,
   isValidGridGap,
   isValidGridItemVariant,
   isValidPadding,
-  Padding,
-  SectionHeaderSize,
-  SectionHeaderVariant,
 } from './enums';
-export type { GridProps } from './Grid';
-// Grid System
-export { Grid } from './Grid';
-export type { GridItemProps } from './GridItem';
-export { GridItem } from './GridItem';
-export type { IntelligenceSidebarProps } from './IntelligenceSidebar';
-// Sidebar Components
-export { IntelligenceSidebar } from './IntelligenceSidebar';
-export type { MainLayoutProps } from './MainLayout';
-// Main Layout Component
-export { MainLayout } from './MainLayout';
-export type { NotificationSidebarProps } from './NotificationSidebar';
-export { NotificationSidebar } from './NotificationSidebar';
-
-// Scroll Management
-export { ScrollToTop } from './ScrollToTop';
-export type { IconComponent, SectionHeaderProps } from './SectionHeader';
-// Section Components
-export { SectionHeader } from './SectionHeader';

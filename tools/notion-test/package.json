@@ -1,0 +1,13 @@
+{
+  "name": "notion-api-test",
+  "version": "1.0.0",
+  "description": "Test Notion API capabilities",
+  "main": "test-api.js",
+  "scripts": {
+    "test": "node test-api.js",
+    "explore": "node explore-api.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}

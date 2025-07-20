@@ -1,7 +1,8 @@
 /**
- * Navigation Category - Navigation components
- * Components for site navigation and routing
+ * Navigation Component Exports
+ * Central export file for all navigation-related components
  */
 
-export type { NavigationCardProps } from './NavigationCard/NavigationCard';
-export { NavigationCard } from './NavigationCard/NavigationCard';
+// Navigation component exports
+export { Breadcrumb } from './Breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './Breadcrumb';

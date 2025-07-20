@@ -1,0 +1,29 @@
+{
+  "name": "evc-linear-automation",
+  "version": "1.0.0",
+  "description": "Automated Linear workspace setup for EV Charging Multi-Repo Migration",
+  "main": "linear-api-setup.js",
+  "scripts": {
+    "setup": "node linear-api-setup.js",
+    "create-tasks": "node create-linear-tasks.js",
+    "setup-workspace": "node linear-api-setup.js",
+    "test-connection": "node -e \"console.log('Testing Linear API...'); require('./linear-api-setup.js');\""
+  },
+  "dependencies": {
+    "@linear/sdk": "^22.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "linear",
+    "project-management",
+    "multi-repo",
+    "automation",
+    "ev-charging"
+  ],
+  "author": "EV Charging Team",
+  "license": "MIT"
+}

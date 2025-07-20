@@ -21,16 +21,17 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button, Input, Select } from '@ui/forms';
 // import { MinimalStatCard, FloatingCard } from '@ui/display';
-import { AppHeader } from '@ui/layout';
+import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { SessionStatus } from '@/types/global.types';
 // ✅ Import shared business logic
-import {
+import { 
   getSessionStatusConfig,
   filterSessions,
-  formatSessionDuration,
+  formatSessionDuration, 
 } from '@evc/shared-business-logic';
 
 // Type for icon components - fixed for Heroicons
@@ -84,6 +85,7 @@ interface SessionStats {
  * - Revolutionary floating card design
  * - API schema compliant TypeScript
  * - Live Operations critical monitoring focus
+ * - ✅ Uses new Breadcrumb and PageContainer components
  */
 const SessionsPage: React.FC = () => {
   const router = useRouter();
@@ -228,24 +230,44 @@ const SessionsPage: React.FC = () => {
   }, [isLiveDataEnabled]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <AppHeader showNotifications={true} notificationCount={3} />
-
+    <MainLayout
+      showNotifications={true}
+      notificationCount={3}
+      headerVariant="default"
+    >
       {/* Revolutionary Page Header with Live Operations Theme */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push('/')}
-            className="p-2 hover:bg-gray-700/30"
-          >
-            <HomeIcon className="w-4 h-4" />
-          </Button>
-          <ChevronRightIcon className="w-4 h-4" />
-          <span className="text-emerald-400 font-medium">Live Sessions</span>
-        </div>
+      <PageContainer paddingY="lg">
+        {/* Revolutionary Breadcrumb Navigation */}
+        <Breadcrumb 
+          currentPageLabel="Live Sessions"
+          variant="emerald"
+        />
+
+        <PageHeader
+          title="Live Charging Sessions"
+          description="Critical real-time monitoring & management"
+          variant="emerald"
+          actionButton={{
+            label: "Monitor Sessions",
+            onClick: () => {
+              /* Monitor logic */
+            },
+            icon: BoltIcon,
+            iconAnimation: "rotate-12"
+          }}
+          indicator={
+            <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-xl">
+              <div className="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
+              <span className="text-emerald-400 font-semibold">
+                LIVE DATA
+              </span>
+              <span className="text-gray-400 text-sm">
+                {sessions.filter((s) => s.status === 'charging').length}{' '}
+                active
+              </span>
+            </div>
+          }
+        />
 
         {/* Revolutionary Hero Section - Live Operations */}
         <div className="relative mb-10">
@@ -254,32 +276,6 @@ const SessionsPage: React.FC = () => {
           <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-green-600/15 rounded-full blur-2xl animate-pulse delay-1000"></div>
 
           <div className="relative z-10">
-            {/* Live Operations Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <div className="w-4 h-12 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full animate-pulse"></div>
-                <div>
-                  <h1 className="text-4xl font-bold text-white mb-2">
-                    Live Charging Sessions
-                  </h1>
-                  <p className="text-gray-300 text-lg">
-                    Critical real-time monitoring & management
-                  </p>
-                </div>
-              </div>
-
-              {/* Live Status Indicator */}
-              <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-xl">
-                <div className="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
-                <span className="text-emerald-400 font-semibold">
-                  LIVE DATA
-                </span>
-                <span className="text-gray-400 text-sm">
-                  {sessions.filter((s) => s.status === 'charging').length}{' '}
-                  active
-                </span>
-              </div>
-            </div>
 
             {/* Revolutionary Floating Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
@@ -287,62 +283,62 @@ const SessionsPage: React.FC = () => {
                 <div
                   key={stat.title}
                   className="group relative"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                    style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  {/* Revolutionary Floating Card */}
-                  <div className="relative p-6 bg-gradient-to-br from-gray-800/40 via-gray-700/30 to-gray-800/20 border border-gray-600/30 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:-translate-y-2">
-                    {/* Live Pulse Indicator */}
-                    {stat.isLive && (
-                      <div
-                        className={`absolute -top-2 -right-2 w-5 h-5 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
-                      ></div>
-                    )}
+                    {/* Revolutionary Floating Card */}
+                    <div className="relative p-6 bg-gradient-to-br from-gray-800/40 via-gray-700/30 to-gray-800/20 border border-gray-600/30 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:-translate-y-2">
+                      {/* Live Pulse Indicator */}
+                      {stat.isLive && (
+                        <div
+                            className={`absolute -top-2 -right-2 w-5 h-5 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
+                          ></div>
+                        )}
 
-                    {/* Floating Background Elements */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                    <div
-                      className={`absolute -inset-1 bg-gradient-to-r from-${stat.variant}-500/20 to-${stat.variant}-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`}
-                    ></div>
+                        {/* Floating Background Elements */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                        <div
+                          className={`absolute -inset-1 bg-gradient-to-r from-${stat.variant}-500/20 to-${stat.variant}-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`}
+                        ></div>
 
-                    {/* Card Content */}
-                    <div className="relative z-10">
-                      {/* Icon Container */}
-                      <div
-                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-${stat.variant}-500/20 to-${stat.variant}-400/10 border border-${stat.variant}-400/25 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}
-                      >
-                        <stat.icon
-                          className={`w-7 h-7 text-${stat.variant}-400`}
-                        />
-                      </div>
+                        {/* Card Content */}
+                      <div className="relative z-10">
+                          {/* Icon Container */}
+                          <div
+                            className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-${stat.variant}-500/20 to-${stat.variant}-400/10 border border-${stat.variant}-400/25 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}
+                          >
+                            <stat.icon
+                              className={`w-7 h-7 text-${stat.variant}-400`}
+                            />
+                          </div>
 
-                      {/* Value & Title */}
-                      <div className="mb-3">
-                        <div className="text-3xl font-bold text-white mb-1 group-hover:text-white transition-colors duration-300">
-                          {stat.value}
+                          {/* Value & Title */}
+                          <div className="mb-3">
+                            <div className="text-3xl font-bold text-white mb-1 group-hover:text-white transition-colors duration-300">
+                              {stat.value}
+                            </div>
+                            <div className="text-gray-300 font-medium">
+                              {stat.title}
+                            </div>
+                          </div>
+
+                          {/* Trend Indicator */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <ArrowTrendingUpIcon
+                              className={`w-4 h-4 text-${stat.variant}-400`}
+                            />
+                            <span
+                              className={`text-sm text-${stat.variant}-400 font-medium`}
+                            >
+                              {stat.trend}
+                            </span>
                         </div>
-                        <div className="text-gray-300 font-medium">
-                          {stat.title}
+
+                          {/* Hidden Description - Revealed on Hover */}
+                          <div className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 leading-relaxed">
+                            {stat.description}
                         </div>
-                      </div>
-
-                      {/* Trend Indicator */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <ArrowTrendingUpIcon
-                          className={`w-4 h-4 text-${stat.variant}-400`}
-                        />
-                        <span
-                          className={`text-sm text-${stat.variant}-400 font-medium`}
-                        >
-                          {stat.trend}
-                        </span>
-                      </div>
-
-                      {/* Hidden Description - Revealed on Hover */}
-                      <div className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 leading-relaxed">
-                        {stat.description}
                       </div>
                     </div>
-                  </div>
                 </div>
               ))}
             </div>
@@ -381,23 +377,47 @@ const SessionsPage: React.FC = () => {
               />
             </div>
 
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 bg-gray-700/30 rounded-lg p-1">
+            {/* Revolutionary View Mode Toggle */}
+            <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
               <Button
                 variant={viewMode === 'grid' ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className="p-2"
+                className={`
+                  relative overflow-hidden p-3 transition-all duration-300 ease-out
+                  ${viewMode === 'grid'
+                    ? `bg-gradient-to-r from-emerald-500/25 via-emerald-400/20 to-emerald-500/25 
+                       text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20
+                       scale-[1.05]`
+                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                       hover:scale-[1.02] border border-transparent`
+                  }
+                  group/toggle flex items-center
+                `}
               >
-                <ViewColumnsIcon className="w-4 h-4" />
+                <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                  viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                }`} />
               </Button>
               <Button
                 variant={viewMode === 'table' ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('table')}
-                className="p-2"
+                className={`
+                  relative overflow-hidden p-3 transition-all duration-300 ease-out
+                  ${viewMode === 'table'
+                    ? `bg-gradient-to-r from-emerald-500/25 via-emerald-400/20 to-emerald-500/25 
+                       text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20
+                       scale-[1.05]`
+                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
+                       hover:scale-[1.02] border border-transparent`
+                  }
+                  group/toggle flex items-center
+                `}
               >
-                <TableCellsIcon className="w-4 h-4" />
+                <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
+                  viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
+                }`} />
               </Button>
             </div>
           </div>
@@ -536,23 +556,49 @@ const SessionsPage: React.FC = () => {
                           )}
                       </div>
 
-                      {/* Action Buttons */}
-                      <div className="flex gap-2">
+                      {/* Revolutionary Action Buttons */}
+                      <div className="flex gap-2 mt-4">
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="flex-1 bg-gray-700/30 hover:bg-gray-600/40 text-gray-300 hover:text-white"
+                          className="
+                            flex-1 relative overflow-hidden group/view
+                            bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
+                            hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
+                            text-gray-300 hover:text-white
+                            border border-gray-600/30 hover:border-gray-500/50
+                            shadow-md hover:shadow-lg
+                            transition-all duration-300 ease-out
+                            hover:scale-[1.02] active:scale-[0.98]
+                            flex items-center justify-center gap-2
+                            before:absolute before:inset-0 before:bg-gradient-to-r 
+                            before:from-transparent before:via-white/10 before:to-transparent
+                            before:translate-x-[-100%] hover:before:translate-x-[100%]
+                            before:transition-transform before:duration-500
+                          "
                         >
-                          <EyeIcon className="w-4 h-4 mr-2" />
-                          View Details
+                          <div className="flex items-center gap-2 relative z-10">
+                            <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
+                            <span className="font-medium">View Details</span>
+                          </div>
                         </Button>
                         {isActive && (
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
+                            className="
+                              relative overflow-hidden p-3 group/stop
+                              bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
+                              hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
+                              text-red-400 hover:text-red-300
+                              border border-red-500/30 hover:border-red-400/50
+                              shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20
+                              transition-all duration-300 ease-out
+                              hover:scale-110 active:scale-95
+                              flex items-center
+                            "
                           >
-                            <StopIcon className="w-4 h-4" />
+                            <StopIcon className="w-4 h-4 group-hover/stop:scale-110 transition-transform duration-300" />
                           </Button>
                         )}
                       </div>
@@ -582,13 +628,28 @@ const SessionsPage: React.FC = () => {
                 setSearchQuery('');
                 setStatusFilter('all');
               }}
+              className="
+                relative overflow-hidden group/empty
+                bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600
+                hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500
+                text-white font-semibold
+                shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30
+                border border-emerald-400/20 hover:border-emerald-300/40
+                transition-all duration-300 ease-out
+                hover:scale-[1.05] active:scale-[0.95]
+                flex items-center
+                before:absolute before:inset-0 before:bg-gradient-to-r 
+                before:from-transparent before:via-white/20 before:to-transparent
+                before:translate-x-[-100%] hover:before:translate-x-[100%]
+                before:transition-transform before:duration-700
+              "
             >
-              Clear Filters
+              <span className="relative z-10 font-medium">Clear Filters</span>
             </Button>
           </div>
         )}
-      </div>
-    </div>
+      </PageContainer>
+    </MainLayout>
   );
 };
 
