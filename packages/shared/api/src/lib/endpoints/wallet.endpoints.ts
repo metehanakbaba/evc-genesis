@@ -13,7 +13,6 @@ import type { EndpointBuilder } from '@reduxjs/toolkit/query';
 import type {
   Wallet,
   PLNTransaction,
-  TransactionType,
   CreateTopUpRequest,
   ProcessPaymentRequest,
   TransactionQuery,
@@ -27,7 +26,7 @@ import type {
   AdminWalletQuery,
   AdminProcessRefundRequest 
 } from '../types/admin.types';
-import { transformResponse, createApiTags } from '../baseApi';
+import { transformResponse } from '../baseApi';
 
 export const walletEndpoints = (
   builder: EndpointBuilder<any, any, any>
