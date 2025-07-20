@@ -1,47 +1,44 @@
 'use client';
 
 import {
-  ArrowDownTrayIcon,
   ArrowPathIcon,
-  ArrowUpIcon,
   BanknotesIcon,
-  BoltIcon,
   ChartBarIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-  ClockIcon,
   EyeIcon,
-  FunnelIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
   PlusIcon,
   ReceiptRefundIcon,
-  TableCellsIcon,
-  ViewColumnsIcon,
   WalletIcon,
-  XCircleIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
-import { Modal } from '@ui/display';
-import { Button, Input } from '@ui/forms';
+import { Button } from '@ui/forms';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState } from 'react';
-import type {
-  PLNTransaction,
-} from '../types/wallet.types';
-// ✅ Import shared business logic
-import { 
-  getTransactionConfig, 
-  formatTransactionDate, 
-  filterTransactions 
-} from '@evc/shared-business-logic';
+import { useState, useMemo } from 'react';
 
-// Type for icon components - fixed for Heroicons
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+// ✅ Import new reusable components
+import { 
+  TransactionGrid, 
+  TransactionTable, 
+  TransactionFilterModal 
+} from '../components';
+
+// ✅ Import API hooks and types
+import { 
+  useWalletStatistics,
+  useTransactionActions,
+  type PLNTransaction,
+} from '../api/walletApi';
+
+// ✅ Import infinite scroll hooks
+import { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
+
+// ✅ Import debounce hook
+import { useSearchDebounce } from '../hooks/useDebounce';
+
+// ✅ Import skeleton components
+import { TransactionGridSkeleton, TransactionTableSkeleton } from '../components/TransactionSkeleton';
 
 /**
  * 💳 Wallet Management Statistics
@@ -50,227 +47,12 @@ type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 interface WalletStats {
   readonly title: string;
   readonly value: string;
-  readonly icon: IconComponent;
+  readonly icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   readonly variant: 'teal' | 'blue' | 'emerald' | 'purple' | 'amber';
   readonly trend: string;
   readonly description: string;
   readonly isLive?: boolean;
 }
-
-/**
- * 🎯 Filter Modal Props for Revolutionary Design
- */
-interface FilterModalProps {
-  readonly isOpen: boolean;
-  readonly onClose: () => void;
-  readonly typeFilter: string;
-  readonly statusFilter: string;
-  readonly onTypeChange: (value: string) => void;
-  readonly onStatusChange: (value: string) => void;
-  readonly onClearFilters: () => void;
-}
-
-/**
- * 🚀 Revolutionary Filter Modal Component
- */
-const FilterModal: React.FC<FilterModalProps> = ({
-  isOpen,
-  onClose,
-  typeFilter,
-  statusFilter,
-  onTypeChange,
-  onStatusChange,
-  onClearFilters,
-}) => {
-  const typeOptions = [
-    { id: 'all', label: 'All Types', icon: WalletIcon, color: 'gray' },
-    { id: 'ADD_PLN_FUNDS', label: 'Top-up', icon: ArrowDownTrayIcon, color: 'emerald' },
-    { id: 'CHARGING_PAYMENT', label: 'Charging', icon: BoltIcon, color: 'blue' },
-    { id: 'REFUND', label: 'Refund', icon: ReceiptRefundIcon, color: 'amber' },
-    { id: 'TRANSFER', label: 'Transfer', icon: ArrowUpIcon, color: 'purple' },
-  ];
-
-  const statusOptions = [
-    { id: 'all', label: 'All Status', icon: ViewColumnsIcon, color: 'gray' },
-    { id: 'COMPLETED', label: 'Completed', icon: CheckCircleIcon, color: 'emerald' },
-    { id: 'PENDING', label: 'Pending', icon: ClockIcon, color: 'amber' },
-    { id: 'FAILED', label: 'Failed', icon: XCircleIcon, color: 'red' },
-    { id: 'CANCELLED', label: 'Cancelled', icon: XMarkIcon, color: 'gray' },
-  ];
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Transaction Filters"
-      description="Select transaction types and status to filter results"
-      size="lg"
-      variant="default"
-      footer={
-        <div className="flex gap-3 justify-end">
-          <Button
-            variant="ghost"
-            onClick={onClearFilters}
-            className="
-              relative overflow-hidden group/clear
-              bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-              hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-              text-gray-300 hover:text-white
-              border border-gray-600/30 hover:border-gray-500/50
-              transition-all duration-300 ease-out
-              hover:scale-[1.02] active:scale-[0.98]
-              flex items-center
-              before:absolute before:inset-0 before:bg-gradient-to-r 
-              before:from-transparent before:via-white/10 before:to-transparent
-              before:translate-x-[-100%] hover:before:translate-x-[100%]
-              before:transition-transform before:duration-500
-            "
-          >
-            <div className="flex items-center gap-2 relative z-10">
-              <XMarkIcon className="w-4 h-4 group-hover/clear:rotate-90 transition-transform duration-300" />
-              <span className="font-medium">Clear All</span>
-            </div>
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onClose}
-            className="
-              relative overflow-hidden group/apply
-              bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600
-              hover:from-teal-500 hover:via-teal-400 hover:to-teal-500
-              text-white font-semibold
-              shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30
-              border border-teal-400/20 hover:border-teal-300/40
-              transition-all duration-300 ease-out
-              hover:scale-[1.02] active:scale-[0.98]
-              flex items-center
-              before:absolute before:inset-0 before:bg-gradient-to-r 
-              before:from-transparent before:via-white/20 before:to-transparent
-              before:translate-x-[-100%] hover:before:translate-x-[100%]
-              before:transition-transform before:duration-700
-            "
-          >
-            <span className="relative z-10 font-medium">Apply Filters</span>
-          </Button>
-        </div>
-      }
-    >
-      <div className="space-y-8">
-        {/* Revolutionary Transaction Type Selection */}
-        <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Transaction Type</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {typeOptions.map((type) => {
-              const isSelected = typeFilter === type.id;
-              const IconComponent = type.icon;
-              return (
-                <button
-                  key={type.id}
-                  onClick={() => onTypeChange(type.id)}
-                  className={`
-                    group relative p-4 rounded-xl border transition-all duration-300 ease-out
-                    ${isSelected
-                      ? `bg-gradient-to-r from-${type.color}-500/20 via-${type.color}-400/15 to-${type.color}-500/20 
-                         border-${type.color}-400/50 text-${type.color}-300 shadow-lg shadow-${type.color}-500/20
-                         scale-[1.02]`
-                      : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
-                         border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
-                         hover:scale-[1.01]`
-                    }
-                    overflow-hidden
-                    before:absolute before:inset-0 before:bg-gradient-to-r 
-                    before:from-transparent before:via-white/5 before:to-transparent
-                    before:translate-x-[-100%] hover:before:translate-x-[100%]
-                    before:transition-transform before:duration-700
-                  `}
-                >
-                  <div className="flex items-center gap-3 relative z-10">
-                    <div
-                      className={`
-                        w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-                        ${isSelected
-                          ? `bg-${type.color}-500/20 border border-${type.color}-400/30`
-                          : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
-                        }
-                      `}
-                    >
-                      <IconComponent 
-                        className={`
-                          w-5 h-5 transition-transform duration-300
-                          ${isSelected 
-                            ? `text-${type.color}-400 scale-110` 
-                            : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
-                          }
-                        `} 
-                      />
-                    </div>
-                    <span className="font-medium text-sm">{type.label}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Revolutionary Transaction Status Selection */}
-        <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Status</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {statusOptions.map((status) => {
-              const isSelected = statusFilter === status.id;
-              const IconComponent = status.icon;
-              return (
-                <button
-                  key={status.id}
-                  onClick={() => onStatusChange(status.id)}
-                  className={`
-                    group relative p-4 rounded-xl border transition-all duration-300 ease-out
-                    ${isSelected
-                      ? `bg-gradient-to-r from-${status.color}-500/20 via-${status.color}-400/15 to-${status.color}-500/20 
-                         border-${status.color}-400/50 text-${status.color}-300 shadow-lg shadow-${status.color}-500/20
-                         scale-[1.02]`
-                      : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
-                         border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
-                         hover:scale-[1.01]`
-                    }
-                    overflow-hidden
-                    before:absolute before:inset-0 before:bg-gradient-to-r 
-                    before:from-transparent before:via-white/5 before:to-transparent
-                    before:translate-x-[-100%] hover:before:translate-x-[100%]
-                    before:transition-transform before:duration-700
-                  `}
-                >
-                  <div className="flex items-center gap-3 relative z-10">
-                    <div
-                      className={`
-                        w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-                        ${isSelected
-                          ? `bg-${status.color}-500/20 border border-${status.color}-400/30`
-                          : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
-                        }
-                      `}
-                    >
-                      <IconComponent 
-                        className={`
-                          w-5 h-5 transition-transform duration-300
-                          ${isSelected 
-                            ? `text-${status.color}-400 scale-110` 
-                            : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
-                          }
-                        `} 
-                      />
-                    </div>
-                    <span className="font-medium text-sm">{status.label}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </Modal>
-  );
-};
 
 /**
  * 🚀 Revolutionary PLN Wallet Management Page - Teal Theme
@@ -285,8 +67,8 @@ const FilterModal: React.FC<FilterModalProps> = ({
  * - Revolutionary table view with glassmorphism
  * - Modal-based filtering system
  * - API schema compliant TypeScript
- * - ✅ Now uses shared business logic for cleaner separation
- * - ✅ Uses new Breadcrumb and PageContainer components
+ * - ✅ Now uses reusable components and API hooks
+ * - ✅ Clean separation of concerns
  */
 const WalletsPage: React.FC = () => {
   const router = useRouter();
@@ -296,11 +78,37 @@ const WalletsPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
+  // ✅ Debounce search query to prevent excessive API calls
+  const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
+
+  // ✅ Use infinite scroll hook for data fetching
+  const {
+    transactions,
+    isLoading,
+    isLoadingMore,
+    hasNextPage,
+    loadMore,
+    total,
+  } = useInfiniteTransactions({
+    filters: {
+      searchQuery: debouncedSearchQuery,
+      typeFilter,
+      statusFilter,
+    },
+    pageSize: 20,
+  });
+
+  const { 
+    totalBalance, 
+  } = useWalletStatistics();
+
+  const { viewDetails, retryTransaction } = useTransactionActions();
+
   // Revolutionary floating stats with financial data
   const walletStats: WalletStats[] = [
     {
       title: 'Total Balance',
-      value: '₺1,247.50',
+      value: totalBalance.formatted,
       icon: WalletIcon,
       variant: 'teal',
       trend: '+₺125 this week',
@@ -334,95 +142,7 @@ const WalletsPage: React.FC = () => {
     },
   ];
 
-  // API Schema Ready - Mock transactions data
-  const transactions: PLNTransaction[] = [
-    {
-      id: 'txn-001',
-      type: 'ADD_PLN_FUNDS',
-      status: 'COMPLETED',
-      amount: {
-        amount: 100.0,
-        currency: 'PLN',
-        formatted: '100.00 zł',
-      },
-      description: 'PLN wallet top-up via Stripe',
-      stripePaymentIntentId: 'pi_1234567890',
-      createdAt: '2024-01-15T10:30:00Z',
-      updatedAt: '2024-01-15T10:31:00Z',
-    },
-    {
-      id: 'txn-002',
-      type: 'CHARGING_PAYMENT',
-      status: 'COMPLETED',
-      amount: {
-        amount: 45.75,
-        currency: 'PLN',
-        formatted: '45.75 zł',
-      },
-      description: 'Charging session at Mall Center Supercharger',
-      metadata: {
-        sessionId: 'session-001',
-        stationId: 'station-001',
-        powerConsumed: 45.5,
-        duration: 90,
-      },
-      createdAt: '2024-01-15T09:15:00Z',
-      updatedAt: '2024-01-15T09:15:00Z',
-    },
-    {
-      id: 'txn-003',
-      type: 'REFUND',
-      status: 'PENDING',
-      amount: {
-        amount: 15.25,
-        currency: 'PLN',
-        formatted: '15.25 zł',
-      },
-      description: 'Refund for incomplete charging session',
-      metadata: {
-        originalTransactionId: 'txn-original-123',
-        reason: 'charging_interrupted',
-      },
-      createdAt: '2024-01-15T08:45:00Z',
-      updatedAt: '2024-01-15T08:45:00Z',
-    },
-    {
-      id: 'txn-004',
-      type: 'CHARGING_PAYMENT',
-      status: 'FAILED',
-      amount: {
-        amount: 75.0,
-        currency: 'PLN',
-        formatted: '75.00 zł',
-      },
-      description: 'Failed payment - insufficient funds',
-      createdAt: '2024-01-14T16:20:00Z',
-      updatedAt: '2024-01-14T16:20:00Z',
-    },
-  ];
-
-  // ✅ Use shared business logic for filtering
-  const filteredTransactions = filterTransactions(transactions, {
-    searchQuery,
-    typeFilter,
-    statusFilter,
-  });
-
-  // Icon mapping for transaction types
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case 'ADD_PLN_FUNDS':
-        return ArrowDownTrayIcon;
-      case 'CHARGING_PAYMENT':
-        return BoltIcon;
-      case 'REFUND':
-        return ReceiptRefundIcon;
-      case 'TRANSFER':
-        return ArrowUpIcon;
-      default:
-        return WalletIcon;
-    }
-  };
+  // ✅ Filtering is now handled by useInfiniteTransactions hook
 
   /**
    * 🎨 Clear All Filters
@@ -604,315 +324,45 @@ const WalletsPage: React.FC = () => {
             className="mb-8"
           />
 
-          {/* Revolutionary Transactions Table */}
-          {viewMode === 'table' && (
-            <div className="bg-gray-800/40 border border-gray-700/50 rounded-2xl overflow-hidden backdrop-blur-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-700/30 border-b border-gray-600/30">
-                    <tr>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Type
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Amount
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Status
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Description
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Date
-                      </th>
-                      <th className="text-right py-4 px-6 text-sm font-medium text-gray-300">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-700/30">
-                    {filteredTransactions.map((transaction) => {
-                      // ✅ Use shared business logic for transaction configuration
-                      const config = getTransactionConfig(
-                        transaction.type,
-                        transaction.status,
-                      );
-                      const TransactionIcon = getTransactionIcon(transaction.type);
-                      return (
-                        <tr
-                          key={transaction.id}
-                          className="hover:bg-gray-700/20 transition-colors group"
-                        >
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-8 h-8 rounded-lg ${config.badgeColor} flex items-center justify-center`}
-                              >
-                                <TransactionIcon className={`w-4 h-4 ${config.textColor}`} />
-                              </div>
-                              <span
-                                className={`text-sm font-medium ${config.textColor}`}
-                              >
-                                {config.text}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6">
-                            <span className="text-white font-semibold">
-                              {transaction.amount.formatted}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div
-                              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${config.badgeColor}`}
-                            >
-                              {transaction.status === 'COMPLETED' && (
-                                <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
-                              )}
-                              {transaction.status === 'PENDING' && (
-                                <ClockIcon className="w-4 h-4 text-amber-400" />
-                              )}
-                              {transaction.status === 'FAILED' && (
-                                <XCircleIcon className="w-4 h-4 text-red-400" />
-                              )}
-                              <span
-                                className={`text-xs font-medium ${config.textColor}`}
-                              >
-                                {transaction.status}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="max-w-xs">
-                              <p className="text-gray-300 text-sm truncate">
-                                {transaction.description}
-                              </p>
-                              <p className="text-gray-500 text-xs font-mono">
-                                ID: {transaction.id.slice(-8)}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6">
-                            <span className="text-gray-300 text-sm">
-                              {/* ✅ Use shared business logic for date formatting */}
-                              {formatTransactionDate(transaction.createdAt)}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-all duration-300">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="
-                                  relative overflow-hidden p-2 group/action
-                                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                                  text-gray-300 hover:text-white
-                                  border border-gray-600/30 hover:border-gray-500/50
-                                  transition-all duration-300 ease-out
-                                  hover:scale-110 active:scale-95
-                                  flex items-center
-                                "
-                              >
-                                <EyeIcon className="w-4 h-4 group-hover/action:scale-110 transition-transform duration-300" />
-                              </Button>
-                              {transaction.type === 'CHARGING_PAYMENT' &&
-                                transaction.status === 'FAILED' && (
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="
-                                      relative overflow-hidden p-2 group/retry
-                                      bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
-                                      hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
-                                      text-teal-400 hover:text-teal-300
-                                      border border-teal-500/30 hover:border-teal-400/50
-                                      shadow-sm shadow-teal-500/10 hover:shadow-md hover:shadow-teal-500/20
-                                      transition-all duration-300 ease-out
-                                      hover:scale-110 active:scale-95
-                                      flex items-center
-                                    "
-                                  >
-                                    <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
-                                  </Button>
-                                )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          {/* ✅ Loading States */}
+          {isLoading && viewMode === 'table' && (
+            <TransactionTableSkeleton count={10} />
           )}
 
-          {/* Revolutionary Transactions Grid */}
-          {viewMode === 'grid' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredTransactions.map((transaction, index) => {
-                // ✅ Use shared business logic for transaction configuration
-                const config = getTransactionConfig(
-                  transaction.type,
-                  transaction.status,
-                );
-                const TransactionIcon = getTransactionIcon(transaction.type);
-                const isPending = transaction.status === 'PENDING';
+          {isLoading && viewMode === 'grid' && (
+            <TransactionGridSkeleton count={6} />
+          )}
 
-                return (
-                  <div
-                    key={transaction.id}
-                    className="group relative"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    {/* Revolutionary Floating Transaction Card */}
-                    <div
-                      className={`relative p-6 ${config.bgColor} border ${config.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer`}
-                    >
-                      {/* Pending Status Pulse */}
-                      {isPending && (
-                        <div
-                          className={`absolute -top-2 -right-2 w-4 h-4 ${config.pulseColor} rounded-full animate-ping opacity-75`}
-                        ></div>
-                      )}
+          {/* ✅ Use new reusable TransactionTable component with infinite scroll */}
+          {!isLoading && viewMode === 'table' && (
+            <TransactionTable
+              transactions={transactions}
+              onViewDetails={viewDetails}
+              onRetryTransaction={retryTransaction}
+              showRetryButton={true}
+              onLoadMore={loadMore}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              total={total}
+            />
+          )}
 
-                      {/* Floating Background Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-                      {/* Transaction Header */}
-                      <div className="relative z-10">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div
-                              className={`w-12 h-12 rounded-xl ${config.badgeColor} flex items-center justify-center`}
-                            >
-                              <TransactionIcon className={`w-6 h-6 ${config.textColor}`} />
-                            </div>
-                            <div>
-                              <div
-                                className={`text-sm font-medium ${config.textColor} mb-1`}
-                              >
-                                {config.text}
-                              </div>
-                              <div className="text-white font-semibold text-lg">
-                                {transaction.amount.formatted}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Status Badge */}
-                          <div
-                            className={`flex items-center gap-2 px-3 py-1 rounded-full ${config.badgeColor}`}
-                          >
-                            {transaction.status === 'COMPLETED' && (
-                              <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
-                            )}
-                            {transaction.status === 'PENDING' && (
-                              <ClockIcon className="w-4 h-4 text-amber-400" />
-                            )}
-                            {transaction.status === 'FAILED' && (
-                              <XCircleIcon className="w-4 h-4 text-red-400" />
-                            )}
-                            <span
-                              className={`text-xs font-medium ${config.textColor}`}
-                            >
-                              {transaction.status}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Transaction Description */}
-                        <div className="mb-4">
-                          <p className="text-gray-300 text-sm leading-relaxed">
-                            {transaction.description}
-                          </p>
-                        </div>
-
-                        {/* Transaction Details */}
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-400">
-                              Transaction ID
-                            </span>
-                            <span className="text-gray-300 font-mono">
-                              {transaction.id.slice(-8)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-400">Date</span>
-                            <span className="text-gray-300">
-                              {/* ✅ Use shared business logic for date formatting */}
-                              {formatTransactionDate(transaction.createdAt)}
-                            </span>
-                          </div>
-                          {transaction.stripePaymentIntentId && (
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-gray-400">Stripe ID</span>
-                              <span className="text-gray-300 font-mono text-xs">
-                                {transaction.stripePaymentIntentId.slice(-8)}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Revolutionary Action Buttons */}
-                        <div className="flex gap-2 mt-4">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="
-                              flex-1 relative overflow-hidden group/view
-                              bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                              hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                              text-gray-300 hover:text-white
-                              border border-gray-600/30 hover:border-gray-500/50
-                              shadow-md hover:shadow-lg
-                              transition-all duration-300 ease-out
-                              hover:scale-[1.02] active:scale-[0.98]
-                              flex items-center justify-center gap-2
-                              before:absolute before:inset-0 before:bg-gradient-to-r 
-                              before:from-transparent before:via-white/10 before:to-transparent
-                              before:translate-x-[-100%] hover:before:translate-x-[100%]
-                              before:transition-transform before:duration-500
-                            "
-                          >
-                            <div className="flex items-center gap-2 relative z-10">
-                              <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
-                              <span className="font-medium">View Details</span>
-                            </div>
-                          </Button>
-                          {transaction.type === 'CHARGING_PAYMENT' &&
-                            transaction.status === 'FAILED' && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="
-                                  relative overflow-hidden p-3 group/retry
-                                  bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
-                                  hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
-                                  text-teal-400 hover:text-teal-300
-                                  border border-teal-500/30 hover:border-teal-400/50
-                                  shadow-sm shadow-teal-500/10 hover:shadow-lg hover:shadow-teal-500/20
-                                  transition-all duration-300 ease-out
-                                  hover:scale-110 active:scale-95
-                                  flex items-center
-                                "
-                              >
-                                <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
-                              </Button>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* ✅ Use new reusable TransactionGrid component with infinite scroll */}
+          {!isLoading && viewMode === 'grid' && (
+            <TransactionGrid
+              transactions={transactions}
+              onViewDetails={viewDetails}
+              onRetryTransaction={retryTransaction}
+              showRetryButton={true}
+              onLoadMore={loadMore}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              total={total}
+            />
           )}
 
           {/* Empty State - Using New EmptyState Component */}
-          {filteredTransactions.length === 0 && (
+          {!isLoading && transactions.length === 0 && (
             <EmptyState
               icon={BanknotesIcon}
               title="No transactions found"
@@ -925,8 +375,8 @@ const WalletsPage: React.FC = () => {
         </section>
       </PageContainer>
 
-      {/* Revolutionary Filter Modal */}
-      <FilterModal
+      {/* ✅ Use new reusable TransactionFilterModal component */}
+      <TransactionFilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
         typeFilter={typeFilter}

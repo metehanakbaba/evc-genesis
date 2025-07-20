@@ -50,6 +50,81 @@ export interface PLNTransaction {
   updatedAt: string;
 }
 
+// 👛 Wallet Entity
+export interface Wallet {
+  id: string;
+  userId: string;
+  balance: PLNAmount;
+  totalAdded: PLNAmount;
+  totalSpent: PLNAmount;
+  status: 'ACTIVE' | 'SUSPENDED' | 'CLOSED';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 💰 Wallet Balance Response
+export interface WalletBalance {
+  balance: PLNAmount;
+  pendingAmount: PLNAmount;
+  totalAdded: PLNAmount;
+  totalSpent: PLNAmount;
+  lastUpdated: string;
+}
+
+// 🎫 Create Top-up Request
+export interface CreateTopUpRequest {
+  walletId: string;
+  amount: number;
+  paymentMethodId?: string;
+  returnUrl?: string;
+  cancelUrl?: string;
+  metadata?: Record<string, string>;
+}
+
+// ⚡ Process Payment Request
+export interface ProcessPaymentRequest {
+  walletId: string;
+  amount: number;
+  chargingSessionId: string;
+  chargeStationId: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+}
+
+// 📋 Transaction Query Parameters
+export interface TransactionQuery extends PaginationParams, DateRangeParams {
+  type?: TransactionType;
+  status?: TransactionStatus;
+  userId?: string;
+}
+
+// 📊 Transaction List Response
+export interface TransactionListResponse {
+  transactions: PLNTransaction[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+// 💳 Payment Method
+export interface PaymentMethod {
+  id: string;
+  type: 'CARD' | 'BANK_ACCOUNT' | 'DIGITAL_WALLET';
+  provider: 'STRIPE' | 'PAYPAL' | 'BANK';
+  isDefault: boolean;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 🔄 Refund Request
+export interface RefundRequest {
+  transactionId: string;
+  amount?: number; // Optional - refund partial amount
+  reason: string;
+  metadata?: Record<string, unknown>;
+}
+
 // 💳 Full Transaction (Admin View - includes sensitive fields)
 export interface FullPLNTransaction extends PLNTransaction {
   userId: string;
