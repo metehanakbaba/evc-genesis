@@ -10,7 +10,7 @@ interface DeveloperToolsSectionProps {
 }
 
 /**
- * Developer Tools section - only visible in dev mode - REVOLUTIONARY VERSION
+ * Revolutionary Developer Tools Section - SessionsPage-inspired Live Design
  */
 export const DeveloperToolsSection: React.FC<DeveloperToolsSectionProps> =
   React.memo(({ developerTools, isDeveloperMode }) => {
@@ -26,60 +26,96 @@ export const DeveloperToolsSection: React.FC<DeveloperToolsSectionProps> =
     if (!isDeveloperMode) return null;
 
     return (
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-8 bg-gradient-to-b from-amber-400 to-orange-400 rounded-full" />
-            <div>
-              <h2 className="text-lg font-semibold text-white">
-                Developer Tools
-              </h2>
-              <p className="text-gray-400 text-sm">
-                Development utilities & documentation
-              </p>
-            </div>
-          </div>
-
-          <div className="px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-xs rounded-full">
-            DEV MODE
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {developerTools.map((tool, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {developerTools.map((tool, index) => (
+          <div
+            key={tool.path}
+            className="group relative"
+            style={{ animationDelay: `${index * 200}ms` }}
+          >
+            {/* Subtle Floating Tool Card */}
             <div
-              key={tool.path}
-              style={{ animationDelay: `${index * 100}ms` }}
-              className="group relative cursor-pointer transform translate-y-4 opacity-0 animate-slide-in-up hover:scale-105 transition-all duration-500"
+              className="relative p-6 bg-gradient-to-br from-gray-800/40 via-gray-700/30 to-gray-800/20 border border-purple-600/25 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.005] hover:-translate-y-0.5 cursor-pointer h-full"
               onClick={() => handleToolClick(tool.path)}
             >
-              {/* Subtle glow */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-gray-700/20 to-gray-600/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              {/* Subtle Live Pulse Indicator for AI Tools */}
+              {tool.badge === 'AI' && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full animate-pulse opacity-60"></div>
+              )}
 
-              <div className="relative p-6 bg-gray-800/60 border border-gray-700/50 rounded-2xl hover:bg-gray-700/60 hover:border-gray-600/50 backdrop-blur-xl transition-all duration-500">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-700/50 to-gray-600/50 border border-gray-600/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <tool.icon className="w-5 h-5 text-gray-300" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-white group-hover:text-blue-200 transition-colors">
-                      {tool.title}
-                    </h3>
-                    {tool.badge && (
-                      <span className="inline-block mt-1 px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-xs rounded">
-                        {tool.badge}
-                      </span>
-                    )}
+              {/* Subtle Background Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+
+              <div className="flex items-start gap-4 relative z-10">
+                {/* Refined Icon Container */}
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${
+                  tool.variant === 'purple' 
+                    ? 'from-purple-500/20 to-purple-400/10 border-purple-400/25' 
+                    : 'from-cyan-500/20 to-cyan-400/10 border-cyan-400/25'
+                } border flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300`}>
+                  <tool.icon className={`w-6 h-6 ${
+                    tool.variant === 'purple' ? 'text-purple-400' : 'text-cyan-400'
+                  }`} />
+                  
+                  {/* AI Badge gets extra subtle glow */}
+                  {tool.badge === 'AI' && (
+                    <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                  )}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  {/* Title with Subtle Hover Effect */}
+                  <h3 className={`text-lg font-medium text-white group-hover:${
+                    tool.variant === 'purple' ? 'text-purple-300' : 'text-cyan-300'
+                  } transition-colors duration-300 mb-2`}>
+                    {tool.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mb-4">
+                    {tool.description}
+                  </p>
+                  
+                  {/* Refined Badge & Action Section */}
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className={`px-3 py-1 bg-gradient-to-r ${
+                      tool.variant === 'purple' 
+                        ? 'from-purple-500/20 to-purple-400/10 border-purple-400/30 text-purple-300'
+                        : 'from-cyan-500/20 to-cyan-400/10 border-cyan-400/30 text-cyan-300'
+                    } border rounded-full text-xs font-medium backdrop-blur-sm`}>
+                      {tool.badge}
+                    </span>
+                    
+                    {/* Subtle Action Indicator */}
+                    <div className={`text-xs ${
+                      tool.variant === 'purple' ? 'text-purple-500' : 'text-cyan-500'
+                    } group-hover:${
+                      tool.variant === 'purple' ? 'text-purple-400' : 'text-cyan-400'
+                    } transition-colors duration-300 flex items-center gap-1`}>
+                      <span>Open</span>
+                      <div className={`w-1 h-1 ${
+                        tool.variant === 'purple' ? 'bg-purple-400' : 'bg-cyan-400'
+                      } rounded-full animate-pulse`}></div>
+                    </div>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 group-hover:text-gray-400 transition-colors">
-                  {tool.description}
-                </p>
               </div>
+
+              {/* Subtle Floating Accents */}
+              <div className="absolute bottom-3 right-3 w-8 h-8 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                <div className={`w-full h-full border ${
+                  tool.variant === 'purple' ? 'border-purple-400' : 'border-cyan-400'
+                } rounded-full animate-pulse`}></div>
+              </div>
+
+              {/* Special AI Sparkle Effect */}
+              {tool.badge === 'AI' && (
+                <div className="absolute top-3 left-3 w-1 h-1 bg-purple-400 rounded-full animate-pulse opacity-40"></div>
+              )}
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        ))}
+      </div>
     );
   });
 

@@ -50,8 +50,8 @@ const DocumentationPage: React.FC = () => {
               <div>
                 <h4 className="font-medium text-blue-400 mb-2">Frontend</h4>
                 <ul className="text-sm text-gray-300 space-y-1">
-                  <li>• React 19.1.0</li>
-                  <li>• Next.js 15 with App Router</li>
+                                  <li>• Modern React with TypeScript</li>
+                <li>• Next.js with App Router</li>
                   <li>• TypeScript (Strict Mode)</li>
                   <li>• Tailwind CSS</li>
                 </ul>
