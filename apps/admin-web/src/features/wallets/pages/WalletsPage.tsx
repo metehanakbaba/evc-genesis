@@ -107,37 +107,37 @@ const WalletsPage: React.FC = () => {
   // Revolutionary floating stats with financial data
   const walletStats: WalletStats[] = [
     {
-      title: 'Total Balance',
+      title: 'Consolidated Balance',
       value: totalBalance.formatted,
       icon: WalletIcon,
       variant: 'teal',
-      trend: '+₺125 this week',
-      description: 'Current PLN wallet balance with live transaction updates',
+      trend: '+₺2,847 this week',
+      description: 'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
       isLive: true,
     },
     {
-      title: 'Transactions Today',
-      value: '47',
+      title: 'Daily Transaction Volume',
+      value: '1,284',
       icon: ArrowPathIcon,
       variant: 'blue',
-      trend: '+12 since morning',
-      description: 'Payment transactions processed in the last 24 hours',
+      trend: '+156 since morning',
+      description: 'Real-time payment processing velocity including charging transactions, wallet top-ups, and automated billing cycles',
     },
     {
-      title: 'Total Revenue',
-      value: '₺8,524.30',
+      title: 'Revenue Recognition',
+      value: '₺247,892.45',
       icon: ChartBarIcon,
       variant: 'emerald',
-      trend: '+18% vs last month',
-      description: 'Total revenue from charging sessions and top-ups',
+      trend: '+23.7% vs last month',
+      description: 'Comprehensive revenue streams from energy consumption, infrastructure utilization, and premium service offerings',
     },
     {
-      title: 'Pending Refunds',
-      value: '₺89.75',
+      title: 'Refund Liabilities',
+      value: '₺3,254.80',
       icon: ReceiptRefundIcon,
       variant: 'amber',
-      trend: '3 pending',
-      description: 'Refund requests awaiting processing',
+      trend: '18 pending',
+      description: 'Outstanding customer reimbursement obligations requiring payment processor validation and compliance approval',
       isLive: true,
     },
   ];
@@ -163,16 +163,16 @@ const WalletsPage: React.FC = () => {
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
         <Breadcrumb 
-          currentPageLabel="PLN Wallet"
+          currentPageLabel="Enterprise Treasury"
           variant="teal"
         />
 
         <PageHeader
-          title="PLN Wallet Management"
-          description="Financial operations & transaction processing"
+          title="Enterprise Treasury Management"
+          description="Comprehensive financial operations, payment processing, and liquidity oversight"
           variant="teal"
           actionButton={{
-            label: "New Transaction",
+            label: "Initiate Transaction",
             onClick: () => {
               /* Add transaction logic */
             },
@@ -189,10 +189,10 @@ const WalletsPage: React.FC = () => {
             <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
             <div>
               <h2 className="text-xl font-bold text-white">
-                Financial Overview
+                Financial Operations Dashboard
               </h2>
               <p className="text-gray-400">
-                Real-time wallet statistics and transaction monitoring
+                Real-time treasury analytics, liquidity monitoring, and payment infrastructure intelligence
               </p>
             </div>
           </div>
@@ -204,14 +204,14 @@ const WalletsPage: React.FC = () => {
                 className="group relative"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                {/* Revolutionary MinimalStatCard Design */}
+                {/* Revolutionary MinimalStatCard Design - Fixed Height */}
                 <div
                   className={`
                   relative p-6 bg-gradient-to-br from-${stat.variant}-500/10 via-${stat.variant}-400/5 to-transparent
                   border border-${stat.variant}-400/25 hover:border-${stat.variant}-300/40
                   rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl
                   transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1
-                  cursor-pointer
+                  cursor-pointer h-[320px] flex flex-col
                 `}
                 >
                   {/* Live indicator */}
@@ -225,7 +225,8 @@ const WalletsPage: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
                   {/* Content */}
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex flex-col h-full">
+                    {/* Top Section - Icon and Value */}
                     <div className="flex items-start justify-between mb-4">
                       <div
                         className={`w-12 h-12 rounded-xl bg-${stat.variant}-500/10 border border-${stat.variant}-500/20 flex items-center justify-center`}
@@ -246,8 +247,9 @@ const WalletsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-white">
+                    {/* Middle Section - Title and Description */}
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-lg font-semibold text-white mb-2">
                         {stat.title}
                       </h3>
                       <p className="text-gray-400 text-sm leading-relaxed">
@@ -255,8 +257,8 @@ const WalletsPage: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Revolutionary Interactive Elements */}
-                    <div className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    {/* Bottom Section - Button (always at bottom) */}
+                    <div className="mt-auto opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
                       <div className="relative overflow-hidden rounded-lg">
                         <Button
                           size="sm"
@@ -302,10 +304,10 @@ const WalletsPage: React.FC = () => {
             <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
             <div>
               <h2 className="text-xl font-bold text-white">
-                Transaction Management
+                Payment Processing Operations
               </h2>
               <p className="text-gray-400">
-                Search, filter and manage PLN transactions
+                Advanced transaction monitoring, compliance tracking, and automated settlement management
               </p>
             </div>
           </div>
@@ -314,10 +316,10 @@ const WalletsPage: React.FC = () => {
           <SearchFilterBar
             searchValue={searchQuery}
             onSearchChange={setSearchQuery}
-            searchPlaceholder="Search transactions, amounts..."
+            searchPlaceholder="Search payment records, amounts, settlement IDs..."
             onFilterClick={() => setIsFilterModalOpen(true)}
             isFilterActive={typeFilter !== 'all' || statusFilter !== 'all'}
-            filterLabel="Filters"
+            filterLabel="Transaction Filters"
             viewMode={viewMode}
             onViewModeChange={setViewMode}
             variant="primary"
@@ -365,8 +367,8 @@ const WalletsPage: React.FC = () => {
           {!isLoading && transactions.length === 0 && (
             <EmptyState
               icon={BanknotesIcon}
-              title="No transactions found"
-              description="Try adjusting your search or filter criteria"
+              title="No Payment Records Found"
+              description="Adjust search parameters or transaction filters to view relevant financial operations"
               actionLabel="Clear Filters"
               onAction={handleClearFilters}
               variant="teal"

@@ -7,6 +7,10 @@ import {
   UserGroupIcon,
   UserPlusIcon,
   UserIcon,
+  UsersIcon,
+  CheckCircleIcon,
+  ShieldExclamationIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline';
 import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Button } from '@ui/forms';
@@ -45,7 +49,10 @@ interface UserStats {
   readonly title: string;
   readonly value: string;
   readonly icon: IconComponent;
-  readonly variant: 'purple' | 'blue' | 'teal' | 'emerald' | 'amber';
+  readonly bgColor: string;
+  readonly borderColor: string;
+  readonly iconColor: string;
+  readonly accentColor: string;
   readonly trend: string;
   readonly description: string;
   readonly isLive?: boolean;
@@ -111,40 +118,52 @@ const UsersPage: React.FC = () => {
     deleteUser 
   } = useUserActions();
 
-  // Revolutionary floating stats with role-based data
+  // Enterprise identity and access management statistics
   const userStats: UserStats[] = [
     {
       title: 'Total Users',
       value: totalUsers.formatted,
-      icon: UserGroupIcon,
-      variant: 'purple',
+      icon: UsersIcon,
+      bgColor: 'from-indigo-500/15 via-indigo-400/8 to-transparent',
+      borderColor: 'border-indigo-400/30 hover:border-indigo-300/50',
+      iconColor: 'text-indigo-400',
+      accentColor: 'bg-indigo-500',
       trend: `+${newUsersThisMonth.formatted} this month`,
-      description: 'Active accounts across all user roles with live statistics',
+      description: 'Total provisioned user identities across all organizational roles and access levels',
       isLive: true,
     },
     {
       title: 'Active Users',
       value: activeUsers.formatted,
-      icon: UserIcon,
-      variant: 'blue',
+      icon: CheckCircleIcon,
+      bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
+      borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
+      iconColor: 'text-emerald-400',
+      accentColor: 'bg-emerald-500',
       trend: `${activeUsers.percentage}% active`,
-      description: 'Users with active account status',
+      description: 'User accounts with validated authentication and active session capabilities',
     },
     {
-      title: 'Admin Users',
+      title: 'Admin Accounts',
       value: adminUsers.formatted,
       icon: ShieldCheckIcon,
-      variant: 'teal',
-      trend: 'Full access',
-      description: 'Administrative users with full system access',
+      bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
+      borderColor: 'border-amber-400/30 hover:border-amber-300/50',
+      iconColor: 'text-amber-400',
+      accentColor: 'bg-amber-500',
+      trend: 'Privileged access',
+      description: 'Administrative accounts with full system access and management capabilities',
     },
     {
-      title: 'New This Month',
+      title: 'New Accounts',
       value: newUsersThisMonth.formatted,
-      icon: UserPlusIcon,
-      variant: 'emerald',
+      icon: PlusCircleIcon,
+      bgColor: 'from-purple-500/15 via-purple-400/8 to-transparent',
+      borderColor: 'border-purple-400/30 hover:border-purple-300/50',
+      iconColor: 'text-purple-400',
+      accentColor: 'bg-purple-500',
       trend: '+8 today',
-      description: 'New customer accounts created in the last 30 days',
+      description: 'Recently provisioned user accounts within the last 30-day operational cycle',
       isLive: true,
     },
   ];
@@ -168,16 +187,16 @@ const UsersPage: React.FC = () => {
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
         <Breadcrumb
-          currentPageLabel="User Management"
+          currentPageLabel="Identity & Access Management"
           variant="purple"
         />
 
         <PageHeader
-          title="User Management"
-          description="Role-based access control & account administration"
+          title="Enterprise Identity Center"
+          description="Comprehensive user lifecycle management and role-based access control administration"
           variant="purple"
           actionButton={{
-            label: "New User",
+            label: "Provision Account",
             onClick: () => {
               /* Add user logic */
             },
@@ -190,12 +209,15 @@ const UsersPage: React.FC = () => {
       <PageContainer paddingY="lg" className="space-y-10">
         {/* Revolutionary Network Stats Section */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-8">
             <div className="w-3 h-8 bg-gradient-to-b from-purple-400 to-purple-300 rounded-full"></div>
             <div>
-              <h2 className="text-xl font-bold text-white">User Statistics</h2>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <CogIcon className="w-6 h-6 text-purple-400" />
+                Identity Management Analytics
+              </h2>
               <p className="text-gray-400">
-                Real-time user metrics and role distribution
+                Real-time access control metrics and organizational role distribution intelligence
               </p>
             </div>
           </div>
@@ -207,57 +229,61 @@ const UsersPage: React.FC = () => {
                 className="group relative"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                {/* Revolutionary MinimalStatCard Design */}
+                {/* Revolutionary MinimalStatCard Design - Fixed Height */}
                 <div
                   className={`
-                  relative p-6 bg-gradient-to-br from-${stat.variant}-500/10 via-${stat.variant}-400/5 to-transparent
-                  border border-${stat.variant}-400/25 hover:border-${stat.variant}-300/40
+                  relative p-6 bg-gradient-to-br ${stat.bgColor}
+                  border ${stat.borderColor}
                   rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl
                   transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1
-                  cursor-pointer
+                  cursor-pointer h-[300px] flex flex-col
                 `}
                 >
                   {/* Live indicator */}
                   {stat.isLive && (
                     <div
-                      className={`absolute -top-2 -right-2 w-4 h-4 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
+                      className={`absolute -top-2 -right-2 w-4 h-4 ${stat.accentColor} rounded-full animate-ping opacity-75`}
                     ></div>
                   )}
 
                   {/* Floating background effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex flex-col h-full">
+                    {/* Header */}
                     <div className="flex items-center justify-between mb-4">
                       <div
-                        className={`w-14 h-14 rounded-2xl bg-${stat.variant}-500/10 border border-${stat.variant}-500/20 flex items-center justify-center`}
+                        className={`w-14 h-14 rounded-2xl ${stat.bgColor} border ${stat.borderColor} flex items-center justify-center backdrop-blur-sm`}
                       >
                         <stat.icon
-                          className={`w-7 h-7 text-${stat.variant}-400`}
+                          className={`w-7 h-7 ${stat.iconColor}`}
                         />
                       </div>
                       <ArrowTrendingUpIcon
-                        className={`w-5 h-5 text-${stat.variant}-400`}
+                        className={`w-5 h-5 ${stat.iconColor}`}
                       />
                     </div>
 
-                    <div className="mb-2">
-                      <div className="text-3xl font-bold text-white mb-1">
-                        {stat.value}
+                    {/* Main Content - Fixed spacing */}
+                    <div className="flex-1 flex flex-col">
+                      <div className="mb-4">
+                        <div className="text-3xl font-bold text-white mb-2">
+                          {stat.value}
+                        </div>
+                        <div
+                          className={`text-sm font-medium ${stat.iconColor}`}
+                        >
+                          {stat.title}
+                        </div>
                       </div>
-                      <div
-                        className={`text-sm font-medium text-${stat.variant}-400`}
-                      >
-                        {stat.title}
+
+                      <div className={`text-xs ${stat.iconColor} mb-4 font-medium`}>
+                        {stat.trend}
                       </div>
                     </div>
 
-                    <div className="text-xs text-gray-400 mb-3">
-                      {stat.trend}
-                    </div>
-
-                    {/* Hidden description - shows on hover */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {/* Description - Fixed at bottom */}
+                    <div className="mt-auto">
                       <p className="text-xs text-gray-300 leading-relaxed">
                         {stat.description}
                       </p>
@@ -271,29 +297,38 @@ const UsersPage: React.FC = () => {
 
         {/* User Management Section */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-8">
             <div className="w-3 h-8 bg-gradient-to-b from-purple-400 to-purple-300 rounded-full"></div>
             <div>
-              <h2 className="text-xl font-bold text-white">User Directory</h2>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <UserGroupIcon className="w-6 h-6 text-purple-400" />
+                Enterprise Directory Services
+              </h2>
               <p className="text-gray-400">
-                Search, filter and manage user accounts
+                Advanced identity search, role-based filtering and comprehensive account lifecycle management
               </p>
             </div>
           </div>
 
-          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
-          <SearchFilterBar
-            searchValue={searchQuery}
-            onSearchChange={setSearchQuery}
-            searchPlaceholder="Search users, emails, roles..."
-            onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={roleFilter !== 'all' || statusFilter !== 'all'}
-            filterLabel="Filters"
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            variant="purple"
-            className="mb-8"
-          />
+          {/* Search & Filter Controls - Enhanced with Icons */}
+          <div className="mb-8 p-6 bg-gradient-to-br from-slate-800/50 via-slate-700/30 to-transparent border border-slate-600/30 rounded-2xl backdrop-blur-xl">
+            <div className="flex items-center gap-2 mb-4">
+              <UserIcon className="w-5 h-5 text-purple-400" />
+              <h3 className="text-sm font-medium text-purple-400">Identity Search & Filtering</h3>
+            </div>
+            
+            <SearchFilterBar
+              searchValue={searchQuery}
+              onSearchChange={setSearchQuery}
+              searchPlaceholder="Identity search... (e.g., john.kowalski@company.com, ADMIN, CUSTOMER)"
+              onFilterClick={() => setIsFilterModalOpen(true)}
+              isFilterActive={roleFilter !== 'all' || statusFilter !== 'all'}
+              filterLabel="Access Filters"
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              variant="purple"
+            />
+          </div>
 
           {/* ✅ Loading States - Skeleton Components */}
           {isLoading && viewMode === 'table' && (
@@ -308,15 +343,15 @@ const UsersPage: React.FC = () => {
           {error && !isLoading && (
             <div className="text-center py-12">
               <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <ShieldCheckIcon className="w-6 h-6 text-red-400" />
+                <ShieldExclamationIcon className="w-6 h-6 text-red-400" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Failed to Load Users</h3>
-              <p className="text-gray-400 mb-4">{error.message}</p>
+              <h3 className="text-lg font-semibold text-white mb-2">Identity Service Unavailable</h3>
+              <p className="text-gray-400 mb-4">Directory service connection failed: {error.message}</p>
               <Button 
                 onClick={refresh}
                 className="mx-auto bg-purple-600 hover:bg-purple-700"
               >
-                Try Again
+                Retry
               </Button>
             </div>
           )}
@@ -343,8 +378,8 @@ const UsersPage: React.FC = () => {
                   ) : (
                     <EmptyState
                       icon={UserIcon}
-                      title="No Users Found"
-                      description="No users match your current filter criteria."
+                      title="No Identity Records Found"
+                      description="Please refine your access control filters or search parameters to view relevant identity records."
                       actionLabel="Clear Filters"
                       onAction={() => {
                         setRoleFilter('all');
@@ -376,8 +411,8 @@ const UsersPage: React.FC = () => {
                   ) : (
                     <EmptyState
                       icon={UserIcon}
-                      title="No Users Found"
-                      description="No users match your current filter criteria."
+                      title="No Identity Records Found"
+                      description="Please refine your access control filters or search parameters to view relevant identity records."
                       actionLabel="Clear Filters"
                       onAction={() => {
                         setRoleFilter('all');

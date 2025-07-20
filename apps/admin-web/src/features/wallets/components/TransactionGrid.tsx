@@ -109,9 +109,9 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
             className="group relative"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            {/* Revolutionary Floating Transaction Card */}
+            {/* Revolutionary Floating Transaction Card - Fixed Height */}
             <div
-              className={`relative p-6 ${typeConfig.bgColor} border ${typeConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer hover:${typeConfig.shadowColor}`}
+              className={`relative p-5 ${typeConfig.bgColor} border ${typeConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer hover:${typeConfig.shadowColor} h-[280px] flex flex-col`}
             >
               {/* Pending Status Pulse */}
               {isPending && (
@@ -123,8 +123,9 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
               {/* Floating Background Effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
-              {/* Transaction Header */}
-              <div className="relative z-10">
+              {/* Transaction Content */}
+              <div className="relative z-10 flex flex-col h-full">
+                {/* Header Section */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div
@@ -165,40 +166,45 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
                   </div>
                 </div>
 
-                {/* Transaction Description */}
+                {/* Description Section */}
                 <div className="mb-4">
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
                     {transaction.description}
                   </p>
                 </div>
 
-                {/* Transaction Details */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Transaction ID</span>
-                    <span className="text-gray-300 font-mono">
-                      {transaction.id.slice(-8)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Date</span>
-                    <span className="text-gray-300">
-                      {/* ✅ Use shared business logic for date formatting */}
-                      {formatTransactionDate(transaction.createdAt)}
-                    </span>
-                  </div>
-                  {transaction.stripePaymentIntentId && (
+                {/* Details Section - Flexible */}
+                <div className="flex-1 flex flex-col">
+                  <div className="space-y-2 mb-4">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Stripe ID</span>
-                      <span className="text-gray-300 font-mono text-xs">
-                        {transaction.stripePaymentIntentId.slice(-8)}
+                      <span className="text-gray-400">Transaction ID</span>
+                      <span className="text-gray-300 font-mono">
+                        {transaction.id.slice(-8)}
                       </span>
                     </div>
-                  )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">Date</span>
+                      <span className="text-gray-300">
+                        {/* ✅ Use shared business logic for date formatting */}
+                        {formatTransactionDate(transaction.createdAt)}
+                      </span>
+                    </div>
+                    {/* Always reserve space for Stripe ID to maintain consistent height */}
+                    <div className="flex items-center justify-between text-sm min-h-[20px]">
+                      <span className="text-gray-400">
+                        {transaction.stripePaymentIntentId ? 'Stripe ID' : ''}
+                      </span>
+                      <span className="text-gray-300 font-mono text-xs">
+                        {transaction.stripePaymentIntentId ? 
+                          transaction.stripePaymentIntentId.slice(-8) : ''
+                        }
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Revolutionary Action Buttons */}
-                <div className="flex gap-2 mt-4">
+                {/* Action Buttons - Always at bottom with reserved space */}
+                <div className="flex gap-2 mt-auto">
                   <Button
                     size="sm"
                     variant="ghost"
@@ -224,28 +230,32 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
                       <span className="font-medium">View Details</span>
                     </div>
                   </Button>
-                  {showRetryButton &&
-                    transaction.type === 'CHARGING_PAYMENT' &&
-                    transaction.status === 'FAILED' && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => onRetryTransaction?.(transaction)}
-                        className="
-                          relative overflow-hidden p-3 group/retry
-                          bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
-                          hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
-                          text-teal-400 hover:text-teal-300
-                          border border-teal-500/30 hover:border-teal-400/50
-                          shadow-sm shadow-teal-500/10 hover:shadow-lg hover:shadow-teal-500/20
-                          transition-all duration-300 ease-out
-                          hover:scale-110 active:scale-95
-                          flex items-center
-                        "
-                      >
-                        <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
-                      </Button>
-                    )}
+                  
+                  {/* Always reserve space for retry button */}
+                  <div className="w-11 flex items-center justify-center">
+                    {showRetryButton &&
+                      transaction.type === 'CHARGING_PAYMENT' &&
+                      transaction.status === 'FAILED' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => onRetryTransaction?.(transaction)}
+                          className="
+                            relative overflow-hidden p-3 group/retry
+                            bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
+                            hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
+                            text-teal-400 hover:text-teal-300
+                            border border-teal-500/30 hover:border-teal-400/50
+                            shadow-sm shadow-teal-500/10 hover:shadow-lg hover:shadow-teal-500/20
+                            transition-all duration-300 ease-out
+                            hover:scale-110 active:scale-95
+                            flex items-center
+                          "
+                        >
+                          <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
+                        </Button>
+                      )}
+                  </div>
                 </div>
               </div>
             </div>
