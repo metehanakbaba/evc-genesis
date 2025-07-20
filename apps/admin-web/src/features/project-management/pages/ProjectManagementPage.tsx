@@ -4,7 +4,6 @@ import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
 import React, { useState, useCallback } from 'react';
 import {
   SparklesIcon,
-  DocumentTextIcon,
   PlayIcon,
   PauseIcon,
   CheckCircleIcon,

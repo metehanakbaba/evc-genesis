@@ -1,14 +1,9 @@
 'use client';
 
 import {
+  FunnelIcon,
   XMarkIcon,
-  AdjustmentsHorizontalIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  WrenchScrewdriverIcon,
-  ClockIcon,
-  BoltIcon,
-  ViewColumnsIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
@@ -71,20 +66,20 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
 
   // Enterprise operational status options
   const statusOptions: FilterOption[] = [
-    { id: 'all', label: 'All Classifications', icon: ViewColumnsIcon, color: 'gray' },
-    { id: 'active', label: 'Operational', icon: CheckCircleIcon, color: 'emerald' },
-    { id: 'offline', label: 'Non-Operational', icon: XCircleIcon, color: 'red' },
-    { id: 'maintenance', label: 'Service Mode', icon: WrenchScrewdriverIcon, color: 'amber' },
+    { id: 'all', label: 'All Classifications', icon: MagnifyingGlassIcon, color: 'gray' },
+    { id: 'active', label: 'Operational', icon: FunnelIcon, color: 'emerald' },
+    { id: 'offline', label: 'Non-Operational', icon: XMarkIcon, color: 'red' },
+    { id: 'maintenance', label: 'Service Mode', icon: FunnelIcon, color: 'amber' },
   ];
 
   // Enterprise connector technology standards
   const connectorTypeOptions: FilterOption[] = [
-    { id: 'all', label: 'All Standards', icon: BoltIcon, color: 'gray' },
-    { id: 'CCS2', label: 'CCS2 Standard', icon: BoltIcon, color: 'blue' },
-    { id: 'CHAdeMO', label: 'CHAdeMO Protocol', icon: BoltIcon, color: 'purple' },
-    { id: 'Type2', label: 'Type 2 (IEC 62196)', icon: BoltIcon, color: 'green' },
-    { id: 'AC', label: 'AC Current', icon: BoltIcon, color: 'cyan' },
-    { id: 'DC', label: 'DC Current', icon: BoltIcon, color: 'pink' },
+    { id: 'all', label: 'All Standards', icon: MagnifyingGlassIcon, color: 'gray' },
+    { id: 'CCS2', label: 'CCS2 Standard', icon: MagnifyingGlassIcon, color: 'blue' },
+    { id: 'CHAdeMO', label: 'CHAdeMO Protocol', icon: MagnifyingGlassIcon, color: 'purple' },
+    { id: 'Type2', label: 'Type 2 (IEC 62196)', icon: MagnifyingGlassIcon, color: 'green' },
+    { id: 'AC', label: 'AC Current', icon: MagnifyingGlassIcon, color: 'cyan' },
+    { id: 'DC', label: 'DC Current', icon: MagnifyingGlassIcon, color: 'pink' },
   ];
 
   /**
@@ -164,7 +159,7 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
         <div className="relative z-10 flex items-start justify-between p-6 border-b border-blue-400/10">
           <div className="flex items-center gap-3 flex-1">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-              <AdjustmentsHorizontalIcon className="w-5 h-5 text-blue-400" />
+              <FunnelIcon className="w-5 h-5 text-blue-400" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white">

@@ -27,9 +27,6 @@ import { useInfiniteScrollTrigger } from '../hooks/useIntersectionObserver';
 // ✅ Import skeleton components
 import { LoadMoreSkeleton, EndOfListIndicator } from './UserSkeleton';
 
-// Type for icon components
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
 /**
  * 🎯 User Table Props
  */

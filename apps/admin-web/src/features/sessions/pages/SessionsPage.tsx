@@ -5,11 +5,9 @@ import {
   BanknotesIcon,
   BoltIcon,
   CheckCircleIcon,
-  ChevronRightIcon,
   ClockIcon,
   EyeIcon,
   FireIcon,
-  HomeIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   PlayIcon,
@@ -23,7 +21,6 @@ import { Button, Input, Select } from '@ui/forms';
 // import { MinimalStatCard, FloatingCard } from '@ui/display';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
-import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { SessionStatus } from '@/types/global.types';
@@ -88,7 +85,6 @@ interface SessionStats {
  * - ✅ Uses new Breadcrumb and PageContainer components
  */
 const SessionsPage: React.FC = () => {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
