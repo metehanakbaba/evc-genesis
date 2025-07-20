@@ -181,11 +181,12 @@ export const UserGrid: React.FC<UserGridProps> = ({
                       <CalendarIcon className="w-4 h-4 flex-shrink-0" />
                       <span>
                         Joined{' '}
-                        {new Date(user.created_at).toLocaleDateString()}
+                        {/* hydration */}
+                        {/* {new Date(user.created_at).toLocaleDateString()} */}
                       </span>
                     </div>
                     <div className="text-gray-300">
-                      Last: {formatLastLogin(user.last_login)}
+                      {/* Last: {formatLastLogin(user.last_login)} */}
                     </div>
                   </div>
 

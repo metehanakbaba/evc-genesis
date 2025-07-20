@@ -11,9 +11,13 @@ import {
   CheckCircleIcon,
   ShieldExclamationIcon,
   PlusCircleIcon,
+  ViewColumnsIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
+import { FilterContainer, EmptyState, FilterModal } from '@/shared/ui/molecules';
+import { SearchInput, FilterButton, ViewModeToggle } from '@/shared/ui/atoms';
 import { Button } from '@ui/forms';
+import type { FilterGroup } from '@/shared/ui/molecules';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import type React from 'react';
@@ -22,8 +26,7 @@ import { useState } from 'react';
 // ✅ Import new reusable components
 import { 
   UserGrid, 
-  UserTable, 
-  UserFilterModal,
+  UserTable,
   UserGridSkeleton,
   UserTableSkeleton,
 } from '../components';
@@ -174,6 +177,83 @@ const UsersPage: React.FC = () => {
     setSearchQuery('');
   };
 
+  /**
+   * 🎯 Filter Groups Configuration for Universal FilterModal
+   */
+  const filterGroups: FilterGroup[] = [
+    {
+      id: 'role',
+      label: 'User Role',
+      description: 'Filter users by their organizational role and access level',
+      icon: UserGroupIcon,
+      value: roleFilter,
+      onChange: setRoleFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Roles',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all users regardless of role'
+        },
+        {
+          id: 'CUSTOMER',
+          label: 'Customer',
+          icon: UserIcon,
+          color: 'blue',
+          description: 'Standard customer accounts'
+        },
+        {
+          id: 'ADMIN',
+          label: 'Administrator',
+          icon: ShieldCheckIcon,
+          color: 'purple',
+          description: 'Administrative accounts with full access'
+        },
+        {
+          id: 'FIELD_WORKER',
+          label: 'Field Worker',
+          icon: CogIcon,
+          color: 'emerald',
+          description: 'Field maintenance and support staff'
+        },
+      ]
+    },
+    {
+      id: 'status',
+      label: 'Account Status',
+      description: 'Filter users by their account activation status',
+      icon: CheckCircleIcon,
+      value: statusFilter,
+      onChange: setStatusFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Statuses',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all users regardless of status'
+        },
+        {
+          id: 'active',
+          label: 'Active',
+          icon: CheckCircleIcon,
+          color: 'green',
+          description: 'Active user accounts'
+        },
+        {
+          id: 'inactive',
+          label: 'Inactive',
+          icon: XCircleIcon,
+          color: 'red',
+          description: 'Deactivated user accounts'
+        },
+      ]
+    }
+  ];
+
   return (
     <MainLayout
       showNotifications={true}
@@ -307,25 +387,37 @@ const UsersPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Search & Filter Controls - Enhanced with Icons */}
-          <div className="mb-8 p-6 bg-gradient-to-br from-slate-800/50 via-slate-700/30 to-transparent border border-slate-600/30 rounded-2xl backdrop-blur-xl">
-            <div className="flex items-center gap-2 mb-4">
-              <UserIcon className="w-5 h-5 text-purple-400" />
-              <h3 className="text-sm font-medium text-purple-400">Identity Search & Filtering</h3>
+          {/* Search & Filter Controls - Using Universal FilterModal */}
+          <FilterContainer className="mb-8">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                {/* Search Input */}
+                <SearchInput
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Identity search... (e.g., john.kowalski@company.com, ADMIN, CUSTOMER)"
+                  size="md"
+                />
+
+                {/* Filter Button */}
+                <FilterButton
+                  onClick={() => setIsFilterModalOpen(true)}
+                  isActive={roleFilter !== 'all' || statusFilter !== 'all'}
+                  label="Access Filters"
+                  variant="purple"
+                  size="md"
+                />
+              </div>
+
+              {/* View Mode Toggle */}
+              <ViewModeToggle
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                variant="purple"
+                size="md"
+              />
             </div>
-            
-            <SearchFilterBar
-              searchValue={searchQuery}
-              onSearchChange={setSearchQuery}
-              searchPlaceholder="Identity search... (e.g., john.kowalski@company.com, ADMIN, CUSTOMER)"
-              onFilterClick={() => setIsFilterModalOpen(true)}
-              isFilterActive={roleFilter !== 'all' || statusFilter !== 'all'}
-              filterLabel="Access Filters"
-              viewMode={viewMode}
-              onViewModeChange={setViewMode}
-              variant="purple"
-            />
-          </div>
+          </FilterContainer>
 
           {/* ✅ Loading States - Skeleton Components */}
           {isLoading && viewMode === 'table' && (
@@ -426,16 +518,18 @@ const UsersPage: React.FC = () => {
         </section>
       </PageContainer>
 
-      {/* ✅ Use new reusable UserFilterModal component */}
-      <UserFilterModal
+      {/* ✅ Universal FilterModal */}
+      <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        roleFilter={roleFilter}
-        statusFilter={statusFilter}
-        onRoleChange={setRoleFilter}
-        onStatusChange={setStatusFilter}
+        title="Identity Access Control Filters"
+        description="Configure role-based access criteria and account status parameters"
+        filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
         variant="purple"
+        size="lg"
+        clearButtonLabel="Reset Criteria"
+        applyButtonLabel="Apply Configuration"
       />
     </MainLayout>
   );

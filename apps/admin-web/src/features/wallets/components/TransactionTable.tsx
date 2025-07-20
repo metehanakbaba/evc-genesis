@@ -224,8 +224,9 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                   {columns.date && (
                     <td className="py-4 px-6">
                       <span className="text-gray-300 text-sm">
+                        {/* hydration */}
                         {/* ✅ Use shared business logic for date formatting */}
-                        {formatTransactionDate(transaction.createdAt)}
+                        {/* {formatTransactionDate(transaction.createdAt)} */}
                       </span>
                     </td>
                   )}

@@ -16,8 +16,6 @@ export type { TransactionGridProps } from './TransactionGrid';
 export { TransactionTable } from './TransactionTable';
 export type { TransactionTableProps } from './TransactionTable';
 
-export { TransactionFilterModal } from './TransactionFilterModal';
-export type { TransactionFilterModalProps } from './TransactionFilterModal';
 
 // Skeleton Components
 export { 

@@ -4,13 +4,20 @@ import {
   ArrowPathIcon,
   BanknotesIcon,
   ChartBarIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  CreditCardIcon,
   EyeIcon,
   PlusIcon,
   ReceiptRefundIcon,
+  ViewColumnsIcon,
   WalletIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
+import { FilterContainer, EmptyState, FilterModal } from '@/shared/ui/molecules';
+import { SearchInput, FilterButton, ViewModeToggle } from '@/shared/ui/atoms';
 import { Button } from '@ui/forms';
+import type { FilterGroup } from '@/shared/ui/molecules';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import type React from 'react';
@@ -19,8 +26,7 @@ import { useState } from 'react';
 // ✅ Import new reusable components
 import { 
   TransactionGrid, 
-  TransactionTable, 
-  TransactionFilterModal 
+  TransactionTable
 } from '../components';
 
 // ✅ Import API hooks and types
@@ -149,6 +155,90 @@ const WalletsPage: React.FC = () => {
     setStatusFilter('all');
     setSearchQuery('');
   };
+
+  /**
+   * 🎯 Filter Groups Configuration for Universal FilterModal
+   */
+  const filterGroups: FilterGroup[] = [
+    {
+      id: 'type',
+      label: 'Transaction Type',
+      description: 'Filter transactions by their operational category',
+      icon: CreditCardIcon,
+      value: typeFilter,
+      onChange: setTypeFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Types',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all transaction types'
+        },
+        {
+          id: 'charge',
+          label: 'Charging',
+          icon: BanknotesIcon,
+          color: 'teal',
+          description: 'Energy consumption payments'
+        },
+        {
+          id: 'topup',
+          label: 'Top-up',
+          icon: WalletIcon,
+          color: 'blue',
+          description: 'Wallet balance additions'
+        },
+        {
+          id: 'refund',
+          label: 'Refund',
+          icon: ReceiptRefundIcon,
+          color: 'amber',
+          description: 'Customer reimbursements'
+        },
+      ]
+    },
+    {
+      id: 'status',
+      label: 'Transaction Status',
+      description: 'Filter transactions by their processing state',
+      icon: CheckCircleIcon,
+      value: statusFilter,
+      onChange: setStatusFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Statuses',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all transaction statuses'
+        },
+        {
+          id: 'completed',
+          label: 'Completed',
+          icon: CheckCircleIcon,
+          color: 'green',
+          description: 'Successfully processed transactions'
+        },
+        {
+          id: 'pending',
+          label: 'Pending',
+          icon: ClockIcon,
+          color: 'yellow',
+          description: 'Transactions awaiting processing'
+        },
+        {
+          id: 'failed',
+          label: 'Failed',
+          icon: XCircleIcon,
+          color: 'red',
+          description: 'Transactions that encountered errors'
+        },
+      ]
+    }
+  ];
 
   return (
     <MainLayout
@@ -309,19 +399,37 @@ const WalletsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
-          <SearchFilterBar
-            searchValue={searchQuery}
-            onSearchChange={setSearchQuery}
-            searchPlaceholder="Search payment records, amounts, settlement IDs..."
-            onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={typeFilter !== 'all' || statusFilter !== 'all'}
-            filterLabel="Transaction Filters"
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            variant="primary"
-            className="mb-8"
-          />
+          {/* Search & Filter Controls - Using Universal FilterModal */}
+          <FilterContainer className="mb-8">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                {/* Search Input */}
+                <SearchInput
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Search payment records, amounts, settlement IDs..."
+                  size="md"
+                />
+
+                {/* Filter Button */}
+                <FilterButton
+                  onClick={() => setIsFilterModalOpen(true)}
+                  isActive={typeFilter !== 'all' || statusFilter !== 'all'}
+                  label="Transaction Filters"
+                  variant="teal"
+                  size="md"
+                />
+              </div>
+
+              {/* View Mode Toggle */}
+              <ViewModeToggle
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                variant="teal"
+                size="md"
+              />
+            </div>
+          </FilterContainer>
 
           {/* ✅ Loading States */}
           {isLoading && viewMode === 'table' && (
@@ -374,15 +482,18 @@ const WalletsPage: React.FC = () => {
         </section>
       </PageContainer>
 
-      {/* ✅ Use new reusable TransactionFilterModal component */}
-      <TransactionFilterModal
+      {/* ✅ Universal FilterModal */}
+      <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        typeFilter={typeFilter}
-        statusFilter={statusFilter}
-        onTypeChange={setTypeFilter}
-        onStatusChange={setStatusFilter}
+        title="Transaction Filters"
+        description="Configure filtering criteria for payment processing operations"
+        filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
+        variant="teal"
+        size="lg"
+        clearButtonLabel="Reset Filters"
+        applyButtonLabel="Apply Filters"
       />
     </MainLayout>
   );

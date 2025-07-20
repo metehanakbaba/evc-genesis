@@ -185,8 +185,9 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-400">Date</span>
                       <span className="text-gray-300">
+                        {/* hydration */}
                         {/* ✅ Use shared business logic for date formatting */}
-                        {formatTransactionDate(transaction.createdAt)}
+                        {/* {formatTransactionDate(transaction.createdAt)} */}
                       </span>
                     </div>
                     {/* Always reserve space for Stripe ID to maintain consistent height */}

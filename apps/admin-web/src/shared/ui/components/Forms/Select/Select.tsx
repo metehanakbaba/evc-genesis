@@ -101,7 +101,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
 
     const selectElement = (
       <Listbox value={value} onChange={onChange} disabled={disabled}>
-        <div className="relative">
+        <div className="relative z-[1000]">
           <ListboxButton ref={ref} className={buttonClasses} {...props}>
             {/* Revolutionary floating accent dot */}
             {!disabled && (

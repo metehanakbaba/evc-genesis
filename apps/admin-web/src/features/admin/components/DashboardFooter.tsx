@@ -52,25 +52,25 @@ export const DashboardFooter: React.FC = () => {
             </h3>
             <div className="space-y-2">
               <a
-                href="/admin/users"
+                href="/users"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 User Management
               </a>
               <a
-                href="/admin/stations"
+                href="/stations"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Charging Stations
               </a>
               <a
-                href="/admin/sessions"
+                href="/sessions"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Active Sessions
               </a>
               <a
-                href="/admin/wallets"
+                href="/wallets"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Payment System
@@ -117,7 +117,8 @@ export const DashboardFooter: React.FC = () => {
 
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
             <span className="text-xs text-gray-500">
-              Last updated: {formatLiveUpdateTime(new Date())}
+              {/* hydration */}
+              {/* Last updated: {formatLiveUpdateTime(new Date())} */}
             </span>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />

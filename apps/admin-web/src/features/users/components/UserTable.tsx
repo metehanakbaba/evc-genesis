@@ -234,7 +234,8 @@ export const UserTable: React.FC<UserTableProps> = ({
                     {columns.lastLogin && (
                       <td className="py-4 px-6">
                         <span className="text-gray-300 text-sm">
-                          {formatLastLogin(user.last_login)}
+                          {/* hydration */}
+                          {/* {formatLastLogin(user.last_login)} */}
                         </span>
                       </td>
                     )}

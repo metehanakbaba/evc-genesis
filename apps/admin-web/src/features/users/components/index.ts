@@ -13,8 +13,6 @@
 export { UserGrid } from './UserGrid';
 export { UserTable } from './UserTable';
 
-// User Filter Components
-export { UserFilterModal } from './UserFilterModal';
 
 // User Skeleton Components
 export { 
@@ -26,5 +24,4 @@ export {
 
 // Re-export types for convenience
 export type { UserGridProps } from './UserGrid';
-export type { UserTableProps } from './UserTable';
-export type { UserFilterModalProps } from './UserFilterModal'; 
+export type { UserTableProps } from './UserTable'; 

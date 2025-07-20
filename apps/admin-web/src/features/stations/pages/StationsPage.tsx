@@ -6,11 +6,14 @@ import {
   EyeIcon,
   PlusIcon,
   SignalIcon,
+  ViewColumnsIcon,
   WrenchScrewdriverIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
+import { FilterContainer, EmptyState, FilterModal } from '@/shared/ui/molecules';
+import { SearchInput, FilterButton, ViewModeToggle } from '@/shared/ui/atoms';
 import { Button } from '@ui/forms';
+import type { FilterGroup } from '@/shared/ui/molecules';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
@@ -21,7 +24,6 @@ import { useState } from 'react';
 import {
   StationGrid,
   StationTable,
-  StationFilterModal,
 } from '../components';
 
 // ✅ Import skeleton components
@@ -157,6 +159,90 @@ const StationsPage: React.FC = () => {
     setConnectorTypeFilter('all');
     setSearchQuery('');
   };
+
+  /**
+   * 🎯 Filter Groups Configuration for Universal FilterModal
+   */
+  const filterGroups: FilterGroup[] = [
+    {
+      id: 'status',
+      label: 'Operational Status',
+      description: 'Filter stations by their current operational state',
+      icon: CheckCircleIcon,
+      value: statusFilter,
+      onChange: setStatusFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Statuses',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all stations regardless of status'
+        },
+        {
+          id: 'active',
+          label: 'Operational',
+          icon: CheckCircleIcon,
+          color: 'green',
+          description: 'Stations currently operational and service-ready'
+        },
+        {
+          id: 'offline',
+          label: 'Offline',
+          icon: XCircleIcon,
+          color: 'red',
+          description: 'Stations currently offline or unavailable'
+        },
+        {
+          id: 'maintenance',
+          label: 'Maintenance',
+          icon: WrenchScrewdriverIcon,
+          color: 'amber',
+          description: 'Stations undergoing maintenance or repairs'
+        },
+      ]
+    },
+    {
+      id: 'connectorType',
+      label: 'Connector Standards',
+      description: 'Filter stations by their connector type compatibility',
+      icon: BoltIcon,
+      value: connectorTypeFilter,
+      onChange: setConnectorTypeFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Types',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all connector types'
+        },
+        {
+          id: 'CCS2',
+          label: 'CCS2',
+          icon: BoltIcon,
+          color: 'blue',
+          description: 'Combined Charging System 2 connectors'
+        },
+        {
+          id: 'CHAdeMO',
+          label: 'CHAdeMO',
+          icon: BoltIcon,
+          color: 'purple',
+          description: 'CHAdeMO fast charging standard'
+        },
+        {
+          id: 'Type2',
+          label: 'Type 2',
+          icon: BoltIcon,
+          color: 'green',
+          description: 'Type 2 AC charging connectors'
+        },
+      ]
+    }
+  ];
 
   return (
     <MainLayout
@@ -315,19 +401,37 @@ const StationsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
-          <SearchFilterBar
-            searchValue={searchQuery}
-            onSearchChange={setSearchQuery}
-            searchPlaceholder="Search assets... (e.g. Warszawa, Kraków, Gdańsk, CCS2, Station-001)"
-            onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={statusFilter !== 'all' || connectorTypeFilter !== 'all'}
-            filterLabel="Filters"
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            variant="blue"
-            className="mb-6"
-          />
+          {/* Search & Filter Controls - Using Universal FilterModal */}
+          <FilterContainer className="mb-6">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                {/* Search Input */}
+                <SearchInput
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Search assets... (e.g. Warszawa, Kraków, Gdańsk, CCS2, Station-001)"
+                  size="md"
+                />
+
+                {/* Filter Button */}
+                <FilterButton
+                  onClick={() => setIsFilterModalOpen(true)}
+                  isActive={statusFilter !== 'all' || connectorTypeFilter !== 'all'}
+                  label="Infrastructure Filters"
+                  variant="blue"
+                  size="md"
+                />
+              </div>
+
+              {/* View Mode Toggle */}
+              <ViewModeToggle
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                variant="blue"
+                size="md"
+              />
+            </div>
+          </FilterContainer>
 
           {/* Quick Filter Buttons */}
           <div className="flex flex-wrap gap-3 mb-8">
@@ -474,15 +578,18 @@ const StationsPage: React.FC = () => {
         </section>
       </PageContainer>
 
-      {/* ✅ Use new reusable StationFilterModal component */}
-      <StationFilterModal
+      {/* ✅ Universal FilterModal */}
+      <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        statusFilter={statusFilter}
-        connectorTypeFilter={connectorTypeFilter}
-        onStatusChange={setStatusFilter}
-        onConnectorTypeChange={setConnectorTypeFilter}
+        title="Infrastructure Filters"
+        description="Configure filtering criteria for charging infrastructure assets"
+        filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
+        variant="blue"
+        size="lg"
+        clearButtonLabel="Reset Filters"
+        applyButtonLabel="Apply Filters"
       />
     </MainLayout>
   );

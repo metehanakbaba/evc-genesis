@@ -18,6 +18,7 @@ export * from './TextElement';
 // New Data Management Atom Components
 export { SearchInput, type SearchInputProps } from './SearchInput/SearchInput';
 export { FilterButton, type FilterButtonProps } from './FilterButton/FilterButton';
+export { FilterSelect, type FilterSelectProps, type FilterSelectOption } from './FilterSelect/FilterSelect';
 export { ViewModeToggle, type ViewModeToggleProps, type ViewMode } from './ViewModeToggle/ViewModeToggle';
 export { ActionButton, type ActionButtonProps, type ActionButtonVariant } from './ActionButton/ActionButton';
 export { StatusBadge, type StatusBadgeProps, type StatusVariant } from './StatusBadge/StatusBadge';

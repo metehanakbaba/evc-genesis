@@ -191,7 +191,7 @@ export const UserTableSkeleton: React.FC<{ count?: number }> = ({ count = 10 }) 
 
 /**
  * 🔄 Load More Skeleton
- * Loading state for infinite scroll
+ * Loading state for infinite scroll - Updated to match sessions style
  */
 export const LoadMoreSkeleton: React.FC = () => {
   return (

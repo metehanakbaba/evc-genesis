@@ -8,17 +8,18 @@ import {
   ClockIcon,
   EyeIcon,
   FireIcon,
-  MagnifyingGlassIcon,
   MapPinIcon,
   PlayIcon,
   StopIcon,
-  TableCellsIcon,
   UserIcon,
   ViewColumnsIcon,
   XCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { Button, Input, Select } from '@ui/forms';
-// import { MinimalStatCard, FloatingCard } from '@ui/display';
+import { FilterContainer, EmptyState, FilterModal } from '@/shared/ui/molecules';
+import { SearchInput, FilterButton, ViewModeToggle } from '@/shared/ui/atoms';
+import { Button } from '@ui/forms';
+import type { FilterGroup } from '@/shared/ui/molecules';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import type React from 'react';
@@ -89,7 +90,8 @@ const SessionsPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isLiveDataEnabled, _] = useState(true);
-
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  
   // Revolutionary floating stats with live data
   const sessionStats: SessionStats[] = [
     {
@@ -209,6 +211,73 @@ const SessionsPage: React.FC = () => {
     searchQuery,
     statusFilter,
   });
+
+  /**
+   * 🎨 Clear All Filters
+   */
+  const handleClearFilters = () => {
+    setStatusFilter('all');
+    setSearchQuery('');
+  };
+
+  /**
+   * 🎯 Filter Groups Configuration for Universal FilterModal
+   */
+  const filterGroups: FilterGroup[] = [
+    {
+      id: 'status',
+      label: 'Session Status',
+      description: 'Filter sessions by their current operational status',
+      icon: BoltIcon,
+      value: statusFilter,
+      onChange: setStatusFilter,
+      gridCols: 2,
+      options: [
+        {
+          id: 'all',
+          label: 'All Statuses',
+          icon: ViewColumnsIcon,
+          color: 'gray',
+          description: 'Show all sessions regardless of status'
+        },
+        {
+          id: 'starting',
+          label: 'Starting',
+          icon: PlayIcon,
+          color: 'blue',
+          description: 'Sessions that are initializing'
+        },
+        {
+          id: 'charging',
+          label: 'Charging',
+          icon: BoltIcon,
+          color: 'emerald',
+          description: 'Active charging sessions'
+        },
+        {
+          id: 'completed',
+          label: 'Completed',
+          icon: CheckCircleIcon,
+          color: 'green',
+          description: 'Successfully finished sessions'
+        },
+        {
+          id: 'failed',
+          label: 'Failed',
+          icon: XCircleIcon,
+          color: 'red',
+          description: 'Sessions that encountered errors'
+        },
+        {
+          id: 'cancelled',
+          label: 'Cancelled',
+          icon: XMarkIcon,
+          color: 'orange',
+          description: 'User-cancelled sessions'
+        },
+      ]
+    }
+  ];
 
   /**
    * 🔄 WebSocket Ready - Live Data Effect
@@ -341,87 +410,41 @@ const SessionsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Search & Filter Controls */}
-        <div className="bg-gray-800/40 border border-gray-700/50 rounded-2xl p-6 mb-8 backdrop-blur-xl">
+        {/* Search & Filter Controls - Using Universal FilterModal */}
+        <FilterContainer className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               {/* Search Input */}
-              <div className="relative flex-1 max-w-md">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search sessions, stations, users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600/50 text-white placeholder:text-gray-400 focus:border-emerald-500/50 focus:ring-emerald-500/20"
-                />
-              </div>
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search sessions, stations, users..."
+                size="md"
+              />
 
-              {/* Status Filter */}
-              <Select
-                value={statusFilter}
-                onChange={(value) => setStatusFilter(value || 'all')}
-                className="min-w-[160px]"
-                options={[
-                  { value: 'all', label: 'All Statuses' },
-                  { value: 'starting', label: 'Starting' },
-                  { value: 'charging', label: 'Charging' },
-                  { value: 'completed', label: 'Completed' },
-                  { value: 'failed', label: 'Failed' },
-                  { value: 'cancelled', label: 'Cancelled' },
-                ]}
+              {/* Filter Button */}
+              <FilterButton
+                onClick={() => setIsFilterModalOpen(true)}
+                isActive={statusFilter !== 'all'}
+                label="Session Filters"
+                variant="emerald"
+                size="md"
               />
             </div>
 
-            {/* Revolutionary View Mode Toggle */}
-            <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
-              <Button
-                variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className={`
-                  relative overflow-hidden p-3 transition-all duration-300 ease-out
-                  ${viewMode === 'grid'
-                    ? `bg-gradient-to-r from-emerald-500/25 via-emerald-400/20 to-emerald-500/25 
-                       text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20
-                       scale-[1.05]`
-                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                       hover:scale-[1.02] border border-transparent`
-                  }
-                  group/toggle flex items-center
-                `}
-              >
-                <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                  viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                }`} />
-              </Button>
-              <Button
-                variant={viewMode === 'table' ? 'primary' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('table')}
-                className={`
-                  relative overflow-hidden p-3 transition-all duration-300 ease-out
-                  ${viewMode === 'table'
-                    ? `bg-gradient-to-r from-emerald-500/25 via-emerald-400/20 to-emerald-500/25 
-                       text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20
-                       scale-[1.05]`
-                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                       hover:scale-[1.02] border border-transparent`
-                  }
-                  group/toggle flex items-center
-                `}
-              >
-                <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                  viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                }`} />
-              </Button>
-            </div>
+            {/* View Mode Toggle */}
+            <ViewModeToggle
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              variant="emerald"
+              size="md"
+            />
           </div>
-        </div>
+        </FilterContainer>
 
         {/* Revolutionary Sessions Grid */}
         {viewMode === 'grid' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
             {filteredSessions.map((session, index) => {
               const statusConfigData = getSessionStatusConfig(session.status);
               // Map icon string to actual icon component
@@ -447,7 +470,7 @@ const SessionsPage: React.FC = () => {
                 >
                   {/* Revolutionary Floating Session Card */}
                   <div
-                    className={`relative p-6 ${statusConfig.bgColor} border ${statusConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer`}
+                    className={`relative z-20 p-6 ${statusConfig.bgColor} border ${statusConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer`}
                   >
                     {/* Live Status Pulse */}
                     {isActive && (
@@ -541,13 +564,14 @@ const SessionsPage: React.FC = () => {
                         {session.estimated_completion &&
                           session.status === 'charging' && (
                             <div className="text-emerald-400">
+                              {/* hydration */}
                               ~
-                              {new Date(
+                              {/* {new Date(
                                 session.estimated_completion,
                               ).toLocaleTimeString([], {
                                 hour: '2-digit',
                                 minute: '2-digit',
-                              })}
+                              })} */}
                             </div>
                           )}
                       </div>
@@ -645,6 +669,20 @@ const SessionsPage: React.FC = () => {
           </div>
         )}
       </PageContainer>
+
+      {/* ✅ Universal FilterModal */}
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        title="Live Session Filters"
+        description="Configure filtering criteria for charging session monitoring"
+        filterGroups={filterGroups}
+        onClearFilters={handleClearFilters}
+        variant="emerald"
+        size="lg"
+        clearButtonLabel="Reset Filters"
+        applyButtonLabel="Apply Filters"
+      />
     </MainLayout>
   );
 };
