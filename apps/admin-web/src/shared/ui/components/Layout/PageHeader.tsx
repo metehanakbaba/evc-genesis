@@ -89,22 +89,25 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
               border ${currentTheme.border}
               transition-all duration-300 ease-out
               hover:scale-[1.02] active:scale-[0.98]
-              flex items-center gap-2
+              flex items-center gap-2.5 px-5 py-2.5
               before:absolute before:inset-0 before:bg-gradient-to-r 
               before:from-transparent before:via-white/20 before:to-transparent
               before:translate-x-[-100%] hover:before:translate-x-[100%]
               before:transition-transform before:duration-700
+              focus:ring-2 focus:ring-blue-400/30 focus:outline-none
             `}
           >
-            <div className="flex items-center gap-2 relative z-10">
+            <div className="flex items-center gap-2.5 relative z-10">
               <actionButton.icon 
                 className={`w-4 h-4 ${
-                  actionButton.iconAnimation 
-                    ? `group-hover/action:${actionButton.iconAnimation}` 
+                  actionButton.iconAnimation === 'rotate-90' 
+                    ? 'group-hover/action:rotate-90' 
+                    : actionButton.iconAnimation === 'rotate-12'
+                    ? 'group-hover/action:rotate-12'
                     : ''
-                } transition-transform duration-300`} 
+                } transition-all duration-300 ease-out`} 
               />
-              <span>{actionButton.label}</span>
+              <span className="font-medium">{actionButton.label}</span>
             </div>
           </Button>
         )}

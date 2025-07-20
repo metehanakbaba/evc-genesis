@@ -3,790 +3,483 @@
 import {
   BoltIcon,
   CheckCircleIcon,
-  ChevronRightIcon,
   ClockIcon,
-  CurrencyDollarIcon,
+  PlusIcon,
   EyeIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
   MapPinIcon,
-  PencilIcon,
   SignalIcon,
-  TableCellsIcon,
-  TrashIcon,
-  ViewColumnsIcon,
   WrenchScrewdriverIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { MinimalStatCard } from '@ui/display';
-import { Button, Input, Select } from '@ui/forms';
+import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
+import { Button } from '@ui/forms';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState } from 'react';
-// ✅ Import shared business logic
-import {
-  getStationStatusConfig,
-  filterStations,
-} from '@evc/shared-business-logic';
+import { useState, useMemo } from 'react';
 
-// // Custom Gas Station Icon Component (better than PlusIcon)
-// const GasStationIcon: React.FC<{ className?: string }> = ({ className }) => (
-//   <svg
-//     className={className}
-//     fill="none"
-//     viewBox="0 0 24 24"
-//     strokeWidth={1.5}
-//     stroke="currentColor"
-//   >
-//     <path
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//       d="M8.25 18.75a1.125 1.125 0 01-1.125-1.125V8.25a1.125 1.125 0 011.125-1.125h2.25a1.125 1.125 0 011.125 1.125v9.375a1.125 1.125 0 01-1.125 1.125H8.25zM6.75 12.75h.008v.008H6.75v-.008zm0 3h.008v.008H6.75v-.008zm0-6h.008v.008H6.75v-.008zm6.75-1.875v-.375m0 13.125h.008v.008h-.008v-.008zm0-13.125v.375m0 0l3.75 3.75v5.625a.75.75 0 01-.75.75h-1.125a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-.375a.75.75 0 00-.75.75v4.5a.75.75 0 01-.75.75H13.5v-7.875a.75.75 0 01.75-.75h.375m0 0h.375a.75.75 0 01.75.75v1.5h1.5"
-//     />
-//   </svg>
-// );
+// ✅ Import new reusable components
+import { 
+  StationGrid, 
+  StationTable, 
+  StationFilterModal 
+} from '../components';
 
-// Electric Charging Station Icon - Revolutionary Design
-const ChargingStationIcon: React.FC<{ className?: string }> = ({
-  className,
-}) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 74 69"
-    fill="none"
-  >
-    <defs>
-      <linearGradient id="stationGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" className="stop-color-blue-400" />
-        <stop offset="100%" className="stop-color-cyan-400" />
-      </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-        <feMerge>
-          <feMergeNode in="coloredBlur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-    </defs>
-    <g transform="translate(-12, -16)">
-      <path
-        d="M74.49,82h-61a1.5,1.5,0,1,0,0,3h61a1.5,1.5,0,1,0,0-3Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-lg"
-      />
-      <path
-        d="M84.48,82h-2a1.5,1.5,0,0,0,0,3h2a1.5,1.5,0,1,0,0-3Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-lg"
-      />
-      <path
-        d="M68,77a2,2,0,0,0-2-2H24a2,2,0,0,0-2,2v3H68Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-lg"
-      />
-      <path
-        d="M74,60.3v4.2a1.5,1.5,0,0,1-3,0V55a2,2,0,0,0-2-2H65V21a5,5,0,0,0-5-5H30a5,5,0,0,0-5,5V73H65V56h3v8.5a4.5,4.5,0,0,0,9,0V36H74ZM60,47H30V24a3,3,0,0,1,3-3H57a3,3,0,0,1,3,3Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-lg"
-        filter="url(#glow)"
-      />
-      <path
-        d="M82,31V23H80V17.5a1.5,1.5,0,0,0-3,0V23H74V17.5a1.5,1.5,0,0,0-3,0V23H69v8a3,3,0,0,0,3,3h7A3,3,0,0,0,82,31Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-lg"
-      />
-      <path
-        d="M45,23A11,11,0,1,0,56,34,11,11,0,0,0,45,23ZM42.6,42l1.2-6.5H40.9L47.4,27l-1.2,6.5h2.9Z"
-        fill="url(#stationGradient)"
-        className="drop-shadow-xl animate-pulse"
-        filter="url(#glow)"
-      />
-    </g>
-    <style>{`
-      .stop-color-blue-400 { stop-color: rgb(96 165 250); }
-      .stop-color-cyan-400 { stop-color: rgb(34 211 238); }
-    `}</style>
-  </svg>
-);
+// ✅ Import skeleton components
+import { StationGridSkeleton, StationTableSkeleton } from '../components/StationSkeleton';
 
-// API Schema based types (chargeStation.ts)
-interface ChargingStation {
-  id: string;
-  name: string;
-  location: string;
-  status: 'AVAILABLE' | 'CHARGING' | 'MAINTENANCE' | 'OFFLINE';
-  powerOutput: number;
-  connectorType: 'CCS' | 'CHAdeMO' | 'Type2' | 'CCS_CHAdeMO';
-  pricePerKwh: number;
-  isActive: boolean;
-  lastHeartbeat: string;
-  createdAt: string;
-  updatedAt: string;
+// ✅ Import hooks for demo data
+import { 
+  useStationStatistics,
+  useStationActions,
+  useInfiniteStations,
+} from '../hooks';
+
+// ✅ Import debounce hook from wallets
+import { useSearchDebounce } from '../../wallets/hooks/useDebounce';
+
+/**
+ * ⚡ Station Management Statistics
+ * Revolutionary floating stats with charging data
+ */
+interface StationStats {
+  readonly title: string;
+  readonly value: string;
+  readonly icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  readonly variant: 'blue' | 'emerald' | 'amber' | 'red';
+  readonly trend: string;
+  readonly description: string;
+  readonly isLive?: boolean;
 }
 
 /**
- * Charging Stations Management Page - Infrastructure Theme
- * API Schema Ready with Real-time Monitoring
+ * 🚀 Revolutionary EV Station Management Page - Blue Theme
+ * Sophisticated floating card design with charging operations
+ *
+ * Features:
+ * - Station overview with real-time status
+ * - Connector availability tracking
+ * - Status management with filters
+ * - Location and maintenance tracking
+ * - Revolutionary table view with glassmorphism
+ * - Modal-based filtering system
+ * - API schema compliant TypeScript
+ * - ✅ Now uses reusable components and API hooks
+ * - ✅ Clean separation of concerns
  */
 const StationsPage: React.FC = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [connectorFilter, setConnectorFilter] = useState<string>('all');
+  const [connectorTypeFilter, setConnectorTypeFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // Mock data based on API schema
-  const stationStats = [
-    {
-      title: 'Total Stations',
-      value: '156',
-      icon: ChargingStationIcon,
-      variant: 'blue' as const,
-      trend: '+8 new this week',
-      description: 'Registered charging infrastructure',
-    },
-    {
-      title: 'Available Now',
-      value: '134',
-      icon: CheckCircleIcon,
-      variant: 'emerald' as const,
-      trend: '86% availability',
-      description: 'Ready for EV charging',
-    },
-    {
-      title: 'Currently Charging',
-      value: '18',
-      icon: BoltIcon,
-      variant: 'teal' as const,
-      trend: '+3 vs last hour',
-      description: 'Active charging sessions',
-    },
-    {
-      title: 'Under Maintenance',
-      value: '4',
-      icon: WrenchScrewdriverIcon,
-      variant: 'purple' as const,
-      trend: '2.5% downtime',
-      description: 'Scheduled maintenance',
-    },
-  ];
+  // ✅ Debounce search query to prevent excessive API calls
+  const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
 
-  // Mock stations data (API schema compatible)
-  const stations: ChargingStation[] = [
-    {
-      id: 'station-001',
-      name: 'Mall Center Supercharger',
-      location: 'Shopping Mall Istanbul, Floor B1',
-      status: 'AVAILABLE',
-      powerOutput: 150,
-      connectorType: 'CCS',
-      pricePerKwh: 2.5,
-      isActive: true,
-      lastHeartbeat: '2024-01-15T10:30:00Z',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T10:30:00Z',
+  // ✅ Use infinite scroll hook for data fetching
+  const {
+    stations,
+    isLoading,
+    isLoadingMore,
+    hasNextPage,
+    loadMore,
+    total,
+  } = useInfiniteStations({
+    filters: {
+      searchQuery: debouncedSearchQuery,
+      statusFilter,
+      connectorTypeFilter,
     },
-    {
-      id: 'station-002',
-      name: 'Airport Fast Charging Hub',
-      location: 'Istanbul Airport, Terminal 1 Parking',
-      status: 'CHARGING',
-      powerOutput: 75,
-      connectorType: 'CCS_CHAdeMO',
-      pricePerKwh: 3.0,
-      isActive: true,
-      lastHeartbeat: '2024-01-15T10:29:45Z',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T10:29:45Z',
-    },
-    {
-      id: 'station-003',
-      name: 'City Center Type2 Station',
-      location: 'Taksim Square, Public Parking',
-      status: 'MAINTENANCE',
-      powerOutput: 22,
-      connectorType: 'Type2',
-      pricePerKwh: 1.8,
-      isActive: false,
-      lastHeartbeat: '2024-01-15T08:15:00Z',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T08:15:00Z',
-    },
-    {
-      id: 'station-004',
-      name: 'Business District CHAdeMO',
-      location: 'Levent Business Center, Ground Floor',
-      status: 'OFFLINE',
-      powerOutput: 50,
-      connectorType: 'CHAdeMO',
-      pricePerKwh: 2.2,
-      isActive: true,
-      lastHeartbeat: '2024-01-15T06:45:00Z',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T06:45:00Z',
-    },
-  ];
-
-  // ✅ Status configuration now handled by shared business logic
-
-  // ✅ Use shared business logic for filtering
-  const filteredStations = filterStations(stations, {
-    searchQuery,
-    statusFilter,
-    connectorFilter,
+    pageSize: 20,
   });
+
+  const { 
+    totalStations,
+    activeStations,
+    offlineStations,
+    maintenanceStations,
+    totalConnectors,
+    availableConnectors,
+  } = useStationStatistics();
+
+  const { viewDetails, editStation } = useStationActions();
+
+  // Revolutionary floating stats with station data
+  const stationStats: StationStats[] = [
+    {
+      title: 'Infrastructure Assets',
+      value: totalStations.formatted,
+      icon: BoltIcon,
+      variant: 'blue',
+      trend: '+3 this week',
+      description: 'Total charging infrastructure deployment across operational territories',
+      isLive: true,
+    },
+    {
+      title: 'Operational Status',
+      value: activeStations.formatted,
+      icon: CheckCircleIcon,
+      variant: 'emerald',
+      trend: `${Math.round((activeStations.count / totalStations.count) * 100) || 0}% operational`,
+      description: 'Infrastructure assets currently operational and service-ready',
+    },
+    {
+      title: 'Service Availability',
+      value: availableConnectors.formatted,
+      icon: SignalIcon,
+      variant: 'blue',
+      trend: `${Math.round((availableConnectors.count / totalConnectors.count) * 100) || 0}% available`,
+      description: 'Charging points available for immediate customer service delivery',
+      isLive: true,
+    },
+    {
+      title: 'Service Interruptions',
+      value: maintenanceStations.formatted,
+      icon: WrenchScrewdriverIcon,
+      variant: 'amber',
+      trend: 'Planned maintenance',
+      description: 'Infrastructure assets currently undergoing scheduled maintenance protocols',
+    },
+  ];
+
+  /**
+   * 🎨 Clear All Filters
+   */
+  const handleClearFilters = () => {
+    setStatusFilter('all');
+    setConnectorTypeFilter('all');
+    setSearchQuery('');
+  };
 
   return (
     <MainLayout
       showNotifications={true}
       notificationCount={3}
       headerVariant="default"
-      showFooter={false}
     >
-      <PageContainer>
-        <Breadcrumb
-          currentPageLabel="Charging Stations"
+      {/* Revolutionary Page Header with Blue Theme */}
+      <PageContainer paddingY="md">
+        {/* Revolutionary Breadcrumb Navigation */}
+        <Breadcrumb 
+          currentPageLabel="Charging Infrastructure Management"
           variant="blue"
         />
 
         <PageHeader
-          title="Charging Stations"
-          description="Infrastructure management & real-time monitoring"
+          title="Infrastructure Operations Center"
+          description="Enterprise-grade charging network administration and performance monitoring across Polish markets"
           variant="blue"
           actionButton={{
-            label: "Add Station",
+            label: "Deploy Infrastructure",
             onClick: () => {
-              /* Add station logic */
+              router.push('/stations/new');
             },
-            icon: BoltIcon,
-            iconAnimation: "rotate-12"
+            icon: PlusIcon,
+            iconAnimation: "rotate-90"
           }}
         />
+      </PageContainer>
 
-        {/* Infrastructure Statistics */}
+      <PageContainer paddingY="lg" className="space-y-10">
+        {/* Revolutionary Network Stats Section */}
         <section>
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-8 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full"></div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Infrastructure Overview
-                </h2>
-                <p className="text-gray-400">
-                  Real-time charging network statistics
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-blue-400 font-medium">
-                Live Monitoring
-              </span>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-3 h-8 bg-gradient-to-b from-blue-400 to-blue-300 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                Network Performance Dashboard
+              </h2>
+              <p className="text-gray-400">
+                Comprehensive infrastructure analytics and operational intelligence
+              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-            {stationStats.map((stat) => (
-              <MinimalStatCard
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stationStats.map((stat, index) => (
+              <div
                 key={stat.title}
-                title={stat.title}
-                value={stat.value}
-                icon={stat.icon}
-                variant={stat.variant}
-                trend={stat.trend}
-                description={stat.description}
-              />
+                className="group relative"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                {/* Revolutionary MinimalStatCard Design */}
+                <div
+                  className={`
+                  relative p-6 bg-gradient-to-br from-${stat.variant}-500/10 via-${stat.variant}-400/5 to-transparent
+                  border border-${stat.variant}-400/25 hover:border-${stat.variant}-300/40
+                  rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl
+                  transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1
+                  cursor-pointer h-full min-h-[280px] flex flex-col
+                `}
+                >
+                  {/* Live indicator */}
+                  {stat.isLive && (
+                    <div
+                      className={`absolute -top-2 -right-2 w-4 h-4 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
+                    ></div>
+                  )}
+
+                  {/* Floating Background Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+
+                  {/* Content */}
+                  <div className="relative z-10 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between mb-4">
+                      <div
+                        className={`w-12 h-12 rounded-xl bg-${stat.variant}-500/10 border border-${stat.variant}-500/20 flex items-center justify-center`}
+                      >
+                        <stat.icon
+                          className={`w-6 h-6 text-${stat.variant}-400`}
+                        />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-white mb-1">
+                          {stat.value}
+                        </div>
+                        <div
+                          className={`text-xs font-medium text-${stat.variant}-400`}
+                        >
+                          {stat.trend}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 flex-grow">
+                      <h3 className="text-lg font-semibold text-white leading-tight line-clamp-2">
+                        {stat.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
+                        {stat.description}
+                      </p>
+                    </div>
+
+                    {/* Revolutionary Interactive Elements */}
+                    <div className="mt-auto pt-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="relative overflow-hidden rounded-lg">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className={`
+                            w-full relative overflow-hidden backdrop-blur-sm
+                            bg-gradient-to-r from-${stat.variant}-500/15 via-${stat.variant}-400/10 to-${stat.variant}-500/15
+                            border border-${stat.variant}-400/30 hover:border-${stat.variant}-300/50
+                            text-${stat.variant}-300 hover:text-white
+                            shadow-lg hover:shadow-${stat.variant}-500/25 hover:shadow-xl
+                            transition-all duration-300 ease-out
+                            hover:scale-[1.02] active:scale-[0.98]
+                            group/button flex items-center justify-center
+                          `}
+                        >
+                          {/* Shine Effect */}
+                          <div className={`
+                            absolute inset-0 z-0
+                            bg-gradient-to-r from-transparent via-white/15 to-transparent
+                            translate-x-[-100%] group-hover/button:translate-x-[100%]
+                            transition-transform duration-700 ease-out
+                          `}></div>
+                          
+                          {/* Button Content */}
+                          <div className="flex items-center gap-2 relative z-10">
+                            <EyeIcon className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`} />
+                            <span className="font-medium text-sm">View Analytics</span>
+                            <div className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}></div>
+                          </div>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </section>
 
-        {/* Search & Filters */}
-        <section className="mt-16">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-8 bg-gradient-to-b from-blue-400 to-blue-300 rounded-full"></div>
-              <div>
-                <h2 className="text-xl font-bold text-white">
-                  Station Management
-                </h2>
-                <p className="text-gray-400">
-                  Search, filter and manage charging stations
-                </p>
-              </div>
-            </div>
-
-            {/* Revolutionary View Mode Toggle */}
-            <div className="flex gap-1 bg-gray-800/60 backdrop-blur-sm p-1 rounded-xl border border-gray-600/30">
-              <Button
-                variant="ghost"
-                onClick={() => setViewMode('grid')}
-                className={`
-                  relative overflow-hidden p-3 transition-all duration-300 ease-out
-                  ${viewMode === 'grid'
-                    ? `bg-gradient-to-r from-blue-500/25 via-blue-400/20 to-blue-500/25 
-                       text-blue-300 border border-blue-400/40 shadow-lg shadow-blue-500/20
-                       scale-[1.05]`
-                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                       hover:scale-[1.02] border border-transparent`
-                  }
-                  group/toggle flex items-center
-                `}
-              >
-                <ViewColumnsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                  viewMode === 'grid' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                }`} />
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setViewMode('table')}
-                className={`
-                  relative overflow-hidden p-3 transition-all duration-300 ease-out
-                  ${viewMode === 'table'
-                    ? `bg-gradient-to-r from-blue-500/25 via-blue-400/20 to-blue-500/25 
-                       text-blue-300 border border-blue-400/40 shadow-lg shadow-blue-500/20
-                       scale-[1.05]`
-                    : `bg-gray-700/40 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 
-                       hover:scale-[1.02] border border-transparent`
-                  }
-                  group/toggle flex items-center
-                `}
-              >
-                <TableCellsIcon className={`w-4 h-4 transition-transform duration-300 ${
-                  viewMode === 'table' ? 'scale-110' : 'group-hover/toggle:scale-105'
-                }`} />
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8">
-            {/* Search Input */}
-            <div className="lg:col-span-6">
-              <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  placeholder="Search stations by name or location..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  size="md"
-                  className="h-12"
-                  inputClassName="pl-11"
-                />
-              </div>
-            </div>
-
-            {/* Status Filter */}
-            <div className="lg:col-span-3">
-              <Select
-                value={statusFilter}
-                onChange={(value) => setStatusFilter(value || 'all')}
-                placeholder="Filter by status"
-                size="md"
-                className="h-12"
-                options={[
-                  { value: 'all', label: 'All Statuses' },
-                  { value: 'AVAILABLE', label: 'Available' },
-                  { value: 'CHARGING', label: 'Charging' },
-                  { value: 'MAINTENANCE', label: 'Maintenance' },
-                  { value: 'OFFLINE', label: 'Offline' },
-                ]}
-              />
-            </div>
-
-            {/* Connector Filter */}
-            <div className="lg:col-span-3">
-              <Select
-                value={connectorFilter}
-                onChange={(value) => setConnectorFilter(value || 'all')}
-                placeholder="Filter by connector"
-                size="md"
-                className="h-12"
-                options={[
-                  { value: 'all', label: 'All Connectors' },
-                  { value: 'CCS', label: 'CCS' },
-                  { value: 'CHAdeMO', label: 'CHAdeMO' },
-                  { value: 'Type2', label: 'Type 2' },
-                  { value: 'CCS_CHAdeMO', label: 'CCS + CHAdeMO' },
-                ]}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Stations List */}
+        {/* Revolutionary Station Management Section */}
         <section>
-          {viewMode === 'grid' ? (
-            // Grid View - Cards
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredStations.map((station) => {
-                const statusConfigData = getStationStatusConfig(station.status);
-                // Map icon string to actual icon component
-                const statusConfig = {
-                  ...statusConfigData,
-                  icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-                        statusConfigData.icon === 'BoltIcon' ? BoltIcon :
-                        statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
-                };
-                const StatusIcon = statusConfig.icon;
-
-                return (
-                  <div
-                    key={station.id}
-                    className="group relative p-8 bg-gradient-to-br from-blue-500/15 via-blue-400/8 to-transparent border border-blue-400/25 rounded-2xl hover:scale-105 hover:-translate-y-2 hover:border-blue-300/40 hover:shadow-3xl transition-all duration-500 ease-out backdrop-blur-xl shadow-2xl"
-                  >
-                    {/* Floating accent dots */}
-                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse opacity-75"></div>
-                    <div className="absolute top-4 -left-1 w-2 h-2 bg-blue-400/60 rounded-full animate-ping"></div>
-
-                    {/* Background decoration */}
-                    <div className="absolute inset-0 opacity-10 pointer-events-none">
-                      <div className="absolute top-8 right-8 w-32 h-32 border border-blue-400/20 rounded-full"></div>
-                      <div className="absolute bottom-6 left-6 w-20 h-20 border border-cyan-400/15 rounded-full"></div>
-                    </div>
-
-                    <div className="relative z-10 flex items-start justify-between mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/25 via-blue-400/15 to-cyan-400/10 border border-blue-400/30 flex items-center justify-center backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300">
-                        <ChargingStationIcon className="w-8 h-8 text-blue-400 drop-shadow-lg" />
-                      </div>
-                      <div
-                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${statusConfig.bgColor} ${statusConfig.borderColor} border`}
-                      >
-                        <StatusIcon
-                          className={`w-4 h-4 ${statusConfig.textColor}`}
-                        />
-                        <span
-                          className={`text-xs font-medium ${statusConfig.textColor}`}
-                        >
-                          {statusConfig.text}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="text-lg font-bold text-white mb-2">
-                        {station.name}
-                      </h3>
-                      <p className="text-gray-400 text-sm mb-3">
-                        {station.location}
-                      </p>
-
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div className="text-gray-300">
-                          <BoltIcon className="w-4 h-4 inline mr-1" />
-                          {station.powerOutput}kW
-                        </div>
-                        <div className="text-gray-300">
-                          {station.connectorType}
-                        </div>
-                        <div className="text-gray-300">
-                          <CurrencyDollarIcon className="w-4 h-4 inline mr-1" />
-                          ₺{station.pricePerKwh}/kWh
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          <ClockIcon className="w-3 h-3 inline mr-1" />
-                          {new Date(station.lastHeartbeat).toLocaleTimeString()}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Revolutionary Action Buttons */}
-                    <div className="flex items-center gap-2 mt-4">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="
-                          flex-1 relative overflow-hidden group/view
-                          bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                          hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                          text-gray-300 hover:text-white
-                          border border-gray-600/30 hover:border-gray-500/50
-                          shadow-md hover:shadow-lg
-                          transition-all duration-300 ease-out
-                          hover:scale-[1.02] active:scale-[0.98]
-                          flex items-center justify-center gap-2
-                          before:absolute before:inset-0 before:bg-gradient-to-r 
-                          before:from-transparent before:via-white/10 before:to-transparent
-                          before:translate-x-[-100%] hover:before:translate-x-[100%]
-                          before:transition-transform before:duration-500
-                        "
-                      >
-                        <div className="flex items-center gap-1 relative z-10">
-                          <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
-                          <span className="text-xs font-medium">View</span>
-                        </div>
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="
-                          relative overflow-hidden p-2 group/edit
-                          bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
-                          hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
-                          text-blue-400 hover:text-blue-300
-                          border border-blue-500/30 hover:border-blue-400/50
-                          shadow-sm shadow-blue-500/10 hover:shadow-lg hover:shadow-blue-500/20
-                          transition-all duration-300 ease-out
-                          hover:scale-110 active:scale-95
-                          flex items-center
-                        "
-                      >
-                        <PencilIcon className="w-4 h-4 group-hover/edit:rotate-12 transition-transform duration-300" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="
-                          relative overflow-hidden p-2 group/delete
-                          bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
-                          hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
-                          text-red-400 hover:text-red-300
-                          border border-red-500/30 hover:border-red-400/50
-                          shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20
-                          transition-all duration-300 ease-out
-                          hover:scale-110 active:scale-95
-                          flex items-center
-                        "
-                      >
-                        <TrashIcon className="w-4 h-4 group-hover/delete:scale-110 transition-transform duration-300" />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            // Table View - Dense table for large datasets
-            <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-700/30 border-b border-gray-600/30">
-                    <tr>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Station
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Status
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Power
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Connector
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Price
-                      </th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">
-                        Last Update
-                      </th>
-                      <th className="text-right py-4 px-6 text-sm font-medium text-gray-300">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-700/30">
-                    {filteredStations.map((station) => {
-                      const statusConfigData = getStationStatusConfig(station.status);
-                      // Map icon string to actual icon component
-                      const statusConfig = {
-                        ...statusConfigData,
-                        icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-                              statusConfigData.icon === 'BoltIcon' ? BoltIcon :
-                              statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
-                      };
-                      const StatusIcon = statusConfig.icon;
-
-                      return (
-                        <tr
-                          key={station.id}
-                          className="hover:bg-gray-700/20 transition-colors"
-                        >
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-4">
-                              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/25 via-blue-400/15 to-cyan-400/10 border border-blue-400/30 flex items-center justify-center backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                                <ChargingStationIcon className="w-5 h-5 text-blue-400 drop-shadow-lg" />
-                                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse opacity-60"></div>
-                              </div>
-                              <div>
-                                <div className="font-medium text-white">
-                                  {station.name}
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                  {station.location}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div
-                              className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full ${statusConfig.bgColor} ${statusConfig.borderColor} border`}
-                            >
-                              <StatusIcon
-                                className={`w-3 h-3 ${statusConfig.textColor}`}
-                              />
-                              <span
-                                className={`text-xs font-medium ${statusConfig.textColor}`}
-                              >
-                                {statusConfig.text}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6 text-sm text-gray-300">
-                            {station.powerOutput}kW
-                          </td>
-                          <td className="py-4 px-6 text-sm text-gray-300">
-                            {station.connectorType}
-                          </td>
-                          <td className="py-4 px-6 text-sm text-gray-300">
-                            ₺{station.pricePerKwh}/kWh
-                          </td>
-                          <td className="py-4 px-6 text-xs text-gray-400">
-                            {new Date(station.lastHeartbeat).toLocaleString()}
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="
-                                  relative overflow-hidden p-2 group/action
-                                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                                  text-gray-300 hover:text-white
-                                  border border-gray-600/30 hover:border-gray-500/50
-                                  transition-all duration-300 ease-out
-                                  hover:scale-110 active:scale-95
-                                  flex items-center
-                                "
-                              >
-                                <EyeIcon className="w-4 h-4 group-hover/action:scale-110 transition-transform duration-300" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="
-                                  relative overflow-hidden p-2 group/edit
-                                  bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
-                                  hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
-                                  text-blue-400 hover:text-blue-300
-                                  border border-blue-500/30 hover:border-blue-400/50
-                                  shadow-sm shadow-blue-500/10 hover:shadow-md hover:shadow-blue-500/20
-                                  transition-all duration-300 ease-out
-                                  hover:scale-110 active:scale-95
-                                  flex items-center
-                                "
-                              >
-                                <PencilIcon className="w-4 h-4 group-hover/edit:rotate-12 transition-transform duration-300" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="
-                                  relative overflow-hidden p-2 group/delete
-                                  bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
-                                  hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
-                                  text-red-400 hover:text-red-300
-                                  border border-red-500/30 hover:border-red-400/50
-                                  shadow-sm shadow-red-500/10 hover:shadow-md hover:shadow-red-500/20
-                                  transition-all duration-300 ease-out
-                                  hover:scale-110 active:scale-95
-                                  flex items-center
-                                "
-                              >
-                                <TrashIcon className="w-4 h-4 group-hover/delete:scale-110 transition-transform duration-300" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {filteredStations.length === 0 && (
-            <div className="text-center py-12">
-              <MapPinIcon className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-400 mb-2">
-                No stations found
-              </h3>
-              <p className="text-gray-500">
-                Try adjusting your search or filter criteria.
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-3 h-8 bg-gradient-to-b from-blue-400 to-blue-300 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                Infrastructure Asset Management
+              </h2>
+              <p className="text-gray-400">
+                Advanced filtering, monitoring and administration of charging infrastructure assets
               </p>
             </div>
-          )}
-        </section>
+          </div>
 
-        {/* Footer */}
-        <footer className="pt-8 border-t border-gray-700/30">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-6 text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <SignalIcon className="w-4 h-4" />
-                <span>Infrastructure Online</span>
-              </div>
-              <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
-              <span>Monitoring: {filteredStations.length} stations</span>
-              <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
-              <span>Last sync: Just now</span>
+          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
+          <SearchFilterBar
+            searchValue={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Search assets... (e.g. Warszawa, Kraków, Gdańsk, CCS2, Station-001)"
+            onFilterClick={() => setIsFilterModalOpen(true)}
+            isFilterActive={statusFilter !== 'all' || connectorTypeFilter !== 'all'}
+            filterLabel="Filters"
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            variant="blue"
+            className="mb-6"
+          />
+
+          {/* Quick Filter Buttons */}
+          <div className="flex flex-wrap gap-3 mb-8">
+            {/* Status Quick Filters */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-400 font-medium">Operational Status:</span>
+              <button
+                onClick={() => setStatusFilter('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
+                  statusFilter === 'all'
+                    ? 'bg-blue-500/20 border border-blue-400/40 text-blue-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setStatusFilter('active')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 flex items-center gap-1.5 ${
+                  statusFilter === 'active'
+                    ? 'bg-emerald-500/20 border border-emerald-400/40 text-emerald-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                <CheckCircleIcon className="w-3 h-3" />
+                Operational
+              </button>
+              <button
+                onClick={() => setStatusFilter('offline')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 flex items-center gap-1.5 ${
+                  statusFilter === 'offline'
+                    ? 'bg-red-500/20 border border-red-400/40 text-red-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                <XCircleIcon className="w-3 h-3" />
+                Offline
+              </button>
+              <button
+                onClick={() => setStatusFilter('maintenance')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 flex items-center gap-1.5 ${
+                  statusFilter === 'maintenance'
+                    ? 'bg-amber-500/20 border border-amber-400/40 text-amber-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                <WrenchScrewdriverIcon className="w-3 h-3" />
+                Maintenance
+              </button>
             </div>
-            <div className="flex items-center gap-3">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => window.location.reload()}
-                className="
-                  relative overflow-hidden group/refresh
-                  bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
-                  hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
-                  text-gray-300 hover:text-white
-                  border border-gray-600/30 hover:border-gray-500/50
-                  transition-all duration-300 ease-out
-                  hover:scale-[1.02] active:scale-[0.98]
-                  flex items-center gap-2
-                  before:absolute before:inset-0 before:bg-gradient-to-r 
-                  before:from-transparent before:via-white/10 before:to-transparent
-                  before:translate-x-[-100%] hover:before:translate-x-[100%]
-                  before:transition-transform before:duration-500
-                "
+
+            {/* Connector Type Quick Filters */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-400 font-medium">Connector Standards:</span>
+              <button
+                onClick={() => setConnectorTypeFilter('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
+                  connectorTypeFilter === 'all'
+                    ? 'bg-blue-500/20 border border-blue-400/40 text-blue-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
               >
-                <div className="flex items-center gap-2 relative z-10">
-                  <SignalIcon className="w-4 h-4 group-hover/refresh:rotate-180 transition-transform duration-300" />
-                  <span className="font-medium">Refresh Data</span>
-                </div>
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="
-                  relative overflow-hidden group/export
-                  bg-gradient-to-r from-blue-500/15 via-blue-400/10 to-blue-500/15
-                  hover:from-blue-500/25 hover:via-blue-400/20 hover:to-blue-500/25
-                  text-blue-400 hover:text-blue-300
-                  border border-blue-500/30 hover:border-blue-400/50
-                  shadow-sm shadow-blue-500/10 hover:shadow-md hover:shadow-blue-500/20
-                  transition-all duration-300 ease-out
-                  hover:scale-[1.02] active:scale-[0.98]
-                  flex items-center gap-2
-                  before:absolute before:inset-0 before:bg-gradient-to-r 
-                  before:from-transparent before:via-blue-300/10 before:to-transparent
-                  before:translate-x-[-100%] hover:before:translate-x-[100%]
-                  before:transition-transform before:duration-500
-                "
+                All
+              </button>
+              <button
+                onClick={() => setConnectorTypeFilter('CCS2')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
+                  connectorTypeFilter === 'CCS2'
+                    ? 'bg-blue-500/20 border border-blue-400/40 text-blue-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
               >
-                <div className="flex items-center gap-2 relative z-10">
-                  <CurrencyDollarIcon className="w-4 h-4 group-hover/export:scale-110 transition-transform duration-300" />
-                  <span className="font-medium">Export Report</span>
-                </div>
-              </Button>
+                CCS2
+              </button>
+              <button
+                onClick={() => setConnectorTypeFilter('CHAdeMO')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
+                  connectorTypeFilter === 'CHAdeMO'
+                    ? 'bg-purple-500/20 border border-purple-400/40 text-purple-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                CHAdeMO
+              </button>
+              <button
+                onClick={() => setConnectorTypeFilter('Type2')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
+                  connectorTypeFilter === 'Type2'
+                    ? 'bg-green-500/20 border border-green-400/40 text-green-300'
+                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400 hover:bg-gray-600/40 hover:text-gray-300'
+                }`}
+              >
+                Type2
+              </button>
             </div>
           </div>
-        </footer>
+
+          {/* ✅ Loading States */}
+          {isLoading && viewMode === 'table' && (
+            <StationTableSkeleton count={10} />
+          )}
+
+          {isLoading && viewMode === 'grid' && (
+            <StationGridSkeleton count={6} />
+          )}
+
+          {/* ✅ Use new reusable StationTable component with infinite scroll */}
+          {!isLoading && viewMode === 'table' && (
+            <StationTable
+              stations={stations}
+              onViewDetails={viewDetails}
+              onEditStation={editStation}
+              onLoadMore={loadMore}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              total={total}
+            />
+          )}
+
+          {/* ✅ Use new reusable StationGrid component with infinite scroll */}
+          {!isLoading && viewMode === 'grid' && (
+            <StationGrid
+              stations={stations}
+              onViewDetails={viewDetails}
+              onEditStation={editStation}
+              onLoadMore={loadMore}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              total={total}
+            />
+          )}
+
+          {/* Empty State - Using New EmptyState Component */}
+          {!isLoading && stations.length === 0 && (
+                       <EmptyState
+             icon={BoltIcon}
+             title="No infrastructure assets match criteria"
+             description="Refine search parameters or adjust operational status filters to display relevant assets"
+             actionLabel="Reset Filters"
+             onAction={handleClearFilters}
+             variant="blue"
+           />
+          )}
+        </section>
       </PageContainer>
+
+      {/* ✅ Use new reusable StationFilterModal component */}
+      <StationFilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        statusFilter={statusFilter}
+        connectorTypeFilter={connectorTypeFilter}
+        onStatusChange={setStatusFilter}
+        onConnectorTypeChange={setConnectorTypeFilter}
+        onClearFilters={handleClearFilters}
+      />
     </MainLayout>
   );
 };
