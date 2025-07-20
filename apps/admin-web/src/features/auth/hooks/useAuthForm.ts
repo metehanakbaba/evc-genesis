@@ -15,8 +15,6 @@ interface LoginState {
   pending?: boolean;
 }
 
-
-
 export const useAuthForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

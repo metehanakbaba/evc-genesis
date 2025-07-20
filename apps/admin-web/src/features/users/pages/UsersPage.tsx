@@ -84,17 +84,26 @@ const FilterModal: React.FC<FilterModalProps> = ({
   onClearFilters,
 }) => {
   // ✅ Use shared business logic for filter options
-  const roleOptions = getRoleOptions().map(option => ({
+  const roleOptions = getRoleOptions().map((option) => ({
     ...option,
-    icon: option.icon === 'UserGroupIcon' ? UserGroupIcon :
-          option.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-          option.icon === 'CogIcon' ? CogIcon : UserIcon,
+    icon:
+      option.icon === 'UserGroupIcon'
+        ? UserGroupIcon
+        : option.icon === 'ShieldCheckIcon'
+          ? ShieldCheckIcon
+          : option.icon === 'CogIcon'
+            ? CogIcon
+            : UserIcon,
   }));
 
-  const statusOptions = getStatusOptions().map(option => ({
+  const statusOptions = getStatusOptions().map((option) => ({
     ...option,
-    icon: option.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-          option.icon === 'XCircleIcon' ? XCircleIcon : UserIcon,
+    icon:
+      option.icon === 'CheckCircleIcon'
+        ? CheckCircleIcon
+        : option.icon === 'XCircleIcon'
+          ? XCircleIcon
+          : UserIcon,
   }));
 
   return (
@@ -604,8 +613,12 @@ const UsersPage: React.FC = () => {
                       // Map icon string to actual icon component
                       const roleConfig = {
                         ...roleConfigData,
-                        icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-                              roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+                        icon:
+                          roleConfigData.icon === 'ShieldCheckIcon'
+                            ? ShieldCheckIcon
+                            : roleConfigData.icon === 'CogIcon'
+                              ? CogIcon
+                              : UserIcon,
                       };
                       return (
                         <tr
@@ -734,8 +747,12 @@ const UsersPage: React.FC = () => {
                 // Map icon string to actual icon component
                 const roleConfig = {
                   ...roleConfigData,
-                  icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-                        roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+                  icon:
+                    roleConfigData.icon === 'ShieldCheckIcon'
+                      ? ShieldCheckIcon
+                      : roleConfigData.icon === 'CogIcon'
+                        ? CogIcon
+                        : UserIcon,
                 };
 
                 return (

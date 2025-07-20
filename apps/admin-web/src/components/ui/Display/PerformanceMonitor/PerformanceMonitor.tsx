@@ -37,15 +37,23 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     if (!enabled) return;
 
     const updateMetrics = () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const navigation = performance.getEntriesByType(
+        'navigation',
+      )[0] as PerformanceNavigationTiming;
       const memory = (performance as any).memory;
 
-      setMetrics(prev => ({
+      setMetrics((prev) => ({
         ...prev,
-        bundleSize: Math.round(performance.getEntriesByType('resource').length / 10),
+        bundleSize: Math.round(
+          performance.getEntriesByType('resource').length / 10,
+        ),
         renderCount: prev.renderCount + 1,
-        memoryUsage: memory ? Math.round(memory.usedJSHeapSize / 1024 / 1024) : 0,
-        loadTime: navigation ? Math.round(navigation.loadEventEnd - navigation.fetchStart) : 0,
+        memoryUsage: memory
+          ? Math.round(memory.usedJSHeapSize / 1024 / 1024)
+          : 0,
+        loadTime: navigation
+          ? Math.round(navigation.loadEventEnd - navigation.fetchStart)
+          : 0,
         apiCalls: prev.apiCalls,
         cacheHitRate: 85, // Mock value
       }));
@@ -67,13 +75,15 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   };
 
   return (
-    <div className={`fixed ${positionClasses[position]} z-50 pointer-events-none`}>
+    <div
+      className={`fixed ${positionClasses[position]} z-50 pointer-events-none`}
+    >
       <div className="bg-black/80 backdrop-blur-sm border border-gray-600 rounded-lg p-3 text-xs text-white font-mono shadow-lg">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           <span className="font-medium">Performance</span>
         </div>
-        
+
         <div className="space-y-1">
           <div className="flex justify-between gap-3">
             <span>Memory:</span>
@@ -95,7 +105,9 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
               </div>
               <div className="flex justify-between gap-3">
                 <span>Cache:</span>
-                <span className="text-cyan-400">{Math.round(metrics.cacheHitRate)}%</span>
+                <span className="text-cyan-400">
+                  {Math.round(metrics.cacheHitRate)}%
+                </span>
               </div>
             </>
           )}
@@ -119,21 +131,25 @@ export function useComponentPerformance(componentName: string) {
   useEffect(() => {
     if (startTime.current) {
       const renderTime = performance.now() - startTime.current;
-      setRenderTimes(prev => [...prev.slice(-9), renderTime]); // Keep last 10 renders
-      
-      if (renderTime > 16) { // More than one frame
-        console.warn(`[Performance] Slow render in ${componentName}: ${renderTime.toFixed(2)}ms`);
+      setRenderTimes((prev) => [...prev.slice(-9), renderTime]); // Keep last 10 renders
+
+      if (renderTime > 16) {
+        // More than one frame
+        console.warn(
+          `[Performance] Slow render in ${componentName}: ${renderTime.toFixed(2)}ms`,
+        );
       }
     }
   });
 
-  const averageRenderTime = renderTimes.length > 0 
-    ? renderTimes.reduce((sum, time) => sum + time, 0) / renderTimes.length 
-    : 0;
+  const averageRenderTime =
+    renderTimes.length > 0
+      ? renderTimes.reduce((sum, time) => sum + time, 0) / renderTimes.length
+      : 0;
 
   return {
     renderTimes,
     averageRenderTime,
     lastRenderTime: renderTimes[renderTimes.length - 1] || 0,
   };
-} 
+}

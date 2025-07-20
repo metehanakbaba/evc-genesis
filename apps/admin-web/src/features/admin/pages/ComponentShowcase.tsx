@@ -28,8 +28,6 @@ import {
 import type React from 'react';
 import { useState } from 'react';
 
-
-
 const sections = [
   {
     id: 'buttons',

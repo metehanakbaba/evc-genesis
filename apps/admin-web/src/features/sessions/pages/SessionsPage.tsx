@@ -411,9 +411,14 @@ const SessionsPage: React.FC = () => {
               // Map icon string to actual icon component
               const statusConfig = {
                 ...statusConfigData,
-                icon: statusConfigData.icon === 'PlayIcon' ? PlayIcon :
-                      statusConfigData.icon === 'BoltIcon' ? BoltIcon :
-                      statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon : XCircleIcon,
+                icon:
+                  statusConfigData.icon === 'PlayIcon'
+                    ? PlayIcon
+                    : statusConfigData.icon === 'BoltIcon'
+                      ? BoltIcon
+                      : statusConfigData.icon === 'CheckCircleIcon'
+                        ? CheckCircleIcon
+                        : XCircleIcon,
               };
               const isActive =
                 session.status === 'charging' || session.status === 'starting';

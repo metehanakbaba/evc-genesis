@@ -1,4 +1,3 @@
-
 import { MainLayout } from '@ui/layout';
 import React from 'react';
 import {
@@ -21,8 +20,6 @@ const DashboardPage: React.FC = React.memo(() => {
     developerTools,
     isDeveloperMode,
   } = useDashboardData();
-
-
 
   return (
     <MainLayout

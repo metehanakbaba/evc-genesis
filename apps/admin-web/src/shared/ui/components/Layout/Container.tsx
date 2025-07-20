@@ -123,7 +123,9 @@ export const Container: React.FC<ContainerProps> = ({
     );
   }
 
-  return <ElementComponent className={containerClasses}>{content}</ElementComponent>;
+  return (
+    <ElementComponent className={containerClasses}>{content}</ElementComponent>
+  );
 };
 
 Container.displayName = 'Container';

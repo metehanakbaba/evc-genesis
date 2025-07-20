@@ -1,6 +1,5 @@
 'use client';
 
-
 import { MainLayout } from '@ui/layout';
 
 import React from 'react';
@@ -18,8 +17,6 @@ import { useDashboardData } from '../hooks/useDashboardData';
  * Revolutionary Admin Dashboard - Optimized & Type-safe
  */
 const DashboardPage: React.FC = React.memo(() => {
-
-
   const {
     networkStats,
     coreManagement,

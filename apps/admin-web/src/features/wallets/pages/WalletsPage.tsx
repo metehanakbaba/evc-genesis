@@ -28,14 +28,12 @@ import { AppHeader } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
-import type {
-  PLNTransaction,
-} from '../types/wallet.types';
+import type { PLNTransaction } from '../types/wallet.types';
 // ✅ Import shared business logic
-import { 
-  getTransactionConfig, 
-  formatTransactionDate, 
-  filterTransactions 
+import {
+  getTransactionConfig,
+  formatTransactionDate,
+  filterTransactions,
 } from '@evc/shared-business-logic';
 
 // Type for icon components - fixed for Heroicons
@@ -127,7 +125,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
       <div className="space-y-8">
         {/* Transaction Type Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Transaction Type</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Transaction Type
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {typeOptions.map((type) => (
               <button

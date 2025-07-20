@@ -260,11 +260,19 @@ export const ModalFooter = {
     variant?: 'primary' | 'success' | 'warning' | 'danger';
   }) => {
     // Map modal variants to button variants
-    const buttonVariant: 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' = 
-      variant === 'danger' ? 'destructive' :
-      variant === 'success' ? 'primary' :
-      variant === 'warning' ? 'outline' :
-      'primary'; // default fallback
+    const buttonVariant:
+      | 'primary'
+      | 'secondary'
+      | 'destructive'
+      | 'outline'
+      | 'ghost' =
+      variant === 'danger'
+        ? 'destructive'
+        : variant === 'success'
+          ? 'primary'
+          : variant === 'warning'
+            ? 'outline'
+            : 'primary'; // default fallback
 
     return (
       <div className="flex justify-end gap-4">

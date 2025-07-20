@@ -1,8 +1,4 @@
-import {
-  Description,
-  Field,
-  Label,
-} from '@headlessui/react';
+import { Description, Field, Label } from '@headlessui/react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { clsx } from 'clsx';
 import React, { useCallback, useState } from 'react';

@@ -1,4 +1,3 @@
-
 import type React from 'react';
 import { memo } from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components';

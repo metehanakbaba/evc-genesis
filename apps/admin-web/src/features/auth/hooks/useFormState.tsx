@@ -8,7 +8,10 @@ import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
-import { validateLoginForm, getFieldValidationState } from '@evc/shared-business-logic';
+import {
+  validateLoginForm,
+  getFieldValidationState,
+} from '@evc/shared-business-logic';
 
 // React 19 Ready: Enhanced form state interface
 interface EnhancedFormState {
@@ -160,8 +163,8 @@ export const FieldValidation: React.FC<FieldValidationProps> = ({
   formState,
 }) => {
   const validationState = getFieldValidationState(
-    fieldName, 
-    formState?.validationErrors || {}
+    fieldName,
+    formState?.validationErrors || {},
   );
 
   if (!validationState.hasError) return null;

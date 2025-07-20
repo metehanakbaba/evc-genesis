@@ -1,7 +1,10 @@
 import { clsx } from 'clsx';
 import type React from 'react';
 import type { ComponentSize } from '../../../../lib/theme.config';
-import { componentTokens, getComponentSize } from '../../../../lib/theme.config';
+import {
+  componentTokens,
+  getComponentSize,
+} from '../../../../lib/theme.config';
 
 interface ButtonProps {
   children: React.ReactNode;

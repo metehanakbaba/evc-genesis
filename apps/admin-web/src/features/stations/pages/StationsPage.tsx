@@ -417,9 +417,14 @@ const StationsPage: React.FC = () => {
                 // Map icon string to actual icon component
                 const statusConfig = {
                   ...statusConfigData,
-                  icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-                        statusConfigData.icon === 'BoltIcon' ? BoltIcon :
-                        statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
+                  icon:
+                    statusConfigData.icon === 'CheckCircleIcon'
+                      ? CheckCircleIcon
+                      : statusConfigData.icon === 'BoltIcon'
+                        ? BoltIcon
+                        : statusConfigData.icon === 'WrenchScrewdriverIcon'
+                          ? WrenchScrewdriverIcon
+                          : XCircleIcon,
                 };
                 const StatusIcon = statusConfig.icon;
 
@@ -531,13 +536,21 @@ const StationsPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-700/30">
                     {filteredStations.map((station) => {
-                      const statusConfigData = getStationStatusConfig(station.status);
+                      const statusConfigData = getStationStatusConfig(
+                        station.status,
+                      );
                       // Map icon string to actual icon component
                       const statusConfig = {
                         ...statusConfigData,
-                        icon: statusConfigData.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-                              statusConfigData.icon === 'BoltIcon' ? BoltIcon :
-                              statusConfigData.icon === 'WrenchScrewdriverIcon' ? WrenchScrewdriverIcon : XCircleIcon,
+                        icon:
+                          statusConfigData.icon === 'CheckCircleIcon'
+                            ? CheckCircleIcon
+                            : statusConfigData.icon === 'BoltIcon'
+                              ? BoltIcon
+                              : statusConfigData.icon ===
+                                  'WrenchScrewdriverIcon'
+                                ? WrenchScrewdriverIcon
+                                : XCircleIcon,
                       };
                       const StatusIcon = statusConfig.icon;
 

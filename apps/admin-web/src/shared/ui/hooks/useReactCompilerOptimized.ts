@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
 
 // React 19: Compiler optimization hints
 // These hooks provide hints to React Compiler for better optimization
@@ -195,19 +201,23 @@ export const markCompilerOptimized = <T>(
 export function useDeepMemo<T>(
   factory: () => T,
   deps: readonly unknown[],
-  equalityFn?: (a: T, b: T) => boolean
+  equalityFn?: (a: T, b: T) => boolean,
 ): T {
   const ref = useRef<{ deps: readonly unknown[]; value: T } | null>(null);
-  
+
   return useMemo(() => {
     if (!ref.current || !depsEqual(ref.current.deps, deps)) {
       const newValue = factory();
-      
+
       // Use custom equality check if provided
-      if (ref.current && equalityFn && equalityFn(ref.current.value, newValue)) {
+      if (
+        ref.current &&
+        equalityFn &&
+        equalityFn(ref.current.value, newValue)
+      ) {
         return ref.current.value;
       }
-      
+
       ref.current = { deps, value: newValue };
     }
     return ref.current.value;
@@ -220,17 +230,17 @@ export function useDeepMemo<T>(
  */
 export function useStableCallback<T extends (...args: any[]) => any>(
   callback: T,
-  dependencies?: readonly unknown[]
+  dependencies?: readonly unknown[],
 ): T {
   const callbackRef = useRef(callback);
   const dependenciesRef = useRef(dependencies);
-  
+
   // Update callback only when dependencies change
   if (!dependencies || !depsEqual(dependenciesRef.current, dependencies)) {
     callbackRef.current = callback;
     dependenciesRef.current = dependencies;
   }
-  
+
   return useCallback((...args: any[]) => {
     return callbackRef.current(...args);
   }, []) as T;
@@ -240,12 +250,9 @@ export function useStableCallback<T extends (...args: any[]) => any>(
  * Memoized value with WeakMap caching for object references
  * Prevents memory leaks while maintaining performance
  */
-export function useWeakMemo<T, K extends object>(
-  value: T,
-  key: K
-): T {
+export function useWeakMemo<T, K extends object>(value: T, key: K): T {
   const cache = useRef(new WeakMap<K, T>());
-  
+
   return useMemo(() => {
     if (cache.current.has(key)) {
       return cache.current.get(key)!;
@@ -261,23 +268,23 @@ export function useWeakMemo<T, K extends object>(
  */
 export function useDebouncedValue<T>(
   value: T,
-  delay: number = 300
+  delay: number = 300,
 ): [T, boolean] {
   const [debouncedValue, setDebouncedValue] = useState(value);
   const [isPending, setIsPending] = useState(false);
-  
+
   useEffect(() => {
     setIsPending(true);
     const handler = setTimeout(() => {
       setDebouncedValue(value);
       setIsPending(false);
     }, delay);
-    
+
     return () => {
       clearTimeout(handler);
     };
   }, [value, delay]);
-  
+
   return [debouncedValue, isPending];
 }
 
@@ -286,8 +293,8 @@ export function useDebouncedValue<T>(
  * Creates stable event handlers that prevent re-renders
  */
 export function useEventHandler<T extends (...args: any[]) => any>(
-  handler: T, 
-  dependencies: readonly unknown[]
+  handler: T,
+  dependencies: readonly unknown[],
 ): T {
   return useCallback(handler, dependencies) as T;
 }
@@ -301,14 +308,14 @@ export function useAdvancedBatchedUpdates() {
     // Use React's unstable_batchedUpdates if available
     if (typeof (React as any).unstable_batchedUpdates === 'function') {
       (React as any).unstable_batchedUpdates(() => {
-        updates.forEach(update => update());
+        updates.forEach((update) => update());
       });
     } else {
       // Fallback: execute updates synchronously
-      updates.forEach(update => update());
+      updates.forEach((update) => update());
     }
   }, []);
-  
+
   return { batchUpdates };
 }
 
@@ -320,14 +327,14 @@ export function useVirtualScrolling<T>(
   items: T[],
   itemHeight: number,
   containerHeight: number,
-  scrollTop: number = 0
+  scrollTop: number = 0,
 ) {
   return useMemo(() => {
     const totalHeight = items.length * itemHeight;
     const startIndex = Math.floor(scrollTop / itemHeight);
     const endIndex = Math.min(
       items.length - 1,
-      Math.floor((scrollTop + containerHeight) / itemHeight)
+      Math.floor((scrollTop + containerHeight) / itemHeight),
     );
     const visibleItems = items.slice(startIndex, endIndex + 1);
     const offsetY = startIndex * itemHeight;
@@ -347,9 +354,9 @@ export function useVirtualScrolling<T>(
  */
 export function usePerformanceMonitor(componentName: string) {
   const [renderCount, setRenderCount] = useState(0);
-  
+
   useEffect(() => {
-    setRenderCount(prev => prev + 1);
+    setRenderCount((prev) => prev + 1);
   }, []);
 
   const resetCounter = useCallback(() => {
@@ -368,33 +375,43 @@ export function usePerformanceMonitor(componentName: string) {
  */
 export function useOptimizedSelector<TState, TSelected>(
   selector: (state: TState) => TSelected,
-  equalityFn?: (left: TSelected, right: TSelected) => boolean
+  equalityFn?: (left: TSelected, right: TSelected) => boolean,
 ) {
   const lastSelected = useRef<TSelected | undefined>(undefined);
   const lastState = useRef<TState | undefined>(undefined);
-  
-  return useCallback((state: TState): TSelected => {
-    if (state !== lastState.current) {
-      const selected = selector(state);
-      
-      if (equalityFn ? !equalityFn(lastSelected.current!, selected) : lastSelected.current !== selected) {
-        lastSelected.current = selected;
+
+  return useCallback(
+    (state: TState): TSelected => {
+      if (state !== lastState.current) {
+        const selected = selector(state);
+
+        if (
+          equalityFn
+            ? !equalityFn(lastSelected.current!, selected)
+            : lastSelected.current !== selected
+        ) {
+          lastSelected.current = selected;
+        }
+        lastState.current = state;
       }
-      lastState.current = state;
-    }
-    
-    return lastSelected.current!;
-  }, [selector, equalityFn]);
+
+      return lastSelected.current!;
+    },
+    [selector, equalityFn],
+  );
 }
 
 // Helper functions
-function depsEqual(a: readonly unknown[] | undefined, b: readonly unknown[] | undefined): boolean {
+function depsEqual(
+  a: readonly unknown[] | undefined,
+  b: readonly unknown[] | undefined,
+): boolean {
   if (a === b) return true;
   if (!a || !b || a.length !== b.length) return false;
-  
+
   for (let i = 0; i < a.length; i++) {
     if (a[i] !== b[i]) return false;
   }
-  
+
   return true;
 }

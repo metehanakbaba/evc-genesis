@@ -260,7 +260,9 @@ export const ModalFooter = {
     variant?: 'primary' | 'success' | 'warning' | 'danger';
   }) => {
     // Map modal variants to button variants
-    const getButtonVariant = (modalVariant: 'primary' | 'success' | 'warning' | 'danger'): 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' => {
+    const getButtonVariant = (
+      modalVariant: 'primary' | 'success' | 'warning' | 'danger',
+    ): 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' => {
       switch (modalVariant) {
         case 'danger':
           return 'destructive';

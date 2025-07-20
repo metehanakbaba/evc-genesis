@@ -8,7 +8,7 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
   WrenchScrewdriverIcon,
-  InboxIcon
+  InboxIcon,
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 
@@ -91,8 +91,6 @@ const getNotificationIcon = (type: Notification['type']) => {
       return <BellIcon className="w-5 h-5 text-gray-400" />;
   }
 };
-
-
 
 const getNotificationBgColor = (type: string, isRead: boolean): string => {
   const baseClasses = isRead

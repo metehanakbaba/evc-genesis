@@ -110,7 +110,7 @@ export const Toast: React.FC<ToastProps> = ({
 
       return () => clearTimeout(timer);
     }
-    
+
     // Return undefined for cases where no timer is set
     return undefined;
   }, [show, duration, id, onClose]);

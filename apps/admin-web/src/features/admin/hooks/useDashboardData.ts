@@ -125,12 +125,13 @@ export const useDashboardData = (): DashboardData => {
     // Custom equality check for deep object comparison
     (prev, next) => {
       if (prev.length !== next.length) return false;
-      return prev.every((item, index) => 
-        item.title === next[index]?.title && 
-        item.value === next[index]?.value &&
-        item.variant === next[index]?.variant
+      return prev.every(
+        (item, index) =>
+          item.title === next[index]?.title &&
+          item.value === next[index]?.value &&
+          item.variant === next[index]?.variant,
       );
-    }
+    },
   );
 
   const coreManagement = useDeepMemo<readonly CoreManagementItem[]>(
@@ -174,7 +175,9 @@ export const useDashboardData = (): DashboardData => {
       },
     ],
     [],
-    (prev, next) => prev.length === next.length && prev.every((item, index) => item.path === next[index]?.path)
+    (prev, next) =>
+      prev.length === next.length &&
+      prev.every((item, index) => item.path === next[index]?.path),
   );
 
   const activeOperations = useDeepMemo<readonly ActiveOperation[]>(

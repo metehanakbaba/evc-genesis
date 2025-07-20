@@ -28,8 +28,6 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
       glowColor,
       variant,
     }) => {
-
-
       return (
         <div className="group relative">
           {/* Floating background glow */}
