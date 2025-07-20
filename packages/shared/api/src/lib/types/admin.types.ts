@@ -50,6 +50,22 @@ export interface AdminAdjustBalanceRequest {
   reference?: string;
 }
 
+// 🔍 Admin Transaction Query
+export interface AdminTransactionQuery extends PaginationParams, DateRangeParams {
+  userId?: string;
+  type?: string;
+  status?: string;
+  search?: string;
+}
+
+// 🔍 Admin Wallet Query
+export interface AdminWalletQuery extends PaginationParams {
+  userId?: string;
+  email?: string;
+  minBalance?: number;
+  maxBalance?: number;
+}
+
 // 🔄 Process Refund Request
 export interface AdminProcessRefundRequest {
   amount?: number;

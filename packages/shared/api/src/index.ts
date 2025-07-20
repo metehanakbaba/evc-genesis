@@ -19,10 +19,12 @@ export * from './lib/platform/mobile.adapter';
 
 // 🔗 API Endpoints (correct file names)
 export * from './lib/endpoints/auth.endpoints';
+// Wallet endpoints - now active
+export * from './lib/endpoints/wallet.endpoints';
+
 // TODO: Fix missing types in these endpoints
 // export * from './lib/endpoints/stations.endpoints';
 // export * from './lib/endpoints/users.endpoints';
-// export * from './lib/endpoints/wallet.endpoints'; // Fixed: wallet not wallets
 
 // 🎯 Easy-to-use Functions
 export {

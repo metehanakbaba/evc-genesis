@@ -11,10 +11,10 @@
 
 import { createTypedApi, createBaseQuery } from './baseApi';
 import { authEndpoints } from './endpoints/auth.endpoints';
+import { walletEndpoints } from './endpoints/wallet.endpoints';
 // TODO: Re-enable after fixing missing types
 // import { usersEndpoints } from './endpoints/users.endpoints';
 // import { stationsEndpoints } from './endpoints/stations.endpoints';
-// import { walletEndpoints } from './endpoints/wallet.endpoints';
 
 /**
  * 🏭 Create EV Charging API Factory
@@ -35,15 +35,15 @@ export const createEVChargingApi = (config: {
       // 🔐 Authentication endpoints
       ...authEndpoints(builder),
       
+      // 💰 Wallet & transaction endpoints
+      ...walletEndpoints(builder),
+      
       // TODO: Re-enable after fixing missing types
       // // 👥 User management endpoints
       // ...usersEndpoints(builder),
       
       // // 🔋 Station management endpoints
       // ...stationsEndpoints(builder),
-      
-      // // 💰 Wallet & transaction endpoints
-      // ...walletEndpoints(builder),
     }),
     overrideExisting: false,
   });
