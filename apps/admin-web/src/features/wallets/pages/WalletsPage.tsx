@@ -108,7 +108,7 @@ const WalletsPage: React.FC = () => {
       value: totalBalance.formatted,
       icon: WalletIcon,
       variant: 'teal',
-      trend: '+₺2,847 this week',
+      trend: '+2,847 zł this week',
       description: 'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
       isLive: true,
     },
@@ -122,7 +122,7 @@ const WalletsPage: React.FC = () => {
     },
     {
       title: 'Revenue Recognition',
-      value: '₺247,892.45',
+      value: '247,892.45 zł',
       icon: ChartBarIcon,
       variant: 'emerald',
       trend: '+23.7% vs last month',
@@ -130,7 +130,7 @@ const WalletsPage: React.FC = () => {
     },
     {
       title: 'Refund Liabilities',
-      value: '₺3,254.80',
+      value: '3,254.80 zł',
       icon: ReceiptRefundIcon,
       variant: 'amber',
       trend: '18 pending',

@@ -357,7 +357,7 @@ export function StationsScreen() {
               <YStack flex={1}>
                 <Text fontWeight="bold">{station.name}</Text>
                 <Text color="$gray10">{station.location}</Text>
-                <Text fontSize="$2">{station.powerOutput}kW • ₺{station.pricePerKwh}/kWh</Text>
+                <Text fontSize="$2">{station.powerOutput}kW • {station.pricePerKwh} zł/kWh</Text>
               </YStack>
             </XStack>
           </Card>
@@ -713,7 +713,7 @@ eas submit --platform ios --latest
 # App Store Review preparation:
 # 1. App metadata complete
 # 2. Screenshots for all devices (iPhone, iPad)
-# 3. App description in Turkish & English
+# 3. App description in Polish & English
 # 4. Privacy policy and terms of service
 # 5. Age rating configuration
 ```
