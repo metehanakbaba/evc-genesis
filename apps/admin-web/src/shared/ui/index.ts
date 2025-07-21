@@ -57,6 +57,12 @@ export type {
 } from './components/DataDisplay/GenericFilterModal';
 export { GenericFilterModal } from './components/DataDisplay/GenericFilterModal';
 export type {
+  QuickFilterGroup,
+  QuickFilterOption,
+  QuickFilterButtonsProps,
+} from './components/DataDisplay/QuickFilterButtons';
+export { QuickFilterButtons } from './components/DataDisplay/QuickFilterButtons';
+export type {
   StatusBadgeProps as DataStatusBadgeProps,
   StatusConfig as DataStatusConfig,
 } from './components/DataDisplay/StatusBadge';

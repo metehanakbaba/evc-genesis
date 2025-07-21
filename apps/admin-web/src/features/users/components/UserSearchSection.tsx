@@ -42,15 +42,7 @@ const UserSearchSection: React.FC<UserSearchSectionProps> = ({
       </div>
 
       {/* Search & Filter Controls - Enhanced with Icons */}
-      <div className="mb-8 p-6 bg-gradient-to-br from-slate-800/50 via-slate-700/30 to-transparent border border-slate-600/30 rounded-2xl backdrop-blur-xl">
-        <div className="flex items-center gap-2 mb-4">
-          <UserIcon className="w-5 h-5 text-purple-400" />
-          <h3 className="text-sm font-medium text-purple-400">
-            Identity Search & Filtering
-          </h3>
-        </div>
-
-        <SearchFilterBar
+      <SearchFilterBar
           searchValue={searchQuery}
           onSearchChange={onSearchChange}
           searchPlaceholder="Identity search... (e.g., john.kowalski@company.com, ADMIN, CUSTOMER)"
@@ -61,7 +53,6 @@ const UserSearchSection: React.FC<UserSearchSectionProps> = ({
           onViewModeChange={onViewModeChange}
           variant="purple"
         />
-      </div>
     </section>
   );
 };

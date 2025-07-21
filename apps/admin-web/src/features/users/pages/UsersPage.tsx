@@ -16,6 +16,8 @@ import { useMemo, useState } from 'react';
 import {
   type GenericFilterGroup,
   GenericFilterModal,
+  type QuickFilterGroup,
+  QuickFilterButtons,
   useBulkSelection,
   useSearchDebounce,
 } from '@/shared/ui';
@@ -101,15 +103,15 @@ const UsersPage: React.FC = () => {
         onChange: setRoleFilter,
         options: [
           { id: 'all', label: 'All Roles', icon: UserGroupIcon, color: 'gray' },
-          { id: 'CUSTOMER', label: 'Customer', icon: UserIcon, color: 'blue' },
+          { id: 'user', label: 'Customer', icon: UserIcon, color: 'blue' },
           {
-            id: 'ADMIN',
+            id: 'admin',
             label: 'Administrator',
             icon: ShieldCheckIcon,
             color: 'purple',
           },
           {
-            id: 'FIELD_WORKER',
+            id: 'operator',
             label: 'Field Worker',
             icon: CogIcon,
             color: 'amber',
@@ -127,6 +129,58 @@ const UsersPage: React.FC = () => {
             label: 'All Statuses',
             icon: UserGroupIcon,
             color: 'gray',
+          },
+          {
+            id: 'active',
+            label: 'Active',
+            icon: CheckCircleIcon,
+            color: 'emerald',
+          },
+          { id: 'inactive', label: 'Inactive', icon: UserIcon, color: 'red' },
+        ],
+      },
+    ],
+    [roleFilter, statusFilter],
+  );
+
+  // ✅ CREATE QUICK FILTER GROUPS for Universal Component
+  const quickFilterGroups = useMemo(
+    (): QuickFilterGroup[] => [
+      {
+        id: 'role',
+        title: 'User Roles',
+        icon: UserGroupIcon,
+        selectedValue: roleFilter,
+        onChange: setRoleFilter,
+        options: [
+          { id: 'all', label: 'All Roles', icon: UserGroupIcon, color: 'purple' },
+          { id: 'user', label: 'Customer', icon: UserIcon, color: 'blue' },
+          {
+            id: 'admin',
+            label: 'Administrator',
+            icon: ShieldCheckIcon,
+            color: 'purple',
+          },
+          {
+            id: 'operator',
+            label: 'Field Worker',
+            icon: CogIcon,
+            color: 'amber',
+          },
+        ],
+      },
+      {
+        id: 'status',
+        title: 'Account Status',
+        icon: CheckCircleIcon,
+        selectedValue: statusFilter,
+        onChange: setStatusFilter,
+        options: [
+          {
+            id: 'all',
+            label: 'All Status',
+            icon: UserGroupIcon,
+            color: 'purple',
           },
           {
             id: 'active',
@@ -191,6 +245,12 @@ const UsersPage: React.FC = () => {
           onViewModeChange={setViewMode}
           onOpenFilterModal={() => setIsFilterModalOpen(true)}
           isFilterActive={roleFilter !== 'all' || statusFilter !== 'all'}
+        />
+
+        {/* ✅ Universal Quick Filter Buttons */}
+        <QuickFilterButtons
+          filterGroups={quickFilterGroups}
+          variant="purple"
         />
 
         {/* ✅ User Data Section */}

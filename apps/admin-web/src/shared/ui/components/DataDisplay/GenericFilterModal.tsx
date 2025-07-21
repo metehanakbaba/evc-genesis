@@ -60,6 +60,46 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
   variant = 'emerald',
 }) => {
   /**
+   * 🎨 Get color classes based on option color
+   */
+  const getColorClasses = (color: string, isSelected: boolean) => {
+    const colorMap = {
+      emerald: {
+        selected: 'bg-gradient-to-r from-emerald-500/20 via-emerald-400/15 to-emerald-500/20 border-emerald-400/50 text-emerald-300 shadow-lg shadow-emerald-500/20',
+        icon: 'bg-emerald-500/20 border border-emerald-400/30',
+        text: 'text-emerald-400'
+      },
+      blue: {
+        selected: 'bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border-blue-400/50 text-blue-300 shadow-lg shadow-blue-500/20',
+        icon: 'bg-blue-500/20 border border-blue-400/30',
+        text: 'text-blue-400'
+      },
+      purple: {
+        selected: 'bg-gradient-to-r from-purple-500/20 via-purple-400/15 to-purple-500/20 border-purple-400/50 text-purple-300 shadow-lg shadow-purple-500/20',
+        icon: 'bg-purple-500/20 border border-purple-400/30',
+        text: 'text-purple-400'
+      },
+      amber: {
+        selected: 'bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 border-amber-400/50 text-amber-300 shadow-lg shadow-amber-500/20',
+        icon: 'bg-amber-500/20 border border-amber-400/30',
+        text: 'text-amber-400'
+      },
+      red: {
+        selected: 'bg-gradient-to-r from-red-500/20 via-red-400/15 to-red-500/20 border-red-400/50 text-red-300 shadow-lg shadow-red-500/20',
+        icon: 'bg-red-500/20 border border-red-400/30',
+        text: 'text-red-400'
+      },
+      gray: {
+        selected: 'bg-gradient-to-r from-gray-500/20 via-gray-400/15 to-gray-500/20 border-gray-400/50 text-gray-300 shadow-lg shadow-gray-500/20',
+        icon: 'bg-gray-500/20 border border-gray-400/30',
+        text: 'text-gray-400'
+      },
+    };
+
+    return colorMap[color as keyof typeof colorMap] || colorMap.gray;
+  };
+
+  /**
    * 🎨 Render Filter Option Button - EXACTLY like TransactionFilterModal
    */
   const renderFilterOption = (
@@ -68,6 +108,7 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
     onClick: () => void,
   ) => {
     const IconComponent = option.icon;
+    const colors = getColorClasses(option.color, isSelected);
 
     return (
       <button
@@ -77,9 +118,7 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
           ${
             isSelected
-              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
-               border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
-               scale-[1.02]`
+              ? `${colors.selected} scale-[1.02]`
               : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
@@ -97,7 +136,7 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
               w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
               ${
                 isSelected
-                  ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
+                  ? colors.icon
                   : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
               }
             `}
@@ -107,7 +146,7 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
                 w-5 h-5 transition-transform duration-300
                 ${
                   isSelected
-                    ? `text-${option.color}-400 scale-110`
+                    ? `${colors.text} scale-110`
                     : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
                 }
               `}
@@ -157,11 +196,12 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
             onClick={onClose}
             className={`
               relative overflow-hidden group/apply
-              bg-gradient-to-r from-${variant}-600 via-${variant}-500 to-${variant}-600
-              hover:from-${variant}-500 hover:via-${variant}-400 hover:to-${variant}-500
+              ${variant === 'emerald' ? 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30 border border-emerald-400/20 hover:border-emerald-300/40' :
+                variant === 'blue' ? 'bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 hover:from-blue-500 hover:via-blue-400 hover:to-blue-500 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-400/30 border border-blue-400/20 hover:border-blue-300/40' :
+                variant === 'purple' ? 'bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 hover:from-purple-500 hover:via-purple-400 hover:to-purple-500 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-400/30 border border-purple-400/20 hover:border-purple-300/40' :
+                variant === 'teal' ? 'bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 hover:from-teal-500 hover:via-teal-400 hover:to-teal-500 shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30 border border-teal-400/20 hover:border-teal-300/40' :
+                'bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30 border border-emerald-400/20 hover:border-emerald-300/40'}
               text-white font-semibold
-              shadow-lg shadow-${variant}-500/25 hover:shadow-xl hover:shadow-${variant}-400/30
-              border border-${variant}-400/20 hover:border-${variant}-300/40
               transition-all duration-300 ease-out
               hover:scale-[1.02] active:scale-[0.98]
               flex items-center
