@@ -1,6 +1,6 @@
 'use client';
 
-import { UserGroupIcon, UserIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { SearchFilterBar } from '@/shared/ui/molecules';
 
