@@ -16,6 +16,27 @@ export interface ChargingSession {
   readonly estimated_completion?: string;
 }
 
+// ✅ Extended interface for live charging sessions (matches SessionsPage structure)
+export interface LiveChargingSession {
+  readonly id: string;
+  readonly connector_id: string;
+  readonly user_id: string;
+  readonly station_id: string;
+  readonly station_name: string;
+  readonly user_email: string;
+  readonly status: SessionStatus;
+  readonly connector_type: 'CCS' | 'CHAdeMO' | 'Type2' | 'CCS_CHAdeMO';
+  readonly power_output: number; // kW
+  readonly started_at: string;
+  readonly ended_at?: string;
+  readonly energy_delivered: number; // kWh
+  readonly current_cost: number; // TL
+  readonly total_cost?: number; // TL
+  readonly estimated_completion?: string;
+  readonly created_at: string;
+  readonly updated_at: string;
+}
+
 export interface StartSessionRequest {
   readonly connector_id: string;
   readonly payment_method_id: string;

@@ -31,7 +31,7 @@ export const DashboardFooter: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-blue-400 rounded-full" />
-                <span className="text-sm text-gray-300">API v2.1.0 Active</span>
+                <span className="text-sm text-gray-300">API 1.0 Active</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full" />
@@ -49,25 +49,25 @@ export const DashboardFooter: React.FC = () => {
             </h3>
             <div className="space-y-2">
               <a
-                href="/admin/users"
+                href="/users"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 User Management
               </a>
               <a
-                href="/admin/stations"
+                href="/stations"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Charging Stations
               </a>
               <a
-                href="/admin/sessions"
+                href="/sessions"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Active Sessions
               </a>
               <a
-                href="/admin/wallets"
+                href="/wallets"
                 className="block text-sm text-gray-300 hover:text-white transition-colors"
               >
                 Payment System
@@ -82,7 +82,7 @@ export const DashboardFooter: React.FC = () => {
             </h3>
             <div className="space-y-2">
               <div className="text-sm text-gray-300">
-                Version: <span className="text-gray-100">2.1.0</span>
+                Version: <span className="text-gray-100">0.1.0 (alpha)</span>
               </div>
               <div className="text-sm text-gray-300">
                 Build: <span className="text-gray-100">{formatBuildTimestamp()}</span>
