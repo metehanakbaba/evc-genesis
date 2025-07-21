@@ -23,18 +23,3 @@ export type {
   SessionStatistics,
   SessionsQueryParams,
 } from '../types/session.types';
-export type { SessionFilterModalProps } from './SessionFilterModal';
-// ✅ Session Filter Modal
-export { SessionFilterModal } from './SessionFilterModal';
-export type { SessionGridProps } from './SessionGrid';
-export { SessionGrid } from './SessionGrid';
-// ✅ Session Skeleton Components
-export {
-  EndOfListIndicator,
-  LoadMoreSkeleton,
-  SessionGridSkeleton,
-  SessionTableSkeleton,
-} from './SessionSkeleton';
-export type { SessionTableProps } from './SessionTable';
-// ✅ Session Display Components
-export { SessionTable } from './SessionTable';
