@@ -34,7 +34,7 @@ export const CoreManagementSection: React.FC<CoreManagementSectionProps> =
       { label: 'Active Stations', value: '2,847', icon: SignalIcon, change: '+12%' },
       { label: 'Network Health', value: '99.7%', icon: CpuChipIcon, change: '+0.3%' },
       { label: 'Energy Output', value: '1.2MW', icon: BoltIcon, change: '+28%' },
-      { label: 'Revenue', value: '₺247K', icon: ChartBarIcon, change: '+23%' },
+      { label: 'Revenue', value: '247K zł', icon: ChartBarIcon, change: '+23%' },
     ];
 
     return (

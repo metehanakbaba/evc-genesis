@@ -266,10 +266,10 @@ export const validateUserData = (userData: Partial<UserProfile>): {
     errors.email = 'Please enter a valid email address';
   }
   
-  // Phone validation (Turkish format)
-  const phoneRegex = /^\+90[0-9]{10}$/;
+  // Phone validation (Polish format)
+  const phoneRegex = /^\+48[0-9]{9}$/;
   if (!userData.phone || !phoneRegex.test(userData.phone)) {
-    errors.phone = 'Please enter a valid Turkish phone number (+90XXXXXXXXXX)';
+    errors.phone = 'Please enter a valid Polish phone number (+48XXXXXXXXX)';
   }
   
   // Role validation

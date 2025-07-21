@@ -26,11 +26,11 @@ export const MOCK_EVENTS: readonly IntelligenceEvent[] = [
     id: '2',
     type: 'payment',
     title: 'Large payment transaction',
-    description: 'Corporate account paid ₺15,430 for fleet charging services',
+    description: 'Corporate account paid 15,430 zł for fleet charging services',
     timestamp: new Date(Date.now() - 8 * 60 * 1000),
     severity: 'medium',
     confidence: 95,
-    data: { amount: '₺15,430', accountType: 'corporate' },
+    data: { amount: '15,430 zł', accountType: 'corporate' },
   },
   {
     id: '3',

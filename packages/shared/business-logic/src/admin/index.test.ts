@@ -142,22 +142,22 @@ describe('Admin/Dashboard Domain Business Logic', () => {
 
     describe('formatRevenue', () => {
       it('should format large amounts with M suffix', () => {
-        expect(formatRevenue(1500000)).toBe('₺1.5M');
-        expect(formatRevenue(2000000)).toBe('₺2.0M');
+        expect(formatRevenue(1500000)).toBe('1.5M zł');
+        expect(formatRevenue(2000000)).toBe('2.0M zł');
       });
 
       it('should format thousands with K suffix', () => {
-        expect(formatRevenue(1500)).toBe('₺1.5K');
-        expect(formatRevenue(25000)).toBe('₺25.0K');
+        expect(formatRevenue(1500)).toBe('1.5K zł');
+        expect(formatRevenue(25000)).toBe('25.0K zł');
       });
 
       it('should format small amounts without suffix', () => {
-        expect(formatRevenue(500)).toBe('₺500');
-        expect(formatRevenue(999)).toBe('₺999');
+        expect(formatRevenue(500)).toBe('500 zł');
+        expect(formatRevenue(999)).toBe('999 zł');
       });
 
       it('should handle zero and negative values', () => {
-        expect(formatRevenue(0)).toBe('₺0');
+        expect(formatRevenue(0)).toBe('0 zł');
       });
     });
 
@@ -386,7 +386,7 @@ describe('Admin/Dashboard Domain Business Logic', () => {
       const formattedRevenue = formatRevenue(metrics.dailyRevenue);
       const formattedPower = formatPowerOutput(metrics.powerOutput);
       
-      expect(formattedRevenue).toBe('₺24.7K');
+      expect(formattedRevenue).toBe('24.7K zł');
       expect(formattedPower).toBe('45.0 kW');
 
       // Check system health

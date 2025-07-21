@@ -68,7 +68,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: 5,
     title: 'Revenue Milestone',
-    message: 'Daily revenue target of ₺25,000 achieved ahead of schedule',
+          message: 'Daily revenue target of 25,000 zł achieved ahead of schedule',
     time: '3 hours ago',
     type: 'success',
     isRead: true,

@@ -84,12 +84,12 @@ export const calculateDashboardStats = (metrics: DashboardMetrics) => {
  */
 export const formatRevenue = (amount: number): string => {
   if (amount >= 1000000) {
-    return `₺${(amount / 1000000).toFixed(1)}M`;
+    return `${(amount / 1000000).toFixed(1)}M zł`;
   }
   if (amount >= 1000) {
-    return `₺${(amount / 1000).toFixed(1)}K`;
+    return `${(amount / 1000).toFixed(1)}K zł`;
   }
-  return `₺${amount.toFixed(0)}`;
+  return `${amount.toFixed(0)} zł`;
 };
 
 /**
@@ -327,7 +327,7 @@ export const getRouteConfig = (path: string): DashboardRoute | null => {
       description: 'Process payments, manage balances and transactions',
       icon: 'CreditCardIcon',
       variant: 'teal',
-      stats: '₺1.2M volume',
+      stats: '1.2M zł volume',
       badge: 'Payments',
     },
     '/sessions': {

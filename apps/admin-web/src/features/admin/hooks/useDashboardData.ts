@@ -112,7 +112,7 @@ export const useDashboardData = (): DashboardData => {
       },
       {
         title: 'Daily Revenue',
-        value: '₺24,680',
+        value: '24,680 zł',
         icon: BanknotesIcon,
         variant: 'teal' as const,
         trend: '+18% vs yesterday',
@@ -166,7 +166,7 @@ export const useDashboardData = (): DashboardData => {
         icon: CreditCardIcon,
         description: 'Process payments, manage balances and transactions',
         variant: 'teal' as const,
-        stats: '₺1.2M volume',
+        stats: '1.2M zł volume',
         designType: 'financial',
         badge: 'Payments',
         gradient: 'from-teal-500/20 via-cyan-400/15 to-blue-500/10',

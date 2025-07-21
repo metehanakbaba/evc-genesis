@@ -120,7 +120,7 @@ const SessionsPage: React.FC = () => {
     },
     {
       title: 'Revenue Flow',
-      value: '₺8,524',
+      value: '8,524 zł',
       icon: BanknotesIcon,
       variant: 'teal',
       trend: '+22% revenue growth',
@@ -514,7 +514,7 @@ const SessionsPage: React.FC = () => {
                         </div>
                         <div className="text-center p-3 bg-gray-800/30 rounded-lg">
                           <div className="text-lg font-bold text-teal-400">
-                            ₺{session.current_cost.toFixed(2)}
+                            {session.current_cost.toFixed(2)} zł
                           </div>
                           <div className="text-xs text-gray-400">
                             Current Cost
