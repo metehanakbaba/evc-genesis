@@ -177,21 +177,21 @@ const WalletsPage: React.FC = () => {
           description: 'Show all transaction types'
         },
         {
-          id: 'charge',
+          id: 'CHARGING_PAYMENT',
           label: 'Charging',
           icon: BanknotesIcon,
           color: 'teal',
           description: 'Energy consumption payments'
         },
         {
-          id: 'topup',
+          id: 'ADD_PLN_FUNDS',
           label: 'Top-up',
           icon: WalletIcon,
           color: 'blue',
           description: 'Wallet balance additions'
         },
         {
-          id: 'refund',
+          id: 'REFUND',
           label: 'Refund',
           icon: ReceiptRefundIcon,
           color: 'amber',
@@ -216,21 +216,21 @@ const WalletsPage: React.FC = () => {
           description: 'Show all transaction statuses'
         },
         {
-          id: 'completed',
+          id: 'COMPLETED',
           label: 'Completed',
           icon: CheckCircleIcon,
           color: 'green',
           description: 'Successfully processed transactions'
         },
         {
-          id: 'pending',
+          id: 'PENDING',
           label: 'Pending',
           icon: ClockIcon,
           color: 'yellow',
           description: 'Transactions awaiting processing'
         },
         {
-          id: 'failed',
+          id: 'FAILED',
           label: 'Failed',
           icon: XCircleIcon,
           color: 'red',

@@ -198,21 +198,21 @@ const UsersPage: React.FC = () => {
           description: 'Show all users regardless of role'
         },
         {
-          id: 'CUSTOMER',
+          id: 'user',
           label: 'Customer',
           icon: UserIcon,
           color: 'blue',
           description: 'Standard customer accounts'
         },
         {
-          id: 'ADMIN',
+          id: 'admin',
           label: 'Administrator',
           icon: ShieldCheckIcon,
           color: 'purple',
           description: 'Administrative accounts with full access'
         },
         {
-          id: 'FIELD_WORKER',
+          id: 'operator',
           label: 'Field Worker',
           icon: CogIcon,
           color: 'emerald',

@@ -416,7 +416,7 @@ const StationsPage: React.FC = () => {
                 {/* Filter Button */}
                 <FilterButton
                   onClick={() => setIsFilterModalOpen(true)}
-                  isActive={statusFilter !== 'all' || connectorTypeFilter !== 'all'}
+                  isActive={statusFilter !== 'all' || statusFilter !== 'all'}
                   label="Infrastructure Filters"
                   variant="blue"
                   size="md"

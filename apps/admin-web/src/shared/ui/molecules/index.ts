@@ -17,6 +17,6 @@ export * from './FloatingAccents';
 // New Data Management Molecule Components
 export { SearchFilterBar, type SearchFilterBarProps } from './SearchFilterBar/SearchFilterBar';
 export { FilterContainer, type FilterContainerProps } from './FilterContainer/FilterContainer';
-export { FilterModal, type FilterModalProps, type FilterOption, type FilterGroup } from './FilterModal/FilterModal';
+export { FilterModal, type FilterModalProps, type FilterOption, type FilterGroup } from '../organisms/FilterModal/FilterModal';
 export { EmptyState, type EmptyStateProps } from './EmptyState/EmptyState';
 export { DataGridCard, type DataGridCardProps, type DataGridCardAction, type DataGridCardStatus } from './DataGridCard/DataGridCard';
