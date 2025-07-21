@@ -57,12 +57,15 @@ export interface ChargingPayment {
 }
 
 export interface TransactionQueryParams {
+  readonly page?: number;
   readonly limit?: number;
-  readonly offset?: number;
+  readonly search?: string;
   readonly type?: TransactionType;
   readonly status?: TransactionStatus;
-  readonly startDate?: string;
-  readonly endDate?: string;
+  readonly sort_by?: 'created_at' | 'amount' | 'description';
+  readonly sort_order?: 'asc' | 'desc';
+  readonly date_from?: string;
+  readonly date_to?: string;
 }
 
 export interface WalletStatistics {

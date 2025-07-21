@@ -3,6 +3,7 @@
 import {
   ArrowDownTrayIcon,
   ArrowUpIcon,
+  BanknotesIcon,
   BoltIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -37,11 +38,14 @@ export interface TransactionFilterModalProps {
   readonly onClose: () => void;
   readonly typeFilter: string;
   readonly statusFilter: string;
+  readonly amountRangeFilter: string;
   readonly onTypeChange: (value: string) => void;
   readonly onStatusChange: (value: string) => void;
+  readonly onAmountRangeChange: (value: string) => void;
   readonly onClearFilters: () => void;
   readonly customTypeOptions?: FilterOption[];
   readonly customStatusOptions?: FilterOption[];
+  readonly customAmountOptions?: FilterOption[];
 }
 
 /**
@@ -53,11 +57,14 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   onClose,
   typeFilter,
   statusFilter,
+  amountRangeFilter,
   onTypeChange,
   onStatusChange,
+  onAmountRangeChange,
   onClearFilters,
   customTypeOptions,
   customStatusOptions,
+  customAmountOptions,
 }) => {
   // Default transaction type options
   const defaultTypeOptions: FilterOption[] = [
@@ -77,9 +84,18 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
     { id: 'CANCELLED', label: 'Cancelled', icon: XMarkIcon, color: 'red' },
   ];
 
+  // Default amount range options
+  const defaultAmountOptions: FilterOption[] = [
+    { id: 'all', label: 'All Amounts', icon: ViewColumnsIcon, color: 'gray' },
+    { id: 'large', label: 'Large (500+ zł)', icon: BanknotesIcon, color: 'red' },
+    { id: 'medium', label: 'Medium (100-500 zł)', icon: BanknotesIcon, color: 'amber' },
+    { id: 'small', label: 'Small (<100 zł)', icon: BanknotesIcon, color: 'blue' },
+  ];
+
   // Use custom options if provided, otherwise use defaults
   const typeOptions = customTypeOptions || defaultTypeOptions;
   const statusOptions = customStatusOptions || defaultStatusOptions;
+  const amountOptions = customAmountOptions || defaultAmountOptions;
 
   /**
    * 🎨 Render Filter Option Button
@@ -143,7 +159,7 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Transaction Filters"
-      description="Select transaction types and status to filter results"
+      description="Filter transactions by type, status, and amount range"
       size="lg"
       variant="default"
       footer={
@@ -176,11 +192,11 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
             onClick={onClose}
             className="
               relative overflow-hidden group/apply
-              bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600
-              hover:from-teal-500 hover:via-teal-400 hover:to-teal-500
+              bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600
+              hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500
               text-white font-semibold
-              shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-400/30
-              border border-teal-400/20 hover:border-teal-300/40
+              shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30
+              border border-emerald-400/20 hover:border-emerald-300/40
               transition-all duration-300 ease-out
               hover:scale-[1.02] active:scale-[0.98]
               flex items-center
@@ -219,6 +235,20 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
                 status,
                 statusFilter === status.id,
                 () => onStatusChange(status.id)
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Revolutionary Amount Range Selection */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Amount Range</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {amountOptions.map((amount) =>
+              renderFilterOption(
+                amount,
+                amountRangeFilter === amount.id,
+                () => onAmountRangeChange(amount.id)
               )
             )}
           </div>

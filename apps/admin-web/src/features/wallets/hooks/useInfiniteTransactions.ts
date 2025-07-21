@@ -1,17 +1,17 @@
 /**
  * 🔄 Infinite Transactions Hook
  * 
- * Infinite scroll functionality for transaction lists with smooth animations.
- * Compatible with wallet API schema and pagination structure.
+ * Infinite scroll functionality for transaction lists with API-based search and filtering.
+ * Compatible with wallet API schema and server-side pagination.
  * 
  * @module useInfiniteTransactions
- * @version 2.0.0 - Performance Optimized
+ * @version 3.0.0 - API Search Integration
  * @author EV Charging Team
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { PLNTransaction } from '../types/wallet.types';
-import { generateMockTransactions } from '../api/walletApi';
+import type { PLNTransaction, TransactionQueryParams } from '../types/wallet.types';
+import { useGetAllTransactionsQuery } from '../api/walletApi';
 
 interface InfiniteTransactionsResult {
   transactions: PLNTransaction[];
@@ -29,14 +29,15 @@ interface UseInfiniteTransactionsOptions {
     searchQuery?: string;
     typeFilter?: string;
     statusFilter?: string;
+    amountRangeFilter?: string;
   };
   pageSize?: number;
   enabled?: boolean;
 }
 
 /**
- * 🚀 useInfiniteTransactions Hook - Performance Optimized
- * Provides infinite scroll functionality with API-compatible pagination
+ * 🚀 useInfiniteTransactions Hook - API Search Integration
+ * Provides infinite scroll functionality with server-side search and filtering
  */
 export const useInfiniteTransactions = (
   options: UseInfiniteTransactionsOptions = {}
@@ -65,13 +66,26 @@ export const useInfiniteTransactions = (
     JSON.stringify(filters), [filters]
   );
 
+  // ✅ Build API query parameters
+  const buildQueryParams = useCallback((page: number): TransactionQueryParams => {
+    return {
+      page,
+      limit: pageSize,
+      search: filters.searchQuery?.trim() || undefined,
+      type: filters.typeFilter && filters.typeFilter !== 'all' ? filters.typeFilter as any : undefined,
+      status: filters.statusFilter && filters.statusFilter !== 'all' ? filters.statusFilter as any : undefined,
+      sort_by: 'created_at',
+      sort_order: 'desc',
+      // Note: amountRangeFilter can be handled client-side for now since it's a range filter
+    };
+  }, [filters, pageSize]);
+
   /**
-   * 🔄 Fetch Transactions Function - Optimized
+   * 🔄 Fetch Transactions Function - API Integration
    */
   const fetchTransactions = useCallback(async (
     page: number,
-    currentFilters: typeof filters,
-  ): Promise<{ transactions: PLNTransaction[]; total: number }> => {
+  ): Promise<{ transactions: PLNTransaction[]; total: number; hasNextPage: boolean }> => {
     // Cancel previous request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -81,9 +95,9 @@ export const useInfiniteTransactions = (
     abortControllerRef.current = new AbortController();
 
     try {
-      // Simulate API delay
+      // Simulate API delay for realistic behavior
       await new Promise((resolve, reject) => {
-        const timeout = setTimeout(resolve, page === 0 ? 800 : 300);
+        const timeout = setTimeout(resolve, page === 0 ? 500 : 200);
         
         abortControllerRef.current?.signal.addEventListener('abort', () => {
           clearTimeout(timeout);
@@ -91,34 +105,30 @@ export const useInfiniteTransactions = (
         });
       });
 
-      // Generate stable mock data
-      const mockData = generateMockTransactions(100);
-      let filteredData = mockData;
+      // Check if request was aborted
+      if (abortControllerRef.current?.signal.aborted) {
+        throw new Error('Request aborted');
+      }
+
+      // Build query parameters
+      const queryParams = buildQueryParams(page);
       
-      // Apply filters
-      if (currentFilters.searchQuery?.trim()) {
-        const query = currentFilters.searchQuery.toLowerCase().trim();
-        filteredData = filteredData.filter(t => 
-          t.description.toLowerCase().includes(query) ||
-          t.id.toLowerCase().includes(query)
-        );
-      }
-
-      if (currentFilters.typeFilter && currentFilters.typeFilter !== 'all') {
-        filteredData = filteredData.filter(t => t.type === currentFilters.typeFilter);
-      }
-
-      if (currentFilters.statusFilter && currentFilters.statusFilter !== 'all') {
-        filteredData = filteredData.filter(t => t.status === currentFilters.statusFilter);
-      }
-
-      // Paginate results
-      const offset = page * pageSize;
-      const paginatedData = filteredData.slice(offset, offset + pageSize);
+      // Use the enhanced API hook (simulated)
+      const result = useGetAllTransactionsQuery(queryParams);
       
+      if (result.isError || result.error) {
+        throw new Error('Failed to fetch transactions');
+      }
+
+      const apiData = result.data?.data;
+      if (!apiData) {
+        throw new Error('Invalid API response');
+      }
+
       return {
-        transactions: paginatedData,
-        total: filteredData.length,
+        transactions: apiData.transactions,
+        total: apiData.total,
+        hasNextPage: apiData.hasNextPage || false,
       };
     } catch (error) {
       if (error instanceof Error && error.message === 'Request aborted') {
@@ -126,12 +136,12 @@ export const useInfiniteTransactions = (
       }
       throw new Error('Failed to fetch transactions');
     }
-  }, [pageSize]);
+  }, [buildQueryParams]);
 
   /**
-   * 📊 Load Initial Data - Optimized
+   * 📊 Load Initial Data - API Integration
    */
-  const loadInitialData = useCallback(async (currentFilters: typeof filters) => {
+  const loadInitialData = useCallback(async () => {
     if (!enabled) return;
 
     setIsLoading(true);
@@ -139,14 +149,14 @@ export const useInfiniteTransactions = (
     setCurrentPage(0);
     
     try {
-      const result = await fetchTransactions(0, currentFilters);
+      const result = await fetchTransactions(0);
       
       // Only update if not aborted
       if (!abortControllerRef.current?.signal.aborted) {
         setTransactions(result.transactions);
         setTotal(result.total);
         setCurrentPage(0);
-        setHasNextPage(result.transactions.length === pageSize && result.total > pageSize);
+        setHasNextPage(result.hasNextPage);
       }
     } catch (err) {
       if (err instanceof Error && err.message !== 'Request aborted') {
@@ -157,10 +167,10 @@ export const useInfiniteTransactions = (
         setIsLoading(false);
       }
     }
-  }, [enabled, fetchTransactions, pageSize]);
+  }, [enabled, fetchTransactions]);
 
   /**
-   * 📄 Load More Data - Optimized
+   * 📄 Load More Data - API Integration
    */
   const loadMore = useCallback(async () => {
     if (isLoadingMore || !hasNextPage || isLoading) return;
@@ -170,7 +180,7 @@ export const useInfiniteTransactions = (
 
     try {
       const nextPage = currentPage + 1;
-      const result = await fetchTransactions(nextPage, filters);
+      const result = await fetchTransactions(nextPage);
       
       // Only update if not aborted
       if (!abortControllerRef.current?.signal.aborted) {
@@ -182,9 +192,7 @@ export const useInfiniteTransactions = (
         
         setCurrentPage(nextPage);
         setTotal(result.total);
-        
-        // Calculate if more pages exist
-        setHasNextPage((nextPage + 1) * pageSize < result.total);
+        setHasNextPage(result.hasNextPage);
       }
     } catch (err) {
       if (err instanceof Error && err.message !== 'Request aborted') {
@@ -195,17 +203,17 @@ export const useInfiniteTransactions = (
         setIsLoadingMore(false);
       }
     }
-  }, [isLoadingMore, hasNextPage, isLoading, currentPage, fetchTransactions, filters, pageSize]);
+  }, [isLoadingMore, hasNextPage, isLoading, currentPage, fetchTransactions]);
 
   /**
-   * 🔄 Refresh Data - Optimized
+   * 🔄 Refresh Data - API Integration
    */
   const refresh = useCallback(() => {
     setTransactions([]);
     setCurrentPage(0);
     setHasNextPage(true);
-    loadInitialData(filters);
-  }, [loadInitialData, filters]);
+    loadInitialData();
+  }, [loadInitialData]);
 
   /**
    * 🎯 Effect: Load initial data only once on mount
@@ -213,13 +221,13 @@ export const useInfiniteTransactions = (
   useEffect(() => {
     if (!isInitializedRef.current && enabled) {
       isInitializedRef.current = true;
-      loadInitialData(filters);
+      loadInitialData();
     }
     return undefined; // Explicit return for TypeScript
   }, [enabled]); // Only depend on enabled
 
   /**
-   * 🎯 Effect: Handle filter changes with debounce-like behavior
+   * 🎯 Effect: Handle filter changes with API reload
    */
   useEffect(() => {
     if (isInitializedRef.current) {
@@ -230,7 +238,7 @@ export const useInfiniteTransactions = (
       
       // Small delay to batch multiple filter changes
       const timeoutId = setTimeout(() => {
-        loadInitialData(filters);
+        loadInitialData();
       }, 100);
 
       return () => clearTimeout(timeoutId);

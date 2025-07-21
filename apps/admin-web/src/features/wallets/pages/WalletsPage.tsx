@@ -1,13 +1,21 @@
 'use client';
 
 import {
+  ArrowDownTrayIcon,
   ArrowPathIcon,
+  ArrowUpIcon,
   BanknotesIcon,
+  BoltIcon,
   ChartBarIcon,
+  CheckCircleIcon,
+  ClockIcon,
   EyeIcon,
   PlusIcon,
   ReceiptRefundIcon,
+  ViewColumnsIcon,
   WalletIcon,
+  XCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Button } from '@ui/forms';
@@ -20,8 +28,13 @@ import { useState } from 'react';
 import { 
   TransactionGrid, 
   TransactionTable, 
-  TransactionFilterModal 
 } from '../components';
+
+// ✅ Import shared GenericFilterModal instead of custom TransactionFilterModal
+import { 
+  GenericFilterModal,
+  type FilterGroup
+} from '@/shared/ui/components/DataDisplay/GenericFilterModal';
 
 // ✅ Import API hooks and types
 import { 
@@ -32,8 +45,8 @@ import {
 // ✅ Import infinite scroll hooks
 import { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
 
-// ✅ Import debounce hook
-import { useSearchDebounce } from '../hooks/useDebounce';
+// ✅ Import shared debounce hook
+import { useSearchDebounce } from '@/shared/ui/hooks/useDebounce';
 
 // ✅ Import skeleton components
 import { TransactionGridSkeleton, TransactionTableSkeleton } from '../components/TransactionSkeleton';
@@ -72,6 +85,7 @@ const WalletsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [amountRangeFilter, setAmountRangeFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
@@ -91,6 +105,7 @@ const WalletsPage: React.FC = () => {
       searchQuery: debouncedSearchQuery,
       typeFilter,
       statusFilter,
+      amountRangeFilter,
     },
     pageSize: 20,
   });
@@ -100,6 +115,118 @@ const WalletsPage: React.FC = () => {
   } = useWalletStatistics();
 
   const { viewDetails, retryTransaction } = useTransactionActions();
+
+  // ✅ Create revolutionary filter groups for GenericFilterModal
+  const filterGroups: FilterGroup[] = [
+          {
+        id: 'transaction-type',
+        title: 'Transaction Type',
+        selectedValue: typeFilter,
+        onChange: setTypeFilter,
+      options: [
+        { 
+          id: 'all', 
+          label: 'All Types', 
+          icon: WalletIcon,
+          color: 'gray'
+        },
+        { 
+          id: 'ADD_PLN_FUNDS', 
+          label: 'Top-up', 
+          icon: ArrowDownTrayIcon,
+          color: 'emerald'
+        },
+        { 
+          id: 'CHARGING_PAYMENT', 
+          label: 'Payment', 
+          icon: BoltIcon,
+          color: 'blue'
+        },
+        { 
+          id: 'REFUND', 
+          label: 'Refund', 
+          icon: ReceiptRefundIcon,
+          color: 'amber'
+        },
+        { 
+          id: 'TRANSFER', 
+          label: 'Transfer', 
+          icon: ArrowUpIcon,
+          color: 'purple'
+        },
+      ],
+    },
+          {
+        id: 'transaction-status',
+        title: 'Status',
+        selectedValue: statusFilter,
+        onChange: setStatusFilter,
+      options: [
+        { 
+          id: 'all', 
+          label: 'All Status', 
+          icon: ViewColumnsIcon,
+          color: 'gray'
+        },
+        { 
+          id: 'COMPLETED', 
+          label: 'Completed', 
+          icon: CheckCircleIcon,
+          color: 'emerald'
+        },
+        { 
+          id: 'PENDING', 
+          label: 'Pending', 
+          icon: ClockIcon,
+          color: 'amber'
+        },
+        { 
+          id: 'FAILED', 
+          label: 'Failed', 
+          icon: XCircleIcon,
+          color: 'red'
+        },
+        { 
+          id: 'CANCELLED', 
+          label: 'Cancelled', 
+          icon: XMarkIcon,
+          color: 'red'
+        },
+      ],
+    },
+          {
+        id: 'amount-range',
+        title: 'Amount Range',
+        selectedValue: amountRangeFilter,
+        onChange: setAmountRangeFilter,
+      options: [
+        { 
+          id: 'all', 
+          label: 'All Amounts', 
+          icon: ViewColumnsIcon,
+          color: 'gray'
+        },
+        { 
+          id: 'large', 
+          label: 'Large (500+ zł)', 
+          icon: BanknotesIcon,
+          color: 'red'
+        },
+        { 
+          id: 'medium', 
+          label: 'Medium (100-500 zł)', 
+          icon: BanknotesIcon,
+          color: 'amber'
+        },
+        { 
+          id: 'small', 
+          label: 'Small (<100 zł)', 
+          icon: BanknotesIcon,
+          color: 'blue'
+        },
+      ],
+    },
+  ];
 
   // Revolutionary floating stats with financial data
   const walletStats: WalletStats[] = [
@@ -147,6 +274,7 @@ const WalletsPage: React.FC = () => {
   const handleClearFilters = () => {
     setTypeFilter('all');
     setStatusFilter('all');
+    setAmountRangeFilter('all');
     setSearchQuery('');
   };
 
@@ -314,8 +442,8 @@ const WalletsPage: React.FC = () => {
             searchValue={searchQuery}
             onSearchChange={setSearchQuery}
             searchPlaceholder="Search payment records, amounts, settlement IDs..."
-            onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={typeFilter !== 'all' || statusFilter !== 'all'}
+                      onFilterClick={() => setIsFilterModalOpen(true)}
+          isFilterActive={typeFilter !== 'all' || statusFilter !== 'all' || amountRangeFilter !== 'all'}
             filterLabel="Transaction Filters"
             viewMode={viewMode}
             onViewModeChange={setViewMode}
@@ -375,14 +503,15 @@ const WalletsPage: React.FC = () => {
       </PageContainer>
 
       {/* ✅ Use new reusable TransactionFilterModal component */}
-      <TransactionFilterModal
+      {/* ✅ Revolutionary GenericFilterModal with Same Design as SessionFilterModal */}
+      <GenericFilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        typeFilter={typeFilter}
-        statusFilter={statusFilter}
-        onTypeChange={setTypeFilter}
-        onStatusChange={setStatusFilter}
+        title="Transaction Filters"
+        description="Filter transactions by type, status, and amount range"
+        filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
+        variant="emerald"
       />
     </MainLayout>
   );

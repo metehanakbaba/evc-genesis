@@ -19,6 +19,61 @@ export * from './molecules';
 export * from './organisms';
 export * from './templates';
 
+// ==================== NEW SHARED COMPONENTS ====================
+// 🎣 HOOKS - Shared Hooks
+export { useInfiniteScrollTrigger, useIntersectionObserver } from './hooks/useInfiniteScrollTrigger';
+export { useDebounce, useSearchDebounce } from './hooks/useDebounce';
+
+// 🗂️ DATA DISPLAY - Generic Data Components
+export { GenericDataGrid } from './components/DataDisplay/GenericDataGrid';
+export type { 
+  GridItem as DataGridItem, 
+  ActionButton as GridActionButton, 
+  StatusConfig as DataGridStatusConfig,
+  GridCardRenderer,
+  GenericDataGridProps 
+} from './components/DataDisplay/GenericDataGrid';
+
+export { StatusBadge as DataStatusBadge, StatusConfigurations, createStatusConfig } from './components/DataDisplay/StatusBadge';
+export type { 
+  StatusConfig as DataStatusConfig, 
+  StatusBadgeProps as DataStatusBadgeProps 
+} from './components/DataDisplay/StatusBadge';
+
+export { 
+  LoadMoreSkeleton, 
+  EndOfListIndicator, 
+  GridItemSkeleton, 
+  GridSkeleton 
+} from './components/DataDisplay/DataGridSkeleton';
+export type {
+  EndOfListIndicatorProps,
+  GridItemSkeletonProps,
+  GridSkeletonProps
+} from './components/DataDisplay/DataGridSkeleton';
+
+export { GenericFilterModal } from './components/DataDisplay/GenericFilterModal';
+export type {
+  FilterOption as GenericFilterOption,
+  FilterGroup as GenericFilterGroup,
+  GenericFilterModalProps
+} from './components/DataDisplay/GenericFilterModal';
+
+export { GenericDataTable } from './components/DataDisplay/GenericDataTable';
+export type {
+  TableColumn,
+  SortConfig,
+  GenericDataTableProps
+} from './components/DataDisplay/GenericDataTable';
+
+export { BulkActionBar, useBulkSelection } from './components/DataDisplay/BulkActionBar';
+export type {
+  BulkAction,
+  BulkActionBarProps
+} from './components/DataDisplay/BulkActionBar';
+
+export { default as BulkActionBarExample } from './components/DataDisplay/examples/BulkActionBarExample';
+
 // ==================== HOOKS ====================
 export * from './hooks';
 
