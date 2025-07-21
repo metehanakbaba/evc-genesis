@@ -1,9 +1,9 @@
 /**
  * 🎯 Session Actions Hook
- * 
+ *
  * Custom hook for session-related actions and operations.
  * Provides centralized session management functionality.
- * 
+ *
  * @module useSessionActions
  * @version 1.0.0
  * @author EV Charging Team
@@ -30,7 +30,7 @@ export const useSessionActions = (): SessionActionsResult => {
   const viewDetails = useCallback((session: LiveChargingSession) => {
     // TODO: Navigate to session details page or open modal
     console.log('Viewing session details:', session.id);
-    
+
     // Example implementation:
     // router.push(`/sessions/${session.id}`);
     // or open a modal with session details
@@ -42,13 +42,12 @@ export const useSessionActions = (): SessionActionsResult => {
   const stopSession = useCallback(async (session: LiveChargingSession) => {
     try {
       console.log('Stopping session:', session.id);
-      
+
       // TODO: Implement actual API call
       // const result = await stopSessionMutation({ sessionId: session.id });
-      
+
       // Show success notification
       // toast.success(`Session ${session.id} stopped successfully`);
-      
     } catch (error) {
       console.error('Failed to stop session:', error);
       // Show error notification
@@ -62,13 +61,12 @@ export const useSessionActions = (): SessionActionsResult => {
   const retrySession = useCallback(async (session: LiveChargingSession) => {
     try {
       console.log('Retrying session:', session.id);
-      
+
       // TODO: Implement actual API call
       // const result = await retrySessionMutation({ sessionId: session.id });
-      
+
       // Show success notification
       // toast.success(`Session ${session.id} retry initiated`);
-      
     } catch (error) {
       console.error('Failed to retry session:', error);
       // Show error notification
@@ -82,13 +80,12 @@ export const useSessionActions = (): SessionActionsResult => {
   const forceStopSession = useCallback(async (session: LiveChargingSession) => {
     try {
       console.log('Force stopping session:', session.id);
-      
+
       // TODO: Implement actual API call
       // const result = await forceStopSessionMutation({ sessionId: session.id });
-      
+
       // Show success notification
       // toast.success(`Session ${session.id} force stopped`);
-      
     } catch (error) {
       console.error('Failed to force stop session:', error);
       // Show error notification
@@ -102,4 +99,4 @@ export const useSessionActions = (): SessionActionsResult => {
     retrySession,
     forceStopSession,
   };
-}; 
+};

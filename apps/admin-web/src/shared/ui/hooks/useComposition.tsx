@@ -1,12 +1,20 @@
-import React, { useMemo, useCallback, useState, ReactElement, isValidElement, cloneElement } from 'react';
-import { BaseComponentProps } from '../atoms/types';
+import type React from 'react';
+import {
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
+import type { BaseComponentProps } from '../atoms/types';
 
 /**
  * Hook for managing component composition
  */
 export function useComposition<T extends BaseComponentProps>(
   baseProps: T,
-  enhancedProps: Partial<T> = {}
+  enhancedProps: Partial<T> = {},
 ) {
   const composedProps = useMemo(() => {
     return { ...baseProps, ...enhancedProps };
@@ -15,20 +23,20 @@ export function useComposition<T extends BaseComponentProps>(
   const enhanceChild = useCallback(
     (child: ReactElement, additionalProps: Partial<T> = {}) => {
       if (!isValidElement(child)) return child;
-      
+
       return cloneElement(child, {
         ...(child.props as any),
         ...composedProps,
         ...additionalProps,
       });
     },
-    [composedProps]
+    [composedProps],
   );
 
   const enhanceChildren = useCallback(
     (children: React.ReactNode, additionalProps: Partial<T> = {}) => {
       if (!children) return null;
-      
+
       if (Array.isArray(children)) {
         return children.map((child, index) => {
           if (isValidElement(child)) {
@@ -37,14 +45,14 @@ export function useComposition<T extends BaseComponentProps>(
           return child;
         });
       }
-      
+
       if (isValidElement(children)) {
         return enhanceChild(children, additionalProps);
       }
-      
+
       return children;
     },
-    [enhanceChild]
+    [enhanceChild],
   );
 
   return {
@@ -59,7 +67,7 @@ export function useComposition<T extends BaseComponentProps>(
  */
 export function useSlots<T extends Record<string, any>>(
   defaultSlots: T,
-  providedSlots: Partial<T> = {}
+  providedSlots: Partial<T> = {},
 ) {
   const slots = useMemo(() => {
     return { ...defaultSlots, ...providedSlots };
@@ -68,27 +76,27 @@ export function useSlots<T extends Record<string, any>>(
   const renderSlot = useCallback(
     (slotName: keyof T, props: any = {}) => {
       const SlotComponent = slots[slotName];
-      
+
       if (!SlotComponent) return null;
-      
+
       if (typeof SlotComponent === 'function') {
         return <SlotComponent {...props} />;
       }
-      
+
       if (isValidElement(SlotComponent)) {
         return cloneElement(SlotComponent, props);
       }
-      
+
       return SlotComponent;
     },
-    [slots]
+    [slots],
   );
 
   const hasSlot = useCallback(
     (slotName: keyof T) => {
       return Boolean(slots[slotName]);
     },
-    [slots]
+    [slots],
   );
 
   return {
@@ -102,16 +110,13 @@ export function useSlots<T extends Record<string, any>>(
  * Hook for managing compound component state
  */
 export function useCompoundComponent<TState extends Record<string, any>>(
-  initialState: TState
+  initialState: TState,
 ) {
   const [state, setState] = useState(initialState);
 
-  const updateState = useCallback(
-    (updates: Partial<TState>) => {
-      setState(prev => ({ ...prev, ...updates }));
-    },
-    []
-  );
+  const updateState = useCallback((updates: Partial<TState>) => {
+    setState((prev) => ({ ...prev, ...updates }));
+  }, []);
 
   const resetState = useCallback(() => {
     setState(initialState);
@@ -120,7 +125,7 @@ export function useCompoundComponent<TState extends Record<string, any>>(
   const createChildProps = useCallback(
     <TChildProps extends BaseComponentProps>(
       childProps: TChildProps,
-      stateProps: Partial<TState> = {}
+      stateProps: Partial<TState> = {},
     ) => {
       return {
         ...childProps,
@@ -130,7 +135,7 @@ export function useCompoundComponent<TState extends Record<string, any>>(
         resetState,
       };
     },
-    [state, updateState, resetState]
+    [state, updateState, resetState],
   );
 
   return {
@@ -146,7 +151,7 @@ export function useCompoundComponent<TState extends Record<string, any>>(
  */
 export function useVariantComposition<TVariants extends Record<string, any>>(
   variants: TVariants,
-  activeVariant: keyof TVariants
+  activeVariant: keyof TVariants,
 ) {
   const currentVariant = useMemo(() => {
     return variants[activeVariant];
@@ -155,7 +160,7 @@ export function useVariantComposition<TVariants extends Record<string, any>>(
   const composeWithVariant = useCallback(
     <TProps extends BaseComponentProps>(
       baseProps: TProps,
-      variantOverrides: Partial<TProps> = {}
+      variantOverrides: Partial<TProps> = {},
     ) => {
       return {
         ...baseProps,
@@ -163,7 +168,7 @@ export function useVariantComposition<TVariants extends Record<string, any>>(
         ...variantOverrides,
       };
     },
-    [currentVariant]
+    [currentVariant],
   );
 
   const getVariantClasses = useCallback(
@@ -171,7 +176,7 @@ export function useVariantComposition<TVariants extends Record<string, any>>(
       const variantClasses = currentVariant?.className || '';
       return [baseClasses, variantClasses].filter(Boolean).join(' ');
     },
-    [currentVariant]
+    [currentVariant],
   );
 
   return {
@@ -192,11 +197,11 @@ export function useResponsiveComposition<T extends BaseComponentProps>(
     lg?: Partial<T>;
     xl?: Partial<T>;
     '2xl'?: Partial<T>;
-  } = {}
+  } = {},
 ) {
   const responsiveProps = useMemo(() => {
     // This would typically integrate with a breakpoint detection hook
-    // For now, we'll merge all props (in a real implementation, 
+    // For now, we'll merge all props (in a real implementation,
     // you'd detect the current breakpoint and apply appropriate props)
     return {
       ...baseProps,
@@ -207,16 +212,16 @@ export function useResponsiveComposition<T extends BaseComponentProps>(
   const getResponsiveClasses = useCallback(
     (baseClasses: string = '') => {
       const classes = [baseClasses];
-      
+
       Object.entries(breakpointProps).forEach(([breakpoint, props]) => {
         if (props?.className) {
           classes.push(`${breakpoint}:${props.className}`);
         }
       });
-      
+
       return classes.filter(Boolean).join(' ');
     },
-    [breakpointProps]
+    [breakpointProps],
   );
 
   return {

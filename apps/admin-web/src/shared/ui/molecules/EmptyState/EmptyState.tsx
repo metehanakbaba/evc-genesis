@@ -1,6 +1,6 @@
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { ActionButton } from '../../atoms/ActionButton/ActionButton';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export interface EmptyStateProps {
   readonly icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -14,7 +14,7 @@ export interface EmptyStateProps {
 
 /**
  * 🫙 EmptyState Molecule Component
- * 
+ *
  * Displays when no data is available with optional clear filters action.
  * Provides consistent empty state experience across all data lists.
  */
@@ -22,10 +22,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   icon: Icon,
   title,
   description,
-  actionLabel = "Clear Filters",
+  actionLabel = 'Clear Filters',
   onAction,
-  variant = "default",
-  className = "",
+  variant = 'default',
+  className = '',
 }) => {
   const getVariantClasses = () => {
     switch (variant) {
@@ -67,21 +67,19 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div className={`text-center py-12 ${className}`}>
       {/* Icon Container */}
-      <div className={`
+      <div
+        className={`
         w-24 h-24 ${variantClasses.iconBg} rounded-2xl 
         flex items-center justify-center mx-auto mb-4
-      `}>
+      `}
+      >
         <Icon className={`w-12 h-12 ${variantClasses.iconColor}`} />
       </div>
-      
+
       {/* Content */}
-      <h3 className="text-xl font-semibold text-white mb-2">
-        {title}
-      </h3>
-      <p className="text-gray-400 mb-6">
-        {description}
-      </p>
-      
+      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+      <p className="text-gray-400 mb-6">{description}</p>
+
       {/* Action Button */}
       {onAction && (
         <ActionButton
@@ -101,4 +99,4 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       )}
     </div>
   );
-}; 
+};

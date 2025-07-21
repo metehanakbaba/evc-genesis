@@ -1,23 +1,23 @@
-import React from 'react';
-import { cn } from '../../utils';
-import { TextElement } from '../../atoms/TextElement';
+import type React from 'react';
 import { IconContainer } from '../../atoms/IconContainer';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps 
+import { TextElement } from '../../atoms/TextElement';
+import type {
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
 } from '../../atoms/types';
+import { cn } from '../../utils';
 
 /**
  * StatValue Component Props
- * 
+ *
  * Molecule component that composes TextElement and IconContainer atoms
  * to display statistical values with icons and trend information
  */
-export interface StatValueProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps {
+export interface StatValueProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps {
   /** The main statistical value to display */
   value: string;
   /** The title/label for the statistic */
@@ -79,19 +79,19 @@ const layoutSizes = {
 
 /**
  * StatValue - Molecule component for displaying statistical values
- * 
+ *
  * Composes TextElement and IconContainer atoms to create a cohesive
  * statistical display with optional trend indicators and descriptions.
- * 
+ *
  * @example
  * ```tsx
- * <StatValue 
- *   value="1,234" 
- *   title="Active Sessions" 
+ * <StatValue
+ *   value="1,234"
+ *   title="Active Sessions"
  *   icon={UserIcon}
  *   trend="+12%"
- *   variant="blue" 
- *   size="md" 
+ *   variant="blue"
+ *   size="md"
  * />
  * ```
  */
@@ -112,20 +112,20 @@ export const StatValue: React.FC<StatValueProps> = ({
 }) => {
   // Get size configuration
   const sizeConfig = layoutSizes[size];
-  
+
   // Format the value if formatter is provided
   const displayValue = formatValue ? formatValue(value) : value;
-  
+
   // Determine if component is interactive
   const isInteractive = Boolean(onClick);
-  
+
   // Determine trend direction and styling
   const getTrendStyling = () => {
     if (!trend) return null;
-    
+
     const isPositive = trend.startsWith('+');
     const isNegative = trend.startsWith('-');
-    
+
     if (isPositive) {
       return {
         variant: 'emerald' as const,
@@ -137,7 +137,7 @@ export const StatValue: React.FC<StatValueProps> = ({
         opacity: 'high' as const,
       };
     }
-    
+
     return {
       variant: variant,
       opacity: 'medium' as const,
@@ -150,18 +150,19 @@ export const StatValue: React.FC<StatValueProps> = ({
   const containerClasses = cn(
     // Base layout
     'flex items-start',
-    
+
     // Orientation
     orientation === 'horizontal' ? 'flex-row items-center' : 'flex-col',
-    
+
     // Spacing
     sizeConfig.container,
-    
+
     // Interactive states
-    isInteractive && 'cursor-pointer transition-all duration-200 hover:scale-105',
-    
+    isInteractive &&
+      'cursor-pointer transition-all duration-200 hover:scale-105',
+
     // Custom className
-    className
+    className,
   );
 
   // Handle click
@@ -182,12 +183,16 @@ export const StatValue: React.FC<StatValueProps> = ({
       data-interactive={isInteractive}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      onKeyDown={isInteractive ? (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-      } : undefined}
+      onKeyDown={
+        isInteractive
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick();
+              }
+            }
+          : undefined
+      }
       {...props}
     >
       {/* Icon Section */}
@@ -203,10 +208,12 @@ export const StatValue: React.FC<StatValueProps> = ({
       )}
 
       {/* Content Section */}
-      <div className={cn(
-        'flex flex-col',
-        orientation === 'horizontal' && 'flex-1'
-      )}>
+      <div
+        className={cn(
+          'flex flex-col',
+          orientation === 'horizontal' && 'flex-1',
+        )}
+      >
         {/* Title */}
         <TextElement
           as="span"

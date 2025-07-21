@@ -1,9 +1,9 @@
 /**
  * 🎨 Transaction Color Utilities
- * 
+ *
  * Centralized color configuration for transaction types and statuses.
  * Ensures consistent visual styling across all wallet components.
- * 
+ *
  * @module TransactionColorUtils
  * @version 1.0.0
  * @author EV Charging Team
@@ -18,7 +18,8 @@ export const getTransactionTypeConfig = (type: string) => {
     case 'ADD_PLN_FUNDS':
       return {
         // Grid card styles
-        bgColor: 'bg-gradient-to-br from-emerald-500/10 via-emerald-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-emerald-500/10 via-emerald-400/5 to-transparent',
         borderColor: 'border-emerald-400/25 hover:border-emerald-300/40',
         badgeColor: 'bg-emerald-500/10 border border-emerald-500/20',
         textColor: 'text-emerald-400',
@@ -30,7 +31,8 @@ export const getTransactionTypeConfig = (type: string) => {
       };
     case 'CHARGING_PAYMENT':
       return {
-        bgColor: 'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
         borderColor: 'border-blue-400/25 hover:border-blue-300/40',
         badgeColor: 'bg-blue-500/10 border border-blue-500/20',
         textColor: 'text-blue-400',
@@ -41,7 +43,8 @@ export const getTransactionTypeConfig = (type: string) => {
       };
     case 'REFUND':
       return {
-        bgColor: 'bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-transparent',
         borderColor: 'border-amber-400/25 hover:border-amber-300/40',
         badgeColor: 'bg-amber-500/10 border border-amber-500/20',
         textColor: 'text-amber-400',
@@ -52,7 +55,8 @@ export const getTransactionTypeConfig = (type: string) => {
       };
     case 'TRANSFER':
       return {
-        bgColor: 'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent',
         borderColor: 'border-purple-400/25 hover:border-purple-300/40',
         badgeColor: 'bg-purple-500/10 border border-purple-500/20',
         textColor: 'text-purple-400',
@@ -63,7 +67,8 @@ export const getTransactionTypeConfig = (type: string) => {
       };
     default:
       return {
-        bgColor: 'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
         borderColor: 'border-gray-400/25 hover:border-gray-300/40',
         badgeColor: 'bg-gray-500/10 border border-gray-500/20',
         textColor: 'text-gray-400',
@@ -152,9 +157,9 @@ export const getTransactionStyling = (type: string, status: string) => {
  */
 export const TRANSACTION_TYPES = [
   'ADD_PLN_FUNDS',
-  'CHARGING_PAYMENT', 
+  'CHARGING_PAYMENT',
   'REFUND',
-  'TRANSFER'
+  'TRANSFER',
 ] as const;
 
 /**
@@ -164,9 +169,9 @@ export const TRANSACTION_TYPES = [
 export const TRANSACTION_STATUSES = [
   'COMPLETED',
   'PENDING',
-  'FAILED', 
-  'CANCELLED'
+  'FAILED',
+  'CANCELLED',
 ] as const;
 
-export type TransactionType = typeof TRANSACTION_TYPES[number];
-export type TransactionStatus = typeof TRANSACTION_STATUSES[number]; 
+export type TransactionType = (typeof TRANSACTION_TYPES)[number];
+export type TransactionStatus = (typeof TRANSACTION_STATUSES)[number];

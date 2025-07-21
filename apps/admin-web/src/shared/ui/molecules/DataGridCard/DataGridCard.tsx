@@ -1,6 +1,12 @@
 import type React from 'react';
-import { ActionButton, type ActionButtonVariant } from '../../atoms/ActionButton/ActionButton';
-import { StatusBadge, type StatusVariant } from '../../atoms/StatusBadge/StatusBadge';
+import {
+  ActionButton,
+  type ActionButtonVariant,
+} from '../../atoms/ActionButton/ActionButton';
+import {
+  StatusBadge,
+  type StatusVariant,
+} from '../../atoms/StatusBadge/StatusBadge';
 
 export interface DataGridCardAction {
   readonly label?: string;
@@ -32,7 +38,7 @@ export interface DataGridCardProps {
 
 /**
  * 🃏 DataGridCard Molecule Component
- * 
+ *
  * Standard card layout for grid view across all data management pages.
  * Supports status badges, metadata display, and action buttons.
  */
@@ -45,8 +51,8 @@ export const DataGridCard: React.FC<DataGridCardProps> = ({
   status,
   actions = [],
   metadata = {},
-  variant = "default",
-  className = "",
+  variant = 'default',
+  className = '',
   animationDelay = 0,
 }) => {
   const getVariantClasses = () => {
@@ -106,25 +112,37 @@ export const DataGridCard: React.FC<DataGridCardProps> = ({
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       {/* Floating accent dots */}
-      <div className={`absolute -top-2 -right-2 w-4 h-4 ${variantClasses.accent} rounded-full animate-pulse opacity-75`}></div>
-      <div className={`absolute top-4 -left-1 w-2 h-2 ${variantClasses.iconColor} rounded-full animate-ping opacity-60`}></div>
+      <div
+        className={`absolute -top-2 -right-2 w-4 h-4 ${variantClasses.accent} rounded-full animate-pulse opacity-75`}
+      ></div>
+      <div
+        className={`absolute top-4 -left-1 w-2 h-2 ${variantClasses.iconColor} rounded-full animate-ping opacity-60`}
+      ></div>
 
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className={`absolute top-8 right-8 w-32 h-32 border border-${variant === 'default' ? 'gray' : variant}-400/20 rounded-full`}></div>
-        <div className={`absolute bottom-6 left-6 w-20 h-20 border border-${variant === 'default' ? 'gray' : variant}-400/15 rounded-full`}></div>
+        <div
+          className={`absolute top-8 right-8 w-32 h-32 border border-${variant === 'default' ? 'gray' : variant}-400/20 rounded-full`}
+        ></div>
+        <div
+          className={`absolute bottom-6 left-6 w-20 h-20 border border-${variant === 'default' ? 'gray' : variant}-400/15 rounded-full`}
+        ></div>
       </div>
 
       <div className="relative z-10 flex items-start justify-between mb-6">
         {/* Icon */}
-        <div className={`
+        <div
+          className={`
           w-16 h-16 rounded-2xl bg-gradient-to-br ${variantClasses.icon} 
           border flex items-center justify-center 
           backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300
-        `}>
-          <Icon className={`w-8 h-8 ${variantClasses.iconColor} drop-shadow-lg`} />
+        `}
+        >
+          <Icon
+            className={`w-8 h-8 ${variantClasses.iconColor} drop-shadow-lg`}
+          />
         </div>
-        
+
         {/* Status Badge */}
         {status && (
           <StatusBadge
@@ -139,18 +157,10 @@ export const DataGridCard: React.FC<DataGridCardProps> = ({
 
       {/* Content */}
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-white mb-2">
-          {title}
-        </h3>
-        {subtitle && (
-          <p className="text-gray-400 text-sm mb-3">
-            {subtitle}
-          </p>
-        )}
+        <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+        {subtitle && <p className="text-gray-400 text-sm mb-3">{subtitle}</p>}
         {description && (
-          <p className="text-gray-500 text-xs mb-3">
-            {description}
-          </p>
+          <p className="text-gray-500 text-xs mb-3">{description}</p>
         )}
 
         {/* Metadata */}
@@ -176,11 +186,11 @@ export const DataGridCard: React.FC<DataGridCardProps> = ({
               icon={action.icon}
               label={action.label}
               size="sm"
-              className={index === 0 && action.label ? "flex-1" : ""}
+              className={index === 0 && action.label ? 'flex-1' : ''}
             />
           ))}
         </div>
       )}
     </div>
   );
-}; 
+};

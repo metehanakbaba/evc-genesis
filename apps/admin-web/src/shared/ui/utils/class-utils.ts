@@ -13,21 +13,23 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
  * Merge class names with conflict resolution
  * Later classes override earlier ones for the same property
  */
-export function mergeClasses(...classes: (string | undefined | null | false)[]): string {
+export function mergeClasses(
+  ...classes: (string | undefined | null | false)[]
+): string {
   const classMap = new Map<string, string>();
-  
+
   classes
     .filter(Boolean)
     .join(' ')
     .split(' ')
     .forEach((className) => {
       if (!className) return;
-      
+
       // Extract the property prefix (e.g., 'bg', 'text', 'p', etc.)
       const prefix = className.split('-')[0];
       classMap.set(prefix, className);
     });
-  
+
   return Array.from(classMap.values()).join(' ');
 }
 
@@ -36,13 +38,13 @@ export function mergeClasses(...classes: (string | undefined | null | false)[]):
  */
 export function createConditionalClasses<T extends Record<string, any>>(
   props: T,
-  classMap: Partial<Record<keyof T, string | ((value: any) => string)>>
+  classMap: Partial<Record<keyof T, string | ((value: any) => string)>>,
 ): string {
   const classes: string[] = [];
-  
+
   Object.entries(classMap).forEach(([key, classValue]) => {
     const propValue = props[key];
-    
+
     if (propValue) {
       if (typeof classValue === 'function') {
         classes.push(classValue(propValue));
@@ -51,7 +53,7 @@ export function createConditionalClasses<T extends Record<string, any>>(
       }
     }
   });
-  
+
   return classes.join(' ');
 }
 
@@ -66,16 +68,16 @@ export function createResponsiveClasses(
     lg?: string;
     xl?: string;
     '2xl'?: string;
-  } = {}
+  } = {},
 ): string {
   const classes = [baseClass];
-  
+
   Object.entries(breakpoints).forEach(([breakpoint, className]) => {
     if (className) {
       classes.push(`${breakpoint}:${className}`);
     }
   });
-  
+
   return classes.join(' ');
 }
 
@@ -90,16 +92,16 @@ export function createStateClasses(
     active?: string;
     disabled?: string;
     loading?: string;
-  } = {}
+  } = {},
 ): string {
   const classes = [baseClass];
-  
+
   Object.entries(states).forEach(([state, className]) => {
     if (className) {
       classes.push(`${state}:${className}`);
     }
   });
-  
+
   return classes.join(' ');
 }
 
@@ -116,7 +118,7 @@ export function organizeClasses(classString: string): {
   other: string[];
 } {
   const classes = classString.split(' ').filter(Boolean);
-  
+
   const categories = {
     layout: [] as string[],
     spacing: [] as string[],
@@ -126,9 +128,11 @@ export function organizeClasses(classString: string): {
     animations: [] as string[],
     other: [] as string[],
   };
-  
+
   classes.forEach((className) => {
-    if (className.match(/^(w-|h-|flex|grid|block|inline|absolute|relative|fixed)/)) {
+    if (
+      className.match(/^(w-|h-|flex|grid|block|inline|absolute|relative|fixed)/)
+    ) {
       categories.layout.push(className);
     } else if (className.match(/^(p-|m-|space-|gap-)/)) {
       categories.spacing.push(className);
@@ -144,7 +148,7 @@ export function organizeClasses(classString: string): {
       categories.other.push(className);
     }
   });
-  
+
   return categories;
 }
 
@@ -155,18 +159,18 @@ export function removeConflictingClasses(classString: string): string {
   const classes = classString.split(' ').filter(Boolean);
   const seen = new Set<string>();
   const result: string[] = [];
-  
+
   // Process classes in reverse to keep the last occurrence
   for (let i = classes.length - 1; i >= 0; i--) {
     const className = classes[i];
     const prefix = className.split('-')[0];
-    
+
     if (!seen.has(prefix)) {
       seen.add(prefix);
       result.unshift(className);
     }
   }
-  
+
   return result.join(' ');
 }
 
@@ -180,10 +184,10 @@ export function validateTailwindClasses(classString: string): {
   const classes = classString.split(' ').filter(Boolean);
   const valid: string[] = [];
   const invalid: string[] = [];
-  
+
   // Basic Tailwind class pattern validation
   const tailwindPattern = /^([a-z]+:)?[a-z-]+(-\d+|\/\d+)?$/;
-  
+
   classes.forEach((className) => {
     if (tailwindPattern.test(className)) {
       valid.push(className);
@@ -191,6 +195,6 @@ export function validateTailwindClasses(classString: string): {
       invalid.push(className);
     }
   });
-  
+
   return { valid, invalid };
 }

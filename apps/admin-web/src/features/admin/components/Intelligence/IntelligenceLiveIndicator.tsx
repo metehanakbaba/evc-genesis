@@ -1,7 +1,7 @@
-import React from 'react';
-import type { IntelligenceLiveIndicatorProps } from './types';
 // ✅ Import shared business logic
 import { formatTimeAgo } from '@evc/shared-business-logic';
+import React from 'react';
+import type { IntelligenceLiveIndicatorProps } from './types';
 
 /**
  * Live update indicator with status

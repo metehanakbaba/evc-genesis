@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 /**
  * Base interfaces for all atomic components
@@ -30,7 +30,12 @@ export interface AnimationProps {
 
 // Position properties for layout control
 export interface PositionProps {
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  position?:
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right'
+    | 'center';
 }
 
 // Intensity properties for visual effects
@@ -55,6 +60,7 @@ export interface HoverProps {
 }
 
 // Common atom prop combinations
-export type AtomicProps = BaseComponentProps & Partial<VariantProps & SizeProps & AnimationProps>;
+export type AtomicProps = BaseComponentProps &
+  Partial<VariantProps & SizeProps & AnimationProps>;
 export type VisualEffectProps = IntensityProps & BlurProps & OpacityProps;
 export type InteractiveProps = HoverProps & AnimationProps;

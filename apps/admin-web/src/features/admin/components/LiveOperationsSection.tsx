@@ -49,7 +49,7 @@ export const LiveOperationsSection: React.FC<LiveOperationsSectionProps> =
                       <operation.icon className="w-6 h-6 text-emerald-400" />
                       <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                     </div>
-                    
+
                     <div className="flex flex-col">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-medium text-white group-hover:text-emerald-300 transition-colors duration-300">
@@ -77,7 +77,7 @@ export const LiveOperationsSection: React.FC<LiveOperationsSectionProps> =
                       <span className="text-xs font-medium">Live</span>
                     </div>
                   </div>
-                  
+
                   {/* Refined Action Button */}
                   <div
                     className="
@@ -92,7 +92,9 @@ export const LiveOperationsSection: React.FC<LiveOperationsSectionProps> =
                       flex items-center px-4 py-2 rounded-xl
                     "
                   >
-                    <span className="relative z-10 text-sm font-medium">Monitor</span>
+                    <span className="relative z-10 text-sm font-medium">
+                      Monitor
+                    </span>
                   </div>
                 </div>
               </div>

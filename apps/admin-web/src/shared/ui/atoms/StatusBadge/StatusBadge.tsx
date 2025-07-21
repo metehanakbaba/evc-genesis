@@ -1,8 +1,18 @@
 import type React from 'react';
 
-export type StatusVariant = 
-  | 'success' | 'warning' | 'error' | 'info' | 'neutral'
-  | 'emerald' | 'blue' | 'teal' | 'purple' | 'amber' | 'red' | 'gray';
+export type StatusVariant =
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info'
+  | 'neutral'
+  | 'emerald'
+  | 'blue'
+  | 'teal'
+  | 'purple'
+  | 'amber'
+  | 'red'
+  | 'gray';
 
 export interface StatusBadgeProps {
   readonly text: string;
@@ -15,7 +25,7 @@ export interface StatusBadgeProps {
 
 /**
  * 🎨 StatusBadge Atom Component
- * 
+ *
  * Reusable status badge with consistent styling and color variants.
  * Supports icons and pulse animation for live states.
  */
@@ -23,22 +33,22 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   text,
   variant,
   icon: Icon,
-  size = "sm",
-  className = "",
+  size = 'sm',
+  className = '',
   pulse = false,
 }) => {
   const sizeClasses = {
-    xs: "px-2 py-0.5 text-xs gap-1",
-    sm: "px-2.5 py-1 text-xs gap-1.5",
-    md: "px-3 py-1.5 text-sm gap-2",
-    lg: "px-4 py-2 text-base gap-2",
+    xs: 'px-2 py-0.5 text-xs gap-1',
+    sm: 'px-2.5 py-1 text-xs gap-1.5',
+    md: 'px-3 py-1.5 text-sm gap-2',
+    lg: 'px-4 py-2 text-base gap-2',
   };
 
   const iconSizes = {
-    xs: "w-3 h-3",
-    sm: "w-3 h-3", 
-    md: "w-4 h-4",
-    lg: "w-5 h-5",
+    xs: 'w-3 h-3',
+    sm: 'w-3 h-3',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
   };
 
   const getVariantClasses = () => {
@@ -109,14 +119,14 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
       `}
     >
       {Icon && (
-        <Icon 
+        <Icon
           className={`
             ${iconSizes[size]}
             ${pulse ? 'animate-pulse' : ''}
-          `} 
+          `}
         />
       )}
       <span className="font-medium">{text}</span>
     </div>
   );
-}; 
+};

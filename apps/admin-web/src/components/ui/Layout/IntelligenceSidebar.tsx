@@ -1,11 +1,11 @@
 'use client';
 
-import { 
-  SparklesIcon, 
-  XMarkIcon, 
-  ChartBarIcon, 
-  BoltIcon, 
-  WrenchScrewdriverIcon 
+import {
+  BoltIcon,
+  ChartBarIcon,
+  SparklesIcon,
+  WrenchScrewdriverIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 

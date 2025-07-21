@@ -2,13 +2,13 @@
 
 import {
   BoltIcon,
-  EyeIcon,
-  MapPinIcon,
-  WrenchScrewdriverIcon,
   CheckCircleIcon,
   ClockIcon,
-  XCircleIcon,
+  EyeIcon,
+  MapPinIcon,
   SignalIcon,
+  WrenchScrewdriverIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
@@ -125,7 +125,9 @@ export const StationTable: React.FC<StationTableProps> = ({
             <tbody>
               {stations.map((station, index) => {
                 const statusConfig = getStatusConfig(station.status);
-                const availableConnectors = station.connectors.filter(c => c.status === 'available').length;
+                const availableConnectors = station.connectors.filter(
+                  (c) => c.status === 'available',
+                ).length;
                 const totalConnectors = station.connectors.length;
 
                 return (
@@ -137,8 +139,12 @@ export const StationTable: React.FC<StationTableProps> = ({
                     {/* Station Info */}
                     <td className="p-6">
                       <div className="flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-xl bg-${statusConfig.variant}-500/10 border border-${statusConfig.variant}-500/20 flex items-center justify-center`}>
-                          <BoltIcon className={`w-5 h-5 text-${statusConfig.variant}-400`} />
+                        <div
+                          className={`w-10 h-10 rounded-xl bg-${statusConfig.variant}-500/10 border border-${statusConfig.variant}-500/20 flex items-center justify-center`}
+                        >
+                          <BoltIcon
+                            className={`w-5 h-5 text-${statusConfig.variant}-400`}
+                          />
                         </div>
                         <div>
                           <div className="text-white font-semibold text-sm line-clamp-1">
@@ -154,7 +160,9 @@ export const StationTable: React.FC<StationTableProps> = ({
                     {/* Location */}
                     <td className="p-6">
                       <div className="flex items-center gap-2 text-gray-300 text-sm">
-                        <MapPinIcon className={`w-4 h-4 text-${statusConfig.variant}-400 flex-shrink-0`} />
+                        <MapPinIcon
+                          className={`w-4 h-4 text-${statusConfig.variant}-400 flex-shrink-0`}
+                        />
                         <span className="line-clamp-2 max-w-xs">
                           {station.location.address}
                         </span>
@@ -163,9 +171,15 @@ export const StationTable: React.FC<StationTableProps> = ({
 
                     {/* Status */}
                     <td className="p-6">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${statusConfig.bg} ${statusConfig.border} border`}>
-                        <statusConfig.icon className={`w-4 h-4 ${statusConfig.text}`} />
-                        <span className={`text-xs font-medium ${statusConfig.text}`}>
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${statusConfig.bg} ${statusConfig.border} border`}
+                      >
+                        <statusConfig.icon
+                          className={`w-4 h-4 ${statusConfig.text}`}
+                        />
+                        <span
+                          className={`text-xs font-medium ${statusConfig.text}`}
+                        >
                           {statusConfig.label}
                         </span>
                       </div>
@@ -175,24 +189,28 @@ export const StationTable: React.FC<StationTableProps> = ({
                     <td className="p-6">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <SignalIcon className={`w-4 h-4 text-${statusConfig.variant}-400`} />
+                          <SignalIcon
+                            className={`w-4 h-4 text-${statusConfig.variant}-400`}
+                          />
                           <span>
                             {availableConnectors}/{totalConnectors} available
                           </span>
                         </div>
                         <div className="flex flex-wrap gap-1">
-                          {station.connectors.slice(0, 2).map((connector, idx) => (
-                            <div
-                              key={idx}
-                              className={`px-2 py-0.5 rounded text-xs font-medium ${
-                                connector.status === 'available'
-                                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
-                                  : 'bg-gray-500/10 text-gray-400 border border-gray-500/25'
-                              }`}
-                            >
-                              {connector.type} {connector.power}kW
-                            </div>
-                          ))}
+                          {station.connectors
+                            .slice(0, 2)
+                            .map((connector, idx) => (
+                              <div
+                                key={idx}
+                                className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                  connector.status === 'available'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                                    : 'bg-gray-500/10 text-gray-400 border border-gray-500/25'
+                                }`}
+                              >
+                                {connector.type} {connector.power}kW
+                              </div>
+                            ))}
                           {station.connectors.length > 2 && (
                             <div className="px-2 py-0.5 rounded text-xs font-medium bg-gray-500/10 text-gray-400 border border-gray-500/25">
                               +{station.connectors.length - 2}
@@ -213,7 +231,7 @@ export const StationTable: React.FC<StationTableProps> = ({
                         >
                           <EyeIcon className="w-4 h-4" />
                         </Button>
-                        
+
                         <Button
                           size="sm"
                           variant="ghost"
@@ -257,4 +275,4 @@ export const StationTable: React.FC<StationTableProps> = ({
       </div>
     </div>
   );
-}; 
+};

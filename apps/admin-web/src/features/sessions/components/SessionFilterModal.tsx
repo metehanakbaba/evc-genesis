@@ -67,23 +67,43 @@ export const SessionFilterModal: React.FC<SessionFilterModalProps> = ({
     { id: 'all', label: 'All Status', icon: ViewColumnsIcon, color: 'gray' },
     { id: 'charging', label: 'Charging', icon: BoltIcon, color: 'emerald' },
     { id: 'starting', label: 'Starting', icon: PlayIcon, color: 'blue' },
-    { id: 'completed', label: 'Completed', icon: CheckCircleIcon, color: 'emerald' },
+    {
+      id: 'completed',
+      label: 'Completed',
+      icon: CheckCircleIcon,
+      color: 'emerald',
+    },
     { id: 'failed', label: 'Failed', icon: XCircleIcon, color: 'red' },
     { id: 'cancelled', label: 'Cancelled', icon: XMarkIcon, color: 'red' },
   ];
 
   // Default connector type options
   const defaultConnectorOptions: FilterOption[] = [
-    { id: 'all', label: 'All Connectors', icon: ViewColumnsIcon, color: 'gray' },
+    {
+      id: 'all',
+      label: 'All Connectors',
+      icon: ViewColumnsIcon,
+      color: 'gray',
+    },
     { id: 'CCS', label: 'CCS', icon: BoltIcon, color: 'blue' },
     { id: 'CHAdeMO', label: 'CHAdeMO', icon: BoltIcon, color: 'purple' },
     { id: 'Type2', label: 'Type 2', icon: BoltIcon, color: 'green' },
-    { id: 'CCS_CHAdeMO', label: 'CCS + CHAdeMO', icon: BoltIcon, color: 'amber' },
+    {
+      id: 'CCS_CHAdeMO',
+      label: 'CCS + CHAdeMO',
+      icon: BoltIcon,
+      color: 'amber',
+    },
   ];
 
   // Default power output options
   const defaultPowerOptions: FilterOption[] = [
-    { id: 'all', label: 'All Power Levels', icon: ViewColumnsIcon, color: 'gray' },
+    {
+      id: 'all',
+      label: 'All Power Levels',
+      icon: ViewColumnsIcon,
+      color: 'gray',
+    },
     { id: 'fast', label: 'Fast (50kW+)', icon: FireIcon, color: 'red' },
     { id: 'slow', label: 'Standard (<50kW)', icon: BoltIcon, color: 'blue' },
   ];
@@ -99,21 +119,22 @@ export const SessionFilterModal: React.FC<SessionFilterModalProps> = ({
   const renderFilterOption = (
     option: FilterOption,
     isSelected: boolean,
-    onClick: () => void
+    onClick: () => void,
   ) => {
     const IconComponent = option.icon;
-    
+
     return (
       <button
         key={option.id}
         onClick={onClick}
         className={`
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
-          ${isSelected
-            ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
+          ${
+            isSelected
+              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
                border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
                scale-[1.02]`
-            : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
           }
@@ -128,20 +149,22 @@ export const SessionFilterModal: React.FC<SessionFilterModalProps> = ({
           <div
             className={`
               w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isSelected
-                ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
-                : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+              ${
+                isSelected
+                  ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
+                  : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
               }
             `}
           >
-            <IconComponent 
+            <IconComponent
               className={`
                 w-5 h-5 transition-transform duration-300
-                ${isSelected 
-                  ? `text-${option.color}-400 scale-110` 
-                  : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                ${
+                  isSelected
+                    ? `text-${option.color}-400 scale-110`
+                    : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
                 }
-              `} 
+              `}
             />
           </div>
           <span className="font-medium text-sm">{option.label}</span>
@@ -210,42 +233,44 @@ export const SessionFilterModal: React.FC<SessionFilterModalProps> = ({
       <div className="space-y-8">
         {/* Revolutionary Session Status Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Session Status</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Session Status
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {statusOptions.map((status) =>
-              renderFilterOption(
-                status,
-                statusFilter === status.id,
-                () => onStatusChange(status.id)
-              )
+              renderFilterOption(status, statusFilter === status.id, () =>
+                onStatusChange(status.id),
+              ),
             )}
           </div>
         </div>
 
         {/* Revolutionary Connector Type Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Connector Type</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Connector Type
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {connectorOptions.map((connector) =>
               renderFilterOption(
                 connector,
                 connectorTypeFilter === connector.id,
-                () => onConnectorTypeChange(connector.id)
-              )
+                () => onConnectorTypeChange(connector.id),
+              ),
             )}
           </div>
         </div>
 
         {/* Revolutionary Power Output Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Power Output</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Power Output
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {powerOptions.map((power) =>
-              renderFilterOption(
-                power,
-                powerOutputFilter === power.id,
-                () => onPowerOutputChange(power.id)
-              )
+              renderFilterOption(power, powerOutputFilter === power.id, () =>
+                onPowerOutputChange(power.id),
+              ),
             )}
           </div>
         </div>
@@ -254,4 +279,4 @@ export const SessionFilterModal: React.FC<SessionFilterModalProps> = ({
   );
 };
 
-export default SessionFilterModal; 
+export default SessionFilterModal;

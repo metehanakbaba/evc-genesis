@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
-import { Button } from '@ui/forms';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from '@ui/forms';
 import type { LucideIcon } from 'lucide-react';
+import React from 'react';
 
 /**
  * 🎯 Bulk Action Configuration
@@ -36,7 +36,7 @@ export interface BulkActionBarProps {
 
 /**
  * 🎨 Revolutionary Bulk Action Bar Component
- * 
+ *
  * Features:
  * - Smooth slide-in animation when items are selected
  * - Beautiful gradient design matching our system
@@ -57,25 +57,29 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
 }) => {
   const variantClasses = {
     blue: {
-      container: 'from-blue-500/10 via-blue-400/5 to-blue-500/10 border-blue-400/25',
+      container:
+        'from-blue-500/10 via-blue-400/5 to-blue-500/10 border-blue-400/25',
       accent: 'bg-blue-500',
       text: 'text-blue-300',
       shadow: 'shadow-blue-500/20',
     },
     purple: {
-      container: 'from-purple-500/10 via-purple-400/5 to-purple-500/10 border-purple-400/25',
+      container:
+        'from-purple-500/10 via-purple-400/5 to-purple-500/10 border-purple-400/25',
       accent: 'bg-purple-500',
       text: 'text-purple-300',
       shadow: 'shadow-purple-500/20',
     },
     emerald: {
-      container: 'from-emerald-500/10 via-emerald-400/5 to-emerald-500/10 border-emerald-400/25',
+      container:
+        'from-emerald-500/10 via-emerald-400/5 to-emerald-500/10 border-emerald-400/25',
       accent: 'bg-emerald-500',
       text: 'text-emerald-300',
       shadow: 'shadow-emerald-500/20',
     },
     amber: {
-      container: 'from-amber-500/10 via-amber-400/5 to-amber-500/10 border-amber-400/25',
+      container:
+        'from-amber-500/10 via-amber-400/5 to-amber-500/10 border-amber-400/25',
       accent: 'bg-amber-500',
       text: 'text-amber-300',
       shadow: 'shadow-amber-500/20',
@@ -85,15 +89,18 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
   const variantConfig = variantClasses[variant];
 
   // Handle keyboard navigation
-  const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      onClearSelection();
-    }
-  }, [onClearSelection]);
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClearSelection();
+      }
+    },
+    [onClearSelection],
+  );
 
   // Auto-focus management
   const containerRef = React.useRef<HTMLElement>(null);
-  
+
   React.useEffect(() => {
     if (selectedCount > 0 && containerRef.current) {
       // Auto-focus the container when it appears for keyboard navigation
@@ -144,7 +151,7 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
     // Show confirmation dialog for dangerous actions
     if (action.confirmMessage) {
       const confirmed = window.confirm(
-        action.confirmMessage.replace('{count}', selectedCount.toString())
+        action.confirmMessage.replace('{count}', selectedCount.toString()),
       );
       if (!confirmed) return;
     }
@@ -159,7 +166,7 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <section 
+    <section
       ref={containerRef}
       className={`
         fixed bottom-4 left-4 right-4 z-50
@@ -178,17 +185,26 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
       aria-describedby="bulk-action-help"
     >
       {/* Semantic Bulk Action Container */}
-      <div className={`
+      <div
+        className={`
         relative p-4 rounded-2xl backdrop-blur-xl border
         bg-gradient-to-r ${variantConfig.container}
         shadow-2xl ${variantConfig.shadow}
         w-full max-w-none lg:min-w-[400px] lg:max-w-[90vw] xl:max-w-[600px] lg:w-auto
         animate-in slide-in-from-bottom-full duration-500
-      `}>
+      `}
+      >
         {/* Floating Background Effects */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className={`absolute top-0 left-1/4 w-32 h-32 ${variantConfig.accent} opacity-5 rounded-full blur-2xl`}></div>
-          <div className={`absolute bottom-0 right-1/4 w-32 h-32 ${variantConfig.accent} opacity-5 rounded-full blur-2xl`}></div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+        >
+          <div
+            className={`absolute top-0 left-1/4 w-32 h-32 ${variantConfig.accent} opacity-5 rounded-full blur-2xl`}
+          ></div>
+          <div
+            className={`absolute bottom-0 right-1/4 w-32 h-32 ${variantConfig.accent} opacity-5 rounded-full blur-2xl`}
+          ></div>
         </div>
 
         {/* Content Layout */}
@@ -196,7 +212,7 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
           {/* Selection Info Header */}
           <header className="flex items-center gap-3 min-w-0">
             {/* Selection Indicator */}
-            <div 
+            <div
               className={`
                 w-6 h-6 rounded-lg ${variantConfig.accent} opacity-80
                 flex items-center justify-center flex-shrink-0
@@ -209,15 +225,19 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
 
             {/* Selection Summary */}
             <div className="min-w-0 flex-1">
-              <div 
+              <div
                 className="text-white font-semibold text-sm"
                 role="status"
                 aria-label={`${selectedCount} ${entityName} selected`}
               >
-                <span className="tabular-nums">{selectedCount}</span> {entityName} selected
+                <span className="tabular-nums">{selectedCount}</span>{' '}
+                {entityName} selected
               </div>
               {totalCount && (
-                <div className="text-gray-400 text-xs" aria-label={`out of ${totalCount} total`}>
+                <div
+                  className="text-gray-400 text-xs"
+                  aria-label={`out of ${totalCount} total`}
+                >
                   of <span className="tabular-nums">{totalCount}</span> total
                 </div>
               )}
@@ -225,17 +245,17 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
           </header>
 
           {/* Actions Navigation */}
-          <nav 
+          <nav
             className="flex items-center gap-2 flex-wrap justify-end sm:flex-nowrap"
             aria-label="Bulk actions"
           >
             {/* Bulk Action Buttons */}
             {actions
-              .filter(action => !action.show || action.show(selectedCount))
+              .filter((action) => !action.show || action.show(selectedCount))
               .map((action, index) => {
                 const ActionIcon = action.icon;
                 const isDisabled = action.disabled?.(selectedCount) || false;
-                
+
                 return (
                   <Button
                     key={action.id}
@@ -252,11 +272,13 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
                       flex items-center gap-2
                     `}
                     aria-label={`${action.label} ${selectedCount} selected ${entityName}`}
-                    aria-describedby={action.tooltip ? `tooltip-${action.id}` : undefined}
+                    aria-describedby={
+                      action.tooltip ? `tooltip-${action.id}` : undefined
+                    }
                   >
                     {/* Shimmer Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover/action:translate-x-[100%] transition-transform duration-500"></div>
-                    
+
                     {/* Button Content */}
                     <div className="flex items-center gap-2 relative z-10">
                       <ActionIcon className="w-4 h-4" aria-hidden="true" />
@@ -264,13 +286,10 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
                         {action.label}
                       </span>
                     </div>
-                    
+
                     {/* Tooltip for screen readers */}
                     {action.tooltip && (
-                      <span 
-                        id={`tooltip-${action.id}`}
-                        className="sr-only"
-                      >
+                      <span id={`tooltip-${action.id}`} className="sr-only">
                         {action.tooltip}
                       </span>
                     )}
@@ -297,17 +316,14 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
             >
               {/* Shimmer Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover/clear:translate-x-[100%] transition-transform duration-500"></div>
-              
+
               <XMarkIcon className="w-4 h-4 relative z-10" />
             </Button>
           </nav>
         </div>
-        
+
         {/* Screen reader help text */}
-        <div 
-          id="bulk-action-help" 
-          className="sr-only"
-        >
+        <div id="bulk-action-help" className="sr-only">
           Press Escape to clear selection. Use Tab to navigate between actions.
         </div>
       </div>
@@ -320,20 +336,22 @@ export const useBulkSelection = <T extends { id: string }>(items: T[]) => {
   const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set());
 
   const selectedItems = React.useMemo(
-    () => items.filter(item => selectedIds.has(item.id)),
-    [items, selectedIds]
+    () => items.filter((item) => selectedIds.has(item.id)),
+    [items, selectedIds],
   );
 
   const isSelected = React.useCallback(
     (id: string) => selectedIds.has(id),
-    [selectedIds]
+    [selectedIds],
   );
 
-  const isAllSelected = selectedIds.size > 0 && selectedIds.size === items.length;
-  const isIndeterminate = selectedIds.size > 0 && selectedIds.size < items.length;
+  const isAllSelected =
+    selectedIds.size > 0 && selectedIds.size === items.length;
+  const isIndeterminate =
+    selectedIds.size > 0 && selectedIds.size < items.length;
 
   const toggleItem = React.useCallback((id: string) => {
-    setSelectedIds(prev => {
+    setSelectedIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -344,13 +362,16 @@ export const useBulkSelection = <T extends { id: string }>(items: T[]) => {
     });
   }, []);
 
-  const toggleAll = React.useCallback((checked: boolean) => {
-    if (checked) {
-      setSelectedIds(new Set(items.map(item => item.id)));
-    } else {
-      setSelectedIds(new Set());
-    }
-  }, [items]);
+  const toggleAll = React.useCallback(
+    (checked: boolean) => {
+      if (checked) {
+        setSelectedIds(new Set(items.map((item) => item.id)));
+      } else {
+        setSelectedIds(new Set());
+      }
+    },
+    [items],
+  );
 
   const clearSelection = React.useCallback(() => {
     setSelectedIds(new Set());
@@ -372,4 +393,4 @@ export const useBulkSelection = <T extends { id: string }>(items: T[]) => {
     clearSelection,
     selectItems,
   };
-}; 
+};

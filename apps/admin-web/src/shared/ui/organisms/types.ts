@@ -1,13 +1,19 @@
-import { ComponentType, MouseEventHandler } from 'react';
-import { BaseComponentProps, VariantProps, SizeProps } from '../atoms/types';
-import { ContentProps, StatusProps } from '../molecules/types';
+import type { ComponentType, MouseEventHandler } from 'react';
+import type {
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
+} from '../atoms/types';
+import type { ContentProps, StatusProps } from '../molecules/types';
 
 /**
  * Base interfaces for organism components
  */
 
 // Base organism props
-export interface BaseOrganismProps extends BaseComponentProps, Partial<VariantProps & SizeProps> {
+export interface BaseOrganismProps
+  extends BaseComponentProps,
+    Partial<VariantProps & SizeProps> {
   // Organisms can have complex interactions
   onClick?: MouseEventHandler<HTMLElement>;
   onHover?: MouseEventHandler<HTMLElement>;

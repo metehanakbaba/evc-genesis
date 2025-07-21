@@ -1,22 +1,22 @@
-import React from 'react';
-import { cn } from '../../utils';
+import type React from 'react';
 import { GlowOrb } from '../../atoms/GlowOrb';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps 
+import type {
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
 } from '../../atoms/types';
+import { cn } from '../../utils';
 
 /**
  * BackgroundEffects Component Props
- * 
+ *
  * Molecule component that composes multiple GlowOrb atoms into a coordinated
  * background effect collection with orchestrated animation timing and positioning
  */
-export interface BackgroundEffectsProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps {
+export interface BackgroundEffectsProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps {
   /** Custom inline styles */
   style?: React.CSSProperties;
   /** Number of orbs to render */
@@ -119,20 +119,20 @@ const sizeConfigs = {
 
 /**
  * BackgroundEffects - Molecule component for orchestrated background orb effects
- * 
+ *
  * Composes multiple GlowOrb atoms into coordinated background collections
  * with various positioning patterns and animation sequences. Provides
  * performance-optimized rendering and responsive behavior.
- * 
+ *
  * @example
  * ```tsx
- * <BackgroundEffects 
- *   variant="blue" 
- *   size="md" 
- *   pattern="corners" 
- *   animated 
+ * <BackgroundEffects
+ *   variant="blue"
+ *   size="md"
+ *   pattern="corners"
+ *   animated
  * />
- * <BackgroundEffects 
+ * <BackgroundEffects
  *   orbCount={6}
  *   intensity="strong"
  *   pattern="random"
@@ -161,20 +161,27 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
 }) => {
   // Get size configuration
   const sizeConfig = sizeConfigs[size];
-  const effectiveOrbCount = orbCount !== undefined ? orbCount : (customOrbs?.length !== undefined ? customOrbs.length : sizeConfig.defaultCount);
-  
+  const effectiveOrbCount =
+    orbCount !== undefined
+      ? orbCount
+      : customOrbs?.length !== undefined
+        ? customOrbs.length
+        : sizeConfig.defaultCount;
+
   // Generate orb configurations
   const generateOrbConfigs = () => {
     if (customOrbs) {
       return customOrbs.map((orb, index) => ({
         variant: orb.variant || variant,
-        size: orb.size || sizeConfig.orbSizes[index % sizeConfig.orbSizes.length],
-        position: orb.position || positionPatterns[pattern](index, customOrbs.length),
-        animationDelay: orb.animationDelay || (index * 0.5),
+        size:
+          orb.size || sizeConfig.orbSizes[index % sizeConfig.orbSizes.length],
+        position:
+          orb.position || positionPatterns[pattern](index, customOrbs.length),
+        animationDelay: orb.animationDelay || index * 0.5,
         intensity: orb.intensity || intensity,
       }));
     }
-    
+
     return Array.from({ length: effectiveOrbCount }, (_, index) => ({
       variant,
       size: sizeConfig.orbSizes[index % sizeConfig.orbSizes.length],
@@ -190,12 +197,12 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   const containerClasses = cn(
     // Base styling
     'absolute inset-0 overflow-hidden pointer-events-none',
-    
+
     // Responsive behavior
     responsive && 'w-full h-full',
-    
+
     // Custom className
-    className
+    className,
   );
 
   // Container styles

@@ -1,4 +1,4 @@
-import { lazy, ComponentType, SVGProps } from 'react';
+import { type ComponentType, lazy, type SVGProps } from 'react';
 
 /**
  * Icon Performance Optimization Utilities
@@ -21,10 +21,10 @@ export const createLazyHeroIcon = (iconName: string): IconComponent => {
     return iconCache.get(`heroicons-outline-${iconName}`)!;
   }
 
-  const LazyIcon = lazy(() => 
+  const LazyIcon = lazy(() =>
     import('@heroicons/react/24/outline').then((module) => ({
-      default: (module as any)[iconName] || (() => null)
-    }))
+      default: (module as any)[iconName] || (() => null),
+    })),
   );
 
   iconCache.set(`heroicons-outline-${iconName}`, LazyIcon);
@@ -39,10 +39,10 @@ export const createLazyHeroIconSolid = (iconName: string): IconComponent => {
     return iconCache.get(`heroicons-solid-${iconName}`)!;
   }
 
-  const LazyIcon = lazy(() => 
+  const LazyIcon = lazy(() =>
     import('@heroicons/react/24/solid').then((module) => ({
-      default: (module as any)[iconName] || (() => null)
-    }))
+      default: (module as any)[iconName] || (() => null),
+    })),
   );
 
   iconCache.set(`heroicons-solid-${iconName}`, LazyIcon);
@@ -57,10 +57,10 @@ export const createLazyLucideIcon = (iconName: string): IconComponent => {
     return iconCache.get(`lucide-${iconName}`)!;
   }
 
-  const LazyIcon = lazy(() => 
+  const LazyIcon = lazy(() =>
     import('lucide-react').then((module) => ({
-      default: (module as any)[iconName] || (() => null)
-    }))
+      default: (module as any)[iconName] || (() => null),
+    })),
   );
 
   iconCache.set(`lucide-${iconName}`, LazyIcon);
@@ -74,19 +74,22 @@ export const createLazyLucideIcon = (iconName: string): IconComponent => {
 export const preloadCriticalIcons = async () => {
   const criticalIcons = [
     'BoltIcon',
-    'UserIcon', 
+    'UserIcon',
     'Cog6ToothIcon',
     'ChartBarIcon',
-    'ExclamationTriangleIcon'
+    'ExclamationTriangleIcon',
   ];
 
   // Preload heroicons in parallel
   await Promise.all(
-    criticalIcons.map(iconName => 
+    criticalIcons.map((iconName) =>
       import('@heroicons/react/24/outline').then((module) => {
-        iconCache.set(`heroicons-outline-${iconName}`, (module as any)[iconName]);
-      })
-    )
+        iconCache.set(
+          `heroicons-outline-${iconName}`,
+          (module as any)[iconName],
+        );
+      }),
+    ),
   );
 };
 
@@ -96,7 +99,7 @@ export const preloadCriticalIcons = async () => {
  */
 export const getOptimizedIcon = (
   library: 'heroicons-outline' | 'heroicons-solid' | 'lucide',
-  iconName: string
+  iconName: string,
 ): IconComponent => {
   switch (library) {
     case 'heroicons-outline':
@@ -123,4 +126,4 @@ export const clearIconCache = () => {
 export const getIconCacheStats = () => ({
   size: iconCache.size,
   keys: Array.from(iconCache.keys()),
-}); 
+});

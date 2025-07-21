@@ -1,5 +1,7 @@
-"use client"
+'use client';
 
+// ✅ Import shared business logic
+import { formatTimeAgo } from '@evc/shared-business-logic';
 import {
   BeakerIcon,
   BugAntIcon,
@@ -7,14 +9,11 @@ import {
   ComputerDesktopIcon,
   CpuChipIcon,
   CurrencyDollarIcon,
-  ShieldExclamationIcon
+  ShieldExclamationIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import React from 'react';
 import type { IntelligenceEventCardProps } from './types';
-// ✅ Import shared business logic
-import { formatTimeAgo } from '@evc/shared-business-logic';
-
 
 const TYPE_ICONS = {
   anomaly: ShieldExclamationIcon,

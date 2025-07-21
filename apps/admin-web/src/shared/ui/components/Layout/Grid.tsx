@@ -67,8 +67,10 @@ export const Grid: React.FC<GridProps> = ({
   );
 
   const ElementComponent = Component as React.ElementType;
-  
-  return <ElementComponent className={gridClasses}>{children}</ElementComponent>;
+
+  return (
+    <ElementComponent className={gridClasses}>{children}</ElementComponent>
+  );
 };
 
 Grid.displayName = 'Grid';

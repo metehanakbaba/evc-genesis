@@ -9,33 +9,28 @@ import {
   WrenchScrewdriverIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Button } from '@ui/forms';
-import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
-import { Breadcrumb } from '@/shared/ui/components/Navigation';
+import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
-
-// ✅ Import new reusable components
-import {
-  StationGrid,
-  StationTable,
-  StationFilterModal,
-} from '../components';
-
-// ✅ Import skeleton components
-import { StationGridSkeleton, StationTableSkeleton } from '../components/StationSkeleton';
-
-// ✅ Import hooks for demo data
-import {
-  useStationStatistics,
-  useStationActions,
-  useInfiniteStations,
-} from '../hooks';
-
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
+import { EmptyState, SearchFilterBar } from '@/shared/ui/molecules';
 // ✅ Import debounce hook from wallets
 import { useSearchDebounce } from '../../wallets/hooks/useDebounce';
+// ✅ Import new reusable components
+import { StationFilterModal, StationGrid, StationTable } from '../components';
+// ✅ Import skeleton components
+import {
+  StationGridSkeleton,
+  StationTableSkeleton,
+} from '../components/StationSkeleton';
+// ✅ Import hooks for demo data
+import {
+  useInfiniteStations,
+  useStationActions,
+  useStationStatistics,
+} from '../hooks';
 
 /**
  * ⚡ Station Management Statistics
@@ -78,23 +73,17 @@ const StationsPage: React.FC = () => {
   const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
 
   // ✅ Use infinite scroll hook for data fetching
-  const {
-    stations,
-    isLoading,
-    isLoadingMore,
-    hasNextPage,
-    loadMore,
-    total,
-  } = useInfiniteStations({
-    filters: {
-      searchQuery: debouncedSearchQuery,
-      statusFilter,
-      connectorTypeFilter,
-    },
-    pageSize: 20,
-  });
+  const { stations, isLoading, isLoadingMore, hasNextPage, loadMore, total } =
+    useInfiniteStations({
+      filters: {
+        searchQuery: debouncedSearchQuery,
+        statusFilter,
+        connectorTypeFilter,
+      },
+      pageSize: 20,
+    });
 
-  const { 
+  const {
     totalStations,
     activeStations,
     maintenanceStations,
@@ -102,10 +91,7 @@ const StationsPage: React.FC = () => {
     availableConnectors,
   } = useStationStatistics();
 
-  const { 
-    handleViewDetails, 
-    handleEdit,
-  } = useStationActions();
+  const { handleViewDetails, handleEdit } = useStationActions();
 
   // Wrapper functions to match component expectations
   const viewDetails = (station: any) => handleViewDetails(station.id);
@@ -119,7 +105,8 @@ const StationsPage: React.FC = () => {
       icon: BoltIcon,
       variant: 'blue',
       trend: '+3 this week',
-      description: 'Total charging infrastructure deployment across operational territories',
+      description:
+        'Total charging infrastructure deployment across operational territories',
       isLive: true,
     },
     {
@@ -128,7 +115,8 @@ const StationsPage: React.FC = () => {
       icon: CheckCircleIcon,
       variant: 'emerald',
       trend: `${Math.round((activeStations.count / totalStations.count) * 100) || 0}% operational`,
-      description: 'Infrastructure assets currently operational and service-ready',
+      description:
+        'Infrastructure assets currently operational and service-ready',
     },
     {
       title: 'Service Availability',
@@ -136,7 +124,8 @@ const StationsPage: React.FC = () => {
       icon: SignalIcon,
       variant: 'blue',
       trend: `${Math.round((availableConnectors.count / totalConnectors.count) * 100) || 0}% available`,
-      description: 'Charging points available for immediate customer service delivery',
+      description:
+        'Charging points available for immediate customer service delivery',
       isLive: true,
     },
     {
@@ -145,7 +134,8 @@ const StationsPage: React.FC = () => {
       icon: WrenchScrewdriverIcon,
       variant: 'amber',
       trend: 'Planned maintenance',
-      description: 'Infrastructure assets currently undergoing scheduled maintenance protocols',
+      description:
+        'Infrastructure assets currently undergoing scheduled maintenance protocols',
     },
   ];
 
@@ -167,7 +157,7 @@ const StationsPage: React.FC = () => {
       {/* Revolutionary Page Header with Blue Theme */}
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
-        <Breadcrumb 
+        <Breadcrumb
           currentPageLabel="Charging Infrastructure Management"
           variant="blue"
         />
@@ -177,12 +167,12 @@ const StationsPage: React.FC = () => {
           description="Enterprise-grade charging network administration and performance monitoring across Polish markets"
           variant="blue"
           actionButton={{
-            label: "Deploy Infrastructure",
+            label: 'Deploy Infrastructure',
             onClick: () => {
               router.push('/stations/new');
             },
             icon: PlusIcon,
-            iconAnimation: "rotate-90"
+            iconAnimation: 'rotate-90',
           }}
         />
       </PageContainer>
@@ -197,7 +187,8 @@ const StationsPage: React.FC = () => {
                 Network Performance Dashboard
               </h2>
               <p className="text-gray-400">
-                Comprehensive infrastructure analytics and operational intelligence
+                Comprehensive infrastructure analytics and operational
+                intelligence
               </p>
             </div>
           </div>
@@ -278,18 +269,26 @@ const StationsPage: React.FC = () => {
                           `}
                         >
                           {/* Shine Effect */}
-                          <div className={`
+                          <div
+                            className={`
                             absolute inset-0 z-0
                             bg-gradient-to-r from-transparent via-white/15 to-transparent
                             translate-x-[-100%] group-hover/button:translate-x-[100%]
                             transition-transform duration-700 ease-out
-                          `}></div>
-                          
+                          `}
+                          ></div>
+
                           {/* Button Content */}
                           <div className="flex items-center gap-2 relative z-10">
-                            <EyeIcon className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`} />
-                            <span className="font-medium text-sm">View Analytics</span>
-                            <div className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}></div>
+                            <EyeIcon
+                              className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`}
+                            />
+                            <span className="font-medium text-sm">
+                              View Analytics
+                            </span>
+                            <div
+                              className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}
+                            ></div>
                           </div>
                         </Button>
                       </div>
@@ -310,7 +309,8 @@ const StationsPage: React.FC = () => {
                 Infrastructure Asset Management
               </h2>
               <p className="text-gray-400">
-                Advanced filtering, monitoring and administration of charging infrastructure assets
+                Advanced filtering, monitoring and administration of charging
+                infrastructure assets
               </p>
             </div>
           </div>
@@ -321,7 +321,9 @@ const StationsPage: React.FC = () => {
             onSearchChange={setSearchQuery}
             searchPlaceholder="Search assets... (e.g. Warszawa, Kraków, Gdańsk, CCS2, Station-001)"
             onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={statusFilter !== 'all' || connectorTypeFilter !== 'all'}
+            isFilterActive={
+              statusFilter !== 'all' || connectorTypeFilter !== 'all'
+            }
             filterLabel="Filters"
             viewMode={viewMode}
             onViewModeChange={setViewMode}
@@ -333,7 +335,9 @@ const StationsPage: React.FC = () => {
           <div className="flex flex-wrap gap-3 mb-8">
             {/* Status Quick Filters */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400 font-medium">Operational Status:</span>
+              <span className="text-sm text-gray-400 font-medium">
+                Operational Status:
+              </span>
               <button
                 onClick={() => setStatusFilter('all')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
@@ -381,7 +385,9 @@ const StationsPage: React.FC = () => {
 
             {/* Connector Type Quick Filters */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400 font-medium">Connector Standards:</span>
+              <span className="text-sm text-gray-400 font-medium">
+                Connector Standards:
+              </span>
               <button
                 onClick={() => setConnectorTypeFilter('all')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
@@ -462,14 +468,14 @@ const StationsPage: React.FC = () => {
 
           {/* Empty State - Using New EmptyState Component */}
           {!isLoading && stations.length === 0 && (
-                       <EmptyState
-             icon={BoltIcon}
-             title="No infrastructure assets match criteria"
-             description="Refine search parameters or adjust operational status filters to display relevant assets"
-             actionLabel="Reset Filters"
-             onAction={handleClearFilters}
-             variant="blue"
-           />
+            <EmptyState
+              icon={BoltIcon}
+              title="No infrastructure assets match criteria"
+              description="Refine search parameters or adjust operational status filters to display relevant assets"
+              actionLabel="Reset Filters"
+              onAction={handleClearFilters}
+              variant="blue"
+            />
           )}
         </section>
       </PageContainer>

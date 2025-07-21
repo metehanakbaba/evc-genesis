@@ -1,23 +1,23 @@
-import React from 'react';
-import { cn } from '../../utils';
-import { TextElement } from '../../atoms/TextElement';
+import type React from 'react';
 import { AccentDot } from '../../atoms/AccentDot';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps 
+import { TextElement } from '../../atoms/TextElement';
+import type {
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
 } from '../../atoms/types';
+import { cn } from '../../utils';
 
 /**
  * TrendIndicator Component Props
- * 
+ *
  * Molecule component that composes AccentDot and TextElement atoms
  * to display live status indicators with animated dots and trend information
  */
-export interface TrendIndicatorProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps {
+export interface TrendIndicatorProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps {
   /** Status of the indicator */
   status?: 'live' | 'offline' | 'warning' | 'success' | 'error';
   /** Trend text to display (e.g., "+12%", "Stable", "Increasing") */
@@ -110,21 +110,21 @@ const layoutSizes = {
 
 /**
  * TrendIndicator - Molecule component for live status and trend display
- * 
+ *
  * Composes AccentDot and TextElement atoms to create status indicators
  * with animated dots and trend information. Supports multiple status types
  * and flexible layout options.
- * 
+ *
  * @example
  * ```tsx
- * <TrendIndicator 
- *   status="live" 
- *   trend="+12%" 
- *   size="md" 
- *   animated 
+ * <TrendIndicator
+ *   status="live"
+ *   trend="+12%"
+ *   size="md"
+ *   animated
  * />
- * <TrendIndicator 
- *   status="warning" 
+ * <TrendIndicator
+ *   status="warning"
  *   label="System Status"
  *   trend="Degraded Performance"
  *   orientation="vertical"
@@ -148,20 +148,20 @@ export const TrendIndicator: React.FC<TrendIndicatorProps> = ({
 }) => {
   // Get status configuration
   const statusConf = statusConfig[status];
-  
+
   // Use variant override or status variant
   const effectiveVariant = variant || statusConf.variant;
   const dotVariant = statusConf.dotVariant;
-  
+
   // Determine if dot should be animated
   const shouldAnimate = animated !== undefined ? animated : statusConf.animated;
-  
+
   // Get size configuration
   const sizeConfig = layoutSizes[size];
-  
+
   // Determine if component is interactive
   const isInteractive = Boolean(onClick);
-  
+
   // Get display label
   const displayLabel = label !== undefined ? label : statusConf.label;
 
@@ -192,16 +192,18 @@ export const TrendIndicator: React.FC<TrendIndicatorProps> = ({
     }
 
     if (isInteractive) {
-      baseClasses.push('cursor-pointer', 'transition-all', 'duration-200', 'hover:scale-105');
+      baseClasses.push(
+        'cursor-pointer',
+        'transition-all',
+        'duration-200',
+        'hover:scale-105',
+      );
     }
 
     return baseClasses;
   };
 
-  const containerClasses = cn(
-    ...getContainerClasses(),
-    className
-  );
+  const containerClasses = cn(...getContainerClasses(), className);
 
   // Handle click
   const handleClick = () => {
@@ -223,12 +225,16 @@ export const TrendIndicator: React.FC<TrendIndicatorProps> = ({
       data-interactive={isInteractive}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      onKeyDown={isInteractive ? (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-      } : undefined}
+      onKeyDown={
+        isInteractive
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick();
+              }
+            }
+          : undefined
+      }
       {...props}
     >
       {/* Status Dot */}
@@ -244,10 +250,14 @@ export const TrendIndicator: React.FC<TrendIndicatorProps> = ({
       </div>
 
       {/* Content Section */}
-      <div className={cn(
-        'flex',
-        orientation === 'horizontal' ? 'flex-col' : 'flex-row items-center gap-2'
-      )}>
+      <div
+        className={cn(
+          'flex',
+          orientation === 'horizontal'
+            ? 'flex-col'
+            : 'flex-row items-center gap-2',
+        )}
+      >
         {/* Status Label */}
         <TextElement
           as="span"

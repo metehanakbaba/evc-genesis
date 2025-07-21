@@ -1,4 +1,4 @@
-import { AnimationProps } from '../atoms/types';
+import type { AnimationProps } from '../atoms/types';
 
 /**
  * Animation utility functions for consistent motion across components
@@ -27,26 +27,26 @@ export const animationClasses = {
   // Fade animations
   fadeIn: 'animate-fade-in',
   fadeOut: 'animate-fade-out',
-  
+
   // Scale animations
   scaleIn: 'animate-scale-in',
   scaleOut: 'animate-scale-out',
   pulse: 'animate-pulse',
-  
+
   // Movement animations
   slideInLeft: 'animate-slide-in-left',
   slideInRight: 'animate-slide-in-right',
   slideInUp: 'animate-slide-in-up',
   slideInDown: 'animate-slide-in-down',
-  
+
   // Rotation animations
   spin: 'animate-spin',
   bounce: 'animate-bounce',
-  
+
   // Glow animations
   glow: 'animate-glow',
   glowPulse: 'animate-glow-pulse',
-  
+
   // Float animations
   float: 'animate-float',
   floatSlow: 'animate-float-slow',
@@ -78,7 +78,7 @@ export function createAnimationStyle(
     delay?: number;
     easing?: keyof typeof animationEasings;
     iterationCount?: number | 'infinite';
-  } = {}
+  } = {},
 ): React.CSSProperties {
   const {
     duration = 'normal',
@@ -87,9 +87,10 @@ export function createAnimationStyle(
     iterationCount = 1,
   } = options;
 
-  const durationValue = typeof duration === 'number' 
-    ? `${duration}ms` 
-    : animationDurations[duration];
+  const durationValue =
+    typeof duration === 'number'
+      ? `${duration}ms`
+      : animationDurations[duration];
 
   return {
     animationDuration: durationValue,
@@ -104,19 +105,19 @@ export function createAnimationStyle(
  */
 export function getAnimationClasses(props: AnimationProps): string {
   const { animated = false, animationSpeed = 1, animationDelay = 0 } = props;
-  
+
   if (!animated) return '';
-  
+
   const classes = [];
-  
+
   if (animationDelay > 0) {
     classes.push(getAnimationDelay(animationDelay));
   }
-  
+
   if (animationSpeed !== 1) {
     classes.push(getAnimationDuration(animationSpeed));
   }
-  
+
   return classes.join(' ');
 }
 
@@ -125,29 +126,32 @@ export function getAnimationClasses(props: AnimationProps): string {
  */
 export function getHoverAnimationClasses(
   hoverScale: boolean = false,
-  hoverGlow: boolean = false
+  hoverGlow: boolean = false,
 ): string {
   const classes = [];
-  
+
   if (hoverScale) {
     classes.push('hover:scale-105 active:scale-95');
   }
-  
+
   if (hoverGlow) {
     classes.push('hover:animate-glow-pulse');
   }
-  
+
   if (classes.length > 0) {
     classes.push('transition-all duration-300');
   }
-  
+
   return classes.join(' ');
 }
 
 /**
  * Create staggered animation delays for multiple elements
  */
-export function createStaggeredDelays(count: number, baseDelay: number = 100): number[] {
+export function createStaggeredDelays(
+  count: number,
+  baseDelay: number = 100,
+): number[] {
   return Array.from({ length: count }, (_, index) => index * baseDelay);
 }
 
@@ -156,7 +160,7 @@ export function createStaggeredDelays(count: number, baseDelay: number = 100): n
  */
 export function generateKeyframes(
   name: string,
-  keyframes: Record<string, React.CSSProperties>
+  keyframes: Record<string, React.CSSProperties>,
 ): string {
   const keyframeEntries = Object.entries(keyframes)
     .map(([percentage, styles]) => {
@@ -166,7 +170,7 @@ export function generateKeyframes(
       return `${percentage} { ${styleString} }`;
     })
     .join('\n  ');
-    
+
   return `@keyframes ${name} {\n  ${keyframeEntries}\n}`;
 }
 
@@ -181,7 +185,7 @@ export const animationPresets = {
     easing: 'smooth' as const,
     iterationCount: 'infinite' as const,
   },
-  
+
   // Quick pulse animation
   quickPulse: {
     animation: 'pulse',
@@ -189,7 +193,7 @@ export const animationPresets = {
     easing: 'easeInOut' as const,
     iterationCount: 'infinite' as const,
   },
-  
+
   // Smooth glow animation
   smoothGlow: {
     animation: 'glow',
@@ -197,7 +201,7 @@ export const animationPresets = {
     easing: 'smooth' as const,
     iterationCount: 'infinite' as const,
   },
-  
+
   // Bounce entrance
   bounceIn: {
     animation: 'scaleIn',

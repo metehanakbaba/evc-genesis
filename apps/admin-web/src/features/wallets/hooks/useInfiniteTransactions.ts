@@ -1,17 +1,20 @@
 /**
  * 🔄 Infinite Transactions Hook
- * 
+ *
  * Infinite scroll functionality for transaction lists with API-based search and filtering.
  * Compatible with wallet API schema and server-side pagination.
- * 
+ *
  * @module useInfiniteTransactions
  * @version 3.0.0 - API Search Integration
  * @author EV Charging Team
  */
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { PLNTransaction, TransactionQueryParams } from '../types/wallet.types';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useGetAllTransactionsQuery } from '../api/walletApi';
+import type {
+  PLNTransaction,
+  TransactionQueryParams,
+} from '../types/wallet.types';
 
 interface InfiniteTransactionsResult {
   transactions: PLNTransaction[];
@@ -40,13 +43,9 @@ interface UseInfiniteTransactionsOptions {
  * Provides infinite scroll functionality with server-side search and filtering
  */
 export const useInfiniteTransactions = (
-  options: UseInfiniteTransactionsOptions = {}
+  options: UseInfiniteTransactionsOptions = {},
 ): InfiniteTransactionsResult => {
-  const {
-    filters = {},
-    pageSize = 20,
-    enabled = true,
-  } = options;
+  const { filters = {}, pageSize = 20, enabled = true } = options;
 
   // ✅ State Management
   const [transactions, setTransactions] = useState<PLNTransaction[]>([]);
@@ -62,81 +61,95 @@ export const useInfiniteTransactions = (
   const isInitializedRef = useRef(false);
 
   // ✅ Memoized filter values to prevent unnecessary re-renders
-  const filterString = useMemo(() => 
-    JSON.stringify(filters), [filters]
-  );
+  const filterString = useMemo(() => JSON.stringify(filters), [filters]);
 
   // ✅ Build API query parameters
-  const buildQueryParams = useCallback((page: number): TransactionQueryParams => {
-    return {
-      page,
-      limit: pageSize,
-      search: filters.searchQuery?.trim() || undefined,
-      type: filters.typeFilter && filters.typeFilter !== 'all' ? filters.typeFilter as any : undefined,
-      status: filters.statusFilter && filters.statusFilter !== 'all' ? filters.statusFilter as any : undefined,
-      sort_by: 'created_at',
-      sort_order: 'desc',
-      // Note: amountRangeFilter can be handled client-side for now since it's a range filter
-    };
-  }, [filters, pageSize]);
+  const buildQueryParams = useCallback(
+    (page: number): TransactionQueryParams => {
+      return {
+        page,
+        limit: pageSize,
+        search: filters.searchQuery?.trim() || undefined,
+        type:
+          filters.typeFilter && filters.typeFilter !== 'all'
+            ? (filters.typeFilter as any)
+            : undefined,
+        status:
+          filters.statusFilter && filters.statusFilter !== 'all'
+            ? (filters.statusFilter as any)
+            : undefined,
+        sort_by: 'created_at',
+        sort_order: 'desc',
+        // Note: amountRangeFilter can be handled client-side for now since it's a range filter
+      };
+    },
+    [filters, pageSize],
+  );
 
   /**
    * 🔄 Fetch Transactions Function - API Integration
    */
-  const fetchTransactions = useCallback(async (
-    page: number,
-  ): Promise<{ transactions: PLNTransaction[]; total: number; hasNextPage: boolean }> => {
-    // Cancel previous request
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new abort controller
-    abortControllerRef.current = new AbortController();
-
-    try {
-      // Simulate API delay for realistic behavior
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(resolve, page === 0 ? 500 : 200);
-        
-        abortControllerRef.current?.signal.addEventListener('abort', () => {
-          clearTimeout(timeout);
-          reject(new Error('Request aborted'));
-        });
-      });
-
-      // Check if request was aborted
-      if (abortControllerRef.current?.signal.aborted) {
-        throw new Error('Request aborted');
+  const fetchTransactions = useCallback(
+    async (
+      page: number,
+    ): Promise<{
+      transactions: PLNTransaction[];
+      total: number;
+      hasNextPage: boolean;
+    }> => {
+      // Cancel previous request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
 
-      // Build query parameters
-      const queryParams = buildQueryParams(page);
-      
-      // Use the enhanced API hook (simulated)
-      const result = useGetAllTransactionsQuery(queryParams);
-      
-      if (result.isError || result.error) {
+      // Create new abort controller
+      abortControllerRef.current = new AbortController();
+
+      try {
+        // Simulate API delay for realistic behavior
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(resolve, page === 0 ? 500 : 200);
+
+          abortControllerRef.current?.signal.addEventListener('abort', () => {
+            clearTimeout(timeout);
+            reject(new Error('Request aborted'));
+          });
+        });
+
+        // Check if request was aborted
+        if (abortControllerRef.current?.signal.aborted) {
+          throw new Error('Request aborted');
+        }
+
+        // Build query parameters
+        const queryParams = buildQueryParams(page);
+
+        // Use the enhanced API hook (simulated)
+        const result = useGetAllTransactionsQuery(queryParams);
+
+        if (result.isError || result.error) {
+          throw new Error('Failed to fetch transactions');
+        }
+
+        const apiData = result.data?.data;
+        if (!apiData) {
+          throw new Error('Invalid API response');
+        }
+
+        return {
+          transactions: apiData.transactions,
+          total: apiData.total,
+          hasNextPage: apiData.hasNextPage || false,
+        };
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Request aborted') {
+          throw error; // Re-throw abort errors
+        }
         throw new Error('Failed to fetch transactions');
       }
-
-      const apiData = result.data?.data;
-      if (!apiData) {
-        throw new Error('Invalid API response');
-      }
-
-      return {
-        transactions: apiData.transactions,
-        total: apiData.total,
-        hasNextPage: apiData.hasNextPage || false,
-      };
-    } catch (error) {
-      if (error instanceof Error && error.message === 'Request aborted') {
-        throw error; // Re-throw abort errors
-      }
-      throw new Error('Failed to fetch transactions');
-    }
-  }, [buildQueryParams]);
+    },
+    [buildQueryParams],
+  );
 
   /**
    * 📊 Load Initial Data - API Integration
@@ -147,10 +160,10 @@ export const useInfiniteTransactions = (
     setIsLoading(true);
     setError(null);
     setCurrentPage(0);
-    
+
     try {
       const result = await fetchTransactions(0);
-      
+
       // Only update if not aborted
       if (!abortControllerRef.current?.signal.aborted) {
         setTransactions(result.transactions);
@@ -181,15 +194,17 @@ export const useInfiniteTransactions = (
     try {
       const nextPage = currentPage + 1;
       const result = await fetchTransactions(nextPage);
-      
+
       // Only update if not aborted
       if (!abortControllerRef.current?.signal.aborted) {
-        setTransactions(prev => {
-          const existingIds = new Set(prev.map(t => t.id));
-          const newTransactions = result.transactions.filter(t => !existingIds.has(t.id));
+        setTransactions((prev) => {
+          const existingIds = new Set(prev.map((t) => t.id));
+          const newTransactions = result.transactions.filter(
+            (t) => !existingIds.has(t.id),
+          );
           return [...prev, ...newTransactions];
         });
-        
+
         setCurrentPage(nextPage);
         setTotal(result.total);
         setHasNextPage(result.hasNextPage);
@@ -235,7 +250,7 @@ export const useInfiniteTransactions = (
       setTransactions([]);
       setCurrentPage(0);
       setHasNextPage(true);
-      
+
       // Small delay to batch multiple filter changes
       const timeoutId = setTimeout(() => {
         loadInitialData();
@@ -267,4 +282,4 @@ export const useInfiniteTransactions = (
     refresh,
     total,
   };
-}; 
+};

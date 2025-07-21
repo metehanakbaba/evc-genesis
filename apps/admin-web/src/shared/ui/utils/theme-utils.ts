@@ -1,4 +1,4 @@
-import { VariantProps, SizeProps } from '../atoms/types';
+import type { SizeProps, VariantProps } from '../atoms/types';
 
 /**
  * Theme utility functions for consistent styling across components
@@ -46,11 +46,41 @@ export const variantColors = {
 
 // Size mappings for different properties
 export const sizeScale = {
-  xs: { width: 'w-3', height: 'h-3', padding: 'p-1', text: 'text-xs', spacing: 'space-1' },
-  sm: { width: 'w-4', height: 'h-4', padding: 'p-2', text: 'text-sm', spacing: 'space-2' },
-  md: { width: 'w-6', height: 'h-6', padding: 'p-3', text: 'text-base', spacing: 'space-3' },
-  lg: { width: 'w-8', height: 'h-8', padding: 'p-4', text: 'text-lg', spacing: 'space-4' },
-  xl: { width: 'w-12', height: 'h-12', padding: 'p-6', text: 'text-xl', spacing: 'space-6' },
+  xs: {
+    width: 'w-3',
+    height: 'h-3',
+    padding: 'p-1',
+    text: 'text-xs',
+    spacing: 'space-1',
+  },
+  sm: {
+    width: 'w-4',
+    height: 'h-4',
+    padding: 'p-2',
+    text: 'text-sm',
+    spacing: 'space-2',
+  },
+  md: {
+    width: 'w-6',
+    height: 'h-6',
+    padding: 'p-3',
+    text: 'text-base',
+    spacing: 'space-3',
+  },
+  lg: {
+    width: 'w-8',
+    height: 'h-8',
+    padding: 'p-4',
+    text: 'text-lg',
+    spacing: 'space-4',
+  },
+  xl: {
+    width: 'w-12',
+    height: 'h-12',
+    padding: 'p-6',
+    text: 'text-xl',
+    spacing: 'space-6',
+  },
 } as const;
 
 // Blur scale for visual effects
@@ -93,7 +123,10 @@ export function getVariantGradient(variant: VariantProps['variant'] = 'blue') {
 /**
  * Generate glow effect classes for variants
  */
-export function getVariantGlow(variant: VariantProps['variant'] = 'blue', intensity: 'subtle' | 'medium' | 'strong' = 'medium') {
+export function getVariantGlow(
+  variant: VariantProps['variant'] = 'blue',
+  intensity: 'subtle' | 'medium' | 'strong' = 'medium',
+) {
   const colors = getVariantColors(variant);
   const alpha = intensityScale[intensity];
   return `shadow-lg shadow-${colors.primary}/${Math.round(parseFloat(alpha) * 100)}`;
@@ -134,7 +167,7 @@ export function createThemeClasses(
     includeBorder?: boolean;
     includeHover?: boolean;
     includeGradient?: boolean;
-  } = {}
+  } = {},
 ) {
   const {
     includeGlow = false,

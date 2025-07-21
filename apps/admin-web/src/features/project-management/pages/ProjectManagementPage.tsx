@@ -1,18 +1,19 @@
 'use client';
 
-import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
-import React, { useState, useCallback } from 'react';
 import {
-  SparklesIcon,
-  PlayIcon,
-  PauseIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  CodeBracketIcon,
-  ClipboardDocumentListIcon,
-  PlusIcon,
   ArrowPathIcon,
+  CheckCircleIcon,
+  ClipboardDocumentListIcon,
+  CodeBracketIcon,
+  ExclamationTriangleIcon,
+  PauseIcon,
+  PlayIcon,
+  PlusIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
+import type React from 'react';
+import { useCallback, useState } from 'react';
+import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
 
 /**
  * AI-Powered Project Management Dashboard
@@ -29,19 +30,28 @@ const ProjectManagementPage: React.FC = () => {
       name: 'EV Charging Admin Frontend',
       status: 'in_progress',
       progress: 78,
-      aiSummary: 'Dashboard redesign completed. Working on project management integration.',
+      aiSummary:
+        'Dashboard redesign completed. Working on project management integration.',
       lastUpdate: '2 minutes ago',
       tasks: [
         { name: 'Dashboard Redesign', status: 'completed', priority: 'high' },
-        { name: 'Core System Administration', status: 'completed', priority: 'medium' },
-        { name: 'Project Management Page', status: 'in_progress', priority: 'high' },
+        {
+          name: 'Core System Administration',
+          status: 'completed',
+          priority: 'medium',
+        },
+        {
+          name: 'Project Management Page',
+          status: 'in_progress',
+          priority: 'high',
+        },
         { name: 'AI Integration', status: 'pending', priority: 'high' },
       ],
       files: {
         modified: ['DashboardPage.tsx', 'CoreManagementSection.tsx'],
         created: ['ProjectManagementPage.tsx'],
-        pending: ['projectStatus.json', 'aiConfig.json']
-      }
+        pending: ['projectStatus.json', 'aiConfig.json'],
+      },
     },
     {
       id: 'mobile-app',
@@ -52,14 +62,18 @@ const ProjectManagementPage: React.FC = () => {
       lastUpdate: '1 hour ago',
       tasks: [
         { name: 'Project Setup', status: 'completed', priority: 'high' },
-        { name: 'Architecture Design', status: 'in_progress', priority: 'high' },
+        {
+          name: 'Architecture Design',
+          status: 'in_progress',
+          priority: 'high',
+        },
         { name: 'UI Components', status: 'pending', priority: 'medium' },
       ],
       files: {
         modified: [],
         created: ['app.json', 'package.json'],
-        pending: ['navigation.tsx', 'styles.ts']
-      }
+        pending: ['navigation.tsx', 'styles.ts'],
+      },
     },
     {
       id: 'api-backend',
@@ -70,35 +84,49 @@ const ProjectManagementPage: React.FC = () => {
       lastUpdate: '3 days ago',
       tasks: [
         { name: 'User Authentication', status: 'completed', priority: 'high' },
-        { name: 'Station Management API', status: 'completed', priority: 'high' },
+        {
+          name: 'Station Management API',
+          status: 'completed',
+          priority: 'high',
+        },
         { name: 'Payment Processing', status: 'completed', priority: 'medium' },
         { name: 'Documentation', status: 'completed', priority: 'low' },
       ],
       files: {
         modified: [],
         created: ['auth.ts', 'stations.ts', 'payments.ts'],
-        pending: []
-      }
-    }
+        pending: [],
+      },
+    },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'emerald';
-      case 'in_progress': return 'blue';
-      case 'planning': return 'amber';
-      case 'on_hold': return 'gray';
-      default: return 'gray';
+      case 'completed':
+        return 'emerald';
+      case 'in_progress':
+        return 'blue';
+      case 'planning':
+        return 'amber';
+      case 'on_hold':
+        return 'gray';
+      default:
+        return 'gray';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return CheckCircleIcon;
-      case 'in_progress': return PlayIcon;
-      case 'planning': return ClipboardDocumentListIcon;
-      case 'on_hold': return PauseIcon;
-      default: return ExclamationTriangleIcon;
+      case 'completed':
+        return CheckCircleIcon;
+      case 'in_progress':
+        return PlayIcon;
+      case 'planning':
+        return ClipboardDocumentListIcon;
+      case 'on_hold':
+        return PauseIcon;
+      default:
+        return ExclamationTriangleIcon;
     }
   };
 
@@ -148,8 +176,9 @@ const ProjectManagementPage: React.FC = () => {
               </div>
             </div>
             <p className="text-gray-400 text-sm">
-              AI automatically tracks file changes, updates project status, and maintains JSON configurations. 
-              Click "Enable AI Edit" to allow automatic file modifications.
+              AI automatically tracks file changes, updates project status, and
+              maintains JSON configurations. Click "Enable AI Edit" to allow
+              automatic file modifications.
             </p>
           </div>
 
@@ -158,7 +187,7 @@ const ProjectManagementPage: React.FC = () => {
             {projects.map((project) => {
               const StatusIcon = getStatusIcon(project.status);
               const statusColor = getStatusColor(project.status);
-              
+
               return (
                 <div
                   key={project.id}
@@ -168,14 +197,20 @@ const ProjectManagementPage: React.FC = () => {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 bg-${statusColor}-500/10 border border-${statusColor}-500/20 rounded-xl flex items-center justify-center`}>
-                        <StatusIcon className={`w-5 h-5 text-${statusColor}-400`} />
+                      <div
+                        className={`w-10 h-10 bg-${statusColor}-500/10 border border-${statusColor}-500/20 rounded-xl flex items-center justify-center`}
+                      >
+                        <StatusIcon
+                          className={`w-5 h-5 text-${statusColor}-400`}
+                        />
                       </div>
                       <div>
                         <h3 className="text-lg font-medium text-white group-hover:text-purple-300 transition-colors">
                           {project.name}
                         </h3>
-                        <span className={`px-2 py-1 bg-${statusColor}-500/10 text-${statusColor}-300 border border-${statusColor}-500/20 rounded text-xs`}>
+                        <span
+                          className={`px-2 py-1 bg-${statusColor}-500/10 text-${statusColor}-300 border border-${statusColor}-500/20 rounded text-xs`}
+                        >
                           {project.status.replace('_', ' ')}
                         </span>
                       </div>
@@ -195,10 +230,12 @@ const ProjectManagementPage: React.FC = () => {
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs text-gray-400">Progress</span>
-                      <span className="text-xs text-white font-medium">{project.progress}%</span>
+                      <span className="text-xs text-white font-medium">
+                        {project.progress}%
+                      </span>
                     </div>
                     <div className="w-full bg-gray-700/50 rounded-full h-2">
-                      <div 
+                      <div
                         className={`bg-gradient-to-r from-${statusColor}-500 to-${statusColor}-400 h-2 rounded-full transition-all duration-500`}
                         style={{ width: `${project.progress}%` }}
                       ></div>
@@ -215,15 +252,21 @@ const ProjectManagementPage: React.FC = () => {
                   {/* Quick Stats */}
                   <div className="grid grid-cols-3 gap-3 mb-4">
                     <div className="text-center">
-                      <div className="text-sm font-medium text-white">{project.tasks.length}</div>
+                      <div className="text-sm font-medium text-white">
+                        {project.tasks.length}
+                      </div>
                       <div className="text-xs text-gray-400">Tasks</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-medium text-white">{project.files.created.length}</div>
+                      <div className="text-sm font-medium text-white">
+                        {project.files.created.length}
+                      </div>
                       <div className="text-xs text-gray-400">Files</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-medium text-white">{project.files.pending.length}</div>
+                      <div className="text-sm font-medium text-white">
+                        {project.files.pending.length}
+                      </div>
                       <div className="text-xs text-gray-400">Pending</div>
                     </div>
                   </div>
@@ -250,7 +293,9 @@ const ProjectManagementPage: React.FC = () => {
             <div className="fixed inset-4 bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 z-50 overflow-auto">
               <div className="max-w-4xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-light text-white">Project Configuration</h2>
+                  <h2 className="text-2xl font-light text-white">
+                    Project Configuration
+                  </h2>
                   <button
                     onClick={() => setSelectedProject(null)}
                     className="text-gray-400 hover:text-white transition-colors"
@@ -258,16 +303,22 @@ const ProjectManagementPage: React.FC = () => {
                     ✕
                   </button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Project Status JSON */}
                   <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6">
                     <div className="flex items-center gap-2 mb-4">
                       <CodeBracketIcon className="w-5 h-5 text-amber-400" />
-                      <h3 className="text-lg font-medium text-white">Project Status JSON</h3>
+                      <h3 className="text-lg font-medium text-white">
+                        Project Status JSON
+                      </h3>
                     </div>
                     <pre className="text-sm text-gray-300 overflow-auto max-h-96 bg-gray-900/50 p-4 rounded-lg">
-{JSON.stringify(projects.find(p => p.id === selectedProject), null, 2)}
+                      {JSON.stringify(
+                        projects.find((p) => p.id === selectedProject),
+                        null,
+                        2,
+                      )}
                     </pre>
                   </div>
 
@@ -275,17 +326,21 @@ const ProjectManagementPage: React.FC = () => {
                   <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6">
                     <div className="flex items-center gap-2 mb-4">
                       <SparklesIcon className="w-5 h-5 text-purple-400" />
-                      <h3 className="text-lg font-medium text-white">AI Configuration</h3>
+                      <h3 className="text-lg font-medium text-white">
+                        AI Configuration
+                      </h3>
                     </div>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
                           Auto-update Files
                         </label>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={aiMode === 'edit'}
-                          onChange={() => setAiMode(aiMode === 'view' ? 'edit' : 'view')}
+                          onChange={() =>
+                            setAiMode(aiMode === 'view' ? 'edit' : 'view')
+                          }
                           className="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500"
                         />
                       </div>
@@ -293,8 +348,8 @@ const ProjectManagementPage: React.FC = () => {
                         <label className="block text-sm font-medium text-gray-300 mb-2">
                           Watch Patterns
                         </label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value="*.tsx,*.ts,*.json"
                           className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 text-white rounded-lg focus:outline-none focus:border-purple-500/50"
                         />
@@ -322,4 +377,4 @@ const ProjectManagementPage: React.FC = () => {
   );
 };
 
-export default ProjectManagementPage; 
+export default ProjectManagementPage;

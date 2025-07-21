@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { MainLayout } from '@ui/layout';
 import type React from 'react'; // React 19: use hook!

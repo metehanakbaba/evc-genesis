@@ -114,7 +114,6 @@ const ARCHITECTURAL_PRINCIPLES: ReadonlyArray<ArchitecturalPrinciple> = [
   },
 ] as const;
 
-
 /**
  * 🧩 Component Patterns
  */
@@ -216,7 +215,6 @@ src/
 │   └── utils/             # Utility functions
 └── types/                 # Global type definitions
 ` as const;
-
 
 const CodeBlock: React.FC<{ children: string; language?: string }> = ({
   children,

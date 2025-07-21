@@ -1,7 +1,10 @@
-import { getOptimizedIcon } from '@/lib/utils/iconOptimization';
-import type React from 'react';
 // ✅ Import shared business logic
-import { formatBuildTimestamp, formatLiveUpdateTime } from '@evc/shared-business-logic';
+import {
+  formatBuildTimestamp,
+  formatLiveUpdateTime,
+} from '@evc/shared-business-logic';
+import type React from 'react';
+import { getOptimizedIcon } from '@/lib/utils/iconOptimization';
 
 // ✅ Use optimized icon loading
 const BoltIcon = getOptimizedIcon('heroicons-outline', 'BoltIcon');
@@ -35,9 +38,7 @@ export const DashboardFooter: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                <span className="text-sm text-gray-300">
-                  Version 1.0.0
-                </span>
+                <span className="text-sm text-gray-300">Version 1.0.0</span>
               </div>
             </div>
           </div>
@@ -85,7 +86,8 @@ export const DashboardFooter: React.FC = () => {
                 Version: <span className="text-gray-100">0.1.0 (alpha)</span>
               </div>
               <div className="text-sm text-gray-300">
-                Build: <span className="text-gray-100">{formatBuildTimestamp()}</span>
+                Build:{' '}
+                <span className="text-gray-100">{formatBuildTimestamp()}</span>
               </div>
               <div className="text-sm text-gray-300">
                 Environment:{' '}

@@ -1,18 +1,18 @@
 'use client';
 
-import React from 'react';
-import { 
-  BulkActionBar, 
-  useBulkSelection,
-  type BulkAction 
-} from '../BulkActionBar';
 import {
-  TrashIcon,
-  CheckCircleIcon,
   ArrowDownTrayIcon,
-  TagIcon,
+  CheckCircleIcon,
   ShieldExclamationIcon,
+  TagIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
+import type React from 'react';
+import {
+  type BulkAction,
+  BulkActionBar,
+  useBulkSelection,
+} from '../BulkActionBar';
 
 // Mock data for demonstration
 const MOCK_USERS = [
@@ -20,12 +20,17 @@ const MOCK_USERS = [
   { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
   { id: '3', name: 'Bob Johnson', email: 'bob@example.com', role: 'moderator' },
   { id: '4', name: 'Alice Brown', email: 'alice@example.com', role: 'user' },
-  { id: '5', name: 'Charlie Davis', email: 'charlie@example.com', role: 'admin' },
+  {
+    id: '5',
+    name: 'Charlie Davis',
+    email: 'charlie@example.com',
+    role: 'admin',
+  },
 ];
 
 /**
  * 🎨 BulkActionBar Example Component
- * 
+ *
  * Demonstrates different configurations and usage patterns:
  * - Basic bulk actions (delete, activate, export)
  * - Conditional actions based on selection count
@@ -52,20 +57,20 @@ export const BulkActionBarExample: React.FC = () => {
       onClick: async (ids) => {
         console.log('✅ Activating users:', ids);
         // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         clearSelection();
       },
       show: (count) => count > 0,
       confirmMessage: 'Activate {count} selected users?',
     },
     {
-      id: 'deactivate', 
+      id: 'deactivate',
       label: 'Deactivate',
       icon: ShieldExclamationIcon,
       variant: 'secondary',
       onClick: async (ids) => {
         console.log('⏸️ Deactivating users:', ids);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         clearSelection();
       },
       show: (count) => count > 0,
@@ -79,7 +84,7 @@ export const BulkActionBarExample: React.FC = () => {
       onClick: async (ids) => {
         console.log('📦 Exporting users:', ids);
         // Simulate export
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         alert(`Exported ${ids.length} users successfully!`);
       },
       show: (count) => count > 0,
@@ -107,12 +112,13 @@ export const BulkActionBarExample: React.FC = () => {
       variant: 'danger',
       onClick: async (ids) => {
         console.log('🗑️ Deleting users:', ids);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         clearSelection();
       },
       show: (count) => count > 0,
       disabled: (count) => count > 5, // Prevent accidental bulk delete
-      confirmMessage: '⚠️ PERMANENTLY DELETE {count} users? This cannot be undone!',
+      confirmMessage:
+        '⚠️ PERMANENTLY DELETE {count} users? This cannot be undone!',
     },
   ];
 
@@ -137,7 +143,7 @@ export const BulkActionBarExample: React.FC = () => {
             Click on users to select them for bulk operations
           </p>
         </div>
-        
+
         <div className="divide-y divide-gray-700/30">
           {MOCK_USERS.map((user) => (
             <div
@@ -146,43 +152,50 @@ export const BulkActionBarExample: React.FC = () => {
               className={`
                 p-4 cursor-pointer transition-all duration-200
                 hover:bg-gradient-to-r hover:from-blue-500/5 hover:via-blue-400/3 hover:to-transparent
-                ${isSelected(user.id) 
-                  ? 'bg-gradient-to-r from-blue-500/10 via-purple-500/5 to-blue-500/10 border-l-4 border-blue-400' 
-                  : 'hover:border-l-4 hover:border-blue-400/50'
+                ${
+                  isSelected(user.id)
+                    ? 'bg-gradient-to-r from-blue-500/10 via-purple-500/5 to-blue-500/10 border-l-4 border-blue-400'
+                    : 'hover:border-l-4 hover:border-blue-400/50'
                 }
               `}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {/* Selection Indicator */}
-                  <div className={`
+                  <div
+                    className={`
                     w-5 h-5 rounded-lg border-2 transition-all duration-200
                     flex items-center justify-center
-                    ${isSelected(user.id)
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400'
-                      : 'border-gray-600 hover:border-blue-400'
+                    ${
+                      isSelected(user.id)
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400'
+                        : 'border-gray-600 hover:border-blue-400'
                     }
-                  `}>
+                  `}
+                  >
                     {isSelected(user.id) && (
                       <div className="w-2 h-2 bg-white rounded-sm"></div>
                     )}
                   </div>
-                  
+
                   <div>
                     <div className="text-white font-medium">{user.name}</div>
                     <div className="text-gray-400 text-sm">{user.email}</div>
                   </div>
                 </div>
-                
-                <div className={`
+
+                <div
+                  className={`
                   px-3 py-1 rounded-full text-xs font-medium
-                  ${user.role === 'admin' 
-                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
-                    : user.role === 'moderator'
-                      ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                      : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                  ${
+                    user.role === 'admin'
+                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                      : user.role === 'moderator'
+                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                        : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
                   }
-                `}>
+                `}
+                >
                   {user.role}
                 </div>
               </div>
@@ -234,7 +247,7 @@ export const BulkActionBarExample: React.FC = () => {
             variant="purple"
           />
         </div>
-        
+
         <div>
           <h4 className="text-white font-semibold mb-3">Emerald Variant</h4>
           <BulkActionBar
@@ -254,7 +267,7 @@ export const BulkActionBarExample: React.FC = () => {
           🚀 Implementation Example
         </h4>
         <pre className="bg-gray-900/60 border border-gray-700/50 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto">
-{`// 1. Import components
+          {`// 1. Import components
 import { BulkActionBar, useBulkSelection } from '@/shared/ui';
 
 // 2. Set up bulk selection
@@ -296,4 +309,4 @@ const bulkActions: BulkAction[] = [
   );
 };
 
-export default BulkActionBarExample; 
+export default BulkActionBarExample;

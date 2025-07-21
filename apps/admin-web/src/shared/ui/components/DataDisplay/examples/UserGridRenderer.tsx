@@ -1,33 +1,33 @@
 /**
  * 👥 User Grid Renderer Example
- * 
+ *
  * This demonstrates how to create a renderer for the GenericDataGrid
  * to replace the existing UserGrid component with reusable patterns.
- * 
+ *
  * @module UserGridRenderer
  * @version 1.0.0
  * @author EV Charging Team
  */
 
-import type React from 'react';
 import {
+  CalendarIcon,
   CheckCircleIcon,
   CogIcon,
+  EnvelopeIcon,
   EyeIcon,
   PencilIcon,
+  PhoneIcon,
   ShieldCheckIcon,
   TrashIcon,
   UserIcon,
   XCircleIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  CalendarIcon,
 } from '@heroicons/react/24/outline';
-import type { 
-  GridCardRenderer, 
-  StatusConfig as GridStatusConfig,
+import type React from 'react';
+import type {
   ActionButton,
-  GridItem
+  GridCardRenderer,
+  GridItem,
+  StatusConfig as GridStatusConfig,
 } from '../GenericDataGrid';
 
 // Example User type - this would come from your feature types
@@ -52,7 +52,8 @@ const getRoleConfig = (role: User['role']) => {
       return {
         icon: ShieldCheckIcon,
         text: 'Admin',
-        bgColor: 'bg-gradient-to-br from-red-500/10 via-red-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-red-500/10 via-red-400/5 to-transparent',
         borderColor: 'border-red-400/25 hover:border-red-300/40',
         badgeColor: 'bg-red-500/10 border-red-500/30',
         textColor: 'text-red-400',
@@ -63,7 +64,8 @@ const getRoleConfig = (role: User['role']) => {
       return {
         icon: CogIcon,
         text: 'Field Worker',
-        bgColor: 'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
         borderColor: 'border-blue-400/25 hover:border-blue-300/40',
         badgeColor: 'bg-blue-500/10 border-blue-500/30',
         textColor: 'text-blue-400',
@@ -75,7 +77,8 @@ const getRoleConfig = (role: User['role']) => {
       return {
         icon: UserIcon,
         text: 'Customer',
-        bgColor: 'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent',
+        bgColor:
+          'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent',
         borderColor: 'border-purple-400/25 hover:border-purple-300/40',
         badgeColor: 'bg-purple-500/10 border-purple-500/30',
         textColor: 'text-purple-400',
@@ -91,16 +94,16 @@ const getRoleConfig = (role: User['role']) => {
  */
 const formatLastLogin = (lastLogin: string | null): string => {
   if (!lastLogin) return 'Never';
-  
+
   const date = new Date(lastLogin);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays} days ago`;
-  
+
   return date.toLocaleDateString();
 };
 
@@ -123,23 +126,26 @@ export const createUserGridRenderer = (): GridCardRenderer<User> => ({
 
   getAnimationDelay: (index: number): string => `${index * 100}ms`,
 
-  renderHeader: (user: User, statusConfig: GridStatusConfig): React.ReactNode => {
+  renderHeader: (
+    user: User,
+    statusConfig: GridStatusConfig,
+  ): React.ReactNode => {
     const roleConfig = getRoleConfig(user.role);
     const RoleIcon = roleConfig.icon;
 
     return (
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-xl ${roleConfig.badgeColor} border flex items-center justify-center`}>
+          <div
+            className={`w-12 h-12 rounded-xl ${roleConfig.badgeColor} border flex items-center justify-center`}
+          >
             <RoleIcon className={`w-6 h-6 ${roleConfig.textColor}`} />
           </div>
           <div>
             <div className={`text-sm font-medium ${roleConfig.textColor} mb-1`}>
               {roleConfig.text}
             </div>
-            <div className="text-white font-semibold text-lg">
-              {user.name}
-            </div>
+            <div className="text-white font-semibold text-lg">{user.name}</div>
           </div>
         </div>
 
@@ -206,7 +212,7 @@ export const createUserGridRenderer = (): GridCardRenderer<User> => ({
 export const createUserGridActions = (
   onViewDetails?: (user: User) => void,
   onEditUser?: (user: User) => void,
-  onDeleteUser?: (user: User) => void
+  onDeleteUser?: (user: User) => void,
 ): ActionButton[] => [
   {
     icon: EyeIcon,
@@ -230,11 +236,11 @@ export const createUserGridActions = (
 
 /**
  * 📖 Usage Example:
- * 
+ *
  * ```tsx
  * import { GenericDataGrid } from '@/shared/ui';
  * import { createUserGridRenderer, createUserGridActions } from './UserGridRenderer';
- * 
+ *
  * const UserManagementPage: React.FC = () => {
  *   const renderer = createUserGridRenderer();
  *   const actions = createUserGridActions(
@@ -242,7 +248,7 @@ export const createUserGridActions = (
  *     handleEditUser,
  *     handleDeleteUser
  *   );
- * 
+ *
  *   return (
  *     <GenericDataGrid
  *       items={users}
@@ -268,4 +274,4 @@ export const createUserGridActions = (
 export default {
   createUserGridRenderer,
   createUserGridActions,
-}; 
+};

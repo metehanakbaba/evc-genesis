@@ -1,50 +1,44 @@
 /**
  * 👥 User Grid - Migrated Version
- * 
+ *
  * This demonstrates how to migrate from the old UserGrid to the new GenericDataGrid.
  * This example shows the complete migration pattern that can be applied to all features.
- * 
+ *
  * BEFORE: 300+ lines of duplicated grid code
  * AFTER: 50 lines using shared GenericDataGrid
- * 
+ *
  * @module UserGridMigrated
  * @version 2.0.0
  * @author EV Charging Team
  */
 
-import type React from 'react';
+// ✅ Import shared business logic (if available)
+import { formatLastLogin, getRoleConfig } from '@evc/shared-business-logic';
 import {
+  CalendarIcon,
   CheckCircleIcon,
   CogIcon,
+  EnvelopeIcon,
   EyeIcon,
   PencilIcon,
+  PhoneIcon,
   ShieldCheckIcon,
   TrashIcon,
   UserIcon,
   XCircleIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  CalendarIcon,
 } from '@heroicons/react/24/outline';
-
+import type React from 'react';
 // ✅ Import the new shared components
-import { 
-  GenericDataGrid, 
+import {
+  type DataGridItem,
+  type DataGridStatusConfig,
   DataStatusBadge,
-  type DataGridItem, 
-  type GridActionButton, 
-  type GridCardRenderer, 
-  type DataGridStatusConfig 
+  GenericDataGrid,
+  type GridActionButton,
+  type GridCardRenderer,
 } from '@/shared/ui';
-
 // Import existing types (no changes needed)
 import type { UserProfile } from '../types/user.types';
-
-// ✅ Import shared business logic (if available)
-import { 
-  getRoleConfig, 
-  formatLastLogin 
-} from '@evc/shared-business-logic';
 
 /**
  * 🔄 MIGRATION STEP 1: Extend UserProfile to work with GenericDataGrid
@@ -72,29 +66,36 @@ const createUserGridRenderer = (): GridCardRenderer<MigratedUser> => ({
 
   getAnimationDelay: (index: number): string => `${index * 100}ms`,
 
-  renderHeader: (user: MigratedUser, statusConfig: DataGridStatusConfig): React.ReactNode => {
+  renderHeader: (
+    user: MigratedUser,
+    statusConfig: DataGridStatusConfig,
+  ): React.ReactNode => {
     const roleConfig = getRoleConfig(user.role);
-    const RoleIcon = roleConfig.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-                    roleConfig.icon === 'CogIcon' ? CogIcon : UserIcon;
+    const RoleIcon =
+      roleConfig.icon === 'ShieldCheckIcon'
+        ? ShieldCheckIcon
+        : roleConfig.icon === 'CogIcon'
+          ? CogIcon
+          : UserIcon;
 
     return (
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-xl ${roleConfig.badgeColor} flex items-center justify-center`}>
+          <div
+            className={`w-12 h-12 rounded-xl ${roleConfig.badgeColor} flex items-center justify-center`}
+          >
             <RoleIcon className={`w-6 h-6 ${roleConfig.textColor}`} />
           </div>
           <div>
             <div className={`text-sm font-medium ${roleConfig.textColor} mb-1`}>
               {roleConfig.text}
             </div>
-            <div className="text-white font-semibold text-lg">
-              {user.name}
-            </div>
+            <div className="text-white font-semibold text-lg">{user.name}</div>
           </div>
         </div>
 
         {/* ✅ Use the new DataStatusBadge component */}
-        <DataStatusBadge 
+        <DataStatusBadge
           status={{
             variant: user.is_active ? 'success' : 'danger',
             label: user.is_active ? 'Active' : 'Inactive',
@@ -143,7 +144,7 @@ const createUserGridRenderer = (): GridCardRenderer<MigratedUser> => ({
 const createUserActions = (
   onViewDetails?: (user: UserProfile) => void,
   onEditUser?: (user: UserProfile) => void,
-  onDeleteUser?: (user: UserProfile) => void
+  onDeleteUser?: (user: UserProfile) => void,
 ): GridActionButton[] => [
   {
     icon: EyeIcon,
@@ -189,7 +190,7 @@ export const UserGridMigrated: React.FC<UserGridMigratedProps> = ({
   onViewDetails,
   onEditUser,
   onDeleteUser,
-  className = "",
+  className = '',
   onLoadMore,
   isLoadingMore = false,
   hasNextPage = false,
@@ -226,7 +227,7 @@ export const UserGridMigrated: React.FC<UserGridMigratedProps> = ({
 
 /**
  * 📊 MIGRATION COMPARISON
- * 
+ *
  * BEFORE (Old UserGrid):
  * - ❌ 292 lines of code
  * - ❌ Duplicated infinite scroll logic
@@ -236,7 +237,7 @@ export const UserGridMigrated: React.FC<UserGridMigratedProps> = ({
  * - ❌ Manual animation delays
  * - ❌ Hardcoded grid layouts
  * - ❌ Manual loading state management
- * 
+ *
  * AFTER (UserGridMigrated):
  * - ✅ 50 lines of actual logic (83% reduction!)
  * - ✅ Reuses shared infinite scroll logic
@@ -248,7 +249,7 @@ export const UserGridMigrated: React.FC<UserGridMigratedProps> = ({
  * - ✅ Built-in loading state management
  * - ✅ Consistent behavior across features
  * - ✅ Single source of truth for bugs/features
- * 
+ *
  * 🎯 MIGRATION BENEFITS:
  * 1. **Code Reduction**: 83% less code to maintain
  * 2. **Consistency**: Identical behavior across all features
@@ -262,17 +263,17 @@ export const UserGridMigrated: React.FC<UserGridMigratedProps> = ({
 
 /**
  * 🛠️ MIGRATION INSTRUCTIONS FOR OTHER FEATURES
- * 
+ *
  * To migrate StationGrid, TransactionGrid, SessionGrid:
- * 
+ *
  * 1. Copy this file and rename it
  * 2. Replace UserProfile with your feature type (Station, Transaction, Session)
  * 3. Update the renderHeader and renderContent functions with your data
  * 4. Update the action buttons for your feature
  * 5. Replace the old grid component with the new one
  * 6. Delete the old grid component file
- * 
+ *
  * That's it! 🎉
  */
 
-export default UserGridMigrated; 
+export default UserGridMigrated;

@@ -1,13 +1,24 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
-import { AnimationProps } from '../atoms/types';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { AnimationProps } from '../atoms/types';
 import { atomicTokens } from '../theme/theme.config';
-import { getAnimationClasses, createAnimationStyle, animationPresets } from '../utils/animation-utils';
+import {
+  animationPresets,
+  createAnimationStyle,
+  getAnimationClasses,
+} from '../utils/animation-utils';
 
 /**
  * Hook for managing component animations
  */
-export function useAnimation(props: AnimationProps & { trigger?: boolean } = {}) {
-  const { animated = false, animationSpeed = 1, animationDelay = 0, trigger = true } = props;
+export function useAnimation(
+  props: AnimationProps & { trigger?: boolean } = {},
+) {
+  const {
+    animated = false,
+    animationSpeed = 1,
+    animationDelay = 0,
+    trigger = true,
+  } = props;
   const [isAnimating, setIsAnimating] = useState(false);
   const animationRef = useRef<HTMLElement>(null);
 
@@ -17,7 +28,7 @@ export function useAnimation(props: AnimationProps & { trigger?: boolean } = {})
 
   const animationStyle = useMemo(() => {
     if (!animated) return {};
-    
+
     return {
       animationDuration: `${300 / animationSpeed}ms`,
       animationDelay: `${animationDelay}ms`,
@@ -29,9 +40,12 @@ export function useAnimation(props: AnimationProps & { trigger?: boolean } = {})
     if (!animated || !trigger) return;
 
     setIsAnimating(true);
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, (300 / animationSpeed) + animationDelay);
+    const timer = setTimeout(
+      () => {
+        setIsAnimating(false);
+      },
+      300 / animationSpeed + animationDelay,
+    );
 
     return () => clearTimeout(timer);
   }, [animated, animationSpeed, animationDelay, trigger]);
@@ -49,25 +63,25 @@ export function useAnimation(props: AnimationProps & { trigger?: boolean } = {})
  */
 export function useHoverAnimation(
   hoverScale: boolean = false,
-  hoverGlow: boolean = false
+  hoverGlow: boolean = false,
 ) {
   const [isHovered, setIsHovered] = useState(false);
 
   const hoverClasses = useMemo(() => {
     const classes: string[] = [];
-    
+
     if (hoverScale) {
       classes.push('hover:scale-105 active:scale-95');
     }
-    
+
     if (hoverGlow) {
       classes.push('hover:animate-glow-pulse');
     }
-    
+
     if (classes.length > 0) {
       classes.push('transition-all duration-300');
     }
-    
+
     return classes.join(' ');
   }, [hoverScale, hoverGlow]);
 
@@ -89,7 +103,7 @@ export function useHoverAnimation(
 export function useStaggeredAnimation(
   count: number,
   baseDelay: number = 100,
-  trigger: boolean = true
+  trigger: boolean = true,
 ) {
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -107,7 +121,7 @@ export function useStaggeredAnimation(
     const interval = setInterval(() => {
       setActiveIndex(currentIndex);
       currentIndex++;
-      
+
       if (currentIndex >= count) {
         clearInterval(interval);
       }
@@ -135,10 +149,10 @@ export function useStaggeredAnimation(
  */
 export function usePresetAnimation(
   preset: keyof typeof animationPresets,
-  trigger: boolean = true
+  trigger: boolean = true,
 ) {
   const presetConfig = animationPresets[preset];
-  
+
   const animationStyle = useMemo(() => {
     return createAnimationStyle(presetConfig.animation, {
       duration: presetConfig.duration,
@@ -168,7 +182,7 @@ export function usePresetAnimation(
  * Hook for managing intersection-based animations
  */
 export function useIntersectionAnimation(
-  options: IntersectionObserverInit = {}
+  options: IntersectionObserverInit = {},
 ) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -188,7 +202,7 @@ export function useIntersectionAnimation(
       {
         threshold: 0.1,
         ...options,
-      }
+      },
     );
 
     observer.observe(element);

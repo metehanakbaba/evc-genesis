@@ -1,22 +1,22 @@
-import React from 'react';
-import { cn } from '../../utils';
+import type React from 'react';
 import { AccentDot } from '../../atoms/AccentDot';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps 
+import type {
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
 } from '../../atoms/types';
+import { cn } from '../../utils';
 
 /**
  * FloatingAccents Component Props
- * 
+ *
  * Molecule component that composes multiple AccentDot atoms into a coordinated
  * floating accent collection with synchronized animation sequences and positioning
  */
-export interface FloatingAccentsProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps {
+export interface FloatingAccentsProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps {
   /** Custom inline styles */
   style?: React.CSSProperties;
   /** Number of accent dots to render */
@@ -142,21 +142,21 @@ const sizeConfigs = {
 
 /**
  * FloatingAccents - Molecule component for coordinated floating accent effects
- * 
+ *
  * Composes multiple AccentDot atoms into synchronized floating collections
  * with various positioning patterns and animation sequences. Provides
  * performance-optimized rendering and flexible customization options.
- * 
+ *
  * @example
  * ```tsx
- * <FloatingAccents 
- *   variant="blue" 
- *   size="md" 
- *   pattern="circular" 
+ * <FloatingAccents
+ *   variant="blue"
+ *   size="md"
+ *   pattern="circular"
  *   sequence="cascade"
- *   animated 
+ *   animated
  * />
- * <FloatingAccents 
+ * <FloatingAccents
  *   accentCount={8}
  *   pattern="scattered"
  *   sequence="wave"
@@ -185,26 +185,46 @@ export const FloatingAccents: React.FC<FloatingAccentsProps> = ({
 }) => {
   // Get size configuration
   const sizeConfig = sizeConfigs[size];
-  const effectiveAccentCount = accentCount !== undefined ? accentCount : (customAccents?.length !== undefined ? customAccents.length : sizeConfig.defaultCount);
-  
+  const effectiveAccentCount =
+    accentCount !== undefined
+      ? accentCount
+      : customAccents?.length !== undefined
+        ? customAccents.length
+        : sizeConfig.defaultCount;
+
   // Generate accent configurations
   const generateAccentConfigs = () => {
     if (customAccents) {
       return customAccents.map((accent, index) => {
-        const animationConfig = animationSequences[sequence](index, customAccents.length, animationSpeed);
+        const animationConfig = animationSequences[sequence](
+          index,
+          customAccents.length,
+          animationSpeed,
+        );
         return {
           variant: accent.variant || variant,
-          size: accent.size || sizeConfig.accentSizes[index % sizeConfig.accentSizes.length],
-          position: accent.position || positionPatterns[pattern](index, customAccents.length),
-          animationDelay: accent.animationDelay !== undefined ? accent.animationDelay : animationConfig.animationDelay,
+          size:
+            accent.size ||
+            sizeConfig.accentSizes[index % sizeConfig.accentSizes.length],
+          position:
+            accent.position ||
+            positionPatterns[pattern](index, customAccents.length),
+          animationDelay:
+            accent.animationDelay !== undefined
+              ? accent.animationDelay
+              : animationConfig.animationDelay,
           animationSpeed: animationConfig.animationSpeed,
           opacity: accent.opacity !== undefined ? accent.opacity : opacity,
         };
       });
     }
-    
+
     return Array.from({ length: effectiveAccentCount }, (_, index) => {
-      const animationConfig = animationSequences[sequence](index, effectiveAccentCount, animationSpeed);
+      const animationConfig = animationSequences[sequence](
+        index,
+        effectiveAccentCount,
+        animationSpeed,
+      );
       return {
         variant,
         size: sizeConfig.accentSizes[index % sizeConfig.accentSizes.length],
@@ -222,12 +242,12 @@ export const FloatingAccents: React.FC<FloatingAccentsProps> = ({
   const containerClasses = cn(
     // Base styling
     'absolute inset-0 overflow-hidden pointer-events-none',
-    
+
     // Responsive behavior
     responsive && 'w-full h-full',
-    
+
     // Custom className
-    className
+    className,
   );
 
   // Container styles

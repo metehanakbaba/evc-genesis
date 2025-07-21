@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { BaseComponentProps } from '../atoms/types';
+import type { ReactNode } from 'react';
+import type { BaseComponentProps } from '../atoms/types';
 
 /**
  * Base interfaces for template components

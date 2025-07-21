@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { DashboardFooter } from '@/features/admin/components/DashboardFooter';
 import { FloatingOrbs } from '@/features/admin/components/FloatingOrbs';
 import { AppHeader } from './AppHeader';
-import { IntelligenceSidebar } from './IntelligenceSidebar';
 import { IntelligenceBottomModal } from './IntelligenceBottomModal';
+import { IntelligenceSidebar } from './IntelligenceSidebar';
 import { NotificationSidebar } from './NotificationSidebar';
 
 export interface MainLayoutProps {

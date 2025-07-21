@@ -1,26 +1,29 @@
 'use client';
 
+// ✅ Import shared business logic
 import {
+  formatSessionDuration,
+  getSessionStatusConfig,
+} from '@evc/shared-business-logic';
+import {
+  ArrowTrendingUpIcon,
+  BanknotesIcon,
   BoltIcon,
   CheckCircleIcon,
   ClockIcon,
   EyeIcon,
+  FireIcon,
   MapPinIcon,
   PlayIcon,
   StopIcon,
   UserIcon,
   XCircleIcon,
-  ArrowTrendingUpIcon,
-  FireIcon,
-  BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import type { LiveChargingSession } from '../types/session.types';
-// ✅ Import shared business logic
-import { getSessionStatusConfig, formatSessionDuration } from '@evc/shared-business-logic';
 // ✅ Import infinite scroll hooks from users feature (reusing existing)
 import { useInfiniteScrollTrigger } from '../../users/hooks/useIntersectionObserver';
+import type { LiveChargingSession } from '../types/session.types';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -61,7 +64,7 @@ export const SessionTable: React.FC<SessionTableProps> = ({
   onViewDetails,
   onStopSession,
   showStopButton = true,
-  className = "",
+  className = '',
   columns = {
     session: true,
     status: true,
@@ -89,7 +92,7 @@ export const SessionTable: React.FC<SessionTableProps> = ({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500, // ✅ Prevent rapid successive calls
-    }
+    },
   );
 
   // Icon mapping for session status
@@ -108,8 +111,6 @@ export const SessionTable: React.FC<SessionTableProps> = ({
         return ClockIcon;
     }
   };
-
-
 
   return (
     <div className={className}>
@@ -138,10 +139,14 @@ export const SessionTable: React.FC<SessionTableProps> = ({
             </thead>
             <tbody className="divide-y divide-gray-700/30">
               {sessions.map((session) => {
-                const statusConfig = getSessionStatusConfig(session.status as any);
+                const statusConfig = getSessionStatusConfig(
+                  session.status as any,
+                );
                 const SessionIcon = getSessionIcon(session.status);
-                const isActive = session.status === 'charging' || session.status === 'starting';
-                
+                const isActive =
+                  session.status === 'charging' ||
+                  session.status === 'starting';
+
                 return (
                   <tr
                     key={session.id}
@@ -150,11 +155,17 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                     {/* Session Details - Two-line layout */}
                     <td className="py-4 px-4">
                       <div className="flex items-start gap-3">
-                        <div className={`w-10 h-10 rounded-lg ${statusConfig.badgeColor} border flex items-center justify-center relative flex-shrink-0 transition-transform duration-200 group-hover:scale-105 will-change-transform`}>
+                        <div
+                          className={`w-10 h-10 rounded-lg ${statusConfig.badgeColor} border flex items-center justify-center relative flex-shrink-0 transition-transform duration-200 group-hover:scale-105 will-change-transform`}
+                        >
                           {isActive && (
-                            <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 ${statusConfig.pulseColor} rounded-full animate-ping opacity-75`}></div>
+                            <div
+                              className={`absolute -top-1 -right-1 w-2.5 h-2.5 ${statusConfig.pulseColor} rounded-full animate-ping opacity-75`}
+                            ></div>
                           )}
-                          <SessionIcon className={`w-5 h-5 ${statusConfig.textColor} transition-transform duration-200 group-hover:scale-110`} />
+                          <SessionIcon
+                            className={`w-5 h-5 ${statusConfig.textColor} transition-transform duration-200 group-hover:scale-110`}
+                          />
                         </div>
                         <div className="min-w-0 flex-1">
                           {/* First line: Session ID and Status */}
@@ -162,8 +173,12 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                             <span className="text-white font-semibold text-sm transition-colors duration-200 group-hover:text-gray-100">
                               #{session.id.slice(-6)}
                             </span>
-                            <div className={`inline-flex items-center px-2 py-0.5 rounded-full ${statusConfig.badgeColor} border transition-transform duration-200 group-hover:scale-105 will-change-transform`}>
-                              <span className={`text-xs font-medium ${statusConfig.textColor} uppercase tracking-wide`}>
+                            <div
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full ${statusConfig.badgeColor} border transition-transform duration-200 group-hover:scale-105 will-change-transform`}
+                            >
+                              <span
+                                className={`text-xs font-medium ${statusConfig.textColor} uppercase tracking-wide`}
+                              >
                                 {session.status}
                               </span>
                             </div>
@@ -173,7 +188,12 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                             <span>{session.connector_type}</span>
                             <div className="flex items-center gap-1">
                               <ClockIcon className="w-3 h-3 transition-transform duration-200 group-hover:scale-110" />
-                              <span>{formatSessionDuration(session.started_at, session.ended_at)}</span>
+                              <span>
+                                {formatSessionDuration(
+                                  session.started_at,
+                                  session.ended_at,
+                                )}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -186,12 +206,16 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                         {/* First line: Station */}
                         <div className="flex items-center gap-2 transition-colors duration-200 group-hover:text-gray-200">
                           <MapPinIcon className="w-4 h-4 text-gray-400 flex-shrink-0 transition-colors duration-200 group-hover:text-gray-300" />
-                          <span className="text-white text-sm font-medium truncate transition-colors duration-200 group-hover:text-gray-100">{session.station_name}</span>
+                          <span className="text-white text-sm font-medium truncate transition-colors duration-200 group-hover:text-gray-100">
+                            {session.station_name}
+                          </span>
                         </div>
                         {/* Second line: User */}
                         <div className="flex items-center gap-2 transition-colors duration-200 group-hover:text-gray-200">
                           <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0 transition-colors duration-200 group-hover:text-gray-300" />
-                          <span className="text-gray-300 text-sm truncate transition-colors duration-200 group-hover:text-gray-200">{session.user_email}</span>
+                          <span className="text-gray-300 text-sm truncate transition-colors duration-200 group-hover:text-gray-200">
+                            {session.user_email}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -228,11 +252,15 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                         </div>
                         {/* Second line: Progress or completion time */}
                         <div className="text-xs text-gray-400 transition-colors duration-200 group-hover:text-gray-300">
-                          {session.estimated_completion && session.status === 'charging' ? (
+                          {session.estimated_completion &&
+                          session.status === 'charging' ? (
                             <div className="flex items-center gap-1">
                               <ArrowTrendingUpIcon className="w-3 h-3 transition-transform duration-200 group-hover:scale-110" />
                               <span>
-                                ~{new Date(session.estimated_completion).toLocaleTimeString([], {
+                                ~
+                                {new Date(
+                                  session.estimated_completion,
+                                ).toLocaleTimeString([], {
                                   hour: '2-digit',
                                   minute: '2-digit',
                                 })}
@@ -241,10 +269,15 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                           ) : (
                             <div className="flex items-center gap-1">
                               <ClockIcon className="w-3 h-3 transition-transform duration-200 group-hover:scale-110" />
-                              <span>Started: {new Date(session.started_at).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}</span>
+                              <span>
+                                Started:{' '}
+                                {new Date(
+                                  session.started_at,
+                                ).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </span>
                             </div>
                           )}
                         </div>
@@ -272,7 +305,7 @@ export const SessionTable: React.FC<SessionTableProps> = ({
                         >
                           <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-200" />
                         </Button>
-                        
+
                         {showStopButton && isActive && (
                           <Button
                             size="sm"
@@ -309,14 +342,16 @@ export const SessionTable: React.FC<SessionTableProps> = ({
         <div className="mt-6 lg:mt-8 flex items-center justify-center py-6 lg:py-8">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 border-2 border-gray-600 border-t-emerald-400 rounded-full animate-spin"></div>
-            <span className="text-gray-400 font-medium">Loading more sessions...</span>
+            <span className="text-gray-400 font-medium">
+              Loading more sessions...
+            </span>
           </div>
         </div>
       )}
 
       {/* ✅ Load More Trigger (invisible) */}
       {hasNextPage && !isLoadingMore && (
-        <div 
+        <div
           ref={loadMoreRef as React.RefObject<HTMLDivElement>}
           className="h-10 flex items-center justify-center"
         >
@@ -330,15 +365,13 @@ export const SessionTable: React.FC<SessionTableProps> = ({
           <div className="w-12 h-12 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-full flex items-center justify-center mb-3">
             <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full"></div>
           </div>
-          
+
           <h3 className="text-white font-semibold mb-1">All sessions loaded</h3>
-          <p className="text-gray-400 text-sm">
-            Showing all {total} sessions
-          </p>
-          
+          <p className="text-gray-400 text-sm">Showing all {total} sessions</p>
+
           <div className="mt-4 h-px w-24 bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
         </div>
       )}
     </div>
   );
-}; 
+};

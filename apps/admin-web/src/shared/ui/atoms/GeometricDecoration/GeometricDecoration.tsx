@@ -1,24 +1,24 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '../../utils';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps, 
+import type {
   AnimationProps,
-  PositionProps 
+  BaseComponentProps,
+  PositionProps,
+  SizeProps,
+  VariantProps,
 } from '../types';
 
 /**
  * GeometricDecoration Component Props
- * 
+ *
  * Geometric decoration elements (circles, borders, lines) for visual enhancement
  */
-export interface GeometricDecorationProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps, 
-          AnimationProps,
-          PositionProps {
+export interface GeometricDecorationProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps,
+    AnimationProps,
+    PositionProps {
   /** Type of geometric decoration shape */
   shape?: 'circle' | 'ring' | 'line' | 'arc' | 'dots';
   /** Pattern variant for the decoration */
@@ -34,7 +34,7 @@ export interface GeometricDecorationProps
  */
 const sizeClasses = {
   xs: 'w-4 h-4',
-  sm: 'w-8 h-8', 
+  sm: 'w-8 h-8',
   md: 'w-12 h-12',
   lg: 'w-16 h-16',
   xl: 'w-24 h-24',
@@ -48,7 +48,7 @@ const positionClasses = {
   'top-right': 'top-4 right-4',
   'bottom-left': 'bottom-4 left-4',
   'bottom-right': 'bottom-4 right-4',
-  'center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+  center: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
 } as const;
 
 /**
@@ -72,10 +72,10 @@ const patternClasses = {
 
 /**
  * GeometricDecoration - Atomic component for geometric visual elements
- * 
+ *
  * Used to add geometric patterns and decorative elements to enhance visual hierarchy.
  * Supports multiple shapes, patterns, and positioning options.
- * 
+ *
  * @example
  * ```tsx
  * <GeometricDecoration shape="circle" size="md" position="top-right" />
@@ -105,7 +105,7 @@ export const GeometricDecoration: React.FC<GeometricDecorationProps> = ({
       purple: 'border-purple-400/30',
       teal: 'border-teal-400/30',
     };
-    
+
     return variantColors[variant];
   };
 
@@ -119,16 +119,16 @@ export const GeometricDecoration: React.FC<GeometricDecorationProps> = ({
       thicknessClasses[thickness],
       patternClasses[pattern],
       animated && 'animate-pulse',
-      className
+      className,
     );
 
     switch (shape) {
       case 'circle':
         return cn(baseClasses, 'rounded-full');
-      
+
       case 'ring':
         return cn(baseClasses, 'rounded-full bg-transparent');
-      
+
       case 'line':
         return cn(
           'absolute pointer-events-none select-none',
@@ -138,42 +138,45 @@ export const GeometricDecoration: React.FC<GeometricDecorationProps> = ({
           thicknessClasses[thickness],
           patternClasses[pattern],
           animated && 'animate-pulse',
-          className
+          className,
         );
-      
+
       case 'arc':
         return cn(
           baseClasses,
           'rounded-full',
-          'border-t-transparent border-r-transparent' // Creates arc effect
+          'border-t-transparent border-r-transparent', // Creates arc effect
         );
-      
+
       case 'dots':
         return cn(
           'absolute pointer-events-none select-none flex gap-1',
           positionClasses[position],
           animated && 'animate-pulse',
-          className
+          className,
         );
-      
+
       default:
         return baseClasses;
     }
   };
 
   // Animation style with custom speed and delay
-  const animationStyle = animated ? {
-    animationDuration: `${2000 / animationSpeed}ms`,
-    animationDelay: `${animationDelay}ms`,
-    animationIterationCount: 'infinite',
-    animationTimingFunction: 'ease-in-out',
-  } : {};
+  const animationStyle = animated
+    ? {
+        animationDuration: `${2000 / animationSpeed}ms`,
+        animationDelay: `${animationDelay}ms`,
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-in-out',
+      }
+    : {};
 
   // Handle gradient pattern
   const getGradientStyle = () => {
     if (pattern === 'gradient') {
       return {
-        background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.3) 0%, transparent 50%, rgba(59, 130, 246, 0.3) 100%)',
+        background:
+          'linear-gradient(45deg, rgba(59, 130, 246, 0.3) 0%, transparent 50%, rgba(59, 130, 246, 0.3) 100%)',
         border: 'none',
       };
     }
@@ -189,9 +192,19 @@ export const GeometricDecoration: React.FC<GeometricDecorationProps> = ({
 
   // Render dots pattern
   if (shape === 'dots') {
-    const dotCount = size === 'xs' ? 2 : size === 'sm' ? 3 : size === 'md' ? 4 : size === 'lg' ? 5 : 6;
-    const dotSize = size === 'xs' ? 'w-1 h-1' : size === 'sm' ? 'w-1.5 h-1.5' : 'w-2 h-2';
-    
+    const dotCount =
+      size === 'xs'
+        ? 2
+        : size === 'sm'
+          ? 3
+          : size === 'md'
+            ? 4
+            : size === 'lg'
+              ? 5
+              : 6;
+    const dotSize =
+      size === 'xs' ? 'w-1 h-1' : size === 'sm' ? 'w-1.5 h-1.5' : 'w-2 h-2';
+
     return (
       <div
         className={getDecorationClasses()}
@@ -208,10 +221,7 @@ export const GeometricDecoration: React.FC<GeometricDecorationProps> = ({
         {Array.from({ length: dotCount }).map((_, index) => (
           <div
             key={index}
-            className={cn(
-              'rounded-full bg-blue-400/30',
-              dotSize
-            )}
+            className={cn('rounded-full bg-blue-400/30', dotSize)}
           />
         ))}
       </div>

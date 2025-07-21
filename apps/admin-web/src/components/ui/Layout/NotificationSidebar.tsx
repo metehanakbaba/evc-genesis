@@ -2,13 +2,13 @@
 
 import {
   BellIcon,
-  XMarkIcon,
-  ClockIcon,
   CheckCircleIcon,
+  ClockIcon,
   ExclamationTriangleIcon,
+  InboxIcon,
   InformationCircleIcon,
   WrenchScrewdriverIcon,
-  InboxIcon
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 
@@ -68,7 +68,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: 5,
     title: 'Revenue Milestone',
-          message: 'Daily revenue target of 25,000 zł achieved ahead of schedule',
+    message: 'Daily revenue target of 25,000 zł achieved ahead of schedule',
     time: '3 hours ago',
     type: 'success',
     isRead: true,
@@ -91,8 +91,6 @@ const getNotificationIcon = (type: Notification['type']) => {
       return <BellIcon className="w-5 h-5 text-gray-400" />;
   }
 };
-
-
 
 const getNotificationBgColor = (type: string, isRead: boolean): string => {
   const baseClasses = isRead

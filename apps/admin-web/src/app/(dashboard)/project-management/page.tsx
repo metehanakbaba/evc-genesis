@@ -2,4 +2,4 @@ import ProjectManagementPage from '@/features/project-management/pages/ProjectMa
 
 export default function ProjectManagementRoute() {
   return <ProjectManagementPage />;
-} 
+}

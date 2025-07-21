@@ -226,7 +226,7 @@ export const DevWarningsProvider: React.FC<{ children: React.ReactNode }> = ({
         console.warn = originalConsoleWarn;
       };
     }
-    
+
     // Return undefined for non-development environments
     return undefined;
   }, []);

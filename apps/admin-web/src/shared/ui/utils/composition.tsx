@@ -1,5 +1,11 @@
-import React, { ComponentType, ReactElement, cloneElement, isValidElement } from 'react';
-import { BaseComponentProps } from '../atoms/types';
+import type React from 'react';
+import {
+  type ComponentType,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+} from 'react';
+import type { BaseComponentProps } from '../atoms/types';
 
 /**
  * Utility functions for composing atomic components
@@ -13,7 +19,7 @@ export type ComposableComponent<T = {}> = ComponentType<T & BaseComponentProps>;
  */
 export function composeComponents<T extends BaseComponentProps>(
   components: ComposableComponent<T>[],
-  sharedProps: Partial<T> = {}
+  sharedProps: Partial<T> = {},
 ): ComposableComponent<T> {
   return function ComposedComponent(props: T) {
     return (
@@ -31,17 +37,18 @@ export function composeComponents<T extends BaseComponentProps>(
  */
 export function createCompoundComponent<
   TMain extends BaseComponentProps,
-  TSubComponents extends Record<string, ComposableComponent<any>>
+  TSubComponents extends Record<string, ComposableComponent<any>>,
 >(
   MainComponent: ComposableComponent<TMain>,
-  subComponents: TSubComponents
+  subComponents: TSubComponents,
 ): ComposableComponent<TMain> & TSubComponents {
-  const CompoundComponent = MainComponent as ComposableComponent<TMain> & TSubComponents;
-  
+  const CompoundComponent = MainComponent as ComposableComponent<TMain> &
+    TSubComponents;
+
   Object.keys(subComponents).forEach((key) => {
     (CompoundComponent as any)[key] = subComponents[key];
   });
-  
+
   return CompoundComponent;
 }
 
@@ -50,7 +57,7 @@ export function createCompoundComponent<
  */
 export function enhanceComponent<TOriginal, TEnhanced>(
   OriginalComponent: ComposableComponent<TOriginal>,
-  enhancer: (props: TEnhanced) => Partial<TOriginal>
+  enhancer: (props: TEnhanced) => Partial<TOriginal>,
 ): ComposableComponent<TEnhanced> {
   return function EnhancedComponent(props: TEnhanced) {
     const enhancedProps = enhancer(props);
@@ -63,12 +70,12 @@ export function enhanceComponent<TOriginal, TEnhanced>(
  */
 export function enhanceElement<T extends BaseComponentProps>(
   element: ReactElement,
-  additionalProps: Partial<T>
+  additionalProps: Partial<T>,
 ): ReactElement {
   if (!isValidElement(element)) {
     return element;
   }
-  
+
   return cloneElement(element, {
     ...(element.props as any),
     ...additionalProps,
@@ -80,10 +87,10 @@ export function enhanceElement<T extends BaseComponentProps>(
  */
 export function renderEnhancedChildren<T extends BaseComponentProps>(
   children: React.ReactNode,
-  enhancedProps: Partial<T>
+  enhancedProps: Partial<T>,
 ): React.ReactNode {
   if (!children) return null;
-  
+
   if (Array.isArray(children)) {
     return children.map((child, index) => {
       if (isValidElement(child)) {
@@ -92,11 +99,11 @@ export function renderEnhancedChildren<T extends BaseComponentProps>(
       return child;
     });
   }
-  
+
   if (isValidElement(children)) {
     return enhanceElement(children, enhancedProps);
   }
-  
+
   return children;
 }
 
@@ -108,11 +115,15 @@ export interface SlotProps extends BaseComponentProps {
 }
 
 export function createSlotComponent<T extends Record<string, any>>(
-  slots: T
+  slots: T,
 ): ComposableComponent<{ slots?: Partial<T> }> {
-  return function SlotComponent({ slots: providedSlots = {}, children, ...props }) {
+  return function SlotComponent({
+    slots: providedSlots = {},
+    children,
+    ...props
+  }) {
     const mergedSlots = { ...slots, ...providedSlots };
-    
+
     return (
       <div {...props}>
         {Object.entries(mergedSlots).map(([slotName, SlotComponent]) => {

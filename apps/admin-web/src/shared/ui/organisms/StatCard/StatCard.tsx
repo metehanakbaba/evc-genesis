@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React from "react";
-import { cn } from "../../utils";
-import { StatValue } from "../../molecules/StatValue";
-import { TrendIndicator } from "../../molecules/TrendIndicator";
-import { BackgroundEffects } from "../../molecules/BackgroundEffects";
-import { AccentDot } from "../../atoms/AccentDot";
-import { GeometricDecoration } from "../../atoms/GeometricDecoration";
-import type { StatOrganismProps } from "../types";
+import React from 'react';
+import { AccentDot } from '../../atoms/AccentDot';
+import { GeometricDecoration } from '../../atoms/GeometricDecoration';
+import { BackgroundEffects } from '../../molecules/BackgroundEffects';
+import { StatValue } from '../../molecules/StatValue';
+import { TrendIndicator } from '../../molecules/TrendIndicator';
+import { cn } from '../../utils';
+import type { StatOrganismProps } from '../types';
 
 /**
  * StatCard Component Props
@@ -32,7 +32,7 @@ export interface StatCardProps extends StatOrganismProps {
   /** Glow color for hover effects */
   glowColor: string;
   /** Card variant for theming */
-  variant: "blue" | "emerald" | "purple" | "teal";
+  variant: 'blue' | 'emerald' | 'purple' | 'teal';
 }
 
 /**
@@ -68,27 +68,27 @@ export const StatCard: React.FC<StatCardProps> = ({
   variant,
   gradient,
   glowColor,
-  size = "md",
+  size = 'md',
   onClick,
   className,
-  "data-testid": testId = "stat-card",
+  'data-testid': testId = 'stat-card',
   ...props
 }) => {
   // Determine if component is interactive
   const isInteractive = Boolean(onClick);
 
   // Build container classes
-  const containerClasses = cn("group relative h-full", className);
+  const containerClasses = cn('group relative h-full', className);
 
   // Build main card classes - maintaining exact visual parity
   const cardClasses = cn(
-    "relative h-full min-h-[200px] max-h-[240px] p-6",
+    'relative h-full min-h-[200px] max-h-[240px] p-6',
     `bg-gradient-to-br ${gradient}`,
-    "backdrop-blur-xl border border-white/10 rounded-3xl",
-    "hover:border-white/20 transition-all duration-700 ease-out",
-    "transform hover:scale-105 hover:-translate-y-3",
-    "shadow-2xl hover:shadow-4xl flex flex-col overflow-hidden",
-    isInteractive && "cursor-pointer"
+    'backdrop-blur-xl border border-white/10 rounded-3xl',
+    'hover:border-white/20 transition-all duration-700 ease-out',
+    'transform hover:scale-105 hover:-translate-y-3',
+    'shadow-2xl hover:shadow-4xl flex flex-col overflow-hidden',
+    isInteractive && 'cursor-pointer',
   );
 
   // Handle click
@@ -106,12 +106,12 @@ export const StatCard: React.FC<StatCardProps> = ({
       data-variant={variant}
       data-size={size}
       data-interactive={isInteractive}
-      role={isInteractive ? "button" : undefined}
+      role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       onKeyDown={
         isInteractive
           ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
+              if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 handleClick(e as any);
               }
@@ -147,12 +147,12 @@ export const StatCard: React.FC<StatCardProps> = ({
           animated
           animationSpeed={1}
           style={{
-            top: "-12px",
-            right: "-12px",
-            width: "32px",
-            height: "32px",
+            top: '-12px',
+            right: '-12px',
+            width: '32px',
+            height: '32px',
             opacity: 0.8,
-            filter: "blur(2px)",
+            filter: 'blur(2px)',
           }}
           data-testid={`${testId}-accent-large`}
         />
@@ -164,11 +164,11 @@ export const StatCard: React.FC<StatCardProps> = ({
           animated
           animationSpeed={0.8}
           style={{
-            top: "-8px",
-            right: "-8px",
-            width: "24px",
-            height: "24px",
-            animation: "ping 2s cubic-bezier(0, 0, 0.2, 1) infinite",
+            top: '-8px',
+            right: '-8px',
+            width: '24px',
+            height: '24px',
+            animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
           }}
           data-testid={`${testId}-accent-small`}
         />
@@ -177,36 +177,36 @@ export const StatCard: React.FC<StatCardProps> = ({
         <div className="flex items-start justify-between mb-4 flex-shrink-0">
           <div
             className={`relative w-14 h-14 rounded-2xl ${
-              variant === "blue"
-                ? "bg-gradient-to-br from-blue-500/30 to-blue-400/20 border-blue-400/40"
-                : variant === "emerald"
-                ? "bg-gradient-to-br from-emerald-500/30 to-emerald-400/20 border-emerald-400/40"
-                : variant === "purple"
-                ? "bg-gradient-to-br from-purple-500/30 to-purple-400/20 border-purple-400/40"
-                : "bg-gradient-to-br from-teal-500/30 to-teal-400/20 border-teal-400/40"
+              variant === 'blue'
+                ? 'bg-gradient-to-br from-blue-500/30 to-blue-400/20 border-blue-400/40'
+                : variant === 'emerald'
+                  ? 'bg-gradient-to-br from-emerald-500/30 to-emerald-400/20 border-emerald-400/40'
+                  : variant === 'purple'
+                    ? 'bg-gradient-to-br from-purple-500/30 to-purple-400/20 border-purple-400/40'
+                    : 'bg-gradient-to-br from-teal-500/30 to-teal-400/20 border-teal-400/40'
             } border flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}
           >
             {React.createElement(icon, {
               className: `w-7 h-7 ${
-                variant === "blue"
-                  ? "text-blue-300"
-                  : variant === "emerald"
-                  ? "text-emerald-300"
-                  : variant === "purple"
-                  ? "text-purple-300"
-                  : "text-teal-300"
+                variant === 'blue'
+                  ? 'text-blue-300'
+                  : variant === 'emerald'
+                    ? 'text-emerald-300'
+                    : variant === 'purple'
+                      ? 'text-purple-300'
+                      : 'text-teal-300'
               } drop-shadow-lg`,
             })}
 
             <div
               className={`absolute inset-0 ${
-                variant === "blue"
-                  ? "bg-gradient-to-r from-blue-400/20"
-                  : variant === "emerald"
-                  ? "bg-gradient-to-r from-emerald-400/20"
-                  : variant === "purple"
-                  ? "bg-gradient-to-r from-purple-400/20"
-                  : "bg-gradient-to-r from-teal-400/20"
+                variant === 'blue'
+                  ? 'bg-gradient-to-r from-blue-400/20'
+                  : variant === 'emerald'
+                    ? 'bg-gradient-to-r from-emerald-400/20'
+                    : variant === 'purple'
+                      ? 'bg-gradient-to-r from-purple-400/20'
+                      : 'bg-gradient-to-r from-teal-400/20'
               } to-transparent rounded-2xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
             />
           </div>
@@ -263,4 +263,4 @@ export const StatCard: React.FC<StatCardProps> = ({
   );
 };
 
-StatCard.displayName = "StatCard";
+StatCard.displayName = 'StatCard';

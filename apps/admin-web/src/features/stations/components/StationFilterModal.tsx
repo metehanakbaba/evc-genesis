@@ -2,8 +2,8 @@
 
 import {
   FunnelIcon,
-  XMarkIcon,
   MagnifyingGlassIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
@@ -66,18 +66,48 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
 
   // Enterprise operational status options
   const statusOptions: FilterOption[] = [
-    { id: 'all', label: 'All Classifications', icon: MagnifyingGlassIcon, color: 'gray' },
+    {
+      id: 'all',
+      label: 'All Classifications',
+      icon: MagnifyingGlassIcon,
+      color: 'gray',
+    },
     { id: 'active', label: 'Operational', icon: FunnelIcon, color: 'emerald' },
     { id: 'offline', label: 'Non-Operational', icon: XMarkIcon, color: 'red' },
-    { id: 'maintenance', label: 'Service Mode', icon: FunnelIcon, color: 'amber' },
+    {
+      id: 'maintenance',
+      label: 'Service Mode',
+      icon: FunnelIcon,
+      color: 'amber',
+    },
   ];
 
   // Enterprise connector technology standards
   const connectorTypeOptions: FilterOption[] = [
-    { id: 'all', label: 'All Standards', icon: MagnifyingGlassIcon, color: 'gray' },
-    { id: 'CCS2', label: 'CCS2 Standard', icon: MagnifyingGlassIcon, color: 'blue' },
-    { id: 'CHAdeMO', label: 'CHAdeMO Protocol', icon: MagnifyingGlassIcon, color: 'purple' },
-    { id: 'Type2', label: 'Type 2 (IEC 62196)', icon: MagnifyingGlassIcon, color: 'green' },
+    {
+      id: 'all',
+      label: 'All Standards',
+      icon: MagnifyingGlassIcon,
+      color: 'gray',
+    },
+    {
+      id: 'CCS2',
+      label: 'CCS2 Standard',
+      icon: MagnifyingGlassIcon,
+      color: 'blue',
+    },
+    {
+      id: 'CHAdeMO',
+      label: 'CHAdeMO Protocol',
+      icon: MagnifyingGlassIcon,
+      color: 'purple',
+    },
+    {
+      id: 'Type2',
+      label: 'Type 2 (IEC 62196)',
+      icon: MagnifyingGlassIcon,
+      color: 'green',
+    },
     { id: 'AC', label: 'AC Current', icon: MagnifyingGlassIcon, color: 'cyan' },
     { id: 'DC', label: 'DC Current', icon: MagnifyingGlassIcon, color: 'pink' },
   ];
@@ -88,21 +118,22 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
   const renderFilterOption = (
     option: FilterOption,
     isSelected: boolean,
-    onClick: () => void
+    onClick: () => void,
   ) => {
     const IconComponent = option.icon;
-    
+
     return (
       <button
         key={option.id}
         onClick={onClick}
         className={`
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
-          ${isSelected
-            ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
+          ${
+            isSelected
+              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
                border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
                scale-[1.02]`
-            : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
           }
@@ -117,20 +148,22 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
           <div
             className={`
               w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isSelected
-                ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
-                : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+              ${
+                isSelected
+                  ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
+                  : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
               }
             `}
           >
-            <IconComponent 
+            <IconComponent
               className={`
                 w-5 h-5 transition-transform duration-300
-                ${isSelected 
-                  ? `text-${option.color}-400 scale-110` 
-                  : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                ${
+                  isSelected
+                    ? `text-${option.color}-400 scale-110`
+                    : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
                 }
-              `} 
+              `}
             />
           </div>
           <span className="font-medium text-sm">{option.label}</span>
@@ -191,28 +224,28 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
         <div className="relative z-10 p-6 space-y-8">
           {/* Revolutionary Station Status Selection */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Operational Status Classification</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Operational Status Classification
+            </h3>
             <div className="grid grid-cols-2 gap-3">
               {statusOptions.map((status) =>
-                renderFilterOption(
-                  status,
-                  statusFilter === status.id,
-                  () => onStatusChange(status.id)
-                )
+                renderFilterOption(status, statusFilter === status.id, () =>
+                  onStatusChange(status.id),
+                ),
               )}
             </div>
           </div>
 
           {/* Revolutionary Connector Type Selection */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Connector Technology Standards</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Connector Technology Standards
+            </h3>
             <div className="grid grid-cols-2 gap-3">
               {connectorTypeOptions.map((type) =>
-                renderFilterOption(
-                  type,
-                  connectorTypeFilter === type.id,
-                  () => onConnectorTypeChange(type.id)
-                )
+                renderFilterOption(type, connectorTypeFilter === type.id, () =>
+                  onConnectorTypeChange(type.id),
+                ),
               )}
             </div>
           </div>
@@ -262,10 +295,12 @@ export const StationFilterModal: React.FC<StationFilterModalProps> = ({
               before:transition-transform before:duration-700
             "
           >
-            <span className="relative z-10 font-medium">Apply Configuration</span>
+            <span className="relative z-10 font-medium">
+              Apply Configuration
+            </span>
           </Button>
         </div>
       </div>
     </div>
   );
-}; 
+};

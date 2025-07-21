@@ -1,5 +1,5 @@
-import type React from 'react';
 import { Button } from '@ui/forms';
+import type React from 'react';
 
 export interface PageHeaderProps {
   title: string;
@@ -18,10 +18,10 @@ export interface PageHeaderProps {
 /**
  * 🚀 Revolutionary Page Header Component
  * Consistent header design across all admin pages
- * 
+ *
  * Features:
  * - Theme-based gradient buttons
- * - Smooth animations and shine effects  
+ * - Smooth animations and shine effects
  * - Flexible action buttons and indicators
  * - Consistent typography and spacing
  */
@@ -37,7 +37,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   const themeConfig = {
     purple: {
       gradient: 'from-purple-600 via-purple-500 to-purple-600',
-      hoverGradient: 'hover:from-purple-500 hover:via-purple-400 hover:to-purple-500',
+      hoverGradient:
+        'hover:from-purple-500 hover:via-purple-400 hover:to-purple-500',
       shadow: 'shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-400/30',
       border: 'border-purple-400/20 hover:border-purple-300/40',
     },
@@ -49,8 +50,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     },
     emerald: {
       gradient: 'from-emerald-600 via-emerald-500 to-emerald-600',
-      hoverGradient: 'hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500',
-      shadow: 'shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30',
+      hoverGradient:
+        'hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500',
+      shadow:
+        'shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-400/30',
       border: 'border-emerald-400/20 hover:border-emerald-300/40',
     },
     blue: {
@@ -66,12 +69,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <header className={`flex items-center justify-between mb-8 ${className}`}>
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          {title}
-        </h1>
-        <p className="text-gray-400">
-          {description}
-        </p>
+        <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
+        <p className="text-gray-400">{description}</p>
       </div>
 
       <div className="flex items-center gap-3">
@@ -98,24 +97,24 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             `}
           >
             <div className="flex items-center gap-2.5 relative z-10">
-              <actionButton.icon 
+              <actionButton.icon
                 className={`w-4 h-4 ${
-                  actionButton.iconAnimation === 'rotate-90' 
-                    ? 'group-hover/action:rotate-90' 
+                  actionButton.iconAnimation === 'rotate-90'
+                    ? 'group-hover/action:rotate-90'
                     : actionButton.iconAnimation === 'rotate-12'
-                    ? 'group-hover/action:rotate-12'
-                    : ''
-                } transition-all duration-300 ease-out`} 
+                      ? 'group-hover/action:rotate-12'
+                      : ''
+                } transition-all duration-300 ease-out`}
               />
               <span className="font-medium">{actionButton.label}</span>
             </div>
           </Button>
         )}
-        
+
         {indicator && indicator}
       </div>
     </header>
   );
 };
 
-export default PageHeader; 
+export default PageHeader;

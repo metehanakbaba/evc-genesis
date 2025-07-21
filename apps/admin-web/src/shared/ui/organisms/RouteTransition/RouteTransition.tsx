@@ -1,11 +1,12 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { cn } from '../../utils';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { AccentDot } from '../../atoms/AccentDot';
 import { BackgroundEffects } from '../../molecules/BackgroundEffects';
 import { FloatingAccents } from '../../molecules/FloatingAccents';
-import { AccentDot } from '../../atoms/AccentDot';
+import { cn } from '../../utils';
 import type { TransitionOrganismProps } from '../types';
 
 /**
@@ -15,7 +16,7 @@ export type TransitionPhase = 'enter' | 'exit';
 
 /**
  * RouteTransition Component Props
- * 
+ *
  * Organism component that decomposes the existing RouteTransition into atomic parts
  * and composes them using BackgroundEffects, FloatingAccents, and transition logic.
  * Maintains identical animation behavior and timing to the original.
@@ -35,11 +36,11 @@ export interface RouteTransitionProps extends TransitionOrganismProps {
 
 /**
  * RouteTransition - Organism component for revolutionary page transitions
- * 
+ *
  * Decomposes the existing monolithic RouteTransition into atomic components
  * while maintaining exact visual parity and animation behavior. Uses
  * BackgroundEffects and FloatingAccents molecules with coordinated timing.
- * 
+ *
  * Features:
  * - Multi-axis transforms with perspective effects
  * - Blur and brightness filters during transitions
@@ -47,7 +48,7 @@ export interface RouteTransitionProps extends TransitionOrganismProps {
  * - Coordinated accent elements with synchronized timing
  * - Exit particles and trail effects
  * - Debug mode for development
- * 
+ *
  * @example
  * ```tsx
  * <RouteTransition
@@ -73,7 +74,8 @@ export const RouteTransition: React.FC<RouteTransitionProps> = ({
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
   const [displayPath, setDisplayPath] = useState(pathname);
-  const [transitionPhase, setTransitionPhase] = useState<TransitionPhase>('enter');
+  const [transitionPhase, setTransitionPhase] =
+    useState<TransitionPhase>('enter');
   const [isExiting, setIsExiting] = useState(false);
 
   // Main transition effect - identical to original
@@ -161,7 +163,7 @@ export const RouteTransition: React.FC<RouteTransitionProps> = ({
   // Build container classes
   const containerClasses = cn(
     'relative min-h-screen overflow-hidden',
-    className
+    className,
   );
 
   return (
@@ -246,7 +248,8 @@ export const RouteTransition: React.FC<RouteTransitionProps> = ({
                   opacity: 0.8 - i * 0.1,
                   width: '8px',
                   height: '8px',
-                  background: 'linear-gradient(to right, rgb(96 165 250 / 0.6), rgb(34 211 238 / 0.6))',
+                  background:
+                    'linear-gradient(to right, rgb(96 165 250 / 0.6), rgb(34 211 238 / 0.6))',
                   borderRadius: '50%',
                   transition: 'all 500ms ease-in-out',
                 }}
@@ -324,7 +327,10 @@ export const RouteTransition: React.FC<RouteTransitionProps> = ({
 
         {/* Exit Trail Effect - identical to original */}
         {isExiting && (
-          <div className="absolute inset-0" data-testid={`${testId}-exit-trail`}>
+          <div
+            className="absolute inset-0"
+            data-testid={`${testId}-exit-trail`}
+          >
             <div
               className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent transform -translate-y-1/2 transition-all duration-400"
               style={{

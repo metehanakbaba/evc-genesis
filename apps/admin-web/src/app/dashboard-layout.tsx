@@ -14,9 +14,7 @@ export default function DashboardLayout({
             <div className="revolutionary-loader w-8 h-8 rounded-lg"></div>
             <h1 className="text-xl font-bold text-white">EV Charging Admin</h1>
           </div>
-          <div className="text-sm text-gray-400">
-            Version 1.0.0
-          </div>
+          <div className="text-sm text-gray-400">Version 1.0.0</div>
         </div>
       </header>
 

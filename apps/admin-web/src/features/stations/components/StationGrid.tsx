@@ -2,13 +2,13 @@
 
 import {
   BoltIcon,
-  EyeIcon,
-  MapPinIcon,
-  WrenchScrewdriverIcon,
   CheckCircleIcon,
   ClockIcon,
-  XCircleIcon,
+  EyeIcon,
+  MapPinIcon,
   SignalIcon,
+  WrenchScrewdriverIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
@@ -93,7 +93,9 @@ export const StationGrid: React.FC<StationGridProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stations.map((station, index) => {
           const statusConfig = getStatusConfig(station.status);
-          const availableConnectors = station.connectors.filter(c => c.status === 'available').length;
+          const availableConnectors = station.connectors.filter(
+            (c) => c.status === 'available',
+          ).length;
           const totalConnectors = station.connectors.length;
 
           return (
@@ -103,11 +105,16 @@ export const StationGrid: React.FC<StationGridProps> = ({
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Revolutionary Station Card */}
-              <div className={`relative p-6 bg-gradient-to-br from-${statusConfig.variant}-500/10 via-${statusConfig.variant}-400/5 to-transparent border border-${statusConfig.variant}-400/25 hover:border-${statusConfig.variant}-300/40 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer`}>
-                
+              <div
+                className={`relative p-6 bg-gradient-to-br from-${statusConfig.variant}-500/10 via-${statusConfig.variant}-400/5 to-transparent border border-${statusConfig.variant}-400/25 hover:border-${statusConfig.variant}-300/40 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer`}
+              >
                 {/* Status Indicator */}
-                <div className={`absolute -top-2 -right-2 w-4 h-4 ${statusConfig.bg} ${statusConfig.border} border-2 rounded-full`}>
-                  <div className={`w-full h-full ${statusConfig.text.replace('text-', 'bg-')} rounded-full opacity-75 ${station.status === 'active' ? 'animate-pulse' : ''}`}></div>
+                <div
+                  className={`absolute -top-2 -right-2 w-4 h-4 ${statusConfig.bg} ${statusConfig.border} border-2 rounded-full`}
+                >
+                  <div
+                    className={`w-full h-full ${statusConfig.text.replace('text-', 'bg-')} rounded-full opacity-75 ${station.status === 'active' ? 'animate-pulse' : ''}`}
+                  ></div>
                 </div>
 
                 {/* Floating Background Effect */}
@@ -116,14 +123,24 @@ export const StationGrid: React.FC<StationGridProps> = ({
                 {/* Content */}
                 <div className="relative z-10">
                   {/* Header */}
-                                      <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-xl bg-${statusConfig.variant}-500/10 border border-${statusConfig.variant}-500/20 flex items-center justify-center`}>
-                        <BoltIcon className={`w-6 h-6 text-${statusConfig.variant}-400`} />
-                      </div>
+                  <div className="flex items-start justify-between mb-4">
+                    <div
+                      className={`w-12 h-12 rounded-xl bg-${statusConfig.variant}-500/10 border border-${statusConfig.variant}-500/20 flex items-center justify-center`}
+                    >
+                      <BoltIcon
+                        className={`w-6 h-6 text-${statusConfig.variant}-400`}
+                      />
+                    </div>
                     <div className="text-right">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${statusConfig.bg} ${statusConfig.border} border`}>
-                        <statusConfig.icon className={`w-4 h-4 ${statusConfig.text}`} />
-                        <span className={`text-xs font-medium ${statusConfig.text}`}>
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${statusConfig.bg} ${statusConfig.border} border`}
+                      >
+                        <statusConfig.icon
+                          className={`w-4 h-4 ${statusConfig.text}`}
+                        />
+                        <span
+                          className={`text-xs font-medium ${statusConfig.text}`}
+                        >
                           {statusConfig.label}
                         </span>
                       </div>
@@ -135,18 +152,23 @@ export const StationGrid: React.FC<StationGridProps> = ({
                     <h3 className="text-lg font-semibold text-white line-clamp-1">
                       {station.name}
                     </h3>
-                    
+
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
-                      <MapPinIcon className={`w-4 h-4 text-${statusConfig.variant}-400`} />
+                      <MapPinIcon
+                        className={`w-4 h-4 text-${statusConfig.variant}-400`}
+                      />
                       <span className="line-clamp-1">
                         {station.location.address}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
-                      <SignalIcon className={`w-4 h-4 text-${statusConfig.variant}-400`} />
+                      <SignalIcon
+                        className={`w-4 h-4 text-${statusConfig.variant}-400`}
+                      />
                       <span>
-                        {availableConnectors}/{totalConnectors} connectors available
+                        {availableConnectors}/{totalConnectors} connectors
+                        available
                       </span>
                     </div>
 
@@ -185,7 +207,7 @@ export const StationGrid: React.FC<StationGridProps> = ({
                         <span className="font-medium text-sm">View</span>
                       </div>
                     </Button>
-                    
+
                     <Button
                       size="sm"
                       variant="ghost"
@@ -228,4 +250,4 @@ export const StationGrid: React.FC<StationGridProps> = ({
       )}
     </div>
   );
-}; 
+};

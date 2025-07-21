@@ -32,15 +32,23 @@ interface StationStatistics {
 export const useStationStatistics = (): StationStatistics => {
   const statistics = useMemo(() => {
     const stations: Station[] = mockStations;
-    
+
     const totalStationsCount = stations.length;
-    const activeStationsCount = stations.filter((s: Station) => s.status === 'active').length;
-    const offlineStationsCount = stations.filter((s: Station) => s.status === 'offline').length;
-    const maintenanceStationsCount = stations.filter((s: Station) => s.status === 'maintenance').length;
-    
+    const activeStationsCount = stations.filter(
+      (s: Station) => s.status === 'active',
+    ).length;
+    const offlineStationsCount = stations.filter(
+      (s: Station) => s.status === 'offline',
+    ).length;
+    const maintenanceStationsCount = stations.filter(
+      (s: Station) => s.status === 'maintenance',
+    ).length;
+
     const allConnectors = stations.flatMap((s: Station) => s.connectors);
     const totalConnectorsCount = allConnectors.length;
-    const availableConnectorsCount = allConnectors.filter((c) => c.status === 'available').length;
+    const availableConnectorsCount = allConnectors.filter(
+      (c) => c.status === 'available',
+    ).length;
 
     return {
       totalStations: {
@@ -71,4 +79,4 @@ export const useStationStatistics = (): StationStatistics => {
   }, []); // Empty dependency array since we're using static mock data
 
   return statistics;
-}; 
+};

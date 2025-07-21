@@ -1,17 +1,20 @@
 /**
  * 🔍 Search Debounce Hook
- * 
+ *
  * Debounces search input to prevent excessive API calls
  * Following WalletsPage pattern for consistency.
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Custom hook to debounce search queries
  * Prevents excessive API calls during rapid typing
  */
-export const useSearchDebounce = (value: string, delay: number = 300): string => {
+export const useSearchDebounce = (
+  value: string,
+  delay: number = 300,
+): string => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -25,4 +28,4 @@ export const useSearchDebounce = (value: string, delay: number = 300): string =>
   }, [value, delay]);
 
   return debouncedValue;
-}; 
+};

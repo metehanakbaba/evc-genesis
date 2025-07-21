@@ -1,15 +1,15 @@
 /**
  * ⏱️ Debounce Hook
- * 
+ *
  * Custom hook for debouncing values to improve performance.
  * Particularly useful for search inputs and filter changes.
- * 
+ *
  * @module useDebounce
  * @version 1.0.0
  * @author EV Charging Team
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * 🚀 useDebounce Hook
@@ -37,12 +37,17 @@ export const useDebounce = <T>(value: T, delay: number): T => {
  * 🔍 useSearchDebounce Hook
  * Specialized debounce for search queries with trimming
  */
-export const useSearchDebounce = (searchQuery: string, delay: number = 300): string => {
-  const [debouncedQuery, setDebouncedQuery] = useState<string>(searchQuery.trim());
+export const useSearchDebounce = (
+  searchQuery: string,
+  delay: number = 300,
+): string => {
+  const [debouncedQuery, setDebouncedQuery] = useState<string>(
+    searchQuery.trim(),
+  );
 
   useEffect(() => {
     const trimmedQuery = searchQuery.trim();
-    
+
     const handler = setTimeout(() => {
       setDebouncedQuery(trimmedQuery);
     }, delay);
@@ -53,4 +58,4 @@ export const useSearchDebounce = (searchQuery: string, delay: number = 300): str
   }, [searchQuery, delay]);
 
   return debouncedQuery;
-}; 
+};

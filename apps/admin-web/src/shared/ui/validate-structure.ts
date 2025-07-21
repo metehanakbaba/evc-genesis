@@ -3,13 +3,13 @@
  * This file can be run to verify the atomic design system is properly set up
  */
 
-import { atomicTokens } from './theme/theme.config';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps, 
-  AnimationProps 
+import type {
+  AnimationProps,
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
 } from './atoms/types';
+import { atomicTokens } from './theme/theme.config';
 
 // Validate that all required types are available
 type ValidationTypes = {
@@ -23,39 +23,47 @@ type ValidationTypes = {
 const validateAtomicTokens = () => {
   const requiredVariants = ['blue', 'emerald', 'purple', 'teal'] as const;
   const requiredSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
-  
+
   // Check variants
-  requiredVariants.forEach(variant => {
+  requiredVariants.forEach((variant) => {
     if (!atomicTokens.variants[variant]) {
       throw new Error(`Missing variant: ${variant}`);
     }
-    
+
     const variantConfig = atomicTokens.variants[variant];
-    const requiredProps = ['primary', 'secondary', 'accent', 'background', 'border', 'text', 'glow'];
-    
-    requiredProps.forEach(prop => {
+    const requiredProps = [
+      'primary',
+      'secondary',
+      'accent',
+      'background',
+      'border',
+      'text',
+      'glow',
+    ];
+
+    requiredProps.forEach((prop) => {
       if (!variantConfig[prop as keyof typeof variantConfig]) {
         throw new Error(`Missing property ${prop} in variant ${variant}`);
       }
     });
   });
-  
+
   // Check sizes
-  requiredSizes.forEach(size => {
+  requiredSizes.forEach((size) => {
     if (!atomicTokens.sizes[size]) {
       throw new Error(`Missing size: ${size}`);
     }
-    
+
     const sizeConfig = atomicTokens.sizes[size];
     const requiredProps = ['scale', 'spacing', 'text'];
-    
-    requiredProps.forEach(prop => {
+
+    requiredProps.forEach((prop) => {
       if (!sizeConfig[prop as keyof typeof sizeConfig]) {
         throw new Error(`Missing property ${prop} in size ${size}`);
       }
     });
   });
-  
+
   console.log('✅ Atomic tokens validation passed');
 };
 
@@ -71,7 +79,7 @@ const validateStructure = () => {
     require('./hooks');
     require('./utils');
     require('./theme/theme.config');
-    
+
     console.log('✅ Directory structure validation passed');
   } catch (error) {
     throw new Error(`Directory structure validation failed: ${error}`);

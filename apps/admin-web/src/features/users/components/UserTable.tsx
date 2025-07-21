@@ -1,31 +1,27 @@
 'use client';
 
+// ✅ Import shared business logic
+import { formatLastLogin, getRoleConfig } from '@evc/shared-business-logic';
 import {
   CheckCircleIcon,
   CogIcon,
+  EnvelopeIcon,
   EyeIcon,
   PencilIcon,
+  PhoneIcon,
   ShieldCheckIcon,
   TrashIcon,
   UserIcon,
   XCircleIcon,
-  EnvelopeIcon,
-  PhoneIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import type { UserProfile } from '../types/user.types';
-// ✅ Import shared business logic
-import { 
-  getRoleConfig, 
-  formatLastLogin 
-} from '@evc/shared-business-logic';
-
 // ✅ Import infinite scroll hooks
 import { useInfiniteScrollTrigger } from '../hooks/useIntersectionObserver';
+import type { UserProfile } from '../types/user.types';
 
 // ✅ Import skeleton components
-import { LoadMoreSkeleton, EndOfListIndicator } from './UserSkeleton';
+import { EndOfListIndicator, LoadMoreSkeleton } from './UserSkeleton';
 
 /**
  * 🎯 User Table Props
@@ -63,7 +59,7 @@ export const UserTable: React.FC<UserTableProps> = ({
   onEditUser,
   onToggleStatus,
   onDeleteUser,
-  className = "",
+  className = '',
   columns = {
     user: true,
     role: true,
@@ -89,7 +85,7 @@ export const UserTable: React.FC<UserTableProps> = ({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500, // ✅ Prevent rapid successive calls
-    }
+    },
   );
 
   return (
@@ -138,10 +134,14 @@ export const UserTable: React.FC<UserTableProps> = ({
                 // Map icon string to actual icon component
                 const roleConfig = {
                   ...roleConfigData,
-                  icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-                        roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+                  icon:
+                    roleConfigData.icon === 'ShieldCheckIcon'
+                      ? ShieldCheckIcon
+                      : roleConfigData.icon === 'CogIcon'
+                        ? CogIcon
+                        : UserIcon,
                 };
-                
+
                 return (
                   <tr
                     key={user.id}
@@ -153,7 +153,9 @@ export const UserTable: React.FC<UserTableProps> = ({
                           <div
                             className={`w-8 h-8 rounded-lg ${roleConfig.badgeColor} flex items-center justify-center`}
                           >
-                            <roleConfig.icon className={`w-4 h-4 ${roleConfig.textColor}`} />
+                            <roleConfig.icon
+                              className={`w-4 h-4 ${roleConfig.textColor}`}
+                            />
                           </div>
                           <div>
                             <div className="text-white font-semibold">
@@ -166,7 +168,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                         </div>
                       </td>
                     )}
-                    
+
                     {columns.role && (
                       <td className="py-4 px-6">
                         <div
@@ -183,7 +185,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                         </div>
                       </td>
                     )}
-                    
+
                     {columns.status && (
                       <td className="py-4 px-6">
                         <div
@@ -210,7 +212,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                         </div>
                       </td>
                     )}
-                    
+
                     {columns.contact && (
                       <td className="py-4 px-6">
                         <div className="space-y-1">
@@ -230,7 +232,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                         </div>
                       </td>
                     )}
-                    
+
                     {columns.lastLogin && (
                       <td className="py-4 px-6">
                         <span className="text-gray-300 text-sm">
@@ -238,7 +240,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                         </span>
                       </td>
                     )}
-                    
+
                     {columns.actions && (
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
@@ -276,7 +278,7 @@ export const UserTable: React.FC<UserTableProps> = ({
             </tbody>
           </table>
         </div>
-        
+
         {/* ✅ Infinite Scroll Loading Indicators */}
         {isLoadingMore && (
           <div className="border-t border-gray-700/30 p-6">
@@ -286,7 +288,7 @@ export const UserTable: React.FC<UserTableProps> = ({
 
         {/* ✅ Load More Trigger (invisible) */}
         {hasNextPage && !isLoadingMore && (
-          <div 
+          <div
             ref={loadMoreRef as React.RefObject<HTMLDivElement>}
             className="h-10 flex items-center justify-center border-t border-gray-700/30"
           >
@@ -305,4 +307,4 @@ export const UserTable: React.FC<UserTableProps> = ({
   );
 };
 
-export default UserTable; 
+export default UserTable;

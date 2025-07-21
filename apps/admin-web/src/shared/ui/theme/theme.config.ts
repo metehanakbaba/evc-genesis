@@ -374,7 +374,7 @@ export const atomicTokens = {
       glow: 'teal-400/15',
     },
   },
-  
+
   // Size system for atomic components
   sizes: {
     xs: { scale: '0.75', spacing: '0.25rem', text: 'text-xs' },
@@ -383,7 +383,7 @@ export const atomicTokens = {
     lg: { scale: '1.125', spacing: '1rem', text: 'text-lg' },
     xl: { scale: '1.25', spacing: '1.25rem', text: 'text-xl' },
   },
-  
+
   // Animation system for atomic components
   animations: {
     durations: {
@@ -401,7 +401,7 @@ export const atomicTokens = {
       smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
-  
+
   // Effect system for visual components
   effects: {
     blur: {

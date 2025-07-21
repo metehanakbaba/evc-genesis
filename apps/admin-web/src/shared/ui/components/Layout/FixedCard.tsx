@@ -114,4 +114,4 @@ export const FixedCardFooter: React.FC<{
   className?: string;
 }> = ({ children, className }) => (
   <div className={cn('flex-shrink-0 mt-auto', className)}>{children}</div>
-); 
+);

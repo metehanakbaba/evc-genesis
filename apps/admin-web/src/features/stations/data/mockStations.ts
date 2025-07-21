@@ -8,7 +8,7 @@ export const mockStations: Station[] = [
     location: {
       address: 'Galeria Mokotów, ul. Wołoska 12, Mokotów, Warszawa',
       lat: 52.1672,
-      lng: 21.0430,
+      lng: 21.043,
     },
     connectors: [
       {
@@ -28,7 +28,7 @@ export const mockStations: Station[] = [
     amenities: ['restroom', 'cafe', 'shopping'],
     operating_hours: '24/7',
     pricing: {
-      per_kwh: 1.80,
+      per_kwh: 1.8,
       currency: 'PLN',
     },
   },
@@ -36,7 +36,8 @@ export const mockStations: Station[] = [
     id: 'station-002',
     name: 'Kraków Lotnisko Balice Fast Hub',
     location: {
-      address: 'Port Lotniczy Kraków-Balice, ul. Kapitana Mieczysława Medweckiego 1',
+      address:
+        'Port Lotniczy Kraków-Balice, ul. Kapitana Mieczysława Medweckiego 1',
       lat: 50.0777,
       lng: 19.7848,
     },
@@ -69,7 +70,7 @@ export const mockStations: Station[] = [
     amenities: ['restroom', 'restaurant', 'wifi'],
     operating_hours: '24/7',
     pricing: {
-      per_kwh: 2.10,
+      per_kwh: 2.1,
       currency: 'PLN',
     },
   },
@@ -78,7 +79,7 @@ export const mockStations: Station[] = [
     name: 'Gdańsk Stare Miasto Station',
     location: {
       address: 'ul. Długa 47, Stare Miasto, Gdańsk',
-      lat: 54.3520,
+      lat: 54.352,
       lng: 18.6466,
     },
     connectors: [
@@ -174,7 +175,7 @@ export const mockStations: Station[] = [
     location: {
       address: 'Manufaktura, ul. Karskiego 5, Łódź',
       lat: 51.7833,
-      lng: 19.4500,
+      lng: 19.45,
     },
     connectors: [
       {
@@ -332,13 +333,13 @@ export const filterMockStations = (
     searchQuery?: string;
     statusFilter?: string;
     connectorTypeFilter?: string;
-  }
+  },
 ): Station[] => {
   return stations.filter((station) => {
     // Search filter
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         station.name.toLowerCase().includes(query) ||
         station.location.address.toLowerCase().includes(query);
       if (!matchesSearch) return false;
@@ -352,11 +353,11 @@ export const filterMockStations = (
     // Connector type filter
     if (filters.connectorTypeFilter && filters.connectorTypeFilter !== 'all') {
       const hasConnectorType = station.connectors.some(
-        connector => connector.type === filters.connectorTypeFilter
+        (connector) => connector.type === filters.connectorTypeFilter,
       );
       if (!hasConnectorType) return false;
     }
 
     return true;
   });
-}; 
+};

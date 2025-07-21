@@ -26,10 +26,10 @@ export interface PageContainerProps {
 
 /**
  * 📏 Revolutionary Page Container Component
- * 
+ *
  * Standardized container wrapper for consistent page layouts
  * Replaces manual max-w-7xl mx-auto px-6 py-6 patterns
- * 
+ *
  * @example
  * ```tsx
  * <PageContainer size="xl" paddingX="lg" paddingY="md">
@@ -77,11 +77,9 @@ export const PageContainer: React.FC<PageContainerProps> = ({
     paddingXMap[paddingX],
     paddingYMap[paddingY],
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  return (
-    <Component className={containerClasses}>
-      {children}
-    </Component>
-  );
-}; 
+  return <Component className={containerClasses}>{children}</Component>;
+};

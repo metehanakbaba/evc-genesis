@@ -1,4 +1,10 @@
-import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useVirtualScrolling } from '@/shared/ui/hooks/useReactCompilerOptimized';
 
 interface VirtualScrollListProps<T> {
@@ -33,15 +39,18 @@ export function VirtualScrollList<T>({
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
 
-  const {
-    startIndex,
-    offsetY,
-    totalHeight,
-  } = useVirtualScrolling(items, itemHeight, containerHeight);
+  const { startIndex, offsetY, totalHeight } = useVirtualScrolling(
+    items,
+    itemHeight,
+    containerHeight,
+  );
 
   // Calculate which items to render with overscan
   const startWithOverscan = Math.max(0, startIndex - overscan);
-  const endWithOverscan = Math.min(items.length, startIndex + Math.ceil(containerHeight / itemHeight) + overscan * 2);
+  const endWithOverscan = Math.min(
+    items.length,
+    startIndex + Math.ceil(containerHeight / itemHeight) + overscan * 2,
+  );
   const itemsToRender = items.slice(startWithOverscan, endWithOverscan);
 
   // Memoized render function for performance
@@ -66,11 +75,14 @@ export function VirtualScrollList<T>({
   }, [itemsToRender, startWithOverscan, itemHeight, renderItem]);
 
   // Optimized scroll handler
-  const handleScroll = useCallback((event: React.UIEvent<HTMLDivElement>) => {
-    const newScrollTop = event.currentTarget.scrollTop;
-    setScrollTop(newScrollTop);
-    onScroll?.(newScrollTop);
-  }, [onScroll]);
+  const handleScroll = useCallback(
+    (event: React.UIEvent<HTMLDivElement>) => {
+      const newScrollTop = event.currentTarget.scrollTop;
+      setScrollTop(newScrollTop);
+      onScroll?.(newScrollTop);
+    },
+    [onScroll],
+  );
 
   // Scroll restoration effect
   useEffect(() => {
@@ -82,8 +94,8 @@ export function VirtualScrollList<T>({
   // Loading state
   if (loading) {
     return (
-      <div 
-        className={`relative ${className}`} 
+      <div
+        className={`relative ${className}`}
         style={{ height: containerHeight }}
       >
         {loadingComponent || (
@@ -98,8 +110,8 @@ export function VirtualScrollList<T>({
   // Empty state
   if (items.length === 0) {
     return (
-      <div 
-        className={`relative ${className}`} 
+      <div
+        className={`relative ${className}`}
         style={{ height: containerHeight }}
       >
         {emptyComponent || (
@@ -137,7 +149,9 @@ export function VirtualScrollList<T>({
 /**
  * Memoized version for better performance
  */
-export const MemoizedVirtualScrollList = React.memo(VirtualScrollList) as typeof VirtualScrollList;
+export const MemoizedVirtualScrollList = React.memo(
+  VirtualScrollList,
+) as typeof VirtualScrollList;
 
 /**
  * Hook for managing virtual scroll state externally
@@ -184,7 +198,7 @@ export function useVirtualScrollState(initialScrollTop = 0) {
 export function useVirtualScrollMetrics<T>(
   items: T[],
   containerHeight: number,
-  itemHeight: number
+  itemHeight: number,
 ) {
   return useMemo(() => {
     const visibleItemCount = Math.ceil(containerHeight / itemHeight);
@@ -196,7 +210,8 @@ export function useVirtualScrollMetrics<T>(
       visibleItems: visibleItemCount,
       renderRatio: Math.min(renderRatio, 1),
       estimatedMemoryUsage: memoryUsage,
-      performanceGain: items.length > visibleItemCount ? items.length / visibleItemCount : 1,
+      performanceGain:
+        items.length > visibleItemCount ? items.length / visibleItemCount : 1,
     };
   }, [items.length, containerHeight, itemHeight]);
-} 
+}

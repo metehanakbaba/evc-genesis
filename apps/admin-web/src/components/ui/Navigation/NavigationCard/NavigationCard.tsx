@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import type React from 'react';
 import { cn } from '@/shared/utils/cn';
-import { Badge } from '../../Display/Badge/Badge';
 import type { ComponentSize } from '../../../../lib/theme.config';
+import { Badge } from '../../Display/Badge/Badge';
 
 export interface NavigationCardProps {
   /** Navigation title */

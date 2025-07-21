@@ -1,32 +1,28 @@
 'use client';
 
+// ✅ Import shared business logic
+import { formatLastLogin, getRoleConfig } from '@evc/shared-business-logic';
 import {
+  CalendarIcon,
   CheckCircleIcon,
   CogIcon,
+  EnvelopeIcon,
   EyeIcon,
   PencilIcon,
+  PhoneIcon,
   ShieldCheckIcon,
   TrashIcon,
   UserIcon,
   XCircleIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  CalendarIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import type { UserProfile } from '../types/user.types';
-// ✅ Import shared business logic
-import { 
-  getRoleConfig, 
-  formatLastLogin 
-} from '@evc/shared-business-logic';
-
 // ✅ Import infinite scroll hooks
 import { useInfiniteScrollTrigger } from '../hooks/useIntersectionObserver';
+import type { UserProfile } from '../types/user.types';
 
 // ✅ Import skeleton components
-import { LoadMoreSkeleton, EndOfListIndicator } from './UserSkeleton';
+import { EndOfListIndicator, LoadMoreSkeleton } from './UserSkeleton';
 
 /**
  * 🎯 User Grid Props
@@ -56,7 +52,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
   onEditUser,
   onToggleStatus,
   onDeleteUser,
-  className = "",
+  className = '',
   onLoadMore,
   isLoadingMore = false,
   hasNextPage = false,
@@ -74,7 +70,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500, // ✅ Prevent rapid successive calls
-    }
+    },
   );
 
   return (
@@ -86,8 +82,12 @@ export const UserGrid: React.FC<UserGridProps> = ({
           // Map icon string to actual icon component
           const roleConfig = {
             ...roleConfigData,
-            icon: roleConfigData.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-                  roleConfigData.icon === 'CogIcon' ? CogIcon : UserIcon,
+            icon:
+              roleConfigData.icon === 'ShieldCheckIcon'
+                ? ShieldCheckIcon
+                : roleConfigData.icon === 'CogIcon'
+                  ? CogIcon
+                  : UserIcon,
           };
 
           return (
@@ -148,9 +148,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
                       )}
                       <span
                         className={`text-xs font-medium ${
-                          user.is_active
-                            ? 'text-emerald-400'
-                            : 'text-red-400'
+                          user.is_active ? 'text-emerald-400' : 'text-red-400'
                         }`}
                       >
                         {user.is_active ? 'Active' : 'Inactive'}
@@ -162,9 +160,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center gap-2 text-gray-300">
                       <EnvelopeIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                      <span className="text-sm truncate">
-                        {user.email}
-                      </span>
+                      <span className="text-sm truncate">{user.email}</span>
                       {user.verified_email && (
                         <CheckCircleIcon className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       )}
@@ -180,8 +176,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="w-4 h-4 flex-shrink-0" />
                       <span>
-                        Joined{' '}
-                        {new Date(user.created_at).toLocaleDateString()}
+                        Joined {new Date(user.created_at).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="text-gray-300">
@@ -271,7 +266,7 @@ export const UserGrid: React.FC<UserGridProps> = ({
 
       {/* ✅ Load More Trigger (invisible) */}
       {hasNextPage && !isLoadingMore && (
-        <div 
+        <div
           ref={loadMoreRef as React.RefObject<HTMLDivElement>}
           className="h-10 flex items-center justify-center"
         >
@@ -289,4 +284,4 @@ export const UserGrid: React.FC<UserGridProps> = ({
   );
 };
 
-export default UserGrid; 
+export default UserGrid;

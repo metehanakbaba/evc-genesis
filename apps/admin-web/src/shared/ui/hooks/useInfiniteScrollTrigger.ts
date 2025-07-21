@@ -1,15 +1,15 @@
 /**
  * 🔄 Infinite Scroll Trigger Hook
- * 
+ *
  * Specialized hook for infinite scroll detection with throttling.
  * Moved to shared to be reused across all data grid components.
- * 
+ *
  * @module useInfiniteScrollTrigger
  * @version 1.0.0
  * @author EV Charging Team
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseIntersectionObserverOptions {
   threshold?: number;
@@ -29,7 +29,7 @@ interface UseIntersectionObserverResult {
  * Provides intersection detection with customizable options
  */
 export const useIntersectionObserver = (
-  options: UseIntersectionObserverOptions = {}
+  options: UseIntersectionObserverOptions = {},
 ): UseIntersectionObserverResult => {
   const {
     threshold = 0.1,
@@ -49,9 +49,9 @@ export const useIntersectionObserver = (
     const observer = new IntersectionObserver(
       ([entry]) => {
         const isCurrentlyIntersecting = entry.isIntersecting;
-        
+
         setIsIntersecting(isCurrentlyIntersecting);
-        
+
         if (isCurrentlyIntersecting && !hasIntersected) {
           setHasIntersected(true);
         }
@@ -64,7 +64,7 @@ export const useIntersectionObserver = (
       {
         threshold,
         rootMargin,
-      }
+      },
     );
 
     observer.observe(element);
@@ -92,7 +92,7 @@ export const useInfiniteScrollTrigger = (
     threshold?: number;
     rootMargin?: string;
     throttleMs?: number;
-  } = {}
+  } = {},
 ) => {
   const {
     enabled = true,
@@ -123,7 +123,7 @@ export const useInfiniteScrollTrigger = (
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      
+
       timeoutRef.current = setTimeout(() => {
         lastTriggeredRef.current = Date.now();
         onIntersect();
@@ -147,4 +147,4 @@ export const useInfiniteScrollTrigger = (
   }, []);
 
   return ref;
-}; 
+};

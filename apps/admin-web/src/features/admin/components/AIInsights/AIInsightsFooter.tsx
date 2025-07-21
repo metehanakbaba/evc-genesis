@@ -1,8 +1,8 @@
+// ✅ Import shared business logic
+import { formatTimeAgo } from '@evc/shared-business-logic';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import type { AIInsightsFooterProps } from './types';
-// ✅ Import shared business logic
-import { formatTimeAgo } from '@evc/shared-business-logic';
 
 /**
  * AI Insights footer with status indicators

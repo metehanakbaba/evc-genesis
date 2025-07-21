@@ -14,10 +14,9 @@ export interface IntelligenceBottomModalProps {
  * AI Intelligence Center Bottom Modal
  * Aşağıdan yukarı açılan modal versiyonu
  */
-export const IntelligenceBottomModal: React.FC<IntelligenceBottomModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export const IntelligenceBottomModal: React.FC<
+  IntelligenceBottomModalProps
+> = ({ isOpen, onClose }) => {
   return (
     <>
       {/* Backdrop */}
@@ -50,7 +49,9 @@ export const IntelligenceBottomModal: React.FC<IntelligenceBottomModalProps> = (
               <h2 className="text-lg font-bold text-white">
                 AI Intelligence Center
               </h2>
-              <p className="text-xs text-gray-400">Aşağıdan Yukarı Açılan Panel</p>
+              <p className="text-xs text-gray-400">
+                Aşağıdan Yukarı Açılan Panel
+              </p>
             </div>
           </div>
 
@@ -91,4 +92,4 @@ export const IntelligenceBottomModal: React.FC<IntelligenceBottomModalProps> = (
       </div>
     </>
   );
-}; 
+};

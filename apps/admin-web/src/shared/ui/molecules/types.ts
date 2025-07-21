@@ -1,12 +1,19 @@
-import { ComponentType } from 'react';
-import { BaseComponentProps, VariantProps, SizeProps, AnimationProps } from '../atoms/types';
+import type { ComponentType } from 'react';
+import type {
+  AnimationProps,
+  BaseComponentProps,
+  SizeProps,
+  VariantProps,
+} from '../atoms/types';
 
 /**
  * Base interfaces for molecule components
  */
 
 // Base molecule props extending atomic props
-export interface BaseMoleculeProps extends BaseComponentProps, Partial<VariantProps & SizeProps> {
+export interface BaseMoleculeProps
+  extends BaseComponentProps,
+    Partial<VariantProps & SizeProps> {
   // Molecules can have more complex state
   loading?: boolean;
   disabled?: boolean;

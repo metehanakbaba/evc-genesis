@@ -1,5 +1,7 @@
 'use client';
 
+// ✅ Import shared business logic
+import { getRoleOptions, getStatusOptions } from '@evc/shared-business-logic';
 import {
   CheckCircleIcon,
   CogIcon,
@@ -12,11 +14,6 @@ import {
 import { Modal } from '@ui/display';
 import { Button } from '@ui/forms';
 import type React from 'react';
-// ✅ Import shared business logic
-import { 
-  getRoleOptions,
-  getStatusOptions 
-} from '@evc/shared-business-logic';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -64,18 +61,29 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
   variant = 'purple',
 }) => {
   // ✅ Use shared business logic for filter options
-  const defaultRoleOptions: FilterOption[] = getRoleOptions().map(option => ({
+  const defaultRoleOptions: FilterOption[] = getRoleOptions().map((option) => ({
     ...option,
-    icon: option.icon === 'UserGroupIcon' ? UserGroupIcon :
-          option.icon === 'ShieldCheckIcon' ? ShieldCheckIcon :
-          option.icon === 'CogIcon' ? CogIcon : UserIcon,
+    icon:
+      option.icon === 'UserGroupIcon'
+        ? UserGroupIcon
+        : option.icon === 'ShieldCheckIcon'
+          ? ShieldCheckIcon
+          : option.icon === 'CogIcon'
+            ? CogIcon
+            : UserIcon,
   }));
 
-  const defaultStatusOptions: FilterOption[] = getStatusOptions().map(option => ({
-    ...option,
-    icon: option.icon === 'CheckCircleIcon' ? CheckCircleIcon :
-          option.icon === 'XCircleIcon' ? XCircleIcon : UserIcon,
-  }));
+  const defaultStatusOptions: FilterOption[] = getStatusOptions().map(
+    (option) => ({
+      ...option,
+      icon:
+        option.icon === 'CheckCircleIcon'
+          ? CheckCircleIcon
+          : option.icon === 'XCircleIcon'
+            ? XCircleIcon
+            : UserIcon,
+    }),
+  );
 
   // Use custom options if provided, otherwise use defaults
   const roleOptions = customRoleOptions || defaultRoleOptions;
@@ -87,21 +95,22 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
   const renderFilterOption = (
     option: FilterOption,
     isSelected: boolean,
-    onClick: () => void
+    onClick: () => void,
   ) => {
     const IconComponent = option.icon;
-    
+
     return (
       <button
         key={option.id}
         onClick={onClick}
         className={`
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
-          ${isSelected
-            ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
+          ${
+            isSelected
+              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
                border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
                scale-[1.02]`
-            : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
           }
@@ -114,7 +123,7 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
       >
         {/* Background shine effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        
+
         {/* Content */}
         <div className="relative z-10 flex items-center gap-3">
           <div
@@ -124,18 +133,20 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
                 : 'bg-gray-600/30 border border-gray-500/30'
             } flex items-center justify-center transition-all duration-300`}
           >
-            <IconComponent 
+            <IconComponent
               className={`w-5 h-5 ${
-                isSelected 
-                  ? `text-${option.color}-400` 
+                isSelected
+                  ? `text-${option.color}-400`
                   : 'text-gray-400 group-hover:text-gray-300'
-              } transition-colors duration-300`} 
+              } transition-colors duration-300`}
             />
           </div>
           <div className="text-left">
-            <span className={`font-medium text-sm ${
-              isSelected ? `text-${option.color}-300` : 'text-gray-300'
-            }`}>
+            <span
+              className={`font-medium text-sm ${
+                isSelected ? `text-${option.color}-300` : 'text-gray-300'
+              }`}
+            >
               {option.label}
             </span>
           </div>
@@ -196,7 +207,9 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
               before:transition-transform before:duration-700
             `}
           >
-            <span className="relative z-10 font-medium">Apply Configuration</span>
+            <span className="relative z-10 font-medium">
+              Apply Configuration
+            </span>
           </Button>
         </div>
       }
@@ -210,11 +223,9 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {roleOptions.map((role) =>
-              renderFilterOption(
-                role,
-                roleFilter === role.id,
-                () => onRoleChange(role.id)
-              )
+              renderFilterOption(role, roleFilter === role.id, () =>
+                onRoleChange(role.id),
+              ),
             )}
           </div>
         </div>
@@ -227,11 +238,9 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {statusOptions.map((status) =>
-              renderFilterOption(
-                status,
-                statusFilter === status.id,
-                () => onStatusChange(status.id)
-              )
+              renderFilterOption(status, statusFilter === status.id, () =>
+                onStatusChange(status.id),
+              ),
             )}
           </div>
         </div>
@@ -240,4 +249,4 @@ export const UserFilterModal: React.FC<UserFilterModalProps> = ({
   );
 };
 
-export default UserFilterModal; 
+export default UserFilterModal;

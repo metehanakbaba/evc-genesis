@@ -6,7 +6,9 @@ interface StationSkeletonProps {
   readonly count?: number;
 }
 
-export const StationGridSkeleton: React.FC<StationSkeletonProps> = ({ count = 6 }) => {
+export const StationGridSkeleton: React.FC<StationSkeletonProps> = ({
+  count = 6,
+}) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, index) => (
@@ -28,7 +30,7 @@ export const StationGridSkeleton: React.FC<StationSkeletonProps> = ({ count = 6 
           <div className="space-y-3 mb-4">
             {/* Station Name */}
             <div className="w-3/4 h-5 bg-gray-600/50 rounded"></div>
-            
+
             {/* Location */}
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-gray-600/50 rounded"></div>
@@ -60,7 +62,9 @@ export const StationGridSkeleton: React.FC<StationSkeletonProps> = ({ count = 6 
   );
 };
 
-export const StationTableSkeleton: React.FC<StationSkeletonProps> = ({ count = 10 }) => {
+export const StationTableSkeleton: React.FC<StationSkeletonProps> = ({
+  count = 10,
+}) => {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/5 via-blue-400/3 to-transparent border border-blue-400/20 backdrop-blur-xl">
       {/* Table Header */}
@@ -144,4 +148,4 @@ export const StationTableSkeleton: React.FC<StationSkeletonProps> = ({ count = 1
       </div>
     </div>
   );
-}; 
+};

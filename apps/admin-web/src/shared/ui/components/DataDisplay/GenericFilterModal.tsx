@@ -1,19 +1,19 @@
 /**
  * 🔍 Generic Filter Modal Component
- * 
+ *
  * Reusable filter modal component with EXACT same design as SessionFilterModal.
  * Features the same sophisticated gradients, shimmer effects, and premium animations.
- * 
+ *
  * @module GenericFilterModal
  * @version 2.0.0 - Revolutionary Design Update
  * @author EV Charging Team
  */
 
-import type React from 'react';
-import { useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Modal } from '@ui/display';
 import { Button } from '@ui/forms';
+import type React from 'react';
+import { useEffect } from 'react';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -66,21 +66,22 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
   const renderFilterOption = (
     option: FilterOption,
     isSelected: boolean,
-    onClick: () => void
+    onClick: () => void,
   ) => {
     const IconComponent = option.icon;
-    
+
     return (
       <button
         key={option.id}
         onClick={onClick}
         className={`
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
-          ${isSelected
-            ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
+          ${
+            isSelected
+              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
                border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
                scale-[1.02]`
-            : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
           }
@@ -95,20 +96,22 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
           <div
             className={`
               w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isSelected
-                ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
-                : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+              ${
+                isSelected
+                  ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
+                  : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
               }
             `}
           >
-            <IconComponent 
+            <IconComponent
               className={`
                 w-5 h-5 transition-transform duration-300
-                ${isSelected 
-                  ? `text-${option.color}-400 scale-110` 
-                  : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                ${
+                  isSelected
+                    ? `text-${option.color}-400 scale-110`
+                    : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
                 }
-              `} 
+              `}
             />
           </div>
           <span className="font-medium text-sm">{option.label}</span>
@@ -179,17 +182,19 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
           <div key={group.id}>
             {/* Revolutionary Section Header */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">{group.title}</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                {group.title}
+              </h3>
             </div>
-            
+
             {/* Revolutionary Grid Layout - EXACTLY like SessionFilterModal */}
             <div className="grid grid-cols-2 gap-3">
               {group.options.map((option) =>
                 renderFilterOption(
                   option,
                   group.selectedValue === option.id,
-                  () => group.onChange(option.id)
-                )
+                  () => group.onChange(option.id),
+                ),
               )}
             </div>
           </div>
@@ -199,4 +204,4 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
   );
 };
 
-export default GenericFilterModal; 
+export default GenericFilterModal;

@@ -1,5 +1,7 @@
 'use client';
 
+// ✅ Import shared business logic
+import { formatSessionDuration } from '@evc/shared-business-logic';
 import {
   BoltIcon,
   CheckCircleIcon,
@@ -13,11 +15,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import type { LiveChargingSession } from '../types/session.types';
-// ✅ Import shared business logic
-import { formatSessionDuration } from '@evc/shared-business-logic';
 // ✅ Import infinite scroll hooks from users feature (reusing existing)
 import { useInfiniteScrollTrigger } from '../../users/hooks/useIntersectionObserver';
+import type { LiveChargingSession } from '../types/session.types';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -47,7 +47,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
   onViewDetails,
   onStopSession,
   showStopButton = true,
-  className = "",
+  className = '',
   onLoadMore,
   isLoadingMore = false,
   hasNextPage = false,
@@ -64,7 +64,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500, // ✅ Prevent rapid successive calls
-    }
+    },
   );
 
   // Icon mapping for session status
@@ -89,7 +89,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
     switch (status) {
       case 'charging':
         return {
-          bgColor: 'bg-gradient-to-br from-emerald-500/10 via-emerald-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-emerald-500/10 via-emerald-400/5 to-transparent',
           borderColor: 'border-emerald-400/25 hover:border-emerald-300/40',
           badgeColor: 'bg-emerald-500/10 border-emerald-500/30',
           textColor: 'text-emerald-400',
@@ -98,7 +99,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         };
       case 'starting':
         return {
-          bgColor: 'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-blue-500/10 via-blue-400/5 to-transparent',
           borderColor: 'border-blue-400/25 hover:border-blue-300/40',
           badgeColor: 'bg-blue-500/10 border-blue-500/30',
           textColor: 'text-blue-400',
@@ -107,7 +109,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         };
       case 'completed':
         return {
-          bgColor: 'bg-gradient-to-br from-green-500/10 via-green-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-green-500/10 via-green-400/5 to-transparent',
           borderColor: 'border-green-400/25 hover:border-green-300/40',
           badgeColor: 'bg-green-500/10 border-green-500/30',
           textColor: 'text-green-400',
@@ -116,7 +119,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         };
       case 'failed':
         return {
-          bgColor: 'bg-gradient-to-br from-red-500/10 via-red-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-red-500/10 via-red-400/5 to-transparent',
           borderColor: 'border-red-400/25 hover:border-red-300/40',
           badgeColor: 'bg-red-500/10 border-red-500/30',
           textColor: 'text-red-400',
@@ -125,7 +129,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         };
       case 'cancelled':
         return {
-          bgColor: 'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
           borderColor: 'border-gray-400/25 hover:border-gray-300/40',
           badgeColor: 'bg-gray-500/10 border-gray-500/30',
           textColor: 'text-gray-400',
@@ -134,7 +139,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         };
       default:
         return {
-          bgColor: 'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
+          bgColor:
+            'bg-gradient-to-br from-gray-500/10 via-gray-400/5 to-transparent',
           borderColor: 'border-gray-400/25 hover:border-gray-300/40',
           badgeColor: 'bg-gray-500/10 border-gray-500/30',
           textColor: 'text-gray-400',
@@ -151,7 +157,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         {sessions.map((session, index) => {
           const statusConfig = getStatusConfig(session.status);
           const SessionIcon = getSessionIcon(session.status);
-          const isActive = session.status === 'charging' || session.status === 'starting';
+          const isActive =
+            session.status === 'charging' || session.status === 'starting';
 
           return (
             <div
@@ -181,7 +188,9 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                       <div
                         className={`w-10 h-10 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl ${statusConfig.badgeColor} border flex items-center justify-center transition-transform duration-200 group-hover:scale-105 will-change-transform`}
                       >
-                        <SessionIcon className={`w-5 h-5 lg:w-6 lg:h-6 ${statusConfig.textColor} transition-transform duration-200 group-hover:scale-110`} />
+                        <SessionIcon
+                          className={`w-5 h-5 lg:w-6 lg:h-6 ${statusConfig.textColor} transition-transform duration-200 group-hover:scale-110`}
+                        />
                       </div>
                       <div className="min-w-0">
                         <div
@@ -216,7 +225,9 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                     </div>
                     <div className="flex items-center gap-2 text-gray-300 transition-colors duration-200 group-hover:text-gray-200">
                       <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0 transition-colors duration-200 group-hover:text-gray-300" />
-                      <span className="text-sm truncate">{session.user_email}</span>
+                      <span className="text-sm truncate">
+                        {session.user_email}
+                      </span>
                     </div>
                   </div>
 
@@ -294,7 +305,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                         <span className="font-medium">View</span>
                       </div>
                     </Button>
-                    
+
                     {showStopButton && isActive && (
                       <Button
                         size="sm"
@@ -329,11 +340,22 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
         <div className="mt-6 lg:mt-8 flex items-center justify-center py-6 lg:py-8">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 border-2 border-gray-600 border-t-emerald-400 rounded-full animate-spin"></div>
-            <span className="text-gray-400 font-medium">Loading more sessions...</span>
+            <span className="text-gray-400 font-medium">
+              Loading more sessions...
+            </span>
             <div className="flex gap-1">
-              <div className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-              <div className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+              <div
+                className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse"
+                style={{ animationDelay: '0ms' }}
+              ></div>
+              <div
+                className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse"
+                style={{ animationDelay: '200ms' }}
+              ></div>
+              <div
+                className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse"
+                style={{ animationDelay: '400ms' }}
+              ></div>
             </div>
           </div>
         </div>
@@ -341,7 +363,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
 
       {/* ✅ Load More Trigger (invisible) */}
       {hasNextPage && !isLoadingMore && (
-        <div 
+        <div
           ref={loadMoreRef as React.RefObject<HTMLDivElement>}
           className="h-10 flex items-center justify-center"
         >
@@ -355,15 +377,13 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
           <div className="w-12 h-12 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-full flex items-center justify-center mb-3">
             <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full"></div>
           </div>
-          
+
           <h3 className="text-white font-semibold mb-1">All sessions loaded</h3>
-          <p className="text-gray-400 text-sm">
-            Showing all {total} sessions
-          </p>
-          
+          <p className="text-gray-400 text-sm">Showing all {total} sessions</p>
+
           <div className="mt-4 h-px w-24 bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
         </div>
       )}
     </div>
   );
-}; 
+};

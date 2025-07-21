@@ -1,9 +1,9 @@
 /**
  * 📊 Session Statistics Hook
- * 
+ *
  * Custom hook for session statistics and metrics.
  * Provides live session data and performance metrics.
- * 
+ *
  * @module useSessionStatistics
  * @version 1.0.0
  * @author EV Charging Team
@@ -61,4 +61,4 @@ export const useSessionStatistics = (): SessionStatisticsResult => {
       },
     };
   }, []);
-}; 
+};

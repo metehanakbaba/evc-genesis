@@ -1,26 +1,31 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '../../utils';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps, 
+import type {
   AnimationProps,
-  OpacityProps 
+  BaseComponentProps,
+  OpacityProps,
+  SizeProps,
+  VariantProps,
 } from '../types';
 
 /**
  * AccentDot Component Props
- * 
+ *
  * Small floating accent elements used for visual decoration
  */
-export interface AccentDotProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps, 
-          AnimationProps,
-          OpacityProps {
+export interface AccentDotProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps,
+    AnimationProps,
+    OpacityProps {
   /** Position of the dot relative to its container */
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  position?:
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right'
+    | 'center';
   /** Custom positioning styles */
   style?: React.CSSProperties;
 }
@@ -30,7 +35,7 @@ export interface AccentDotProps
  */
 const sizeClasses = {
   xs: 'w-1 h-1',
-  sm: 'w-2 h-2', 
+  sm: 'w-2 h-2',
   md: 'w-3 h-3',
   lg: 'w-4 h-4',
   xl: 'w-6 h-6',
@@ -44,7 +49,7 @@ const positionClasses = {
   'top-right': 'top-2 right-2',
   'bottom-left': 'bottom-2 left-2',
   'bottom-right': 'bottom-2 right-2',
-  'center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+  center: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
 } as const;
 
 /**
@@ -59,10 +64,10 @@ const animationClasses = {
 
 /**
  * AccentDot - Atomic component for small floating accent elements
- * 
+ *
  * Used as decorative elements to enhance visual hierarchy and add subtle animation.
  * Supports multiple variants, sizes, positions, and animation options.
- * 
+ *
  * @example
  * ```tsx
  * <AccentDot variant="blue" size="sm" position="top-right" animated />
@@ -86,18 +91,18 @@ export const AccentDot: React.FC<AccentDotProps> = ({
   const baseClasses = cn(
     // Base styling
     'absolute rounded-full pointer-events-none select-none z-10',
-    
+
     // Size classes
     sizeClasses[size],
-    
+
     // Position classes
     positionClasses[position],
-    
+
     // Animation classes
     animated && animationClasses.pulse,
-    
+
     // Custom className
-    className
+    className,
   );
 
   // Build background color based on variant
@@ -108,17 +113,19 @@ export const AccentDot: React.FC<AccentDotProps> = ({
       purple: 'rgb(139, 92, 246)', // purple-500
       teal: 'rgb(20, 184, 166)', // teal-500
     };
-    
+
     return variantColors[variant];
   };
 
   // Animation style with custom speed and delay
-  const animationStyle = animated ? {
-    animationDuration: `${2000 / animationSpeed}ms`,
-    animationDelay: `${animationDelay}ms`,
-    animationIterationCount: 'infinite',
-    animationTimingFunction: 'ease-in-out',
-  } : {};
+  const animationStyle = animated
+    ? {
+        animationDuration: `${2000 / animationSpeed}ms`,
+        animationDelay: `${animationDelay}ms`,
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-in-out',
+      }
+    : {};
 
   // Combined styles
   const combinedStyle = {

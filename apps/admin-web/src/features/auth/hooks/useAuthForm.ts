@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useActionState, useCallback } from 'react'; // React 19: New hook!
+// ✅ Import shared business logic
+import { validateEmail, validatePassword } from '@evc/shared-business-logic';
 import { useRouter } from 'next/navigation';
+import { useActionState, useCallback } from 'react'; // React 19: New hook!
 import { useAppDispatch } from '@/lib/store/hooks';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { loginSuccess } from '../authSlice';
-// ✅ Import shared business logic
-import { validateEmail, validatePassword } from '@evc/shared-business-logic';
 
 // React 19: Action state interface
 interface LoginState {
@@ -16,8 +16,6 @@ interface LoginState {
   error?: string;
   pending?: boolean;
 }
-
-
 
 export const useAuthForm = () => {
   const router = useRouter();

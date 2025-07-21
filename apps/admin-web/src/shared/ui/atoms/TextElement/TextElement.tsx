@@ -1,20 +1,16 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '../../utils';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps 
-} from '../types';
+import type { BaseComponentProps, SizeProps, VariantProps } from '../types';
 
 /**
  * TextElement Component Props
- * 
+ *
  * Typography atoms with size and color variants
  */
-export interface TextElementProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps {
+export interface TextElementProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps {
   /** HTML element to render */
   as?: 'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   /** Font weight variant */
@@ -38,7 +34,7 @@ export interface TextElementProps
  */
 const sizeClasses = {
   xs: 'text-xs',
-  sm: 'text-sm', 
+  sm: 'text-sm',
   md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
@@ -77,10 +73,10 @@ const opacityClasses = {
 
 /**
  * TextElement - Atomic component for typography
- * 
+ *
  * Provides consistent typography styling with variants, sizes, and responsive behavior.
  * Supports truncation, alignment, and semantic HTML elements.
- * 
+ *
  * @example
  * ```tsx
  * <TextElement variant="blue" size="lg" weight="semibold">Title Text</TextElement>
@@ -109,19 +105,19 @@ export const TextElement: React.FC<TextElementProps> = ({
       purple: 'text-purple-200',
       teal: 'text-teal-200',
     };
-    
+
     return variantColors[variant];
   };
 
   // Build truncation classes
   const getTruncationClasses = () => {
     if (!truncate) return '';
-    
+
     if (lines && lines > 1) {
       // Multi-line truncation using line-clamp
       return `line-clamp-${lines}`;
     }
-    
+
     // Single line truncation
     return 'truncate';
   };
@@ -130,27 +126,27 @@ export const TextElement: React.FC<TextElementProps> = ({
   const baseClasses = cn(
     // Base typography styling
     'transition-colors duration-200',
-    
+
     // Size classes
     sizeClasses[size],
-    
+
     // Weight classes
     weightClasses[weight],
-    
+
     // Alignment classes
     alignClasses[align],
-    
+
     // Color classes
     getVariantColor(),
-    
+
     // Opacity classes
     opacityClasses[opacity],
-    
+
     // Truncation classes
     getTruncationClasses(),
-    
+
     // Custom className
-    className
+    className,
   );
 
   return (

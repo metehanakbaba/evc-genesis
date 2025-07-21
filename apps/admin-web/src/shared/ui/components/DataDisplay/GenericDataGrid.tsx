@@ -4,7 +4,7 @@ import { EyeIcon } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
 import { useInfiniteScrollTrigger } from '../../hooks/useInfiniteScrollTrigger';
-import { LoadMoreSkeleton, EndOfListIndicator } from './DataGridSkeleton';
+import { EndOfListIndicator, LoadMoreSkeleton } from './DataGridSkeleton';
 
 // Generic types for the data grid
 export interface GridItem {
@@ -31,9 +31,18 @@ export interface StatusConfig {
 }
 
 export interface GridCardRenderer<T extends GridItem> {
-  readonly renderHeader: (item: T, statusConfig: StatusConfig) => React.ReactNode;
-  readonly renderContent: (item: T, statusConfig: StatusConfig) => React.ReactNode;
-  readonly renderFooter?: (item: T, statusConfig: StatusConfig) => React.ReactNode;
+  readonly renderHeader: (
+    item: T,
+    statusConfig: StatusConfig,
+  ) => React.ReactNode;
+  readonly renderContent: (
+    item: T,
+    statusConfig: StatusConfig,
+  ) => React.ReactNode;
+  readonly renderFooter?: (
+    item: T,
+    statusConfig: StatusConfig,
+  ) => React.ReactNode;
   readonly getStatusConfig: (item: T) => StatusConfig;
   readonly getAnimationDelay?: (index: number) => string;
 }
@@ -62,10 +71,10 @@ export interface GenericDataGridProps<T extends GridItem> {
 
 /**
  * 🚀 Generic Data Grid Component
- * 
+ *
  * Reusable grid component that abstracts the common patterns from:
  * - UserGrid, StationGrid, TransactionGrid, SessionGrid
- * 
+ *
  * Features:
  * - Configurable card rendering via renderer prop
  * - Infinite scroll support
@@ -100,7 +109,9 @@ export const GenericDataGrid = <T extends GridItem>({
     lg:grid-cols-${columns.lg || 2}
     xl:grid-cols-${columns.xl || 3}
     2xl:grid-cols-${columns['2xl'] || 4}
-  `.replace(/\s+/g, ' ').trim();
+  `
+    .replace(/\s+/g, ' ')
+    .trim();
 
   // Infinite scroll trigger with throttling
   const loadMoreRef = useInfiniteScrollTrigger(
@@ -113,13 +124,13 @@ export const GenericDataGrid = <T extends GridItem>({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500,
-    }
+    },
   );
 
   // Revolutionary action button renderer with original sophisticated design
   const renderActionButtons = (item: T, statusConfig: StatusConfig) => {
-    const visibleActions = actions.filter(action => 
-      !action.show || action.show(item)
+    const visibleActions = actions.filter(
+      (action) => !action.show || action.show(item),
     );
 
     if (visibleActions.length === 0) return null;
@@ -129,8 +140,9 @@ export const GenericDataGrid = <T extends GridItem>({
         {visibleActions.map((action, index) => {
           const ActionIcon = action.icon;
           const isMainAction = index === 0;
-          const actionVariant = action.variant || (isMainAction ? 'ghost' : 'secondary');
-          
+          const actionVariant =
+            action.variant || (isMainAction ? 'ghost' : 'secondary');
+
           return (
             <Button
               key={action.label}
@@ -166,7 +178,9 @@ export const GenericDataGrid = <T extends GridItem>({
               }
             >
               <div className="flex items-center gap-2 relative z-10">
-                <ActionIcon className={`w-4 h-4 ${getActionIconAnimation(action.label, isMainAction)}`} />
+                <ActionIcon
+                  className={`w-4 h-4 ${getActionIconAnimation(action.label, isMainAction)}`}
+                />
                 {isMainAction && (
                   <span className="font-medium">{action.label}</span>
                 )}
@@ -181,10 +195,13 @@ export const GenericDataGrid = <T extends GridItem>({
   return (
     <div className={className}>
       {/* Data Grid */}
-      <div className={`grid ${gridCols} gap-4 lg:gap-5 xl:gap-6 ${gridClassName}`}>
+      <div
+        className={`grid ${gridCols} gap-4 lg:gap-5 xl:gap-6 ${gridClassName}`}
+      >
         {items.map((item, index) => {
           const statusConfig = renderer.getStatusConfig(item);
-          const animationDelay = renderer.getAnimationDelay?.(index) || `${index * 100}ms`;
+          const animationDelay =
+            renderer.getAnimationDelay?.(index) || `${index * 100}ms`;
 
           return (
             <div
@@ -239,7 +256,7 @@ export const GenericDataGrid = <T extends GridItem>({
 
       {/* Load More Trigger (invisible) */}
       {hasNextPage && !isLoadingMore && (
-        <div 
+        <div
           ref={loadMoreRef as React.RefObject<HTMLDivElement>}
           className="h-10 flex items-center justify-center"
         >
@@ -289,11 +306,14 @@ const getRevolutionaryActionButtonClasses = (variant: string): string => {
 };
 
 // Revolutionary action icon animations - matches original design
-const getActionIconAnimation = (actionLabel: string, isMainAction: boolean): string => {
+const getActionIconAnimation = (
+  actionLabel: string,
+  isMainAction: boolean,
+): string => {
   if (isMainAction) {
     return 'group-hover/view:text-white transition-colors duration-150';
   }
-  
+
   switch (actionLabel.toLowerCase()) {
     case 'edit':
       return 'group-hover/edit:rotate-12 transition-transform duration-150';
@@ -304,4 +324,4 @@ const getActionIconAnimation = (actionLabel: string, isMainAction: boolean): str
   }
 };
 
-export default GenericDataGrid; 
+export default GenericDataGrid;

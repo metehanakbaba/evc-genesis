@@ -1,17 +1,17 @@
 /**
  * 🔄 Infinite Sessions Hook
- * 
+ *
  * Infinite scroll functionality for session lists with smooth animations.
  * Based on the wallet infinite transactions pattern.
- * 
+ *
  * @module useInfiniteSessions
  * @version 1.0.0 - Performance Optimized
  * @author EV Charging Team
  */
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { LiveChargingSession } from '../types/session.types';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { generateMockSessions } from '../api/sessionsApi';
+import type { LiveChargingSession } from '../types/session.types';
 
 interface InfiniteSessionsResult {
   sessions: LiveChargingSession[];
@@ -40,13 +40,9 @@ interface UseInfiniteSessionsOptions {
  * Provides infinite scroll functionality with API-compatible pagination
  */
 export const useInfiniteSessions = (
-  options: UseInfiniteSessionsOptions = {}
+  options: UseInfiniteSessionsOptions = {},
 ): InfiniteSessionsResult => {
-  const {
-    filters = {},
-    pageSize = 20,
-    enabled = true,
-  } = options;
+  const { filters = {}, pageSize = 20, enabled = true } = options;
 
   // ✅ State Management
   const [sessions, setSessions] = useState<LiveChargingSession[]>([]);
@@ -62,112 +58,138 @@ export const useInfiniteSessions = (
   const isInitializedRef = useRef(false);
 
   // ✅ Memoized filter values to prevent unnecessary re-renders
-  const filterString = useMemo(() => 
-    JSON.stringify(filters), [filters]
-  );
+  const filterString = useMemo(() => JSON.stringify(filters), [filters]);
 
   /**
    * 🔄 Fetch Sessions Function - Optimized
    */
-  const fetchSessions = useCallback(async (
-    page: number,
-    currentFilters: typeof filters,
-  ): Promise<{ sessions: LiveChargingSession[]; total: number }> => {
-    // Cancel previous request
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+  const fetchSessions = useCallback(
+    async (
+      page: number,
+      currentFilters: typeof filters,
+    ): Promise<{ sessions: LiveChargingSession[]; total: number }> => {
+      // Cancel previous request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
 
-    // Create new abort controller
-    abortControllerRef.current = new AbortController();
+      // Create new abort controller
+      abortControllerRef.current = new AbortController();
 
-    try {
-      // Simulate API delay
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(resolve, page === 0 ? 800 : 300);
-        
-        abortControllerRef.current?.signal.addEventListener('abort', () => {
-          clearTimeout(timeout);
-          reject(new Error('Request aborted'));
+      try {
+        // Simulate API delay
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(resolve, page === 0 ? 800 : 300);
+
+          abortControllerRef.current?.signal.addEventListener('abort', () => {
+            clearTimeout(timeout);
+            reject(new Error('Request aborted'));
+          });
         });
-      });
 
-      // Generate stable mock data
-      const mockData = generateMockSessions(100);
-      let filteredData = mockData;
-      
-      // Apply filters
-      if (currentFilters.searchQuery?.trim()) {
-        const query = currentFilters.searchQuery.toLowerCase().trim();
-        filteredData = filteredData.filter((s: LiveChargingSession) => 
-          s.station_name.toLowerCase().includes(query) ||
-          s.user_email.toLowerCase().includes(query) ||
-          s.id.toLowerCase().includes(query)
-        );
-      }
+        // Generate stable mock data
+        const mockData = generateMockSessions(100);
+        let filteredData = mockData;
 
-      if (currentFilters.statusFilter && currentFilters.statusFilter !== 'all') {
-        filteredData = filteredData.filter((s: LiveChargingSession) => s.status === currentFilters.statusFilter);
-      }
-
-      if (currentFilters.connectorTypeFilter && currentFilters.connectorTypeFilter !== 'all') {
-        filteredData = filteredData.filter((s: LiveChargingSession) => s.connector_type === currentFilters.connectorTypeFilter);
-      }
-
-      if (currentFilters.powerOutputFilter && currentFilters.powerOutputFilter !== 'all') {
-        if (currentFilters.powerOutputFilter === 'fast') {
-          filteredData = filteredData.filter((s: LiveChargingSession) => s.power_output >= 50);
-        } else if (currentFilters.powerOutputFilter === 'slow') {
-          filteredData = filteredData.filter((s: LiveChargingSession) => s.power_output < 50);
+        // Apply filters
+        if (currentFilters.searchQuery?.trim()) {
+          const query = currentFilters.searchQuery.toLowerCase().trim();
+          filteredData = filteredData.filter(
+            (s: LiveChargingSession) =>
+              s.station_name.toLowerCase().includes(query) ||
+              s.user_email.toLowerCase().includes(query) ||
+              s.id.toLowerCase().includes(query),
+          );
         }
-      }
 
-      // Paginate results
-      const offset = page * pageSize;
-      const paginatedData = filteredData.slice(offset, offset + pageSize);
-      
-      return {
-        sessions: paginatedData,
-        total: filteredData.length,
-      };
-    } catch (error) {
-      if (error instanceof Error && error.message === 'Request aborted') {
-        throw error; // Re-throw abort errors
+        if (
+          currentFilters.statusFilter &&
+          currentFilters.statusFilter !== 'all'
+        ) {
+          filteredData = filteredData.filter(
+            (s: LiveChargingSession) =>
+              s.status === currentFilters.statusFilter,
+          );
+        }
+
+        if (
+          currentFilters.connectorTypeFilter &&
+          currentFilters.connectorTypeFilter !== 'all'
+        ) {
+          filteredData = filteredData.filter(
+            (s: LiveChargingSession) =>
+              s.connector_type === currentFilters.connectorTypeFilter,
+          );
+        }
+
+        if (
+          currentFilters.powerOutputFilter &&
+          currentFilters.powerOutputFilter !== 'all'
+        ) {
+          if (currentFilters.powerOutputFilter === 'fast') {
+            filteredData = filteredData.filter(
+              (s: LiveChargingSession) => s.power_output >= 50,
+            );
+          } else if (currentFilters.powerOutputFilter === 'slow') {
+            filteredData = filteredData.filter(
+              (s: LiveChargingSession) => s.power_output < 50,
+            );
+          }
+        }
+
+        // Paginate results
+        const offset = page * pageSize;
+        const paginatedData = filteredData.slice(offset, offset + pageSize);
+
+        return {
+          sessions: paginatedData,
+          total: filteredData.length,
+        };
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Request aborted') {
+          throw error; // Re-throw abort errors
+        }
+        throw new Error('Failed to fetch sessions');
       }
-      throw new Error('Failed to fetch sessions');
-    }
-  }, [pageSize]);
+    },
+    [pageSize],
+  );
 
   /**
    * 📊 Load Initial Data - Optimized
    */
-  const loadInitialData = useCallback(async (currentFilters: typeof filters) => {
-    if (!enabled) return;
+  const loadInitialData = useCallback(
+    async (currentFilters: typeof filters) => {
+      if (!enabled) return;
 
-    setIsLoading(true);
-    setError(null);
-    setCurrentPage(0);
-    
-    try {
-      const result = await fetchSessions(0, currentFilters);
-      
-      // Only update if not aborted
-      if (!abortControllerRef.current?.signal.aborted) {
-        setSessions(result.sessions);
-        setTotal(result.total);
-        setCurrentPage(0);
-        setHasNextPage(result.sessions.length === pageSize && result.total > pageSize);
+      setIsLoading(true);
+      setError(null);
+      setCurrentPage(0);
+
+      try {
+        const result = await fetchSessions(0, currentFilters);
+
+        // Only update if not aborted
+        if (!abortControllerRef.current?.signal.aborted) {
+          setSessions(result.sessions);
+          setTotal(result.total);
+          setCurrentPage(0);
+          setHasNextPage(
+            result.sessions.length === pageSize && result.total > pageSize,
+          );
+        }
+      } catch (err) {
+        if (err instanceof Error && err.message !== 'Request aborted') {
+          setError(err);
+        }
+      } finally {
+        if (!abortControllerRef.current?.signal.aborted) {
+          setIsLoading(false);
+        }
       }
-    } catch (err) {
-      if (err instanceof Error && err.message !== 'Request aborted') {
-        setError(err);
-      }
-    } finally {
-      if (!abortControllerRef.current?.signal.aborted) {
-        setIsLoading(false);
-      }
-    }
-  }, [enabled, fetchSessions, pageSize]);
+    },
+    [enabled, fetchSessions, pageSize],
+  );
 
   /**
    * 📄 Load More Data - Optimized
@@ -181,18 +203,20 @@ export const useInfiniteSessions = (
     try {
       const nextPage = currentPage + 1;
       const result = await fetchSessions(nextPage, filters);
-      
+
       // Only update if not aborted
       if (!abortControllerRef.current?.signal.aborted) {
-        setSessions(prev => {
-          const existingIds = new Set(prev.map(s => s.id));
-          const newSessions = result.sessions.filter(s => !existingIds.has(s.id));
+        setSessions((prev) => {
+          const existingIds = new Set(prev.map((s) => s.id));
+          const newSessions = result.sessions.filter(
+            (s) => !existingIds.has(s.id),
+          );
           return [...prev, ...newSessions];
         });
-        
+
         setCurrentPage(nextPage);
         setTotal(result.total);
-        
+
         // Calculate if more pages exist
         setHasNextPage((nextPage + 1) * pageSize < result.total);
       }
@@ -205,7 +229,15 @@ export const useInfiniteSessions = (
         setIsLoadingMore(false);
       }
     }
-  }, [isLoadingMore, hasNextPage, isLoading, currentPage, fetchSessions, filters, pageSize]);
+  }, [
+    isLoadingMore,
+    hasNextPage,
+    isLoading,
+    currentPage,
+    fetchSessions,
+    filters,
+    pageSize,
+  ]);
 
   /**
    * 🔄 Refresh Data - Optimized
@@ -237,7 +269,7 @@ export const useInfiniteSessions = (
       setSessions([]);
       setCurrentPage(0);
       setHasNextPage(true);
-      
+
       // Small delay to batch multiple filter changes
       const timeoutId = setTimeout(() => {
         loadInitialData(filters);
@@ -269,4 +301,4 @@ export const useInfiniteSessions = (
     refresh,
     total,
   };
-}; 
+};

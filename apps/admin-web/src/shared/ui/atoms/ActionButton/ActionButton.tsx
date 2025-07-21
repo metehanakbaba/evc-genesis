@@ -1,6 +1,11 @@
 import type React from 'react';
 
-export type ActionButtonVariant = 'view' | 'edit' | 'delete' | 'primary' | 'secondary';
+export type ActionButtonVariant =
+  | 'view'
+  | 'edit'
+  | 'delete'
+  | 'primary'
+  | 'secondary';
 
 export interface ActionButtonProps {
   readonly onClick: () => void;
@@ -14,7 +19,7 @@ export interface ActionButtonProps {
 
 /**
  * 🎯 ActionButton Atom Component
- * 
+ *
  * Reusable action button with predefined variants for common actions.
  * Supports view, edit, delete and custom variants.
  */
@@ -23,20 +28,20 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   variant,
   icon: Icon,
   label,
-  size = "sm",
-  className = "",
+  size = 'sm',
+  className = '',
   disabled = false,
 }) => {
   const sizeClasses = {
-    sm: label ? "px-3 py-2 text-xs" : "p-2",
-    md: label ? "px-4 py-2.5 text-sm" : "p-2.5",
-    lg: label ? "px-5 py-3 text-base" : "p-3",
+    sm: label ? 'px-3 py-2 text-xs' : 'p-2',
+    md: label ? 'px-4 py-2.5 text-sm' : 'p-2.5',
+    lg: label ? 'px-5 py-3 text-base' : 'p-3',
   };
 
   const iconSizes = {
-    sm: "w-4 h-4",
-    md: "w-4 h-4",
-    lg: "w-5 h-5",
+    sm: 'w-4 h-4',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
   };
 
   const getVariantClasses = () => {
@@ -128,15 +133,13 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         ${className}
       `}
     >
-      <Icon 
+      <Icon
         className={`
           ${iconSizes[size]} transition-transform duration-300 relative z-10
           ${getIconAnimation()}
-        `} 
+        `}
       />
-      {label && (
-        <span className="font-medium relative z-10">{label}</span>
-      )}
+      {label && <span className="font-medium relative z-10">{label}</span>}
     </button>
   );
-}; 
+};

@@ -28,8 +28,6 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
       glowColor,
       variant,
     }) => {
-
-
       return (
         <div className="group relative h-full">
           {/* Floating background glow */}
@@ -110,14 +108,20 @@ export const RevolutionaryStatCard: React.FC<RevolutionaryStatCardProps> =
                   <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
                   <span>Live</span>
                 </div>
-                <div className="text-xs text-gray-400 text-truncate-title max-w-[80px]">{trend}</div>
+                <div className="text-xs text-gray-400 text-truncate-title max-w-[80px]">
+                  {trend}
+                </div>
               </div>
             </div>
 
             {/* Content with proper overflow handling */}
             <div className="flex-1 flex flex-col min-h-0">
-              <div className="text-2xl font-bold text-white mb-1 text-truncate-title">{value}</div>
-              <div className="text-sm font-medium text-gray-300 mb-2 text-truncate-title">{title}</div>
+              <div className="text-2xl font-bold text-white mb-1 text-truncate-title">
+                {value}
+              </div>
+              <div className="text-sm font-medium text-gray-300 mb-2 text-truncate-title">
+                {title}
+              </div>
               <div className="flex-1 min-h-0 overflow-hidden">
                 <p className="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-100 text-truncate-multi">
                   {description}

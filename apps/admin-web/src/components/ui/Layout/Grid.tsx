@@ -1,4 +1,5 @@
-import React, { type ReactNode } from 'react';
+import type React from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../shared/utils/cn';
 import { GridColumns, GridColumnsMap, GridGap, GridGapMap } from './enums';
 

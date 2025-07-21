@@ -8,7 +8,15 @@ import type React from 'react';
 /**
  * 🎨 Theme Variant Types
  */
-type BreadcrumbVariant = 'blue' | 'purple' | 'emerald' | 'teal' | 'amber' | 'rose' | 'cyan' | 'gray';
+type BreadcrumbVariant =
+  | 'blue'
+  | 'purple'
+  | 'emerald'
+  | 'teal'
+  | 'amber'
+  | 'rose'
+  | 'cyan'
+  | 'gray';
 
 /**
  * 🧭 Breadcrumb Item Interface
@@ -33,12 +41,12 @@ export interface BreadcrumbProps {
 
 /**
  * 🧭 Revolutionary Breadcrumb Navigation Component
- * 
+ *
  * Consistent breadcrumb navigation across all pages with theme support
- * 
+ *
  * @example
  * ```tsx
- * <Breadcrumb 
+ * <Breadcrumb
  *   currentPageLabel="PLN Wallet"
  *   variant="teal"
  *   items={[
@@ -72,7 +80,9 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const currentColor = themeConfig[variant];
 
   return (
-    <nav className={`flex items-center gap-2 text-sm text-gray-400 mb-6 ${className}`}>
+    <nav
+      className={`flex items-center gap-2 text-sm text-gray-400 mb-6 ${className}`}
+    >
       {/* Home Button */}
       {showHomeButton && (
         <>
@@ -123,9 +133,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
       ))}
 
       {/* Current Page */}
-      <span className={`font-medium ${currentColor}`}>
-        {currentPageLabel}
-      </span>
+      <span className={`font-medium ${currentColor}`}>{currentPageLabel}</span>
     </nav>
   );
-}; 
+};

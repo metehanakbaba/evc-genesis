@@ -1,5 +1,9 @@
 // @ts-nocheck - Redux store type system complexities, suppressing for build
-import { configureStore, isPlain, createListenerMiddleware } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  createListenerMiddleware,
+  isPlain,
+} from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import authReducer from '@/features/auth/authSlice';
 import { evChargingApi } from '@/shared/api/evChargingApi';
@@ -44,7 +48,7 @@ export const store = configureStore({
       .concat(evChargingApi.middleware)
       .prepend(listenerMiddleware.middleware);
   },
-      
+
   // Performance: Enable DevTools only in development
   devTools: process.env.NODE_ENV === 'development' && {
     maxAge: 50, // Limit history to prevent memory issues
@@ -58,34 +62,38 @@ export const store = configureStore({
       'api/executeMutation/fulfilled',
     ],
   },
-  
+
   // Performance: Preloaded state can be optimized
   preloadedState: undefined,
-  
+
   // Enhanced store for performance monitoring
   enhancers: (getDefaultEnhancers) => {
     if (process.env.NODE_ENV === 'development') {
       // Add performance monitoring in development
-      return getDefaultEnhancers().concat((createStore) => (reducer, preloadedState) => {
-        const store = createStore(reducer, preloadedState);
-        
-        // Performance monitoring wrapper
-        const originalDispatch = store.dispatch;
-        store.dispatch = (action: any) => {
-          const start = performance.now();
-          const result = originalDispatch(action);
-          const end = performance.now();
-          
-          // Log slow actions (> 5ms)
-          if (end - start > 5) {
-            console.warn(`[Redux Performance] Slow action: ${action.type} (${(end - start).toFixed(2)}ms)`);
-          }
-          
-          return result;
-        };
-        
-        return store;
-      });
+      return getDefaultEnhancers().concat(
+        (createStore) => (reducer, preloadedState) => {
+          const store = createStore(reducer, preloadedState);
+
+          // Performance monitoring wrapper
+          const originalDispatch = store.dispatch;
+          store.dispatch = (action: any) => {
+            const start = performance.now();
+            const result = originalDispatch(action);
+            const end = performance.now();
+
+            // Log slow actions (> 5ms)
+            if (end - start > 5) {
+              console.warn(
+                `[Redux Performance] Slow action: ${action.type} (${(end - start).toFixed(2)}ms)`,
+              );
+            }
+
+            return result;
+          };
+
+          return store;
+        },
+      );
     }
     return getDefaultEnhancers();
   },
@@ -97,7 +105,7 @@ setupListeners(store.dispatch);
 // 🔗 Inject store into window for shared-api access (optimized)
 if (typeof window !== 'undefined') {
   (window as any).__REDUX_STORE__ = store;
-  
+
   // Optimized state injection - only update when necessary
   let lastState = store.getState();
   (window as any).__REDUX_STATE__ = lastState;
@@ -108,7 +116,7 @@ if (typeof window !== 'undefined') {
     if (updateTimeout) {
       clearTimeout(updateTimeout);
     }
-    
+
     updateTimeout = setTimeout(() => {
       const currentState = store.getState();
       if (currentState !== lastState) {
@@ -117,19 +125,19 @@ if (typeof window !== 'undefined') {
       }
     }, 16); // ~60fps throttling
   });
-  
+
   // Performance monitoring in development
   if (process.env.NODE_ENV === 'development') {
     let actionCount = 0;
     const originalDispatch = store.dispatch;
-    
+
     store.dispatch = (action: any) => {
       actionCount++;
-      
+
       if (actionCount % 100 === 0) {
         console.log(`[Redux Stats] ${actionCount} actions dispatched`);
       }
-      
+
       return originalDispatch(action);
     };
   }
@@ -139,7 +147,7 @@ if (typeof window !== 'undefined') {
 export const storeUtils = {
   getState: () => store.getState(),
   dispatch: store.dispatch,
-  
+
   // Performance monitoring utilities
   getPerformanceMetrics: () => {
     const state = store.getState();
@@ -159,8 +167,10 @@ export const storeUtils = {
   // Memory optimization
   optimizeMemory: () => {
     // Clear old queries
-    store.dispatch(evChargingApi.util.invalidateTags(['Station', 'Session', 'User']));
-    
+    store.dispatch(
+      evChargingApi.util.invalidateTags(['Station', 'Session', 'User']),
+    );
+
     // Force garbage collection if available
     if (typeof window !== 'undefined' && (window as any).gc) {
       (window as any).gc();

@@ -1,5 +1,7 @@
 'use client';
 
+// ✅ Import shared business logic
+import { formatTransactionDate } from '@evc/shared-business-logic';
 import {
   ArrowDownTrayIcon,
   ArrowPathIcon,
@@ -14,19 +16,17 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import type { PLNTransaction } from '../types/wallet.types';
-// ✅ Import shared business logic
-import { formatTransactionDate } from '@evc/shared-business-logic';
-// ✅ Import centralized color utilities
-import { 
-  getTransactionTypeConfig, 
-  getTransactionStatusConfig,
-  getTransactionTypeLabel 
-} from '../utils/transactionColorUtils';
 // ✅ Import infinite scroll hooks
 import { useInfiniteScrollTrigger } from '../hooks/useIntersectionObserver';
+import type { PLNTransaction } from '../types/wallet.types';
+// ✅ Import centralized color utilities
+import {
+  getTransactionStatusConfig,
+  getTransactionTypeConfig,
+  getTransactionTypeLabel,
+} from '../utils/transactionColorUtils';
 // ✅ Import skeleton components
-import { LoadMoreSkeleton, EndOfListIndicator } from './TransactionSkeleton';
+import { EndOfListIndicator, LoadMoreSkeleton } from './TransactionSkeleton';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -56,7 +56,7 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
   onViewDetails,
   onRetryTransaction,
   showRetryButton = true,
-  className = "",
+  className = '',
   onLoadMore,
   isLoadingMore = false,
   hasNextPage = false,
@@ -73,7 +73,7 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
       enabled: hasNextPage && !isLoadingMore,
       rootMargin: '100px',
       throttleMs: 500, // ✅ Prevent rapid successive calls
-    }
+    },
   );
   // Icon mapping for transaction types
   const getTransactionIcon = (type: string): IconComponent => {
@@ -96,120 +96,122 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
       {/* Transaction Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {transactions.map((transaction, index) => {
-        // ✅ Use color configuration based on transaction type and status
-        const typeConfig = getTransactionTypeConfig(transaction.type);
-        const statusConfig = getTransactionStatusConfig(transaction.status);
-        const TransactionIcon = getTransactionIcon(transaction.type);
-        const typeLabel = getTransactionTypeLabel(transaction.type);
-        const isPending = transaction.status === 'PENDING';
+          // ✅ Use color configuration based on transaction type and status
+          const typeConfig = getTransactionTypeConfig(transaction.type);
+          const statusConfig = getTransactionStatusConfig(transaction.status);
+          const TransactionIcon = getTransactionIcon(transaction.type);
+          const typeLabel = getTransactionTypeLabel(transaction.type);
+          const isPending = transaction.status === 'PENDING';
 
-        return (
-          <div
-            key={transaction.id}
-            className="group relative"
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            {/* Revolutionary Floating Transaction Card - Fixed Height */}
+          return (
             <div
-              className={`relative p-5 ${typeConfig.bgColor} border ${typeConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer hover:${typeConfig.shadowColor} h-[280px] flex flex-col`}
+              key={transaction.id}
+              className="group relative"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              {/* Pending Status Pulse */}
-              {isPending && (
-                <div
-                  className={`absolute -top-2 -right-2 w-4 h-4 ${typeConfig.pulseColor} rounded-full animate-ping opacity-75`}
-                ></div>
-              )}
-
-              {/* Floating Background Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-              {/* Transaction Content */}
-              <div className="relative z-10 flex flex-col h-full">
-                {/* Header Section */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-12 h-12 rounded-xl ${typeConfig.badgeColor} flex items-center justify-center`}
-                    >
-                      <TransactionIcon className={`w-6 h-6 ${typeConfig.textColor}`} />
-                    </div>
-                    <div>
-                      <div
-                        className={`text-sm font-medium ${typeConfig.textColor} mb-1`}
-                      >
-                        {typeLabel}
-                      </div>
-                      <div className="text-white font-semibold text-lg">
-                        {transaction.amount.formatted}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Status Badge */}
+              {/* Revolutionary Floating Transaction Card - Fixed Height */}
+              <div
+                className={`relative p-5 ${typeConfig.bgColor} border ${typeConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer hover:${typeConfig.shadowColor} h-[280px] flex flex-col`}
+              >
+                {/* Pending Status Pulse */}
+                {isPending && (
                   <div
-                    className={`flex items-center gap-2 px-3 py-1 rounded-full ${statusConfig.badgeColor}`}
-                  >
-                    {transaction.status === 'COMPLETED' && (
-                      <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
-                    )}
-                    {transaction.status === 'PENDING' && (
-                      <ClockIcon className="w-4 h-4 text-amber-400" />
-                    )}
-                    {transaction.status === 'FAILED' && (
-                      <XCircleIcon className="w-4 h-4 text-red-400" />
-                    )}
-                    <span
-                      className={`text-xs font-medium ${statusConfig.textColor}`}
+                    className={`absolute -top-2 -right-2 w-4 h-4 ${typeConfig.pulseColor} rounded-full animate-ping opacity-75`}
+                  ></div>
+                )}
+
+                {/* Floating Background Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+
+                {/* Transaction Content */}
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Header Section */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-12 h-12 rounded-xl ${typeConfig.badgeColor} flex items-center justify-center`}
+                      >
+                        <TransactionIcon
+                          className={`w-6 h-6 ${typeConfig.textColor}`}
+                        />
+                      </div>
+                      <div>
+                        <div
+                          className={`text-sm font-medium ${typeConfig.textColor} mb-1`}
+                        >
+                          {typeLabel}
+                        </div>
+                        <div className="text-white font-semibold text-lg">
+                          {transaction.amount.formatted}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Status Badge */}
+                    <div
+                      className={`flex items-center gap-2 px-3 py-1 rounded-full ${statusConfig.badgeColor}`}
                     >
-                      {transaction.status}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Description Section */}
-                <div className="mb-4">
-                  <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
-                    {transaction.description}
-                  </p>
-                </div>
-
-                {/* Details Section - Flexible */}
-                <div className="flex-1 flex flex-col">
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Transaction ID</span>
-                      <span className="text-gray-300 font-mono">
-                        {transaction.id.slice(-8)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Date</span>
-                      <span className="text-gray-300">
-                        {/* ✅ Use shared business logic for date formatting */}
-                        {formatTransactionDate(transaction.createdAt)}
-                      </span>
-                    </div>
-                    {/* Always reserve space for Stripe ID to maintain consistent height */}
-                    <div className="flex items-center justify-between text-sm min-h-[20px]">
-                      <span className="text-gray-400">
-                        {transaction.stripePaymentIntentId ? 'Stripe ID' : ''}
-                      </span>
-                      <span className="text-gray-300 font-mono text-xs">
-                        {transaction.stripePaymentIntentId ? 
-                          transaction.stripePaymentIntentId.slice(-8) : ''
-                        }
+                      {transaction.status === 'COMPLETED' && (
+                        <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
+                      )}
+                      {transaction.status === 'PENDING' && (
+                        <ClockIcon className="w-4 h-4 text-amber-400" />
+                      )}
+                      {transaction.status === 'FAILED' && (
+                        <XCircleIcon className="w-4 h-4 text-red-400" />
+                      )}
+                      <span
+                        className={`text-xs font-medium ${statusConfig.textColor}`}
+                      >
+                        {transaction.status}
                       </span>
                     </div>
                   </div>
-                </div>
 
-                {/* Action Buttons - Always at bottom with reserved space */}
-                <div className="flex gap-2 mt-auto">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => onViewDetails?.(transaction)}
-                    className="
+                  {/* Description Section */}
+                  <div className="mb-4">
+                    <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
+                      {transaction.description}
+                    </p>
+                  </div>
+
+                  {/* Details Section - Flexible */}
+                  <div className="flex-1 flex flex-col">
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400">Transaction ID</span>
+                        <span className="text-gray-300 font-mono">
+                          {transaction.id.slice(-8)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400">Date</span>
+                        <span className="text-gray-300">
+                          {/* ✅ Use shared business logic for date formatting */}
+                          {formatTransactionDate(transaction.createdAt)}
+                        </span>
+                      </div>
+                      {/* Always reserve space for Stripe ID to maintain consistent height */}
+                      <div className="flex items-center justify-between text-sm min-h-[20px]">
+                        <span className="text-gray-400">
+                          {transaction.stripePaymentIntentId ? 'Stripe ID' : ''}
+                        </span>
+                        <span className="text-gray-300 font-mono text-xs">
+                          {transaction.stripePaymentIntentId
+                            ? transaction.stripePaymentIntentId.slice(-8)
+                            : ''}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons - Always at bottom with reserved space */}
+                  <div className="flex gap-2 mt-auto">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onViewDetails?.(transaction)}
+                      className="
                       flex-1 relative overflow-hidden group/view
                       bg-gradient-to-r from-gray-700/40 via-gray-600/30 to-gray-700/40
                       hover:from-gray-600/50 hover:via-gray-500/40 hover:to-gray-600/50
@@ -224,23 +226,23 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
                       before:translate-x-[-100%] hover:before:translate-x-[100%]
                       before:transition-transform before:duration-500
                     "
-                  >
-                    <div className="flex items-center gap-2 relative z-10">
-                      <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
-                      <span className="font-medium">View Details</span>
-                    </div>
-                  </Button>
-                  
-                  {/* Always reserve space for retry button */}
-                  <div className="w-11 flex items-center justify-center">
-                    {showRetryButton &&
-                      transaction.type === 'CHARGING_PAYMENT' &&
-                      transaction.status === 'FAILED' && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => onRetryTransaction?.(transaction)}
-                          className="
+                    >
+                      <div className="flex items-center gap-2 relative z-10">
+                        <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
+                        <span className="font-medium">View Details</span>
+                      </div>
+                    </Button>
+
+                    {/* Always reserve space for retry button */}
+                    <div className="w-11 flex items-center justify-center">
+                      {showRetryButton &&
+                        transaction.type === 'CHARGING_PAYMENT' &&
+                        transaction.status === 'FAILED' && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => onRetryTransaction?.(transaction)}
+                            className="
                             relative overflow-hidden p-3 group/retry
                             bg-gradient-to-r from-teal-500/15 via-teal-400/10 to-teal-500/15
                             hover:from-teal-500/25 hover:via-teal-400/20 hover:to-teal-500/25
@@ -251,15 +253,15 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
                             hover:scale-110 active:scale-95
                             flex items-center
                           "
-                        >
-                          <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
-                        </Button>
-                      )}
+                          >
+                            <ArrowPathIcon className="w-4 h-4 group-hover/retry:rotate-180 transition-transform duration-500" />
+                          </Button>
+                        )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           );
         })}
       </div>
@@ -273,7 +275,7 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
 
       {/* ✅ Load More Trigger (invisible) */}
       {hasNextPage && !isLoadingMore && (
-        <div 
+        <div
           ref={loadMoreRef as React.RefObject<HTMLDivElement>}
           className="h-10 flex items-center justify-center"
         >
@@ -291,4 +293,4 @@ export const TransactionGrid: React.FC<TransactionGridProps> = ({
   );
 };
 
-export default TransactionGrid; 
+export default TransactionGrid;

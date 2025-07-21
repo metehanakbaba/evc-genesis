@@ -17,39 +17,31 @@ import {
   XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import { Button } from '@ui/forms';
-import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
-import { Breadcrumb } from '@/shared/ui/components/Navigation';
+import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
 import type React from 'react';
 import { useState } from 'react';
-
-// ✅ Import new reusable components
-import { 
-  TransactionGrid, 
-  TransactionTable, 
-} from '../components';
-
 // ✅ Import shared GenericFilterModal instead of custom TransactionFilterModal
-import { 
+import {
+  type FilterGroup,
   GenericFilterModal,
-  type FilterGroup
 } from '@/shared/ui/components/DataDisplay/GenericFilterModal';
-
-// ✅ Import API hooks and types
-import { 
-  useWalletStatistics,
-  useTransactionActions,
-} from '../api/walletApi';
-
-// ✅ Import infinite scroll hooks
-import { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
-
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
 // ✅ Import shared debounce hook
 import { useSearchDebounce } from '@/shared/ui/hooks/useDebounce';
+import { EmptyState, SearchFilterBar } from '@/shared/ui/molecules';
 
+// ✅ Import API hooks and types
+import { useTransactionActions, useWalletStatistics } from '../api/walletApi';
+// ✅ Import new reusable components
+import { TransactionGrid, TransactionTable } from '../components';
 // ✅ Import skeleton components
-import { TransactionGridSkeleton, TransactionTableSkeleton } from '../components/TransactionSkeleton';
+import {
+  TransactionGridSkeleton,
+  TransactionTableSkeleton,
+} from '../components/TransactionSkeleton';
+// ✅ Import infinite scroll hooks
+import { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
 
 /**
  * 💳 Wallet Management Statistics
@@ -110,119 +102,117 @@ const WalletsPage: React.FC = () => {
     pageSize: 20,
   });
 
-  const { 
-    totalBalance, 
-  } = useWalletStatistics();
+  const { totalBalance } = useWalletStatistics();
 
   const { viewDetails, retryTransaction } = useTransactionActions();
 
   // ✅ Create revolutionary filter groups for GenericFilterModal
   const filterGroups: FilterGroup[] = [
-          {
-        id: 'transaction-type',
-        title: 'Transaction Type',
-        selectedValue: typeFilter,
-        onChange: setTypeFilter,
+    {
+      id: 'transaction-type',
+      title: 'Transaction Type',
+      selectedValue: typeFilter,
+      onChange: setTypeFilter,
       options: [
-        { 
-          id: 'all', 
-          label: 'All Types', 
+        {
+          id: 'all',
+          label: 'All Types',
           icon: WalletIcon,
-          color: 'gray'
+          color: 'gray',
         },
-        { 
-          id: 'ADD_PLN_FUNDS', 
-          label: 'Top-up', 
+        {
+          id: 'ADD_PLN_FUNDS',
+          label: 'Top-up',
           icon: ArrowDownTrayIcon,
-          color: 'emerald'
+          color: 'emerald',
         },
-        { 
-          id: 'CHARGING_PAYMENT', 
-          label: 'Payment', 
+        {
+          id: 'CHARGING_PAYMENT',
+          label: 'Payment',
           icon: BoltIcon,
-          color: 'blue'
+          color: 'blue',
         },
-        { 
-          id: 'REFUND', 
-          label: 'Refund', 
+        {
+          id: 'REFUND',
+          label: 'Refund',
           icon: ReceiptRefundIcon,
-          color: 'amber'
+          color: 'amber',
         },
-        { 
-          id: 'TRANSFER', 
-          label: 'Transfer', 
+        {
+          id: 'TRANSFER',
+          label: 'Transfer',
           icon: ArrowUpIcon,
-          color: 'purple'
+          color: 'purple',
         },
       ],
     },
-          {
-        id: 'transaction-status',
-        title: 'Status',
-        selectedValue: statusFilter,
-        onChange: setStatusFilter,
+    {
+      id: 'transaction-status',
+      title: 'Status',
+      selectedValue: statusFilter,
+      onChange: setStatusFilter,
       options: [
-        { 
-          id: 'all', 
-          label: 'All Status', 
+        {
+          id: 'all',
+          label: 'All Status',
           icon: ViewColumnsIcon,
-          color: 'gray'
+          color: 'gray',
         },
-        { 
-          id: 'COMPLETED', 
-          label: 'Completed', 
+        {
+          id: 'COMPLETED',
+          label: 'Completed',
           icon: CheckCircleIcon,
-          color: 'emerald'
+          color: 'emerald',
         },
-        { 
-          id: 'PENDING', 
-          label: 'Pending', 
+        {
+          id: 'PENDING',
+          label: 'Pending',
           icon: ClockIcon,
-          color: 'amber'
+          color: 'amber',
         },
-        { 
-          id: 'FAILED', 
-          label: 'Failed', 
+        {
+          id: 'FAILED',
+          label: 'Failed',
           icon: XCircleIcon,
-          color: 'red'
+          color: 'red',
         },
-        { 
-          id: 'CANCELLED', 
-          label: 'Cancelled', 
+        {
+          id: 'CANCELLED',
+          label: 'Cancelled',
           icon: XMarkIcon,
-          color: 'red'
+          color: 'red',
         },
       ],
     },
-          {
-        id: 'amount-range',
-        title: 'Amount Range',
-        selectedValue: amountRangeFilter,
-        onChange: setAmountRangeFilter,
+    {
+      id: 'amount-range',
+      title: 'Amount Range',
+      selectedValue: amountRangeFilter,
+      onChange: setAmountRangeFilter,
       options: [
-        { 
-          id: 'all', 
-          label: 'All Amounts', 
+        {
+          id: 'all',
+          label: 'All Amounts',
           icon: ViewColumnsIcon,
-          color: 'gray'
+          color: 'gray',
         },
-        { 
-          id: 'large', 
-          label: 'Large (500+ zł)', 
+        {
+          id: 'large',
+          label: 'Large (500+ zł)',
           icon: BanknotesIcon,
-          color: 'red'
+          color: 'red',
         },
-        { 
-          id: 'medium', 
-          label: 'Medium (100-500 zł)', 
+        {
+          id: 'medium',
+          label: 'Medium (100-500 zł)',
           icon: BanknotesIcon,
-          color: 'amber'
+          color: 'amber',
         },
-        { 
-          id: 'small', 
-          label: 'Small (<100 zł)', 
+        {
+          id: 'small',
+          label: 'Small (<100 zł)',
           icon: BanknotesIcon,
-          color: 'blue'
+          color: 'blue',
         },
       ],
     },
@@ -236,7 +226,8 @@ const WalletsPage: React.FC = () => {
       icon: WalletIcon,
       variant: 'teal',
       trend: '+2,847 zł this week',
-      description: 'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
+      description:
+        'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
       isLive: true,
     },
     {
@@ -245,7 +236,8 @@ const WalletsPage: React.FC = () => {
       icon: ArrowPathIcon,
       variant: 'blue',
       trend: '+156 since morning',
-      description: 'Real-time payment processing velocity including charging transactions, wallet top-ups, and automated billing cycles',
+      description:
+        'Real-time payment processing velocity including charging transactions, wallet top-ups, and automated billing cycles',
     },
     {
       title: 'Revenue Recognition',
@@ -253,7 +245,8 @@ const WalletsPage: React.FC = () => {
       icon: ChartBarIcon,
       variant: 'emerald',
       trend: '+23.7% vs last month',
-      description: 'Comprehensive revenue streams from energy consumption, infrastructure utilization, and premium service offerings',
+      description:
+        'Comprehensive revenue streams from energy consumption, infrastructure utilization, and premium service offerings',
     },
     {
       title: 'Refund Liabilities',
@@ -261,7 +254,8 @@ const WalletsPage: React.FC = () => {
       icon: ReceiptRefundIcon,
       variant: 'amber',
       trend: '18 pending',
-      description: 'Outstanding customer reimbursement obligations requiring payment processor validation and compliance approval',
+      description:
+        'Outstanding customer reimbursement obligations requiring payment processor validation and compliance approval',
       isLive: true,
     },
   ];
@@ -287,22 +281,19 @@ const WalletsPage: React.FC = () => {
       {/* Revolutionary Page Header with Teal Theme */}
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
-        <Breadcrumb 
-          currentPageLabel="Enterprise Treasury"
-          variant="teal"
-        />
+        <Breadcrumb currentPageLabel="Enterprise Treasury" variant="teal" />
 
         <PageHeader
           title="Enterprise Treasury Management"
           description="Comprehensive financial operations, payment processing, and liquidity oversight"
           variant="teal"
           actionButton={{
-            label: "Initiate Transaction",
+            label: 'Initiate Transaction',
             onClick: () => {
               /* Add transaction logic */
             },
             icon: PlusIcon,
-            iconAnimation: "rotate-90"
+            iconAnimation: 'rotate-90',
           }}
         />
       </PageContainer>
@@ -317,7 +308,8 @@ const WalletsPage: React.FC = () => {
                 Financial Operations Dashboard
               </h2>
               <p className="text-gray-400">
-                Real-time treasury analytics, liquidity monitoring, and payment infrastructure intelligence
+                Real-time treasury analytics, liquidity monitoring, and payment
+                infrastructure intelligence
               </p>
             </div>
           </div>
@@ -400,18 +392,26 @@ const WalletsPage: React.FC = () => {
                           `}
                         >
                           {/* Shine Effect */}
-                          <div className={`
+                          <div
+                            className={`
                             absolute inset-0 z-0
                             bg-gradient-to-r from-transparent via-white/15 to-transparent
                             translate-x-[-100%] group-hover/button:translate-x-[100%]
                             transition-transform duration-700 ease-out
-                          `}></div>
-                          
+                          `}
+                          ></div>
+
                           {/* Button Content */}
                           <div className="flex items-center gap-2 relative z-10">
-                            <EyeIcon className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`} />
-                            <span className="font-medium text-sm">View Details</span>
-                            <div className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}></div>
+                            <EyeIcon
+                              className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`}
+                            />
+                            <span className="font-medium text-sm">
+                              View Details
+                            </span>
+                            <div
+                              className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}
+                            ></div>
                           </div>
                         </Button>
                       </div>
@@ -432,7 +432,8 @@ const WalletsPage: React.FC = () => {
                 Payment Processing Operations
               </h2>
               <p className="text-gray-400">
-                Advanced transaction monitoring, compliance tracking, and automated settlement management
+                Advanced transaction monitoring, compliance tracking, and
+                automated settlement management
               </p>
             </div>
           </div>
@@ -442,8 +443,12 @@ const WalletsPage: React.FC = () => {
             searchValue={searchQuery}
             onSearchChange={setSearchQuery}
             searchPlaceholder="Search payment records, amounts, settlement IDs..."
-                      onFilterClick={() => setIsFilterModalOpen(true)}
-          isFilterActive={typeFilter !== 'all' || statusFilter !== 'all' || amountRangeFilter !== 'all'}
+            onFilterClick={() => setIsFilterModalOpen(true)}
+            isFilterActive={
+              typeFilter !== 'all' ||
+              statusFilter !== 'all' ||
+              amountRangeFilter !== 'all'
+            }
             filterLabel="Transaction Filters"
             viewMode={viewMode}
             onViewModeChange={setViewMode}

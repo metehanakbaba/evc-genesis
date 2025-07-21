@@ -69,7 +69,12 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   // Default transaction type options
   const defaultTypeOptions: FilterOption[] = [
     { id: 'all', label: 'All Types', icon: WalletIcon, color: 'gray' },
-    { id: 'ADD_PLN_FUNDS', label: 'Top-up', icon: ArrowDownTrayIcon, color: 'emerald' },
+    {
+      id: 'ADD_PLN_FUNDS',
+      label: 'Top-up',
+      icon: ArrowDownTrayIcon,
+      color: 'emerald',
+    },
     { id: 'CHARGING_PAYMENT', label: 'Payment', icon: BoltIcon, color: 'blue' },
     { id: 'REFUND', label: 'Refund', icon: ReceiptRefundIcon, color: 'amber' },
     { id: 'TRANSFER', label: 'Transfer', icon: ArrowUpIcon, color: 'purple' },
@@ -78,7 +83,12 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   // Default transaction status options
   const defaultStatusOptions: FilterOption[] = [
     { id: 'all', label: 'All Status', icon: ViewColumnsIcon, color: 'gray' },
-    { id: 'COMPLETED', label: 'Completed', icon: CheckCircleIcon, color: 'emerald' },
+    {
+      id: 'COMPLETED',
+      label: 'Completed',
+      icon: CheckCircleIcon,
+      color: 'emerald',
+    },
     { id: 'PENDING', label: 'Pending', icon: ClockIcon, color: 'amber' },
     { id: 'FAILED', label: 'Failed', icon: XCircleIcon, color: 'red' },
     { id: 'CANCELLED', label: 'Cancelled', icon: XMarkIcon, color: 'red' },
@@ -87,9 +97,24 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   // Default amount range options
   const defaultAmountOptions: FilterOption[] = [
     { id: 'all', label: 'All Amounts', icon: ViewColumnsIcon, color: 'gray' },
-    { id: 'large', label: 'Large (500+ zł)', icon: BanknotesIcon, color: 'red' },
-    { id: 'medium', label: 'Medium (100-500 zł)', icon: BanknotesIcon, color: 'amber' },
-    { id: 'small', label: 'Small (<100 zł)', icon: BanknotesIcon, color: 'blue' },
+    {
+      id: 'large',
+      label: 'Large (500+ zł)',
+      icon: BanknotesIcon,
+      color: 'red',
+    },
+    {
+      id: 'medium',
+      label: 'Medium (100-500 zł)',
+      icon: BanknotesIcon,
+      color: 'amber',
+    },
+    {
+      id: 'small',
+      label: 'Small (<100 zł)',
+      icon: BanknotesIcon,
+      color: 'blue',
+    },
   ];
 
   // Use custom options if provided, otherwise use defaults
@@ -103,21 +128,22 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   const renderFilterOption = (
     option: FilterOption,
     isSelected: boolean,
-    onClick: () => void
+    onClick: () => void,
   ) => {
     const IconComponent = option.icon;
-    
+
     return (
       <button
         key={option.id}
         onClick={onClick}
         className={`
           group relative p-4 rounded-xl border transition-all duration-300 ease-out
-          ${isSelected
-            ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
+          ${
+            isSelected
+              ? `bg-gradient-to-r from-${option.color}-500/20 via-${option.color}-400/15 to-${option.color}-500/20 
                border-${option.color}-400/50 text-${option.color}-300 shadow-lg shadow-${option.color}-500/20
                scale-[1.02]`
-            : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
+              : `bg-gradient-to-r from-gray-700/30 via-gray-600/20 to-gray-700/30
                border-gray-600/30 text-gray-300 hover:bg-gray-600/40 hover:border-gray-500/50
                hover:scale-[1.01]`
           }
@@ -132,20 +158,22 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
           <div
             className={`
               w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isSelected
-                ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
-                : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
+              ${
+                isSelected
+                  ? `bg-${option.color}-500/20 border border-${option.color}-400/30`
+                  : `bg-gray-600/30 border border-gray-500/30 group-hover:bg-gray-500/40`
               }
             `}
           >
-            <IconComponent 
+            <IconComponent
               className={`
                 w-5 h-5 transition-transform duration-300
-                ${isSelected 
-                  ? `text-${option.color}-400 scale-110` 
-                  : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
+                ${
+                  isSelected
+                    ? `text-${option.color}-400 scale-110`
+                    : `text-gray-400 group-hover:text-gray-300 group-hover:scale-105`
                 }
-              `} 
+              `}
             />
           </div>
           <span className="font-medium text-sm">{option.label}</span>
@@ -214,14 +242,14 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
       <div className="space-y-8">
         {/* Revolutionary Transaction Type Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Transaction Type</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Transaction Type
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {typeOptions.map((type) =>
-              renderFilterOption(
-                type,
-                typeFilter === type.id,
-                () => onTypeChange(type.id)
-              )
+              renderFilterOption(type, typeFilter === type.id, () =>
+                onTypeChange(type.id),
+              ),
             )}
           </div>
         </div>
@@ -231,25 +259,23 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
           <h3 className="text-lg font-semibold text-white mb-4">Status</h3>
           <div className="grid grid-cols-2 gap-3">
             {statusOptions.map((status) =>
-              renderFilterOption(
-                status,
-                statusFilter === status.id,
-                () => onStatusChange(status.id)
-              )
+              renderFilterOption(status, statusFilter === status.id, () =>
+                onStatusChange(status.id),
+              ),
             )}
           </div>
         </div>
 
         {/* Revolutionary Amount Range Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Amount Range</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Amount Range
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {amountOptions.map((amount) =>
-              renderFilterOption(
-                amount,
-                amountRangeFilter === amount.id,
-                () => onAmountRangeChange(amount.id)
-              )
+              renderFilterOption(amount, amountRangeFilter === amount.id, () =>
+                onAmountRangeChange(amount.id),
+              ),
             )}
           </div>
         </div>
@@ -258,4 +284,4 @@ export const TransactionFilterModal: React.FC<TransactionFilterModalProps> = ({
   );
 };
 
-export default TransactionFilterModal; 
+export default TransactionFilterModal;

@@ -12,39 +12,41 @@ export interface SearchInputProps {
 
 /**
  * 🔍 SearchInput Atom Component
- * 
+ *
  * Reusable search input with consistent styling and behavior.
  * Used across all data management pages.
  */
 export const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
-  placeholder = "Search...",
-  className = "",
-  size = "md",
+  placeholder = 'Search...',
+  className = '',
+  size = 'md',
   disabled = false,
 }) => {
   const sizeClasses = {
-    sm: "h-9 text-sm",
-    md: "h-11 text-sm", 
-    lg: "h-12 text-base",
+    sm: 'h-9 text-sm',
+    md: 'h-11 text-sm',
+    lg: 'h-12 text-base',
   };
 
   const paddingClasses = {
-    sm: "pl-9 pr-3",
-    md: "pl-11 pr-4", 
-    lg: "pl-12 pr-4",
+    sm: 'pl-9 pr-3',
+    md: 'pl-11 pr-4',
+    lg: 'pl-12 pr-4',
   };
 
   const iconClasses = {
-    sm: "w-4 h-4 left-2.5",
-    md: "w-5 h-5 left-3",
-    lg: "w-5 h-5 left-3.5",
+    sm: 'w-4 h-4 left-2.5',
+    md: 'w-5 h-5 left-3',
+    lg: 'w-5 h-5 left-3.5',
   };
 
   return (
     <div className={`relative flex-1 max-w-md ${className}`}>
-      <div className={`absolute top-1/2 transform -translate-y-1/2 z-10 pointer-events-none ${iconClasses[size]}`}>
+      <div
+        className={`absolute top-1/2 transform -translate-y-1/2 z-10 pointer-events-none ${iconClasses[size]}`}
+      >
         <MagnifyingGlassIcon className="text-gray-400" />
       </div>
       <input
@@ -65,4 +67,4 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       />
     </div>
   );
-}; 
+};

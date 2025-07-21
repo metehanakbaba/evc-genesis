@@ -1,7 +1,7 @@
 'use client';
 
-import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
 import React, { useEffect, useState } from 'react';
+import { MainLayout } from '@/shared/ui/components/Layout/MainLayout';
 import {
   CoreManagementSection,
   DeveloperToolsSection,
@@ -13,11 +13,8 @@ import { useDashboardData } from '../hooks/useDashboardData';
  * Revolutionary & Live Dashboard - Sophisticated Enterprise Focus
  */
 const DashboardPage: React.FC = React.memo(() => {
-  const {
-    coreManagement,
-    activeOperations,
-    isDeveloperMode,
-  } = useDashboardData();
+  const { coreManagement, activeOperations, isDeveloperMode } =
+    useDashboardData();
 
   const [isLiveDataEnabled, _] = useState(true);
 
@@ -56,15 +53,15 @@ const DashboardPage: React.FC = React.memo(() => {
             <header className="text-center py-12">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-emerald-400 text-sm font-medium">LIVE</span>
+                <span className="text-emerald-400 text-sm font-medium">
+                  LIVE
+                </span>
               </div>
-              
+
               <h1 className="text-4xl font-light text-white mb-2">
                 Admin Dashboard
               </h1>
-              <p className="text-gray-400">
-                Enterprise System Management
-              </p>
+              <p className="text-gray-400">Enterprise System Management</p>
             </header>
 
             {/* Live Operations - Minimal Design */}
@@ -88,7 +85,7 @@ const DashboardPage: React.FC = React.memo(() => {
                   </div>
                 </div>
               </div>
-              
+
               <LiveOperationsSection activeOperations={activeOperations} />
             </section>
 
@@ -113,7 +110,7 @@ const DashboardPage: React.FC = React.memo(() => {
                   </div>
                 </div>
               </div>
-              
+
               <CoreManagementSection coreManagement={coreManagement} />
             </section>
 
@@ -139,25 +136,28 @@ const DashboardPage: React.FC = React.memo(() => {
                     </div>
                   </div>
                 </div>
-                
+
                 <DeveloperToolsSection
                   developerTools={[
                     {
                       title: 'Documentation',
-                      description: 'API documentation, guides, and technical references',
+                      description:
+                        'API documentation, guides, and technical references',
                       path: '/docs',
                       badge: 'Docs',
                       variant: 'cyan',
-                      icon: require('@heroicons/react/24/outline').DocumentTextIcon,
+                      icon: require('@heroicons/react/24/outline')
+                        .DocumentTextIcon,
                     },
                     {
                       title: 'Project Management',
-                      description: 'AI-powered project tracking and status management',
+                      description:
+                        'AI-powered project tracking and status management',
                       path: '/project-management',
                       badge: 'AI',
                       variant: 'purple',
                       icon: require('@heroicons/react/24/outline').ChartBarIcon,
-                    }
+                    },
                   ]}
                   isDeveloperMode={isDeveloperMode}
                 />
@@ -169,20 +169,24 @@ const DashboardPage: React.FC = React.memo(() => {
               <div className="flex items-center justify-center gap-6 mb-4">
                 <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full backdrop-blur-xl">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 text-sm">All Systems Operational</span>
+                  <span className="text-green-400 text-sm">
+                    All Systems Operational
+                  </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full backdrop-blur-xl">
                   <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-300"></div>
-                  <span className="text-blue-400 text-sm">Live Data Active</span>
+                  <span className="text-blue-400 text-sm">
+                    Live Data Active
+                  </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full backdrop-blur-xl">
                   <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse delay-600"></div>
                   <span className="text-purple-400 text-sm">AI Ready</span>
                 </div>
               </div>
-              
+
               <p className="text-gray-500 text-sm">
                 Last updated: {new Date().toLocaleTimeString()} • Version 1.0.0
               </p>

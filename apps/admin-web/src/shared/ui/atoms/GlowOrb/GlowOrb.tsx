@@ -1,27 +1,27 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '../../utils/class-utils';
 
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps, 
+import type {
   AnimationProps,
+  BaseComponentProps,
+  BlurProps,
   IntensityProps,
-  BlurProps 
+  SizeProps,
+  VariantProps,
 } from '../types';
 
 /**
  * GlowOrb Component Props
- * 
+ *
  * Animated gradient orbs used for background effects and visual enhancement
  */
-export interface GlowOrbProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps, 
-          AnimationProps,
-          IntensityProps,
-          BlurProps {
+export interface GlowOrbProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps,
+    AnimationProps,
+    IntensityProps,
+    BlurProps {
   /** Position of the orb in the layout */
   position?: 'background' | 'foreground';
   /** Custom positioning styles */
@@ -33,7 +33,7 @@ export interface GlowOrbProps
  */
 const sizeClasses = {
   xs: 'w-8 h-8',
-  sm: 'w-16 h-16', 
+  sm: 'w-16 h-16',
   md: 'w-24 h-24',
   lg: 'w-32 h-32',
   xl: 'w-48 h-48',
@@ -44,7 +44,7 @@ const sizeClasses = {
  */
 const blurClasses = {
   sm: 'blur-sm',
-  md: 'blur-md', 
+  md: 'blur-md',
   lg: 'blur-lg',
   xl: 'blur-xl',
 } as const;
@@ -61,10 +61,10 @@ const animationClasses = {
 
 /**
  * GlowOrb - Atomic component for animated gradient orbs
- * 
+ *
  * Used as background decoration and visual effects throughout the application.
  * Supports multiple variants, sizes, and animation options.
- * 
+ *
  * @example
  * ```tsx
  * <GlowOrb variant="blue" size="lg" animated />
@@ -86,38 +86,38 @@ export const GlowOrb: React.FC<GlowOrbProps> = ({
   ...props
 }) => {
   // Note: atomicTokens.variants[variant] available for future enhancements
-  
+
   // Build base classes
   const baseClasses = cn(
     // Base styling
     'absolute rounded-full pointer-events-none select-none',
-    
+
     // Size classes
     sizeClasses[size],
-    
+
     // Blur effect
     blurClasses[blur],
-    
+
     // Position-based z-index
     position === 'background' ? 'z-0' : 'z-10',
-    
+
     // Animation classes
     animated && animationClasses.normal,
-    
+
     // Custom className
-    className
+    className,
   );
 
   // Build background gradient based on variant and intensity
   const getBackgroundGradient = () => {
     const opacityMap = {
       subtle: '0.1',
-      medium: '0.25', 
+      medium: '0.25',
       strong: '0.5',
     };
-    
+
     const opacity = opacityMap[intensity];
-    
+
     // Use Tailwind color classes instead of CSS variables for better compatibility
     const gradientColors = {
       blue: `radial-gradient(circle, rgba(59, 130, 246, ${opacity}) 0%, transparent 70%)`,
@@ -125,7 +125,7 @@ export const GlowOrb: React.FC<GlowOrbProps> = ({
       purple: `radial-gradient(circle, rgba(139, 92, 246, ${opacity}) 0%, transparent 70%)`,
       teal: `radial-gradient(circle, rgba(20, 184, 166, ${opacity}) 0%, transparent 70%)`,
     };
-    
+
     return {
       background: gradientColors[variant],
       ...style,
@@ -133,12 +133,14 @@ export const GlowOrb: React.FC<GlowOrbProps> = ({
   };
 
   // Animation style with custom speed and delay
-  const animationStyle = animated ? {
-    animationDuration: `${2000 / animationSpeed}ms`,
-    animationDelay: `${animationDelay}ms`,
-    animationIterationCount: 'infinite',
-    animationTimingFunction: 'ease-in-out',
-  } : {};
+  const animationStyle = animated
+    ? {
+        animationDuration: `${2000 / animationSpeed}ms`,
+        animationDelay: `${animationDelay}ms`,
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-in-out',
+      }
+    : {};
 
   return (
     <div

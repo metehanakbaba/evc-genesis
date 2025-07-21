@@ -7,23 +7,23 @@ import {
   CheckCircleIcon,
   FireIcon,
 } from '@heroicons/react/24/outline';
-import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
-import { Breadcrumb } from '@/shared/ui/components/Navigation';
-import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
+import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
+import { EmptyState, SearchFilterBar } from '@/shared/ui/molecules';
 
 // ✅ Import new session components and hooks
-import { 
-  SessionGrid, 
-  SessionTable, 
+import {
   SessionFilterModal,
+  SessionGrid,
   SessionGridSkeleton,
+  SessionTable,
   SessionTableSkeleton,
   useInfiniteSessions,
+  useSearchDebounce,
   useSessionActions,
   useSessionStatistics,
-  useSearchDebounce,
 } from '../components';
 
 // Type for icon components - fixed for Heroicons
@@ -69,30 +69,20 @@ const SessionsPage: React.FC = () => {
   const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
 
   // ✅ Use session statistics hook
-  const { 
-    activeSessions, 
-    totalPowerOutput, 
-    completedToday, 
-    revenueFlow 
-  } = useSessionStatistics();
+  const { activeSessions, totalPowerOutput, completedToday, revenueFlow } =
+    useSessionStatistics();
 
   // ✅ Use infinite scroll hook for data fetching
-  const {
-    sessions,
-    isLoading,
-    isLoadingMore,
-    hasNextPage,
-    loadMore,
-    total,
-  } = useInfiniteSessions({
-    filters: {
-      searchQuery: debouncedSearchQuery,
-      statusFilter,
-      connectorTypeFilter,
-      powerOutputFilter,
-    },
-    pageSize: 20,
-  });
+  const { sessions, isLoading, isLoadingMore, hasNextPage, loadMore, total } =
+    useInfiniteSessions({
+      filters: {
+        searchQuery: debouncedSearchQuery,
+        statusFilter,
+        connectorTypeFilter,
+        powerOutputFilter,
+      },
+      pageSize: 20,
+    });
 
   // ✅ Use session actions hook
   const { viewDetails, stopSession } = useSessionActions();
@@ -170,10 +160,7 @@ const SessionsPage: React.FC = () => {
       {/* Revolutionary Page Header with Live Operations Theme */}
       <PageContainer paddingY="lg">
         {/* Revolutionary Breadcrumb Navigation */}
-        <Breadcrumb 
-          currentPageLabel="Live Sessions"
-          variant="emerald"
-        />
+        <Breadcrumb currentPageLabel="Live Sessions" variant="emerald" />
 
         {/* ✅ Updated PageHeader - Removed Monitor Sessions button */}
         <PageHeader
@@ -183,12 +170,9 @@ const SessionsPage: React.FC = () => {
           indicator={
             <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-xl">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
-              <span className="text-emerald-400 font-semibold">
-                LIVE DATA
-              </span>
+              <span className="text-emerald-400 font-semibold">LIVE DATA</span>
               <span className="text-gray-400 text-sm">
-                {sessions.filter((s) => s.status === 'charging').length}{' '}
-                active
+                {sessions.filter((s) => s.status === 'charging').length} active
               </span>
             </div>
           }
@@ -207,62 +191,62 @@ const SessionsPage: React.FC = () => {
                 <div
                   key={stat.title}
                   className="group relative"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
-                    {/* Revolutionary Floating Card */}
-                    <div className="relative p-6 bg-gradient-to-br from-gray-800/40 via-gray-700/30 to-gray-800/20 border border-gray-600/30 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:-translate-y-2">
-                      {/* Live Pulse Indicator */}
-                      {stat.isLive && (
-                        <div
-                            className={`absolute -top-2 -right-2 w-5 h-5 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
-                          ></div>
-                        )}
+                  {/* Revolutionary Floating Card */}
+                  <div className="relative p-6 bg-gradient-to-br from-gray-800/40 via-gray-700/30 to-gray-800/20 border border-gray-600/30 rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:-translate-y-2">
+                    {/* Live Pulse Indicator */}
+                    {stat.isLive && (
+                      <div
+                        className={`absolute -top-2 -right-2 w-5 h-5 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
+                      ></div>
+                    )}
 
-                        {/* Floating Background Elements */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                        <div
-                          className={`absolute -inset-1 bg-gradient-to-r from-${stat.variant}-500/20 to-${stat.variant}-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`}
-                        ></div>
+                    {/* Floating Background Elements */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                    <div
+                      className={`absolute -inset-1 bg-gradient-to-r from-${stat.variant}-500/20 to-${stat.variant}-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`}
+                    ></div>
 
-                        {/* Card Content */}
-                      <div className="relative z-10">
-                          {/* Icon Container */}
-                          <div
-                            className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-${stat.variant}-500/20 to-${stat.variant}-400/10 border border-${stat.variant}-400/25 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}
-                          >
-                            <stat.icon
-                              className={`w-7 h-7 text-${stat.variant}-400`}
-                            />
-                          </div>
+                    {/* Card Content */}
+                    <div className="relative z-10">
+                      {/* Icon Container */}
+                      <div
+                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-${stat.variant}-500/20 to-${stat.variant}-400/10 border border-${stat.variant}-400/25 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}
+                      >
+                        <stat.icon
+                          className={`w-7 h-7 text-${stat.variant}-400`}
+                        />
+                      </div>
 
-                          {/* Value & Title */}
-                          <div className="mb-3">
-                            <div className="text-3xl font-bold text-white mb-1 group-hover:text-white transition-colors duration-300">
-                              {stat.value}
-                            </div>
-                            <div className="text-gray-300 font-medium">
-                              {stat.title}
-                            </div>
-                          </div>
-
-                          {/* Trend Indicator */}
-                          <div className="flex items-center gap-2 mb-2">
-                            <ArrowTrendingUpIcon
-                              className={`w-4 h-4 text-${stat.variant}-400`}
-                            />
-                            <span
-                              className={`text-sm text-${stat.variant}-400 font-medium`}
-                            >
-                              {stat.trend}
-                            </span>
+                      {/* Value & Title */}
+                      <div className="mb-3">
+                        <div className="text-3xl font-bold text-white mb-1 group-hover:text-white transition-colors duration-300">
+                          {stat.value}
                         </div>
-
-                          {/* Hidden Description - Revealed on Hover */}
-                          <div className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 leading-relaxed">
-                            {stat.description}
+                        <div className="text-gray-300 font-medium">
+                          {stat.title}
                         </div>
                       </div>
+
+                      {/* Trend Indicator */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <ArrowTrendingUpIcon
+                          className={`w-4 h-4 text-${stat.variant}-400`}
+                        />
+                        <span
+                          className={`text-sm text-${stat.variant}-400 font-medium`}
+                        >
+                          {stat.trend}
+                        </span>
+                      </div>
+
+                      {/* Hidden Description - Revealed on Hover */}
+                      <div className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 leading-relaxed">
+                        {stat.description}
+                      </div>
                     </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -275,7 +259,11 @@ const SessionsPage: React.FC = () => {
           onSearchChange={setSearchQuery}
           searchPlaceholder="Search sessions, stations, users..."
           onFilterClick={() => setIsFilterModalOpen(true)}
-          isFilterActive={statusFilter !== 'all' || connectorTypeFilter !== 'all' || powerOutputFilter !== 'all'}
+          isFilterActive={
+            statusFilter !== 'all' ||
+            connectorTypeFilter !== 'all' ||
+            powerOutputFilter !== 'all'
+          }
           filterLabel="Session Filters"
           viewMode={viewMode}
           onViewModeChange={setViewMode}
@@ -288,9 +276,7 @@ const SessionsPage: React.FC = () => {
           <SessionTableSkeleton count={10} />
         )}
 
-        {isLoading && viewMode === 'grid' && (
-          <SessionGridSkeleton count={6} />
-        )}
+        {isLoading && viewMode === 'grid' && <SessionGridSkeleton count={6} />}
 
         {/* ✅ Use new reusable SessionTable component with infinite scroll */}
         {!isLoading && viewMode === 'table' && (

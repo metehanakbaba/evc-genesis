@@ -108,7 +108,9 @@ export const MinimalStatCard: React.FC<MinimalStatCardProps> = ({
           <Icon className={cn('w-7 h-7', variantClasses[variant].icon)} />
         </div>
         <div className="text-right flex-shrink-0">
-          <div className="text-3xl font-bold text-white mb-1 text-truncate-title">{value}</div>
+          <div className="text-3xl font-bold text-white mb-1 text-truncate-title">
+            {value}
+          </div>
           <div
             className={cn(
               'text-xs flex items-center gap-1 justify-end',
@@ -122,7 +124,9 @@ export const MinimalStatCard: React.FC<MinimalStatCardProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <h3 className="text-white font-medium mb-1 text-truncate-title">{title}</h3>
+        <h3 className="text-white font-medium mb-1 text-truncate-title">
+          {title}
+        </h3>
         <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-truncate-multi">
           {description}
         </p>

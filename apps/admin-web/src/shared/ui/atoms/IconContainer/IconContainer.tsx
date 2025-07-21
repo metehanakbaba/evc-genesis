@@ -1,22 +1,22 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '../../utils';
-import type { 
-  BaseComponentProps, 
-  VariantProps, 
-  SizeProps, 
-  HoverProps 
+import type {
+  BaseComponentProps,
+  HoverProps,
+  SizeProps,
+  VariantProps,
 } from '../types';
 
 /**
  * IconContainer Component Props
- * 
+ *
  * Standardized icon wrapper with variants and hover effects
  */
-export interface IconContainerProps 
-  extends BaseComponentProps, 
-          VariantProps, 
-          SizeProps, 
-          HoverProps {
+export interface IconContainerProps
+  extends BaseComponentProps,
+    VariantProps,
+    SizeProps,
+    HoverProps {
   /** Icon component to render */
   icon: React.ComponentType<{ className?: string }>;
   /** Enable glow effect */
@@ -34,7 +34,7 @@ export interface IconContainerProps
  */
 const sizeClasses = {
   xs: 'w-6 h-6 p-1',
-  sm: 'w-8 h-8 p-1.5', 
+  sm: 'w-8 h-8 p-1.5',
   md: 'w-10 h-10 p-2',
   lg: 'w-12 h-12 p-2.5',
   xl: 'w-16 h-16 p-3',
@@ -45,7 +45,7 @@ const sizeClasses = {
  */
 const iconSizeClasses = {
   xs: 'w-4 h-4',
-  sm: 'w-5 h-5', 
+  sm: 'w-5 h-5',
   md: 'w-6 h-6',
   lg: 'w-7 h-7',
   xl: 'w-10 h-10',
@@ -53,10 +53,10 @@ const iconSizeClasses = {
 
 /**
  * IconContainer - Atomic component for standardized icon display
- * 
+ *
  * Provides consistent styling, sizing, and interactive states for icons.
  * Supports variants, hover effects, and glow effects.
- * 
+ *
  * @example
  * ```tsx
  * <IconContainer icon={UserIcon} variant="blue" size="md" glowEffect />
@@ -84,32 +84,32 @@ export const IconContainer: React.FC<IconContainerProps> = ({
   const baseClasses = cn(
     // Base styling
     'relative inline-flex items-center justify-center rounded-lg transition-all duration-200',
-    
+
     // Size classes
     sizeClasses[size],
-    
+
     // Interactive states
     isInteractive && 'cursor-pointer',
     disabled && 'cursor-not-allowed opacity-50',
-    
+
     // Hover effects
     hoverScale && !disabled && 'hover:scale-110 active:scale-95',
     hoverGlow && !disabled && 'hover:shadow-lg',
-    
+
     // Custom className
-    className
+    className,
   );
 
   // Build icon classes
   const iconClasses = cn(
     // Base icon styling
     'transition-all duration-200',
-    
+
     // Size classes
     iconSizeClasses[size],
-    
+
     // Custom icon className
-    iconClassName
+    iconClassName,
   );
 
   // Get variant colors
@@ -156,13 +156,10 @@ export const IconContainer: React.FC<IconContainerProps> = ({
     variantStyles.background,
     variantStyles.border,
     variantStyles.glow,
-    !disabled && isInteractive && variantStyles.hover
+    !disabled && isInteractive && variantStyles.hover,
   );
 
-  const finalIconClasses = cn(
-    iconClasses,
-    variantStyles.text
-  );
+  const finalIconClasses = cn(iconClasses, variantStyles.text);
 
   // Handle click
   const handleClick = () => {
@@ -183,12 +180,16 @@ export const IconContainer: React.FC<IconContainerProps> = ({
       data-glow-effect={glowEffect}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      onKeyDown={isInteractive ? (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-      } : undefined}
+      onKeyDown={
+        isInteractive
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick();
+              }
+            }
+          : undefined
+      }
       {...props}
     >
       <Icon className={finalIconClasses} />

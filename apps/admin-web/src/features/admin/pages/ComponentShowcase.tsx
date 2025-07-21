@@ -28,8 +28,6 @@ import {
 import type React from 'react';
 import { useState } from 'react';
 
-
-
 const sections = [
   {
     id: 'buttons',
@@ -80,7 +78,7 @@ const ComponentShowcase = () => {
 
   // Options for select components
   const countryOptions = [
-              { value: 'pl', label: 'Poland' },
+    { value: 'pl', label: 'Poland' },
     { value: 'us', label: 'United States' },
     { value: 'uk', label: 'United Kingdom' },
     { value: 'de', label: 'Germany' },

@@ -1,5 +1,5 @@
-import type { AppDispatch } from '@/lib/store/store';
 import { logout } from '@/features/auth/authSlice';
+import type { AppDispatch } from '@/lib/store/store';
 import type { ApiError } from '@/types/global.types';
 
 /**

@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { filterMockStations, mockStations } from '../data/mockStations';
 import type { Station } from '../types/station.types';
-import { mockStations, filterMockStations } from '../data/mockStations';
 
 interface UseInfiniteStationsFilters {
   readonly searchQuery?: string;
@@ -67,12 +67,12 @@ export const useInfiniteStations = ({
 
   const loadMore = useCallback(() => {
     if (!paginatedData.hasMore || isLoadingMore || isInitialLoading) return;
-    
+
     setIsLoadingMore(true);
-    
+
     // Simulate loading delay
     setTimeout(() => {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       setIsLoadingMore(false);
     }, 600);
   }, [paginatedData.hasMore, isLoadingMore, isInitialLoading]);
@@ -80,7 +80,7 @@ export const useInfiniteStations = ({
   const refresh = useCallback(() => {
     setCurrentPage(1);
     setIsInitialLoading(true);
-    
+
     setTimeout(() => {
       setIsInitialLoading(false);
     }, 500);
@@ -95,4 +95,4 @@ export const useInfiniteStations = ({
     loadMore,
     refresh,
   };
-}; 
+};

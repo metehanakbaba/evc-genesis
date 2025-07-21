@@ -1,11 +1,11 @@
 /**
  * 👥 Users API Hooks
- * 
+ *
  * Custom user management hooks that extend the base API.
  * Following WalletsPage pattern for consistency.
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { UserProfile } from '../types/user.types';
 
 // Mock data - API schema compliant
@@ -74,10 +74,12 @@ const MOCK_USERS: UserProfile[] = [
  */
 export const useUserStatistics = () => {
   const totalUsers = MOCK_USERS.length;
-  const activeUsers = MOCK_USERS.filter(user => user.is_active).length;
-  const adminUsers = MOCK_USERS.filter(user => user.role === 'admin').length;
+  const activeUsers = MOCK_USERS.filter((user) => user.is_active).length;
+  const adminUsers = MOCK_USERS.filter((user) => user.role === 'admin').length;
   const newUsersThisMonth = MOCK_USERS.filter(
-    user => new Date(user.created_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    (user) =>
+      new Date(user.created_at) >
+      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
   ).length;
 
   return {
@@ -169,8 +171,14 @@ export const useInfiniteUsers = ({
   const generateMockUsers = useCallback((count: number = 50): UserProfile[] => {
     const additionalUsers: UserProfile[] = [];
     const roles: UserProfile['role'][] = ['admin', 'operator', 'user'];
-    const companies = ['TechCorp', 'EV Solutions', 'Energy Plus', 'Smart Grid', 'PowerFlow'];
-    
+    const companies = [
+      'TechCorp',
+      'EV Solutions',
+      'Energy Plus',
+      'Smart Grid',
+      'PowerFlow',
+    ];
+
     for (let i = 5; i < count; i++) {
       additionalUsers.push({
         id: `user-${String(i + 1).padStart(3, '0')}`,
@@ -178,13 +186,17 @@ export const useInfiniteUsers = ({
         name: `User ${i + 1}`,
         phone: `+9055512345${String(i + 10)}`,
         role: roles[i % roles.length],
-        created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
-        last_login: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date(
+          Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
+        last_login: new Date(
+          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         is_active: Math.random() > 0.1, // 90% active
         verified_email: Math.random() > 0.2, // 80% verified
       });
     }
-    
+
     return [...MOCK_USERS, ...additionalUsers];
   }, []);
 
@@ -197,11 +209,11 @@ export const useInfiniteUsers = ({
       // Search filter
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           user.name.toLowerCase().includes(query) ||
           user.email.toLowerCase().includes(query) ||
           user.phone.includes(query);
-        
+
         if (!matchesSearch) return false;
       }
 
@@ -221,29 +233,36 @@ export const useInfiniteUsers = ({
   }, [allUsers, filters]);
 
   // ✅ Fetch Users Function with pagination simulation
-  const fetchUsers = useCallback(async (page: number): Promise<UserProfile[]> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, page === 0 ? 800 : 400));
-    
-    // Paginate filtered results
-    const offset = page * pageSize;
-    const paginatedUsers = filteredUsers.slice(offset, offset + pageSize);
-    
-    return paginatedUsers;
-  }, [filteredUsers, pageSize]);
+  const fetchUsers = useCallback(
+    async (page: number): Promise<UserProfile[]> => {
+      // Simulate API delay
+      await new Promise((resolve) =>
+        setTimeout(resolve, page === 0 ? 800 : 400),
+      );
+
+      // Paginate filtered results
+      const offset = page * pageSize;
+      const paginatedUsers = filteredUsers.slice(offset, offset + pageSize);
+
+      return paginatedUsers;
+    },
+    [filteredUsers, pageSize],
+  );
 
   // ✅ Load initial data
   const loadInitialData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     setCurrentPage(0);
-    
+
     try {
       const initialUsers = await fetchUsers(0);
-      
+
       setUsers(initialUsers);
       setCurrentPage(0);
-      setHasNextPage(initialUsers.length === pageSize && filteredUsers.length > pageSize);
+      setHasNextPage(
+        initialUsers.length === pageSize && filteredUsers.length > pageSize,
+      );
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to load users'));
     } finally {
@@ -254,28 +273,38 @@ export const useInfiniteUsers = ({
   // ✅ Load more data for infinite scroll
   const loadMore = useCallback(async () => {
     if (isLoadingMore || !hasNextPage || isLoading) return;
-    
+
     setIsLoadingMore(true);
     setError(null);
 
     try {
       const nextPage = currentPage + 1;
       const moreUsers = await fetchUsers(nextPage);
-      
-      setUsers(prev => {
-        const existingIds = new Set(prev.map(u => u.id));
-        const newUsers = moreUsers.filter(u => !existingIds.has(u.id));
+
+      setUsers((prev) => {
+        const existingIds = new Set(prev.map((u) => u.id));
+        const newUsers = moreUsers.filter((u) => !existingIds.has(u.id));
         return [...prev, ...newUsers];
       });
-      
+
       setCurrentPage(nextPage);
       setHasNextPage((nextPage + 1) * pageSize < filteredUsers.length);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to load more users'));
+      setError(
+        err instanceof Error ? err : new Error('Failed to load more users'),
+      );
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasNextPage, isLoading, currentPage, fetchUsers, filteredUsers.length, pageSize]);
+  }, [
+    isLoadingMore,
+    hasNextPage,
+    isLoading,
+    currentPage,
+    fetchUsers,
+    filteredUsers.length,
+    pageSize,
+  ]);
 
   // ✅ Refresh data
   const refresh = useCallback(() => {
@@ -293,11 +322,12 @@ export const useInfiniteUsers = ({
 
   // ✅ Reload when filters change
   useEffect(() => {
-    if (users.length > 0) { // Only reload if we have initial data
+    if (users.length > 0) {
+      // Only reload if we have initial data
       setUsers([]);
       setCurrentPage(0);
       setHasNextPage(true);
-      
+
       // Small delay to batch filter changes
       const timeoutId = setTimeout(() => {
         loadInitialData();
@@ -317,4 +347,4 @@ export const useInfiniteUsers = ({
     refresh,
     error,
   };
-}; 
+};

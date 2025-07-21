@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 import { RouteTransition } from './RouteTransition';
 
 // Mock Next.js usePathname hook
@@ -30,21 +30,23 @@ describe('RouteTransition', () => {
   describe('Rendering', () => {
     it('renders with children', () => {
       render(<RouteTransition {...defaultProps} />);
-      
+
       expect(screen.getByTestId('route-transition')).toBeInTheDocument();
       expect(screen.getByTestId('test-content')).toBeInTheDocument();
     });
 
     it('applies custom className', () => {
       render(<RouteTransition {...defaultProps} className="custom-class" />);
-      
+
       const container = screen.getByTestId('route-transition');
       expect(container).toHaveClass('custom-class');
     });
 
     it('renders with custom test id', () => {
-      render(<RouteTransition {...defaultProps} data-testid="custom-transition" />);
-      
+      render(
+        <RouteTransition {...defaultProps} data-testid="custom-transition" />,
+      );
+
       expect(screen.getByTestId('custom-transition')).toBeInTheDocument();
     });
   });
@@ -52,8 +54,10 @@ describe('RouteTransition', () => {
   describe('Component Composition', () => {
     it('renders BackgroundEffects molecule', () => {
       render(<RouteTransition {...defaultProps} />);
-      
-      const backgroundEffects = screen.getByTestId('route-transition-background-effects');
+
+      const backgroundEffects = screen.getByTestId(
+        'route-transition-background-effects',
+      );
       expect(backgroundEffects).toBeInTheDocument();
       expect(backgroundEffects).toHaveAttribute('data-variant', 'blue');
       expect(backgroundEffects).toHaveAttribute('data-size', 'lg');
@@ -62,8 +66,10 @@ describe('RouteTransition', () => {
 
     it('renders FloatingAccents molecule', () => {
       render(<RouteTransition {...defaultProps} />);
-      
-      const floatingAccents = screen.getByTestId('route-transition-floating-accents');
+
+      const floatingAccents = screen.getByTestId(
+        'route-transition-floating-accents',
+      );
       expect(floatingAccents).toBeInTheDocument();
       expect(floatingAccents).toHaveAttribute('data-variant', 'blue');
       expect(floatingAccents).toHaveAttribute('data-size', 'md');
@@ -72,7 +78,7 @@ describe('RouteTransition', () => {
 
     it('renders main content container', () => {
       render(<RouteTransition {...defaultProps} />);
-      
+
       const content = screen.getByTestId('route-transition-content');
       expect(content).toBeInTheDocument();
       expect(content).toContainElement(screen.getByTestId('test-content'));
@@ -82,9 +88,9 @@ describe('RouteTransition', () => {
   describe('Transition States', () => {
     it('sets correct data attributes for transition state', async () => {
       render(<RouteTransition {...defaultProps} />);
-      
+
       const container = screen.getByTestId('route-transition');
-      
+
       // Initially the component may be in exit state due to useEffect timing
       // Wait for it to settle into enter state
       await waitFor(() => {
@@ -95,11 +101,11 @@ describe('RouteTransition', () => {
 
     it('handles path changes and triggers exit state', async () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Change the pathname
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       // Should trigger exit state
       await waitFor(() => {
         const container = screen.getByTestId('route-transition');
@@ -110,41 +116,49 @@ describe('RouteTransition', () => {
 
     it('renders exit particles when exiting', async () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Change the pathname to trigger exit
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       // Should render exit particles
       await waitFor(() => {
-        expect(screen.getByTestId('route-transition-exit-particle-0')).toBeInTheDocument();
-        expect(screen.getByTestId('route-transition-exit-particle-7')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('route-transition-exit-particle-0'),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByTestId('route-transition-exit-particle-7'),
+        ).toBeInTheDocument();
       });
     });
 
     it('renders exit trail when exiting', async () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Change the pathname to trigger exit
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       // Should render exit trail
       await waitFor(() => {
-        expect(screen.getByTestId('route-transition-exit-trail')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('route-transition-exit-trail'),
+        ).toBeInTheDocument();
       });
     });
 
     it('renders exit overlay when exiting', async () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Change the pathname to trigger exit
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       // Should render exit overlay
       await waitFor(() => {
-        expect(screen.getByTestId('route-transition-exit-overlay')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('route-transition-exit-overlay'),
+        ).toBeInTheDocument();
       });
     });
   });
@@ -152,22 +166,24 @@ describe('RouteTransition', () => {
   describe('Animation Configuration', () => {
     it('applies custom animation speed', () => {
       render(<RouteTransition {...defaultProps} animationSpeed={2} />);
-      
-      const backgroundEffects = screen.getByTestId('route-transition-background-effects');
+
+      const backgroundEffects = screen.getByTestId(
+        'route-transition-background-effects',
+      );
       expect(backgroundEffects).toBeInTheDocument();
       // Animation speed is passed to child components
     });
 
     it('applies custom exit duration', () => {
       render(<RouteTransition {...defaultProps} exitDuration={800} />);
-      
+
       expect(screen.getByTestId('route-transition')).toBeInTheDocument();
       // Exit duration affects timing but doesn't change DOM structure immediately
     });
 
     it('applies custom enter delay', () => {
       render(<RouteTransition {...defaultProps} enterDelay={100} />);
-      
+
       expect(screen.getByTestId('route-transition')).toBeInTheDocument();
       // Enter delay affects timing but doesn't change DOM structure immediately
     });
@@ -176,7 +192,7 @@ describe('RouteTransition', () => {
   describe('Debug Mode', () => {
     it('renders debug indicator when debug mode is enabled', () => {
       render(<RouteTransition {...defaultProps} debugMode />);
-      
+
       const debugIndicator = screen.getByText(/ENTER • \/test-path/);
       expect(debugIndicator).toBeInTheDocument();
       expect(debugIndicator).toHaveClass('fixed', 'top-4', 'right-4', 'z-50');
@@ -184,17 +200,19 @@ describe('RouteTransition', () => {
 
     it('does not render debug indicator when debug mode is disabled', () => {
       render(<RouteTransition {...defaultProps} debugMode={false} />);
-      
+
       expect(screen.queryByText(/ENTER • \/test-path/)).not.toBeInTheDocument();
     });
 
     it('logs debug messages when debug mode is enabled', async () => {
-      const { rerender } = render(<RouteTransition {...defaultProps} debugMode />);
-      
+      const { rerender } = render(
+        <RouteTransition {...defaultProps} debugMode />,
+      );
+
       // Change pathname to trigger debug logs
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} debugMode />);
-      
+
       await waitFor(() => {
         expect(console.log).toHaveBeenCalledWith(
           '🎭 Route Transition Debug:',
@@ -202,22 +220,24 @@ describe('RouteTransition', () => {
             from: '/test-path',
             to: '/new-path',
             phase: 'exit-start',
-          })
+          }),
         );
       });
     });
 
     it('does not log debug messages when debug mode is disabled', async () => {
-      const { rerender } = render(<RouteTransition {...defaultProps} debugMode={false} />);
-      
+      const { rerender } = render(
+        <RouteTransition {...defaultProps} debugMode={false} />,
+      );
+
       // Change pathname
       mockUsePathname.mockReturnValue('/new-path');
       rerender(<RouteTransition {...defaultProps} debugMode={false} />);
-      
+
       // Should not log debug messages
       expect(console.log).not.toHaveBeenCalledWith(
         '🎭 Route Transition Debug:',
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
@@ -225,7 +245,7 @@ describe('RouteTransition', () => {
   describe('Visual Parity', () => {
     it('maintains exact CSS classes for container', () => {
       render(<RouteTransition {...defaultProps} />);
-      
+
       const container = screen.getByTestId('route-transition');
       expect(container).toHaveClass('relative');
       expect(container).toHaveClass('min-h-screen');
@@ -234,7 +254,7 @@ describe('RouteTransition', () => {
 
     it('applies correct transition classes to content', () => {
       render(<RouteTransition {...defaultProps} />);
-      
+
       const content = screen.getByTestId('route-transition-content');
       expect(content).toHaveClass('relative');
       expect(content).toHaveClass('z-10');
@@ -245,8 +265,10 @@ describe('RouteTransition', () => {
 
     it('renders background effects with fixed positioning', () => {
       render(<RouteTransition {...defaultProps} />);
-      
-      const backgroundContainer = screen.getByTestId('route-transition-background-effects').parentElement;
+
+      const backgroundContainer = screen.getByTestId(
+        'route-transition-background-effects',
+      ).parentElement;
       expect(backgroundContainer).toHaveClass('fixed');
       expect(backgroundContainer).toHaveClass('inset-0');
       expect(backgroundContainer).toHaveClass('pointer-events-none');
@@ -254,8 +276,10 @@ describe('RouteTransition', () => {
 
     it('renders floating accents with correct z-index', () => {
       render(<RouteTransition {...defaultProps} />);
-      
-      const accentsContainer = screen.getByTestId('route-transition-floating-accents').parentElement;
+
+      const accentsContainer = screen.getByTestId(
+        'route-transition-floating-accents',
+      ).parentElement;
       expect(accentsContainer).toHaveClass('fixed');
       expect(accentsContainer).toHaveClass('inset-0');
       expect(accentsContainer).toHaveClass('pointer-events-none');
@@ -268,54 +292,56 @@ describe('RouteTransition', () => {
       const startTime = performance.now();
       render(<RouteTransition {...defaultProps} />);
       const endTime = performance.now();
-      
+
       // Should render quickly (within 50ms for this simple test)
       expect(endTime - startTime).toBeLessThan(50);
     });
 
     it('handles multiple re-renders efficiently', () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Multiple re-renders should not cause issues
       for (let i = 0; i < 10; i++) {
         rerender(<RouteTransition {...defaultProps} animationSpeed={i + 1} />);
       }
-      
+
       expect(screen.getByTestId('route-transition')).toBeInTheDocument();
     });
   });
 
   describe('Error Handling', () => {
     it('handles missing children gracefully', () => {
-      expect(() => render(<RouteTransition>{null}</RouteTransition>)).not.toThrow();
+      expect(() =>
+        render(<RouteTransition>{null}</RouteTransition>),
+      ).not.toThrow();
     });
 
     it('handles invalid animation values gracefully', () => {
-      expect(() => 
+      expect(() =>
         render(
-          <RouteTransition 
-            {...defaultProps} 
-            animationSpeed={-1} 
-            exitDuration={-100} 
-            enterDelay={-50} 
-          />
-        )
+          <RouteTransition
+            {...defaultProps}
+            animationSpeed={-1}
+            exitDuration={-100}
+            enterDelay={-50}
+          />,
+        ),
       ).not.toThrow();
     });
 
     it('handles pathname changes during transition', async () => {
       const { rerender } = render(<RouteTransition {...defaultProps} />);
-      
+
       // Rapid pathname changes
       mockUsePathname.mockReturnValue('/path-1');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       mockUsePathname.mockReturnValue('/path-2');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       mockUsePathname.mockReturnValue('/path-3');
       rerender(<RouteTransition {...defaultProps} />);
-      
+
       // Should handle rapid changes without errors
       expect(screen.getByTestId('route-transition')).toBeInTheDocument();
     });
@@ -327,9 +353,9 @@ describe('RouteTransition', () => {
         <RouteTransition {...defaultProps}>
           <button>Accessible Button</button>
           <input aria-label="Accessible Input" />
-        </RouteTransition>
+        </RouteTransition>,
       );
-      
+
       expect(screen.getByRole('button')).toBeInTheDocument();
       expect(screen.getByLabelText('Accessible Input')).toBeInTheDocument();
     });
@@ -338,9 +364,9 @@ describe('RouteTransition', () => {
       render(
         <RouteTransition {...defaultProps}>
           <button tabIndex={0}>Focusable Button</button>
-        </RouteTransition>
+        </RouteTransition>,
       );
-      
+
       const button = screen.getByRole('button');
       button.focus();
       expect(document.activeElement).toBe(button);
