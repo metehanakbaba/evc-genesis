@@ -13,7 +13,6 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Modal } from '@ui/display';
 import { Button } from '@ui/forms';
 import type React from 'react';
-import { useEffect } from 'react';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;

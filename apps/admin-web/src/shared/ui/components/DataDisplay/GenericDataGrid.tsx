@@ -1,6 +1,5 @@
 'use client';
 
-import { EyeIcon } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
 import type React from 'react';
 import { useInfiniteScrollTrigger } from '../../hooks/useInfiniteScrollTrigger';
