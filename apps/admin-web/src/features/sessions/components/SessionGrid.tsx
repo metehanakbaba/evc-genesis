@@ -148,8 +148,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
 
   return (
     <div className={className}>
-      {/* Session Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* Session Grid - Improved spacing and responsiveness */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 lg:gap-5 xl:gap-6">
         {sessions.map((session, index) => {
           const statusConfig = getStatusConfig(session.status);
           const SessionIcon = getSessionIcon(session.status);
@@ -161,92 +161,92 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
               className="group relative"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              {/* Revolutionary Floating Session Card */}
+              {/* Revolutionary Floating Session Card - Optimized dimensions */}
               <div
-                className={`relative p-6 ${statusConfig.bgColor} border ${statusConfig.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer ${statusConfig.shadowColor} h-[320px] flex flex-col`}
+                className={`relative p-4 lg:p-5 ${statusConfig.bgColor} border ${statusConfig.borderColor} rounded-xl lg:rounded-2xl backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5 cursor-pointer ${statusConfig.shadowColor} min-h-[280px] max-h-[320px] flex flex-col will-change-transform`}
               >
                 {/* Live Status Pulse */}
                 {isActive && (
                   <div
-                    className={`absolute -top-2 -right-2 w-4 h-4 ${statusConfig.pulseColor} rounded-full animate-ping opacity-75`}
+                    className={`absolute -top-1 -right-1 w-3 h-3 ${statusConfig.pulseColor} rounded-full animate-ping opacity-75`}
                   ></div>
                 )}
 
-                {/* Floating Background Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                {/* Floating Background Effect - Optimized */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl lg:rounded-2xl will-change-opacity"></div>
 
                 {/* Session Content */}
                 <div className="relative z-10 flex flex-col h-full">
-                  {/* Header Section */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
+                  {/* Header Section - Compact */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-12 h-12 rounded-xl ${statusConfig.badgeColor} border flex items-center justify-center`}
+                        className={`w-10 h-10 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl ${statusConfig.badgeColor} border flex items-center justify-center transition-transform duration-200 group-hover:scale-105 will-change-transform`}
                       >
-                        <SessionIcon className={`w-6 h-6 ${statusConfig.textColor}`} />
+                        <SessionIcon className={`w-5 h-5 lg:w-6 lg:h-6 ${statusConfig.textColor} transition-transform duration-200 group-hover:scale-110`} />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div
-                          className={`text-sm font-medium ${statusConfig.textColor} mb-1`}
+                          className={`text-xs font-medium ${statusConfig.textColor} mb-0.5 transition-colors duration-200`}
                         >
                           {session.status.toUpperCase()}
                         </div>
-                        <div className="text-white font-semibold text-lg">
-                          Session #{session.id.slice(-6)}
+                        <div className="text-white font-semibold text-base lg:text-lg truncate transition-colors duration-200 group-hover:text-gray-100">
+                          #{session.id.slice(-6)}
                         </div>
                       </div>
                     </div>
 
-                    {/* Power Output Badge */}
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-white">
+                    {/* Power Output Badge - Compact */}
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-xl lg:text-2xl font-bold text-white transition-transform duration-200 group-hover:scale-105">
                         {session.power_output}kW
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-400 transition-colors duration-200">
                         {session.connector_type}
                       </div>
                     </div>
                   </div>
 
-                  {/* Station & User Info */}
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-gray-300">
-                      <MapPinIcon className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">
+                  {/* Station & User Info - Improved spacing */}
+                  <div className="space-y-1.5 mb-3">
+                    <div className="flex items-center gap-2 text-gray-300 transition-colors duration-200 group-hover:text-gray-200">
+                      <MapPinIcon className="w-4 h-4 text-gray-400 flex-shrink-0 transition-colors duration-200 group-hover:text-gray-300" />
+                      <span className="text-sm truncate">
                         {session.station_name}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-gray-300">
-                      <UserIcon className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">{session.user_email}</span>
+                    <div className="flex items-center gap-2 text-gray-300 transition-colors duration-200 group-hover:text-gray-200">
+                      <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0 transition-colors duration-200 group-hover:text-gray-300" />
+                      <span className="text-sm truncate">{session.user_email}</span>
                     </div>
                   </div>
 
-                  {/* Energy & Cost Display */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-lg font-bold text-white">
+                  {/* Energy & Cost Display - Optimized */}
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="text-center p-2.5 bg-gray-800/30 rounded-lg transition-all duration-200 group-hover:bg-gray-800/40 group-hover:scale-105 will-change-transform">
+                      <div className="text-base lg:text-lg font-bold text-white transition-colors duration-200">
                         {session.energy_delivered.toFixed(1)}
                       </div>
-                      <div className="text-xs text-gray-400">
-                        kWh Delivered
+                      <div className="text-xs text-gray-400 transition-colors duration-200">
+                        kWh
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-lg font-bold text-teal-400">
+                    <div className="text-center p-2.5 bg-gray-800/30 rounded-lg transition-all duration-200 group-hover:bg-gray-800/40 group-hover:scale-105 will-change-transform">
+                      <div className="text-base lg:text-lg font-bold text-teal-400 transition-colors duration-200">
                         {session.current_cost.toFixed(2)} zł
                       </div>
-                      <div className="text-xs text-gray-400">
-                        Current Cost
+                      <div className="text-xs text-gray-400 transition-colors duration-200">
+                        Cost
                       </div>
                     </div>
                   </div>
 
-                  {/* Session Timeline */}
-                  <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                  {/* Session Timeline - Compact */}
+                  <div className="flex items-center justify-between text-sm text-gray-400 mb-3 transition-colors duration-200 group-hover:text-gray-300">
                     <div className="flex items-center gap-1">
-                      <ClockIcon className="w-4 h-4" />
-                      <span>
+                      <ClockIcon className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                      <span className="text-xs">
                         {formatSessionDuration(
                           session.started_at,
                           session.ended_at,
@@ -255,7 +255,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                     </div>
                     {session.estimated_completion &&
                       session.status === 'charging' && (
-                        <div className="text-emerald-400">
+                        <div className="text-emerald-400 text-xs transition-colors duration-200 group-hover:text-emerald-300">
                           ~
                           {new Date(
                             session.estimated_completion,
@@ -267,8 +267,8 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                       )}
                   </div>
 
-                  {/* Revolutionary Action Buttons */}
-                  <div className="flex gap-2 mt-auto">
+                  {/* Action Buttons - Improved spacing */}
+                  <div className="flex gap-2 mt-auto pt-2">
                     <Button
                       size="sm"
                       variant="ghost"
@@ -280,18 +280,20 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                         text-gray-300 hover:text-white
                         border border-gray-600/30 hover:border-gray-500/50
                         shadow-md hover:shadow-lg
-                        transition-all duration-300 ease-out
-                        hover:scale-[1.02] active:scale-[0.98]
-                        flex items-center justify-center gap-2
+                        transition-all duration-200 ease-out
+                        hover:scale-[1.01] active:scale-[0.98]
+                        flex items-center justify-center gap-1.5
                         before:absolute before:inset-0 before:bg-gradient-to-r 
                         before:from-transparent before:via-white/10 before:to-transparent
                         before:translate-x-[-100%] hover:before:translate-x-[100%]
-                        before:transition-transform before:duration-500
+                        before:transition-transform before:duration-300
+                        py-2 text-xs lg:text-sm
+                        will-change-transform
                       "
                     >
-                      <div className="flex items-center gap-2 relative z-10">
-                        <EyeIcon className="w-4 h-4 group-hover/view:scale-110 transition-transform duration-300" />
-                        <span className="font-medium">View Details</span>
+                      <div className="flex items-center gap-1.5 relative z-10">
+                        <EyeIcon className="w-4 h-4 group-hover/view:scale-105 transition-transform duration-200" />
+                        <span className="font-medium">View</span>
                       </div>
                     </Button>
                     
@@ -301,18 +303,19 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
                         variant="ghost"
                         onClick={() => onStopSession?.(session)}
                         className="
-                          relative overflow-hidden p-3 group/stop
+                          relative overflow-hidden p-2 group/stop
                           bg-gradient-to-r from-red-500/15 via-red-400/10 to-red-500/15
                           hover:from-red-500/25 hover:via-red-400/20 hover:to-red-500/25
                           text-red-400 hover:text-red-300
                           border border-red-500/30 hover:border-red-400/50
                           shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20
-                          transition-all duration-300 ease-out
-                          hover:scale-110 active:scale-95
+                          transition-all duration-200 ease-out
+                          hover:scale-105 active:scale-95
                           flex items-center
+                          will-change-transform
                         "
                       >
-                        <StopIcon className="w-4 h-4 group-hover/stop:scale-110 transition-transform duration-300" />
+                        <StopIcon className="w-4 h-4 group-hover/stop:scale-105 transition-transform duration-200" />
                       </Button>
                     )}
                   </div>
@@ -325,7 +328,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
 
       {/* ✅ Infinite Scroll Loading Indicators */}
       {isLoadingMore && (
-        <div className="mt-8 flex items-center justify-center py-8">
+        <div className="mt-6 lg:mt-8 flex items-center justify-center py-6 lg:py-8">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 border-2 border-gray-600 border-t-emerald-400 rounded-full animate-spin"></div>
             <span className="text-gray-400 font-medium">Loading more sessions...</span>
@@ -350,7 +353,7 @@ export const SessionGrid: React.FC<SessionGridProps> = ({
 
       {/* ✅ End of List Indicator */}
       {!hasNextPage && sessions.length > 0 && total > 0 && (
-        <div className="mt-8 flex flex-col items-center justify-center py-8 text-center">
+        <div className="mt-6 lg:mt-8 flex flex-col items-center justify-center py-6 lg:py-8 text-center">
           <div className="w-12 h-12 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-full flex items-center justify-center mb-3">
             <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full"></div>
           </div>

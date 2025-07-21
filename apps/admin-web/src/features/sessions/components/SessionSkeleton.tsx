@@ -118,7 +118,7 @@ export const SessionGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 })
 
 /**
  * 📋 Session Table Skeleton
- * Skeleton for table row layout
+ * Skeleton for table row layout - Updated for compact two-line design
  */
 export const SessionTableSkeleton: React.FC<{ count?: number }> = ({ count = 10 }) => {
   return (
@@ -127,15 +127,11 @@ export const SessionTableSkeleton: React.FC<{ count?: number }> = ({ count = 10 
         <table className="w-full">
           <thead className="bg-gray-700/30 border-b border-gray-600/30">
             <tr>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Session</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Status</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Station</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">User</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Power</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Energy</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Cost</th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-gray-300">Duration</th>
-              <th className="text-right py-4 px-6 text-sm font-medium text-gray-300">Actions</th>
+              <th className="text-left py-4 px-4 text-sm font-medium text-gray-300 min-w-[200px]">Session Details</th>
+              <th className="text-left py-4 px-4 text-sm font-medium text-gray-300 min-w-[220px]">Station & User</th>
+              <th className="text-left py-4 px-4 text-sm font-medium text-gray-300 min-w-[160px]">Power & Energy</th>
+              <th className="text-left py-4 px-4 text-sm font-medium text-gray-300 min-w-[140px]">Duration & Cost</th>
+              <th className="text-right py-4 px-4 text-sm font-medium text-gray-300 min-w-[120px]">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700/30">
@@ -145,63 +141,76 @@ export const SessionTableSkeleton: React.FC<{ count?: number }> = ({ count = 10 
                 className="hover:bg-gray-700/20 transition-colors"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                {/* Session */}
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="w-8 h-8 rounded-lg" />
-                    <div className="space-y-1">
-                      <Skeleton className="h-4 w-16 rounded" />
-                      <Skeleton className="h-3 w-12 rounded" />
+                {/* Session Details */}
+                <td className="py-4 px-4">
+                  <div className="flex items-start gap-3">
+                    <Skeleton className="w-10 h-10 rounded-lg flex-shrink-0" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      {/* First line: Session ID and Status */}
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-4 w-16 rounded" />
+                        <Skeleton className="h-5 w-20 rounded-full" />
+                      </div>
+                      {/* Second line: Connector and duration */}
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-3 w-12 rounded" />
+                        <Skeleton className="w-3 h-3 rounded" />
+                        <Skeleton className="h-3 w-16 rounded" />
+                      </div>
                     </div>
                   </div>
                 </td>
                 
-                {/* Status */}
-                <td className="py-4 px-6">
-                  <Skeleton className="h-6 w-20 rounded-full" />
-                </td>
-                
-                {/* Station */}
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="w-4 h-4 rounded" />
-                    <Skeleton className="h-4 w-32 rounded" />
+                {/* Station & User */}
+                <td className="py-4 px-4">
+                  <div className="space-y-2">
+                    {/* Station line */}
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-4 h-4 rounded" />
+                      <Skeleton className="h-4 w-32 rounded" />
+                    </div>
+                    {/* User line */}
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-4 h-4 rounded" />
+                      <Skeleton className="h-4 w-28 rounded" />
+                    </div>
                   </div>
                 </td>
                 
-                {/* User */}
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="w-4 h-4 rounded" />
-                    <Skeleton className="h-4 w-28 rounded" />
+                {/* Power & Energy */}
+                <td className="py-4 px-4">
+                  <div className="space-y-2">
+                    {/* Power line */}
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-4 h-4 rounded" />
+                      <Skeleton className="h-4 w-16 rounded" />
+                    </div>
+                    {/* Energy line */}
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-4 h-4 rounded" />
+                      <Skeleton className="h-4 w-20 rounded" />
+                    </div>
                   </div>
                 </td>
                 
-                {/* Power */}
-                <td className="py-4 px-6">
-                  <Skeleton className="h-5 w-16 rounded" />
-                </td>
-                
-                {/* Energy */}
-                <td className="py-4 px-6">
-                  <Skeleton className="h-5 w-20 rounded" />
-                </td>
-                
-                {/* Cost */}
-                <td className="py-4 px-6">
-                  <Skeleton className="h-5 w-18 rounded" />
-                </td>
-                
-                {/* Duration */}
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-1">
-                    <Skeleton className="w-4 h-4 rounded" />
-                    <Skeleton className="h-4 w-16 rounded" />
+                {/* Duration & Cost */}
+                <td className="py-4 px-4">
+                  <div className="space-y-2">
+                    {/* Cost line */}
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-4 h-4 rounded" />
+                      <Skeleton className="h-4 w-18 rounded" />
+                    </div>
+                    {/* Time line */}
+                    <div className="flex items-center gap-1">
+                      <Skeleton className="w-3 h-3 rounded" />
+                      <Skeleton className="h-3 w-16 rounded" />
+                    </div>
                   </div>
                 </td>
                 
                 {/* Actions */}
-                <td className="py-4 px-6">
+                <td className="py-4 px-4">
                   <div className="flex items-center gap-2 justify-end">
                     <Skeleton className="w-8 h-8 rounded-lg" />
                     <Skeleton className="w-8 h-8 rounded-lg" />
