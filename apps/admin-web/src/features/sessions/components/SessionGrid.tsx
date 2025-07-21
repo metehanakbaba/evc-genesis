@@ -1,12 +1,10 @@
 'use client';
 
 import {
-  ArrowPathIcon,
   BoltIcon,
   CheckCircleIcon,
   ClockIcon,
   EyeIcon,
-  FireIcon,
   MapPinIcon,
   PlayIcon,
   StopIcon,

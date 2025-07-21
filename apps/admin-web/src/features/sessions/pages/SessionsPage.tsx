@@ -5,25 +5,13 @@ import {
   BanknotesIcon,
   BoltIcon,
   CheckCircleIcon,
-  ClockIcon,
-  EyeIcon,
   FireIcon,
-  MagnifyingGlassIcon,
-  MapPinIcon,
-  PlayIcon,
-  StopIcon,
-  TableCellsIcon,
-  UserIcon,
-  ViewColumnsIcon,
-  XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Button, Input, Select } from '@ui/forms';
 import { MainLayout, PageHeader, PageContainer } from '@ui/layout';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 import { SearchFilterBar, EmptyState } from '@/shared/ui/molecules';
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import type { SessionStatus } from '@/types/global.types';
 
 // ✅ Import new session components and hooks
 import { 

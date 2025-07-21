@@ -3,7 +3,6 @@
 import {
   BoltIcon,
   CheckCircleIcon,
-  ClockIcon,
   FireIcon,
   PlayIcon,
   ViewColumnsIcon,

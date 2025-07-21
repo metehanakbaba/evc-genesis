@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ArrowPathIcon,
   BoltIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -110,47 +109,7 @@ export const SessionTable: React.FC<SessionTableProps> = ({
     }
   };
 
-  // Color configuration for session status
-  const getStatusConfig = (status: string) => {
-    switch (status) {
-      case 'charging':
-        return {
-          badgeColor: 'bg-emerald-500/10 border-emerald-500/30',
-          textColor: 'text-emerald-400',
-          pulseColor: 'bg-emerald-500',
-        };
-      case 'starting':
-        return {
-          badgeColor: 'bg-blue-500/10 border-blue-500/30',
-          textColor: 'text-blue-400',
-          pulseColor: 'bg-blue-500',
-        };
-      case 'completed':
-        return {
-          badgeColor: 'bg-green-500/10 border-green-500/30',
-          textColor: 'text-green-400',
-          pulseColor: 'bg-green-500',
-        };
-      case 'failed':
-        return {
-          badgeColor: 'bg-red-500/10 border-red-500/30',
-          textColor: 'text-red-400',
-          pulseColor: 'bg-red-500',
-        };
-      case 'cancelled':
-        return {
-          badgeColor: 'bg-gray-500/10 border-gray-500/30',
-          textColor: 'text-gray-400',
-          pulseColor: 'bg-gray-500',
-        };
-      default:
-        return {
-          badgeColor: 'bg-gray-500/10 border-gray-500/30',
-          textColor: 'text-gray-400',
-          pulseColor: 'bg-gray-500',
-        };
-    }
-  };
+
 
   return (
     <div className={className}>
@@ -179,7 +138,7 @@ export const SessionTable: React.FC<SessionTableProps> = ({
             </thead>
             <tbody className="divide-y divide-gray-700/30">
               {sessions.map((session) => {
-                const statusConfig = getStatusConfig(session.status);
+                const statusConfig = getSessionStatusConfig(session.status as any);
                 const SessionIcon = getSessionIcon(session.status);
                 const isActive = session.status === 'charging' || session.status === 'starting';
                 
