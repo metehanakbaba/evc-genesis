@@ -1,4 +1,5 @@
-// StationsSearchSection.tsx
+'use client'
+
 import React from 'react';
 import { SearchFilterBar } from '@/shared/ui';
 

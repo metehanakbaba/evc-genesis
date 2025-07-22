@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  BanknotesIcon,
   BoltIcon,
   CheckCircleIcon,
   FireIcon,
@@ -10,8 +9,6 @@ import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
 import type React from 'react';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
-import { useBulkSelection } from '@/shared/ui';
-
 
 // ✅ Import new session components and hooks
 import {
@@ -19,28 +16,22 @@ import {
   useSearchDebounce,
   useSessionActions,
   useSessionStatistics,
-} from '../components';
-import { GenericFilterGroup, GenericFilterModal, QuickFilterGroup, QuickFilterButtons } from '@/shared/ui';
-import SessionBulkActions from '../components/SessionBulkActions';
-import SessionsDataSection from '../components/SessionsDataSection';
-import { SessionStatsSection } from '../components/SessionStatsSection';
-import { SessionSearchSection } from '../components/SessionSearchSection';
-
-// Type for icon components - fixed for Heroicons
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  SessionBulkActions, 
+  SessionSearchSection,
+  SessionsDataSection, 
+  SessionStatsSection
+} from '@/features/sessions/components';
+import { GenericFilterGroup, GenericFilterModal, QuickFilterGroup, QuickFilterButtons, useBulkSelection } from '@/shared/ui';
 
 /**
- * 📊 Live Session Statistics
- * Revolutionary floating stats with real-time data
+ * 📊 Session Statistics Data
+ * Interface for session statistics data
  */
-interface SessionStats {
-  readonly title: string;
-  readonly value: string;
-  readonly icon: IconComponent;
-  readonly variant: 'emerald' | 'blue' | 'teal' | 'purple' | 'amber';
-  readonly trend: string;
-  readonly description: string;
-  readonly isLive?: boolean;
+interface SessionStatsData {
+  totalSessions: { formatted: string; count: number };
+  activeSessions: { formatted: string; percentage: string };
+  completedSessions: { formatted: string };
+  newSessionsToday: { formatted: string };
 }
 
 /**
@@ -66,11 +57,6 @@ const SessionsPage: React.FC = () => {
 
   const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
 
-  const {    viewDetails,
-    stopSession,
-  } = useSessionActions();
-
-
   const { sessions, isLoading, isLoadingMore, hasNextPage, loadMore, total, error } =
     useInfiniteSessions({
       filters: {
@@ -82,54 +68,41 @@ const SessionsPage: React.FC = () => {
       pageSize: 20,
     });
 
-        // ✅ Bulk selection management
-    const { selectedIds, selectedCount, clearSelection } =
-      useBulkSelection(sessions);
+  // ✅ Bulk selection management
+  const { 
+    selectedIds,
+    selectedCount,
+    toggleItem,
+    toggleAll,
+    clearSelection,
+   } = useBulkSelection(sessions);
 
-      const {      
-        activeSessions,
-      totalPowerOutput,
-      completedToday,
-      revenueFlow,} = useSessionStatistics();
+  const { activeSessions, completedToday } = useSessionStatistics();
 
-  // Revolutionary floating stats with live data
-  const sessionStats: SessionStats[] = [
-    {
-      title: 'Active Sessions',
-      value: activeSessions.formatted,
-      icon: BoltIcon,
-      variant: 'emerald',
-      trend: '+3 in last hour',
-      description: 'Currently charging vehicles with live power monitoring',
-      isLive: true,
+  const {  
+    viewDetails,
+    stopSession,
+    retrySession,
+    forceStopSession,
+  } = useSessionActions();
+
+  // ✅ Prepare session stats data
+  const sessionStatsData: SessionStatsData = {
+    totalSessions: {
+      formatted: '2,847',
+      count: 2847,
     },
-    {
-      title: 'Power Output',
-      value: totalPowerOutput.formatted,
-      icon: FireIcon,
-      variant: 'amber',
-      trend: '↗️ Peak load active',
-      description: 'Total network power consumption in real-time',
-      isLive: true,
+    activeSessions: {
+      formatted: activeSessions.formatted,
+      percentage: '85',
     },
-    {
-      title: 'Completed Today',
-      value: completedToday.formatted,
-      icon: CheckCircleIcon,
-      variant: 'blue',
-      trend: '+15% vs yesterday',
-      description: 'Successfully completed charging sessions',
+    completedSessions: {
+      formatted: completedToday.formatted,
     },
-    {
-      title: 'Revenue Flow',
-      value: revenueFlow.formatted,
-      icon: BanknotesIcon,
-      variant: 'teal',
-      trend: '+22% revenue growth',
-      description: 'Live revenue from active charging sessions',
-      isLive: true,
+    newSessionsToday: {
+      formatted: '156',
     },
-  ];
+  };
 
 
   const filterGroups = useMemo((): GenericFilterGroup[] => [
@@ -246,7 +219,7 @@ const SessionsPage: React.FC = () => {
 
       <PageContainer paddingY="lg" className="space-y-10">
 
-        <SessionStatsSection stats={sessionStats} />
+        <SessionStatsSection sessionStats={sessionStatsData} />
 
         <SessionSearchSection 
           searchQuery={searchQuery}
@@ -271,13 +244,19 @@ const SessionsPage: React.FC = () => {
           isLoading={isLoading}
           isLoadingMore={isLoadingMore}
           hasNextPage={hasNextPage}
-          total={total}
+          totalSessions={total}
           viewMode={viewMode}
           onLoadMore={loadMore}
           onViewDetails={viewDetails}
           onStopSession={stopSession}
+          onRetrySession={retrySession}
+          onForceStopSession={forceStopSession}
           error={error}
           onClear={clearSelection}
+          selectable={true}
+          onSelectAll={() => toggleAll(true)}
+          onSelectItem={toggleItem}
+          selectedItems={new Set(selectedIds)}  
           />
       </PageContainer>
 

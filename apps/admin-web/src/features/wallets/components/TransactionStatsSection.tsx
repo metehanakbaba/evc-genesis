@@ -2,10 +2,11 @@
 
 import {
   ArrowTrendingUpIcon,
-  BoltIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  PlayIcon,
+  ArrowPathIcon,
+  BanknotesIcon,
+  ChartBarIcon,
+  ReceiptRefundIcon,
+  WalletIcon,
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 
@@ -13,10 +14,10 @@ import type React from 'react';
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 /**
- * ⚡ Session Management Statistics
- * Revolutionary floating stats with charging session data
+ * 💳 Wallet Management Statistics
+ * Revolutionary floating stats with financial data
  */
-interface SessionStats {
+interface TransactionStats {
   readonly title: string;
   readonly value: string;
   readonly icon: IconComponent;
@@ -29,75 +30,74 @@ interface SessionStats {
   readonly isLive?: boolean;
 }
 
-interface SessionStatsData {
-  totalSessions: { formatted: string; count: number };
-  activeSessions: { formatted: string; percentage: string };
-  completedSessions: { formatted: string };
-  newSessionsToday: { formatted: string };
+interface TransactionStatsData {
+  totalBalance: { formatted: string; amount: number };
+  dailyVolume: { formatted: string; count: number };
+  revenue: { formatted: string; percentage: string };
+  refundLiabilities: { formatted: string; pending: number };
 }
 
-interface SessionStatsSectionProps {
-  sessionStats: SessionStatsData;
+interface TransactionStatsSectionProps {
+  transactionStats: TransactionStatsData;
 }
 
 /**
- * 📊 Session Statistics Section Component
- * Displays enterprise charging session analytics
+ * 📊 Transaction Statistics Section Component
+ * Displays enterprise treasury management analytics
  */
-export const SessionStatsSection: React.FC<SessionStatsSectionProps> = ({ sessionStats }) => {
-  const { totalSessions, activeSessions, completedSessions, newSessionsToday } = sessionStats;
+export const TransactionStatsSection: React.FC<TransactionStatsSectionProps> = ({ transactionStats }) => {
+  const { totalBalance, dailyVolume, revenue, refundLiabilities } = transactionStats;
 
-  // Enterprise charging session management statistics
-  const statsConfig: SessionStats[] = [
+  // Enterprise treasury and financial management statistics
+  const statsConfig: TransactionStats[] = [
     {
-      title: 'Total Sessions',
-      value: totalSessions.formatted,
-      icon: BoltIcon,
-      bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
-      borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
-      iconColor: 'text-emerald-400',
-      accentColor: 'bg-emerald-500',
-      trend: `+${newSessionsToday.formatted} today`,
+      title: 'Consolidated Balance',
+      value: totalBalance.formatted,
+      icon: WalletIcon,
+      bgColor: 'from-teal-500/15 via-teal-400/8 to-transparent',
+      borderColor: 'border-teal-400/30 hover:border-teal-300/50',
+      iconColor: 'text-teal-400',
+      accentColor: 'bg-teal-500',
+      trend: '+2,847 zł this week',
       description:
-        'Total charging sessions initiated across all stations with comprehensive energy delivery tracking',
+        'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
       isLive: true,
     },
     {
-      title: 'Active Sessions',
-      value: activeSessions.formatted,
-      icon: PlayIcon,
+      title: 'Daily Transaction Volume',
+      value: dailyVolume.formatted,
+      icon: ArrowPathIcon,
       bgColor: 'from-blue-500/15 via-blue-400/8 to-transparent',
       borderColor: 'border-blue-400/30 hover:border-blue-300/50',
       iconColor: 'text-blue-400',
       accentColor: 'bg-blue-500',
-      trend: `${activeSessions.percentage}% of capacity`,
+      trend: '+156 since morning',
       description:
-        'Currently active charging sessions with real-time energy delivery and payment processing',
-      isLive: true,
+        'Real-time payment processing velocity including charging transactions, wallet top-ups, and automated billing cycles',
     },
     {
-      title: 'Completed Sessions',
-      value: completedSessions.formatted,
-      icon: CheckCircleIcon,
-      bgColor: 'from-purple-500/15 via-purple-400/8 to-transparent',
-      borderColor: 'border-purple-400/30 hover:border-purple-300/50',
-      iconColor: 'text-purple-400',
-      accentColor: 'bg-purple-500',
-      trend: 'Successfully finished',
+      title: 'Revenue Recognition',
+      value: revenue.formatted,
+      icon: ChartBarIcon,
+      bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
+      borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
+      iconColor: 'text-emerald-400',
+      accentColor: 'bg-emerald-500',
+      trend: `${revenue.percentage}% vs last month`,
       description:
-        'Successfully completed charging sessions with full payment settlement and energy delivery confirmation',
+        'Comprehensive revenue streams from energy consumption, infrastructure utilization, and premium service offerings',
     },
     {
-      title: 'New Sessions Today',
-      value: newSessionsToday.formatted,
-      icon: ClockIcon,
+      title: 'Refund Liabilities',
+      value: refundLiabilities.formatted,
+      icon: ReceiptRefundIcon,
       bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
       borderColor: 'border-amber-400/30 hover:border-amber-300/50',
       iconColor: 'text-amber-400',
       accentColor: 'bg-amber-500',
-      trend: '+12 this hour',
+      trend: `${refundLiabilities.pending} pending`,
       description:
-        'New charging sessions initiated within the last 24-hour operational cycle with automated billing',
+        'Outstanding customer reimbursement obligations requiring payment processor validation and compliance approval',
       isLive: true,
     },
   ];
@@ -105,14 +105,14 @@ export const SessionStatsSection: React.FC<SessionStatsSectionProps> = ({ sessio
   return (
     <section>
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-3 h-8 bg-gradient-to-b from-emerald-400 to-emerald-300 rounded-full"></div>
+        <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <BoltIcon className="w-6 h-6 text-emerald-400" />
-            Live Session Analytics
+            <BanknotesIcon className="w-6 h-6 text-teal-400" />
+            Financial Operations Dashboard
           </h2>
           <p className="text-gray-400">
-            Real-time charging session metrics and energy delivery intelligence
+            Real-time treasury analytics, liquidity monitoring, and payment infrastructure intelligence
           </p>
         </div>
       </div>
