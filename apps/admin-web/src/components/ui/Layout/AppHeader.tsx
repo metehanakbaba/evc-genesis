@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useAuthMiddleware } from '@/features/auth/hooks/useAuthMiddleware';
 import React from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components';
 
@@ -38,12 +39,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onToggleNotificationSidebar,
 }) => {
   const router = useRouter();
+  const { logout } = useAuthMiddleware();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 
   const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
-    router.push('/auth/login');
+    logout();
   };
 
   const getGreeting = () => {

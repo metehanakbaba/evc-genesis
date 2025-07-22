@@ -2,107 +2,76 @@
 
 // ✅ Import shared business logic
 import { validateEmail, validatePassword } from '@evc/shared-business-logic';
-import { useRouter } from 'next/navigation';
-import { useActionState, useCallback } from 'react'; // React 19: New hook!
-import { useAppDispatch } from '@/lib/store/hooks';
+import { useCallback } from 'react';
 import { getApiErrorMessage } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
-import { loginSuccess } from '../authSlice';
+import { useAuthMiddleware } from './useAuthMiddleware';
 
-// React 19: Action state interface
+// Simplified login state interface
 interface LoginState {
   success?: boolean;
   error?: string;
-  pending?: boolean;
 }
 
 export const useAuthForm = () => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
   const { showToast } = useToast();
-  const [login] = useLoginMutation();
+  const [login, { isLoading: isLoginLoading, error: loginError }] = useLoginMutation();
+  const { login: authLogin } = useAuthMiddleware();
 
-  // React 19: useActionState replaces complex state management!
-  const [state, submitAction, isPending] = useActionState(
-    async (
-      previousState: LoginState | null,
-      formData: FormData,
-    ): Promise<LoginState> => {
-      try {
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
+  // Simplified login action without useActionState
+  const submitAction = useCallback(async (formData: FormData) => {
+    try {
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-        if (!email || !password) {
-          return {
-            success: false,
-            error: 'Please fill in all fields',
-          };
-        }
+      if (!email || !password) {
+        throw new Error('Please fill in all fields');
+      }
 
-        // ✅ Use shared business logic instead of inline validation
-        const emailValidation = validateEmail(email);
-        if (!emailValidation.isValid) {
-          return {
-            success: false,
-            error: emailValidation.error,
-          };
-        }
+      // ✅ Use shared business logic instead of inline validation
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.isValid) {
+        throw new Error(emailValidation.error);
+      }
 
-        const passwordValidation = validatePassword(password);
-        if (!passwordValidation.isValid) {
-          return {
-            success: false,
-            error: passwordValidation.error,
-          };
-        }
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.isValid) {
+        throw new Error(passwordValidation.error);
+      }
 
-        // Perform login
-        const result = await login({ email, password }).unwrap();
+      // Perform login
+      const result = await login({ email, password }).unwrap();
 
-        if (result.success) {
-          dispatch(
-            loginSuccess({
-              user: result.data.user,
-              token: result.data.token,
-            }),
-          );
-
-          showToast({
-            type: 'success',
-            title: 'Welcome back!',
-            message: 'Successfully signed in',
-          });
-
-          // Navigate to dashboard
-          router.push('/');
-
-          return {
-            success: true,
-          };
-        }
-
-        return {
-          success: false,
-          error: 'Login failed. Please check your credentials.',
-        };
-      } catch (error) {
-        const errorMessage = getApiErrorMessage(error);
-
-        showToast({
-          type: 'error',
-          title: 'Sign in failed',
-          message: errorMessage,
+      if (result.success) {
+        // Use auth middleware to handle login (Redux + cookies + navigation)
+        authLogin({
+          user: result.data.user,
+          token: result.data.token,
         });
 
-        return {
-          success: false,
-          error: errorMessage,
-        };
+        showToast({
+          type: 'success',
+          title: 'Welcome back!',
+          message: 'Successfully signed in',
+        });
+
+        return { success: true };
       }
-    },
-    null, // Initial state
-  );
+
+      throw new Error('Login failed. Please check your credentials.');
+    } catch (error) {
+      const errorMessage = getApiErrorMessage(error);
+
+      showToast({
+        type: 'error',
+        title: 'Sign in failed',
+        message: errorMessage,
+      });
+
+      throw error; // Re-throw for form handling
+    }
+  }, [login, authLogin, showToast]);
 
   const handleForgotPassword = useCallback(() => {
     showToast({
@@ -113,11 +82,10 @@ export const useAuthForm = () => {
   }, [showToast]);
 
   return {
-    // React 19: Much cleaner API!
+    // Simplified API with RTK Query loading state only
     submitAction,
-    isPending,
-    error: state?.error,
-    success: state?.success,
+    isLoading: isLoginLoading,
+    error: loginError,
     handleForgotPassword,
   };
 };

@@ -10,8 +10,9 @@
  */
 // @ts-nocheck - RTK Query type system is complex, suppressing for build
 
-import { createWebApi, webApiHelpers } from '@evc/shared-api';
+import { createWebApi } from '@evc/shared-api';
 import { logout } from '@/features/auth/authSlice';
+import { authStorage } from '@/lib/utils/auth-storage';
 import type { RootState } from '@/lib/store/store';
 
 /**
@@ -22,26 +23,18 @@ import type { RootState } from '@/lib/store/store';
  */
 // Create the API instance with proper typing
 const apiInstance = createWebApi({
-  baseUrl: 'https://api.evcharge.com/v1',
+  baseUrl: 'http://soft-tech-edu.com',
 
-  // Custom token getter that integrates with Redux auth slice
+  // Custom token getter that integrates with cookie storage
   getToken: () => {
-    // Try to get token from Redux state first (if available)
-    const state = (window as any).__REDUX_STATE__ as RootState | undefined;
-    const reduxToken = state?.auth?.token;
-
-    if (reduxToken) {
-      return reduxToken;
-    }
-
-    // Fallback to localStorage
-    return webApiHelpers.getAuthToken();
+    // Get token from cookie storage (single source of truth)
+    return authStorage.getToken();
   },
 
-  // Custom auth error handler that dispatches Redux logout
+  // Custom auth error handler that clears auth state
   onAuthError: () => {
-    // Clear token from localStorage
-    webApiHelpers.clearAuthToken();
+    // Clear auth storage
+    authStorage.clear();
 
     // Dispatch logout action to Redux (if store is available)
     const store = (window as any).__REDUX_STORE__;
@@ -50,7 +43,9 @@ const apiInstance = createWebApi({
     }
 
     // Redirect to login
-    window.location.href = '/login';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth';
+    }
   },
 });
 

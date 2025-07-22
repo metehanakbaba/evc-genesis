@@ -24,13 +24,20 @@ export const createWebApi = (config?: {
   const webConfig = {
     baseUrl: config?.baseUrl || defaultApiConfig.baseUrl,
     getToken: config?.getToken || (() => {
-      // Default: get token from localStorage
-      return localStorage.getItem('authToken');
+      // SSR Safe: get token from localStorage only on client side
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return localStorage.getItem('authToken');
+      }
+      return null;
     }),
     onAuthError: config?.onAuthError || (() => {
-      // Default: clear token and redirect to login
-      localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      // SSR Safe: clear token and redirect only on client side
+      if (typeof window !== 'undefined') {
+        if (window.localStorage) {
+          localStorage.removeItem('authToken');
+        }
+        window.location.href = '/login';
+      }
     }),
   };
 
@@ -39,26 +46,36 @@ export const createWebApi = (config?: {
 
 /**
  * 🎯 Web API Helpers
- * Utility functions for web-specific operations
+ * Utility functions for web-specific operations (SSR Safe)
  */
 export const webApiHelpers = {
-  // Store token in localStorage
+  // Store token in localStorage (SSR Safe)
   setAuthToken: (token: string) => {
-    localStorage.setItem('authToken', token);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('authToken', token);
+    }
   },
 
-  // Remove token from localStorage
+  // Remove token from localStorage (SSR Safe)
   clearAuthToken: () => {
-    localStorage.removeItem('authToken');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('authToken');
+    }
   },
 
-  // Get token from localStorage
+  // Get token from localStorage (SSR Safe)
   getAuthToken: () => {
-    return localStorage.getItem('authToken');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('authToken');
+    }
+    return null;
   },
 
-  // Check if user is authenticated
+  // Check if user is authenticated (SSR Safe)
   isAuthenticated: () => {
-    return !!localStorage.getItem('authToken');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return !!localStorage.getItem('authToken');
+    }
+    return false;
   },
 } as const; 

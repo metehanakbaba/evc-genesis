@@ -29,8 +29,11 @@ export const store = configureStore({
         ignoredPaths: ['api.queries', 'api.mutations'],
         // Custom serializable check for better performance
         isSerializable: (value: any) => {
-          if (value instanceof File || value instanceof FileList) {
-            return false;
+          // Check for File and FileList only on client side (SSR safe)
+          if (typeof window !== 'undefined') {
+            if (value instanceof File || (typeof FileList !== 'undefined' && value instanceof FileList)) {
+              return false;
+            }
           }
           return isPlain(value);
         },
