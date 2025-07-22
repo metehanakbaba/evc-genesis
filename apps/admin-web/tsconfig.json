@@ -48,7 +48,7 @@
       "@evc/shared-business-logic": ["../../packages/shared/business-logic/src/index.ts"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/features/stations/components/StationBulkActions.stx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": [
     "node_modules"
   ],
