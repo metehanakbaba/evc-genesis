@@ -24,12 +24,10 @@ import {
 } from '@/shared/ui';
 import { PageContainer } from '@/shared/ui/components/Layout';
 import { useSearchDebounce } from '@/shared/ui';
-import { useInfiniteStations, useStationStatistics, useStationActions } from '../hooks';
-import { StationStatsSection } from '../components/StationsStatsSection';
-import { StationsSearchSection } from '../components/StationsSearchSection';
-import { StationsDataSection } from '../components/StationsDataSection';
-import StationBulkActions from '../components/StationBulkActions';
-import { Station } from '../types/station.types';
+import { useInfiniteStations, useStationStatistics, useStationActions } from '@/features/stations/hooks';
+import { StationsSearchSection, StationStatsSection, StationsDataSection } from '@/features/stations/components/index';
+import StationBulkActions from '@/features/stations/components/StationBulkActions';
+import { Station } from '@/features/stations/types/station.types';
 
 /**
  * ⚡ Station Management Statistics
@@ -55,11 +53,10 @@ const connectorOptions = [
   { id: 'all', label: 'All Standards', icon: BoltIcon, color: 'gray' },
   { id: 'CCS2', label: 'CCS2', icon: BoltIcon, color: 'blue' },
   { id: 'CHAdeMO', label: 'CHAdeMO', icon: BoltIcon, color: 'purple' },
-  { id: 'Type2', label: 'Type 2', icon: BoltIcon, color: 'green' },
+  { id: 'Type2', label: 'Type 2', icon: BoltIcon, color: 'emerald' },
   { id: 'AC', label: 'AC', icon: BoltIcon, color: 'teal' },
   { id: 'DC', label: 'DC', icon: BoltIcon, color: 'red' },
 ] as const;
-
 
 const StationsPage: React.FC = () => {
   const router = useRouter();
@@ -104,6 +101,8 @@ const StationsPage: React.FC = () => {
     selectedIds,
     selectedCount,
     clearSelection,
+    toggleItem,
+    toggleAll
   } = useBulkSelection(stations as Station[])
 
   // Actions hook
@@ -260,6 +259,9 @@ const quickFilterGroups = useMemo<QuickFilterGroup[]>(
           onViewDetails={handleViewDetails}
           onEdit={handleEdit}
           onClearFilters={handleClearFilters}
+          selectedItems={new Set(selectedIds)}
+          onSelectItem={toggleItem}
+          onSelectAll={() => toggleAll(true)}
         />
       </PageContainer>
 

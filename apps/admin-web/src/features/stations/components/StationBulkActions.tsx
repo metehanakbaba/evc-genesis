@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useMemo } from 'react';
 import { XCircleIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BulkActionBar, type BulkAction } from '@/shared/ui';

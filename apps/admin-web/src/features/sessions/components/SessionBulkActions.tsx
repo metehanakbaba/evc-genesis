@@ -1,7 +1,9 @@
+'use client'
+
 import React, { useMemo } from 'react';
 import { BulkActionBar, type BulkAction } from '@/shared/ui';
 import { XCircleIcon, ArrowPathIcon, FireIcon } from '@heroicons/react/24/solid';
-import { useSessionActions } from '../hooks/useSessionActions'; // поправьте путь при необходимости
+import { useSessionActions } from '@/features/sessions/hooks/useSessionActions';
 
 interface SessionBulkActionsProps {
   selectedCount: number;

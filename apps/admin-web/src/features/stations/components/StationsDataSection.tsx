@@ -13,8 +13,6 @@ import {
   type TableColumn,
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
-import XCircleIcon from '@heroicons/react/24/outline';
-import { Button } from '@/shared/ui';
 import {
   EyeIcon,
   WrenchScrewdriverIcon,
@@ -38,6 +36,9 @@ interface StationsDataSectionProps {
   onViewDetails: (stationId: string) => void;
   onEdit: (station: Station) => void;
   onClearFilters: () => void;
+  selectedItems: Set<string>;
+  onSelectItem: (id: string) => void;
+  onSelectAll: () => void;
 }
 
 export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
@@ -49,84 +50,120 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
   viewMode,
   onLoadMore,
   onRefresh,
+  selectedItems,
+  onSelectItem,
+  onSelectAll,
   onViewDetails,
   onEdit,
   onClearFilters,
 }) => {
-  // Grid renderer
-  const gridRenderer = useMemo<GridCardRenderer<EnhancedStation>>(() => ({
-    getStatusConfig: (st) => {
-      const cfg: Record<string, DataGridStatusConfig> = {
-        active: {
-          bgColor: 'bg-emerald-500/10',
-          borderColor: 'border-emerald-500/25',
-          badgeColor: 'bg-emerald-500/10',
-          textColor: 'text-emerald-400',
-          pulseColor: 'bg-emerald-500',
-        },
-        offline: {
-          bgColor: 'bg-red-500/10',
-          borderColor: 'border-red-500/25',
-          badgeColor: 'bg-red-500/10',
-          textColor: 'text-red-400',
-          pulseColor: 'bg-red-500',
-        },
-        maintenance: {
-          bgColor: 'bg-amber-500/10',
-          borderColor: 'border-amber-500/25',
-          badgeColor: 'bg-amber-500/10',
-          textColor: 'text-amber-400',
-          pulseColor: 'bg-amber-500',
-        },
-      };
-      return cfg[st.status] ?? cfg.offline;
-    },
-    getAnimationDelay: (i) => `${i * 100}ms`,
-    renderHeader: (st) => {
-      const cfg = gridRenderer.getStatusConfig(st);
-      return (
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div
-              className={`
-                w-12 h-12 rounded-xl ${cfg.badgeColor} border ${cfg.borderColor}
-                flex items-center justify-center
-              `}
-            >
-              <BoltIcon className={`w-6 h-6 ${cfg.textColor}`} />
+  // ✅ Helper function to get station status config
+  const getStationStatusConfig = (station: EnhancedStation): DataGridStatusConfig => {
+    const statusConfigs = {
+      active: {
+        bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
+        borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
+        badgeColor: 'bg-emerald-500/10',
+        textColor: 'text-emerald-400',
+        pulseColor: 'bg-emerald-500',
+      },
+      offline: {
+        bgColor: 'from-red-500/15 via-red-400/8 to-transparent',
+        borderColor: 'border-red-400/30 hover:border-red-300/50',
+        badgeColor: 'bg-red-500/10',
+        textColor: 'text-red-400',
+        pulseColor: 'bg-red-500',
+      },
+      maintenance: {
+        bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
+        borderColor: 'border-amber-400/30 hover:border-amber-300/50',
+        badgeColor: 'bg-amber-500/10',
+        textColor: 'text-amber-400',
+        pulseColor: 'bg-amber-500',
+      },
+    };
+    return statusConfigs[station.status] || statusConfigs.offline;
+  };
+
+  // ✅ CREATE GRID RENDERER for GenericDataGrid
+  const gridRenderer = useMemo(
+    (): GridCardRenderer<EnhancedStation> => ({
+      getStatusConfig: (station: EnhancedStation): DataGridStatusConfig => {
+        return getStationStatusConfig(station);
+      },
+
+      getAnimationDelay: (index: number): string => `${index * 100}ms`,
+
+      renderHeader: (station: EnhancedStation): React.ReactNode => {
+        const statusConfig = getStationStatusConfig(station);
+
+        return (
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-12 h-12 rounded-xl ${statusConfig.badgeColor} flex items-center justify-center`}
+              >
+                <BoltIcon className={`w-6 h-6 ${statusConfig.textColor}`} />
+              </div>
+              <div>
+                <div
+                  className={`text-sm font-medium ${statusConfig.textColor} mb-1`}
+                >
+                  Charging Station
+                </div>
+                <div className="text-white font-semibold text-lg">
+                  {station.name}
+                </div>
+              </div>
             </div>
-            <h3 className="text-white font-semibold">{st.name}</h3>
+
+            {/* ✅ Use shared StatusBadge */}
+            <DataStatusBadge
+              status={{
+                variant: station.status === 'active' ? 'success' : 
+                         station.status === 'maintenance' ? 'warning' : 'danger',
+                label: station.status.charAt(0).toUpperCase() + station.status.slice(1),
+                pulse: station.status === 'active',
+              }}
+            />
           </div>
-          <DataStatusBadge
-            status={{
-              variant: st.status === 'active' ? 'success' : 'danger',
-              label: st.status[0].toUpperCase() + st.status.slice(1),
-              pulse: st.status === 'active',
-            }}
-          />
+        );
+      },
+
+      renderContent: (station: EnhancedStation): React.ReactNode => {
+        const available = station.connectors.filter((c) => c.status === 'available').length;
+        return (
+        <div className="h-full flex flex-1 flex-col">
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center gap-2 text-gray-300">
+              <MapPinIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <span className="text-sm truncate">{station.location.address}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-300">
+              <SignalIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <span className="text-sm">
+                {available}/{station.connectors.length} connectors available
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-auto pb-2">
+            <div className="flex items-center justify-between text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <BoltIcon className="w-4 h-4 flex-shrink-0" />
+                <span>ID: {station.id.slice(-11)}</span>
+              </div>
+              <div className="text-gray-300">
+                {station.location.address}
+              </div>
+            </div>
+          </div>
         </div>
-      );
-    },
-    renderContent: (st) => {
-      const available = st.connectors.filter((c) => c.status === 'available').length;
-      return (
-        <>
-          <div className="flex items-center gap-2 mb-2">
-            <MapPinIcon className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-300 line-clamp-1">
-              {st.location.address}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <SignalIcon className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-300">
-              {available}/{st.connectors.length} available
-            </span>
-          </div>
-        </>
-      );
-    },
-  }), []);
+        )
+      }
+    }),
+    [],
+  );
 
   // Grid action buttons
   const gridActions = useMemo<GridActionButton[]>(() => [
@@ -204,30 +241,45 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
     );
   }
 
-  // Data views
-  return viewMode === 'table' ? (
-    <GenericDataTable
-      items={enhanced}
-      columns={tableColumns}
-      actions={gridActions}
-      onLoadMore={onLoadMore}
-      isLoadingMore={isLoadingMore}
-      hasNextPage={hasNextPage}
-      total={total}
-      selectable={false}
-      hoverable
-    />
-  ) : (
-    <GenericDataGrid
-      items={enhanced}
-      renderer={gridRenderer}
-      actions={gridActions}
-      onLoadMore={onLoadMore}
-      isLoadingMore={isLoadingMore}
-      hasNextPage={hasNextPage}
-      total={total}
-      columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
-    />
+  return (
+    <>
+      {viewMode === 'table' && (
+        <GenericDataTable
+            items={enhanced}
+            columns={tableColumns}
+            actions={gridActions}
+            onLoadMore={onLoadMore}
+            isLoadingMore={isLoadingMore}
+            hasNextPage={hasNextPage}
+            selectable={true}
+            hoverable={true}
+            selectedItems={selectedItems}
+            onSelectItem={onSelectItem}
+            onSelectAll={onSelectAll}
+        />
+      )}
+
+      {viewMode === 'grid' && (
+        <GenericDataGrid
+          items={enhanced}
+          renderer={gridRenderer}
+          actions={gridActions}
+          onLoadMore={onLoadMore}
+          isLoadingMore={isLoadingMore}
+          hasNextPage={hasNextPage}
+          total={total}
+          columns={{
+            sm: 1,
+            md: 2,
+            lg: 3, 
+            xl: 3,
+            '2xl': 3
+          }}
+          gridClassName="gap-4 lg:gap-6"
+          cardClassName="min-h-[280px]"
+        />
+      )}
+    </>
   );
 };
 
