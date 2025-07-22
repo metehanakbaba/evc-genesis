@@ -144,7 +144,7 @@ export const SessionsDataSection: React.FC<SessionsDataSectionProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="mt-auto flex items-center justify-between text-sm text-gray-400">
+          <div className="mt-auto flex items-center justify-between text-sm text-gray-400 pb-3">
             <div className="flex items-center gap-2">
               <ClockIcon className="w-4 h-4 text-gray-400" />
               <span>
