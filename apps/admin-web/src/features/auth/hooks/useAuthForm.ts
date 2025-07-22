@@ -3,7 +3,7 @@
 // ✅ Import shared business logic
 import { validateEmail, validatePassword } from '@evc/shared-business-logic';
 import { useCallback } from 'react';
-import { getApiErrorMessage } from '@/shared/api/apiHelpers';
+import { getApiErrorMessage, formatApiError, isApiError } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { useAuthMiddleware } from './useAuthMiddleware';
@@ -43,17 +43,21 @@ export const useAuthForm = () => {
       // Perform login
       const result = await login({ email, password }).unwrap();
 
-      if (result.success) {
+      if (result.success && result.data) {
         // Use auth middleware to handle login (Redux + cookies + navigation)
         authLogin({
-          user: result.data.user,
+          user: {
+            ...result.data.user,
+            name: `${result.data.user.firstName} ${result.data.user.lastName}`, // Backward compatibility
+          },
           token: result.data.token,
+          expiresIn: result.data.expiresIn,
         });
 
         showToast({
           type: 'success',
-          title: 'Welcome back!',
-          message: 'Successfully signed in',
+          title: result.message || 'Welcome back!',
+          message: `Successfully signed in as ${result.data.user.firstName} ${result.data.user.lastName}`,
         });
 
         return { success: true };
@@ -61,12 +65,12 @@ export const useAuthForm = () => {
 
       throw new Error('Login failed. Please check your credentials.');
     } catch (error) {
-      const errorMessage = getApiErrorMessage(error);
-
+      const formattedError = formatApiError(error);
+      
       showToast({
         type: 'error',
-        title: 'Sign in failed',
-        message: errorMessage,
+        title: formattedError.title,
+        message: formattedError.message,
       });
 
       throw error; // Re-throw for form handling
@@ -76,7 +80,7 @@ export const useAuthForm = () => {
   const handleForgotPassword = useCallback(() => {
     showToast({
       type: 'info',
-      title: 'Coming Soon',
+      title: 'Password Reset',
       message: 'Password reset feature will be available soon',
     });
   }, [showToast]);

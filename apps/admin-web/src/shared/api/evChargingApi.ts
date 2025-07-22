@@ -33,6 +33,11 @@ const apiInstance = createWebApi({
 
   // Custom auth error handler that clears auth state
   onAuthError: () => {
+    // Don't handle auth errors if we're already on the auth page
+    if (typeof window !== 'undefined' && window.location.pathname.includes('/auth')) {
+      return; // Do nothing if we're on login page
+    }
+
     // Clear auth storage
     authStorage.clear();
 

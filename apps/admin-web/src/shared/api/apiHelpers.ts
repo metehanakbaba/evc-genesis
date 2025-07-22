@@ -46,7 +46,7 @@ export const handleAuthError = (
   dispatch: AppDispatch,
 ): void => {
   const errorCode = getApiErrorCode(error);
-  if (errorCode === 'UNAUTHORIZED' || errorCode === 'TOKEN_EXPIRED') {
+  if (errorCode === 'AUTHENTICATION_FAILED' || errorCode === 'AUTHENTICATION_REQUIRED' || errorCode === 'UNAUTHORIZED' || errorCode === 'TOKEN_EXPIRED') {
     dispatch(logout());
   }
 };
@@ -68,6 +68,41 @@ export const formatApiError = (
       return {
         title: 'Validation Error',
         message,
+      };
+    case 'AUTHENTICATION_FAILED':
+      return {
+        title: 'Authentication Failed',
+        message: 'Invalid credentials provided',
+      };
+    case 'AUTHENTICATION_REQUIRED':
+      return {
+        title: 'Authentication Required',
+        message: 'Please login to continue',
+      };
+    case 'INSUFFICIENT_PRIVILEGES':
+      return {
+        title: 'Access Denied',
+        message: 'You do not have permission to perform this action',
+      };
+    case 'USER_EXISTS':
+      return {
+        title: 'User Already Exists',
+        message: 'A user with this email already exists',
+      };
+    case 'USER_NOT_FOUND':
+      return {
+        title: 'User Not Found',
+        message: 'User account could not be found',
+      };
+    case 'REGISTRATION_FAILED':
+      return {
+        title: 'Registration Failed',
+        message: 'Failed to create user account. Please try again.',
+      };
+    case 'LOGIN_FAILED':
+      return {
+        title: 'Login Failed',
+        message: 'Failed to authenticate user. Please try again.',
       };
     case 'UNAUTHORIZED':
       return {

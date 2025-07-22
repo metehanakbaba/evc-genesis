@@ -7,7 +7,11 @@ export interface ApiResponse<T> {
   readonly success: boolean;
   readonly data: T;
   readonly message: string;
-  readonly timestamp: string;
+  readonly meta: {
+    readonly timestamp: string;
+    readonly requestId: string;
+    readonly version: string;
+  };
 }
 
 export interface ApiError {
@@ -17,7 +21,11 @@ export interface ApiError {
     readonly message: string;
     readonly details?: Record<string, unknown>;
   };
-  readonly timestamp: string;
+  readonly meta: {
+    readonly timestamp: string;
+    readonly requestId: string;
+    readonly version: string;
+  };
 }
 
 // Pagination types
@@ -50,5 +58,5 @@ export interface Location {
   readonly address: string;
 }
 
-// User role types
-export type UserRole = 'user' | 'admin' | 'operator';
+// User role types - Updated to match API specification
+export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';

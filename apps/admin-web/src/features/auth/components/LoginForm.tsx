@@ -1,6 +1,6 @@
 'use client';
 
-import { LockClosedIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { useState, useRef } from 'react';
 import { useAuthForm } from '../hooks/useAuthForm';
@@ -14,6 +14,7 @@ export const LoginForm: React.FC = () => {
     password: ''
   });
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   // Handle input changes to preserve form state
@@ -29,28 +30,46 @@ export const LoginForm: React.FC = () => {
     if (submitError) {
       setSubmitError(null);
     }
+    
+    // Reset success state when user starts typing again
+    if (isSuccess) {
+      setIsSuccess(false);
+    }
   };
 
   // Enhanced form submission with error handling
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // Prevent form submission and page reload
     event.preventDefault();
+    event.stopPropagation();
+    
     if (isLoading) return; // Prevent double submission
     
-    const form = event.currentTarget;
-    const formDataObj = new FormData(form);
-    
-    // Clear previous submit error
-    setSubmitError(null);
-    
     try {
+      const form = event.currentTarget;
+      const formDataObj = new FormData(form);
+      
+      // Clear previous states
+      setSubmitError(null);
+      setIsSuccess(false);
+      
       // Call the action with form data
       await submitAction(formDataObj);
       
-      // Success - clear form
+      // Success - show success state briefly before redirect
+      setIsSuccess(true);
       setFormData({ email: '', password: '' });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      // Extract error message - handle both API errors and regular errors
+      let errorMessage = 'An unexpected error occurred';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
       setSubmitError(errorMessage);
+      setIsSuccess(false);
     }
   };
 
@@ -126,14 +145,14 @@ export const LoginForm: React.FC = () => {
                   Password
                 </label>
                 <div className="relative">
-                  {/* Lock Icon */}
+                  {/* Icon Container */}
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10" aria-hidden="true">
                     <LockClosedIcon className={`w-4 h-4 transition-colors duration-200 ${
                       isLoading ? 'text-slate-500' : 'text-slate-400'
                     }`} />
                   </div>
                   
-                  {/* Enhanced Password Input */}
+                  {/* Enhanced Input */}
                   <input
                     id="password"
                     name="password"
@@ -144,7 +163,7 @@ export const LoginForm: React.FC = () => {
                     autoComplete="current-password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    aria-describedby={showPassword ? 'password-visible' : 'password-hidden'}
+                    aria-describedby={submitError ? 'form-error' : 'password-visibility-toggle'}
                     className={`w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 transition-all duration-200 ${
                       isLoading 
                         ? 'cursor-not-allowed opacity-60' 
@@ -152,7 +171,7 @@ export const LoginForm: React.FC = () => {
                     }`}
                   />
                   
-                  {/* Eye Icon Toggle */}
+                  {/* Enhanced Password Toggle */}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -180,12 +199,26 @@ export const LoginForm: React.FC = () => {
             </fieldset>
 
             {/* 🚨 Enhanced Error Display */}
-            {submitError && !isLoading && (
+            {submitError && !isLoading && !isSuccess && (
               <aside className="relative" role="alert" aria-live="polite">
                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                   <div id="form-error" className="flex items-center space-x-3">
                     <ExclamationTriangleIcon className="w-4 h-4 text-red-400 flex-shrink-0" aria-hidden="true" />
                     <p className="text-red-300 text-sm font-medium">{submitError}</p>
+                  </div>
+                </div>
+              </aside>
+            )}
+
+
+
+            {/* ✅ Success Display */}
+            {isSuccess && !isLoading && (
+              <aside className="relative" role="status" aria-live="polite">
+                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircleIcon className="w-4 h-4 text-emerald-400 flex-shrink-0" aria-hidden="true" />
+                    <p className="text-emerald-300 text-sm font-medium">Successfully signed in! Redirecting...</p>
                   </div>
                 </div>
               </aside>
@@ -214,7 +247,7 @@ export const LoginForm: React.FC = () => {
               </span>
             </div>
 
-            {/* �� Forgot Password */}
+            {/* 🔐 Forgot Password */}
             <nav className="text-center pt-2">
               <button
                 type="button"

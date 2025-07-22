@@ -20,17 +20,35 @@ export const useAuthMiddleware = () => {
   /**
    * Login function that sets both Redux state and cookie storage
    */
-  const login = useCallback((userData: { user: User; token: string }) => {
+  const login = useCallback((userData: { user: User; token: string; expiresIn?: string }) => {
     // Update Redux state
     dispatch(loginSuccess(userData));
     
     // Store token in cookie (single source of truth)
     authStorage.setToken(userData.token);
     
-    // Navigate to dashboard or redirect URL
+    // Navigate to appropriate dashboard based on user role
     const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirect') || '/';
-    router.push(redirectUrl);
+    const redirectUrl = urlParams.get('redirect');
+    
+    // Role-based redirection
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      switch (userData.user.role) {
+        case 'ADMIN':
+          router.push('/admin');
+          break;
+        case 'CUSTOMER':
+          router.push('/');
+          break;
+        case 'FIELD_WORKER':
+          router.push('/');
+          break;
+        default:
+          router.push('/');
+      }
+    }
   }, [dispatch, router]);
 
   /**
