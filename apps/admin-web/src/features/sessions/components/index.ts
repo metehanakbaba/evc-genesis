@@ -16,6 +16,11 @@ export { useDebounce, useSearchDebounce } from '../hooks/useDebounce';
 export { useInfiniteSessions } from '../hooks/useInfiniteSessions';
 export { useSessionActions } from '../hooks/useSessionActions';
 export { useSessionStatistics } from '../hooks/useSessionStatistics';
+export { SessionStatsSection } from "../components/SessionStatsSection";
+export { SessionsDataSection } from "../components/SessionsDataSection";
+export {SessionBulkActions} from "../components/SessionBulkActions";
+export {SessionSearchSection} from "../components/SessionSearchSection"
+
 // ✅ Session Types
 export type {
   ChargingSession,

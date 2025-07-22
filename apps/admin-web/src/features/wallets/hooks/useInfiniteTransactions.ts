@@ -66,7 +66,7 @@ export const useInfiniteTransactions = (
   // ✅ Build API query parameters
   const buildQueryParams = useCallback(
     (page: number): TransactionQueryParams => {
-      return {
+      const params: TransactionQueryParams = {
         page,
         limit: pageSize,
         search: filters.searchQuery?.trim() || undefined,
@@ -80,8 +80,24 @@ export const useInfiniteTransactions = (
             : undefined,
         sort_by: 'created_at',
         sort_order: 'desc',
-        // Note: amountRangeFilter can be handled client-side for now since it's a range filter
       };
+
+      // Handle amount range filtering
+      if (filters.amountRangeFilter && filters.amountRangeFilter !== 'all') {
+        switch (filters.amountRangeFilter) {
+          case 'large':
+            // Large amounts (500+ zł) - we'll filter client-side
+            break;
+          case 'medium':
+            // Medium amounts (100-500 zł) - we'll filter client-side
+            break;
+          case 'small':
+            // Small amounts (<100 zł) - we'll filter client-side
+            break;
+        }
+      }
+
+      return params;
     },
     [filters, pageSize],
   );
@@ -136,8 +152,26 @@ export const useInfiniteTransactions = (
           throw new Error('Invalid API response');
         }
 
+        // Apply amount range filtering client-side
+        let filteredTransactions = apiData.transactions;
+        if (filters.amountRangeFilter && filters.amountRangeFilter !== 'all') {
+          filteredTransactions = apiData.transactions.filter((transaction) => {
+            const amount = transaction.amount.amount;
+            switch (filters.amountRangeFilter) {
+              case 'large':
+                return amount >= 500;
+              case 'medium':
+                return amount >= 100 && amount < 500;
+              case 'small':
+                return amount < 100;
+              default:
+                return true;
+            }
+          });
+        }
+
         return {
-          transactions: apiData.transactions,
+          transactions: filteredTransactions,
           total: apiData.total,
           hasNextPage: apiData.hasNextPage || false,
         };
@@ -148,7 +182,7 @@ export const useInfiniteTransactions = (
         throw new Error('Failed to fetch transactions');
       }
     },
-    [buildQueryParams],
+    [buildQueryParams, filters.amountRangeFilter],
   );
 
   /**
