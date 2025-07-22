@@ -269,8 +269,8 @@ const quickFilterGroups = useMemo<QuickFilterGroup[]>(
       <GenericFilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        title=''
-        description=''
+        title='Stations Filters'
+        description='Filter stations by status, connector'
         filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
       />
