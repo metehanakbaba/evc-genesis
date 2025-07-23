@@ -29,9 +29,9 @@ import {
   UserSearchSection,
   type UserStatsData,
   UserStatsSection,
-} from '../components';
+} from '@/features/users/components';
 // ✅ Import API hooks and types
-import { useInfiniteUsers, useUserActions, useUserStatistics } from '../hooks';
+import { useInfiniteUsers, useUserActions, useUserStatistics } from '@/features/users/hooks';
 
 /**
  * 🚀 Revolutionary Users Management Page - Purple Theme

@@ -2,14 +2,11 @@
 
 import {
   ArrowDownTrayIcon,
-  ArrowPathIcon,
   ArrowUpIcon,
   BanknotesIcon,
   BoltIcon,
-  ChartBarIcon,
   CheckCircleIcon,
   ClockIcon,
-  EyeIcon,
   PlusIcon,
   ReceiptRefundIcon,
   ViewColumnsIcon,
@@ -17,10 +14,9 @@ import {
   XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from '@ui/forms';
 import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
 import type React from 'react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 // ✅ Import shared GenericFilterModal instead of custom TransactionFilterModal
 import {
   type FilterGroup,
@@ -29,32 +25,22 @@ import {
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 // ✅ Import shared debounce hook
 import { useSearchDebounce } from '@/shared/ui/hooks/useDebounce';
-import { EmptyState, SearchFilterBar } from '@/shared/ui/molecules';
 
 // ✅ Import API hooks and types
-import { useTransactionActions, useWalletStatistics } from '../api/walletApi';
+import { useTransactionActions, useWalletStatistics } from '@/features/wallets/api/walletApi';
 // ✅ Import new reusable components
-import { TransactionGrid, TransactionTable } from '../components';
-// ✅ Import skeleton components
-import {
-  TransactionGridSkeleton,
-  TransactionTableSkeleton,
-} from '../components/TransactionSkeleton';
-// ✅ Import infinite scroll hooks
-import { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
+import { TransactionStatsSection, TransactionSearchSection, TransactionsDataSection, TransactionBulkActions, useInfiniteTransactions} from '@/features/wallets/components/index';
+import { QuickFilterButtons, QuickFilterGroup, useBulkSelection } from '@/shared/ui';
 
 /**
- * 💳 Wallet Management Statistics
- * Revolutionary floating stats with financial data
+ * 💳 Transaction Statistics Data
+ * Interface for transaction statistics data
  */
-interface WalletStats {
-  readonly title: string;
-  readonly value: string;
-  readonly icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  readonly variant: 'teal' | 'blue' | 'emerald' | 'purple' | 'amber';
-  readonly trend: string;
-  readonly description: string;
-  readonly isLive?: boolean;
+interface TransactionStatsData {
+  totalBalance: { formatted: string; amount: number };
+  dailyVolume: { formatted: string; count: number };
+  revenue: { formatted: string; percentage: string };
+  refundLiabilities: { formatted: string; pending: number };
 }
 
 /**
@@ -104,7 +90,11 @@ const WalletsPage: React.FC = () => {
 
   const { totalBalance } = useWalletStatistics();
 
-  const { viewDetails, retryTransaction } = useTransactionActions();
+  const { viewDetails, retryTransaction, refundTransaction } = useTransactionActions();
+
+  // ✅ Bulk selection management
+  const { selectedIds, selectedCount, toggleItem, toggleAll, clearSelection } =
+    useBulkSelection(transactions);
 
   // ✅ Create revolutionary filter groups for GenericFilterModal
   const filterGroups: FilterGroup[] = [
@@ -218,47 +208,67 @@ const WalletsPage: React.FC = () => {
     },
   ];
 
-  // Revolutionary floating stats with financial data
-  const walletStats: WalletStats[] = [
+const quickFilterGroups: QuickFilterGroup[] = useMemo(
+  () => [
     {
-      title: 'Consolidated Balance',
-      value: totalBalance.formatted,
+      id: 'transaction-type',
+      title: 'Type',
       icon: WalletIcon,
-      variant: 'teal',
-      trend: '+2,847 zł this week',
-      description:
-        'Real-time aggregate digital wallet liquidity across all customer accounts with automated reconciliation and multi-currency support',
-      isLive: true,
+      selectedValue: typeFilter,
+      onChange: setTypeFilter,
+      options: [
+        { id: 'all', label: 'All', icon: WalletIcon, color: 'gray' },
+        { id: 'ADD_PLN_FUNDS', label: 'Top‑up', icon: ArrowDownTrayIcon, color: 'emerald' },
+        { id: 'CHARGING_PAYMENT', label: 'Payment', icon: BoltIcon, color: 'blue' },
+      ],
     },
     {
-      title: 'Daily Transaction Volume',
-      value: '1,284',
-      icon: ArrowPathIcon,
-      variant: 'blue',
-      trend: '+156 since morning',
-      description:
-        'Real-time payment processing velocity including charging transactions, wallet top-ups, and automated billing cycles',
+      id: 'transaction-status',
+      title: 'Status',
+      icon: ViewColumnsIcon,
+      selectedValue: statusFilter,
+      onChange: setStatusFilter,
+      options: [
+        { id: 'all', label: 'All', icon: ViewColumnsIcon, color: 'gray' },
+        { id: 'COMPLETED', label: 'Done', icon: CheckCircleIcon, color: 'emerald' },
+        { id: 'PENDING', label: 'Pending', icon: ClockIcon, color: 'amber' },
+      ],
     },
     {
-      title: 'Revenue Recognition',
-      value: '247,892.45 zł',
-      icon: ChartBarIcon,
-      variant: 'emerald',
-      trend: '+23.7% vs last month',
-      description:
-        'Comprehensive revenue streams from energy consumption, infrastructure utilization, and premium service offerings',
+      id: 'amount-range',
+      title: 'Amount',
+      icon: BanknotesIcon,
+      selectedValue: amountRangeFilter,
+      onChange: setAmountRangeFilter,
+      options: [
+        { id: 'all', label: 'All', icon: BanknotesIcon, color: 'gray' },
+        { id: 'large', label: '500+ zł', icon: BanknotesIcon, color: 'red' },
+        { id: 'small', label: '<100 zł', icon: BanknotesIcon, color: 'blue' },
+      ],
     },
-    {
-      title: 'Refund Liabilities',
-      value: '3,254.80 zł',
-      icon: ReceiptRefundIcon,
-      variant: 'amber',
-      trend: '18 pending',
-      description:
-        'Outstanding customer reimbursement obligations requiring payment processor validation and compliance approval',
-      isLive: true,
+  ],
+    [typeFilter, statusFilter, amountRangeFilter],
+  )
+
+  // ✅ Prepare transaction stats data
+  const transactionStatsData: TransactionStatsData = {
+    totalBalance: {
+      formatted: totalBalance.formatted,
+      amount: totalBalance.amount,
     },
-  ];
+    dailyVolume: {
+      formatted: '1,284',
+      count: 1284,
+    },
+    revenue: {
+      formatted: '247,892.45 zł',
+      percentage: '+23.7',
+    },
+    refundLiabilities: {
+      formatted: '3,254.80 zł',
+      pending: 18,
+    },
+  };
 
   // ✅ Filtering is now handled by useInfiniteTransactions hook
 
@@ -300,215 +310,51 @@ const WalletsPage: React.FC = () => {
 
       <PageContainer paddingY="lg" className="space-y-10">
         {/* Revolutionary Network Stats Section */}
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Financial Operations Dashboard
-              </h2>
-              <p className="text-gray-400">
-                Real-time treasury analytics, liquidity monitoring, and payment
-                infrastructure intelligence
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {walletStats.map((stat, index) => (
-              <div
-                key={stat.title}
-                className="group relative"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                {/* Revolutionary MinimalStatCard Design - Fixed Height */}
-                <div
-                  className={`
-                  relative p-6 bg-gradient-to-br from-${stat.variant}-500/10 via-${stat.variant}-400/5 to-transparent
-                  border border-${stat.variant}-400/25 hover:border-${stat.variant}-300/40
-                  rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl
-                  transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1
-                  cursor-pointer h-[320px] flex flex-col
-                `}
-                >
-                  {/* Live indicator */}
-                  {stat.isLive && (
-                    <div
-                      className={`absolute -top-2 -right-2 w-4 h-4 bg-${stat.variant}-500 rounded-full animate-ping opacity-75`}
-                    ></div>
-                  )}
-
-                  {/* Floating Background Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-                  {/* Content */}
-                  <div className="relative z-10 flex flex-col h-full">
-                    {/* Top Section - Icon and Value */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div
-                        className={`w-12 h-12 rounded-xl bg-${stat.variant}-500/10 border border-${stat.variant}-500/20 flex items-center justify-center`}
-                      >
-                        <stat.icon
-                          className={`w-6 h-6 text-${stat.variant}-400`}
-                        />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white mb-1">
-                          {stat.value}
-                        </div>
-                        <div
-                          className={`text-xs font-medium text-${stat.variant}-400`}
-                        >
-                          {stat.trend}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Middle Section - Title and Description */}
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="text-lg font-semibold text-white mb-2">
-                        {stat.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {stat.description}
-                      </p>
-                    </div>
-
-                    {/* Bottom Section - Button (always at bottom) */}
-                    <div className="mt-auto opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
-                      <div className="relative overflow-hidden rounded-lg">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className={`
-                            w-full relative overflow-hidden backdrop-blur-sm
-                            bg-gradient-to-r from-${stat.variant}-500/15 via-${stat.variant}-400/10 to-${stat.variant}-500/15
-                            border border-${stat.variant}-400/30 hover:border-${stat.variant}-300/50
-                            text-${stat.variant}-300 hover:text-white
-                            shadow-lg hover:shadow-${stat.variant}-500/25 hover:shadow-xl
-                            transition-all duration-300 ease-out
-                            hover:scale-[1.02] active:scale-[0.98]
-                            group/button flex items-center justify-center
-                          `}
-                        >
-                          {/* Shine Effect */}
-                          <div
-                            className={`
-                            absolute inset-0 z-0
-                            bg-gradient-to-r from-transparent via-white/15 to-transparent
-                            translate-x-[-100%] group-hover/button:translate-x-[100%]
-                            transition-transform duration-700 ease-out
-                          `}
-                          ></div>
-
-                          {/* Button Content */}
-                          <div className="flex items-center gap-2 relative z-10">
-                            <EyeIcon
-                              className={`w-4 h-4 text-${stat.variant}-400 group-hover/button:text-white transition-colors duration-300`}
-                            />
-                            <span className="font-medium text-sm">
-                              View Details
-                            </span>
-                            <div
-                              className={`w-1 h-1 bg-${stat.variant}-400 rounded-full opacity-60 group-hover/button:opacity-100 transition-opacity duration-300`}
-                            ></div>
-                          </div>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <TransactionStatsSection transactionStats={transactionStatsData} />
 
         {/* Revolutionary Transaction Management Section */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-3 h-8 bg-gradient-to-b from-teal-400 to-teal-300 rounded-full"></div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Payment Processing Operations
-              </h2>
-              <p className="text-gray-400">
-                Advanced transaction monitoring, compliance tracking, and
-                automated settlement management
-              </p>
-            </div>
-          </div>
 
-          {/* Search & Filter Controls - Using New SearchFilterBar Component */}
-          <SearchFilterBar
-            searchValue={searchQuery}
+          <TransactionSearchSection 
+            searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            searchPlaceholder="Search payment records, amounts, settlement IDs..."
-            onFilterClick={() => setIsFilterModalOpen(true)}
-            isFilterActive={
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onOpenFilterModal={() => setIsFilterModalOpen(true)}
+            isFilterActive={              
               typeFilter !== 'all' ||
               statusFilter !== 'all' ||
               amountRangeFilter !== 'all'
             }
-            filterLabel="Transaction Filters"
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            variant="primary"
-            className="mb-8"
           />
 
-          {/* ✅ Loading States */}
-          {isLoading && viewMode === 'table' && (
-            <TransactionTableSkeleton count={10} />
-          )}
+          <QuickFilterButtons 
+            filterGroups={quickFilterGroups} 
+            variant="teal"
+           />
 
-          {isLoading && viewMode === 'grid' && (
-            <TransactionGridSkeleton count={6} />
-          )}
-
-          {/* ✅ Use new reusable TransactionTable component with infinite scroll */}
-          {!isLoading && viewMode === 'table' && (
-            <TransactionTable
-              transactions={transactions}
-              onViewDetails={viewDetails}
-              onRetryTransaction={retryTransaction}
-              showRetryButton={true}
-              onLoadMore={loadMore}
-              isLoadingMore={isLoadingMore}
-              hasNextPage={hasNextPage}
-              total={total}
-            />
-          )}
-
-          {/* ✅ Use new reusable TransactionGrid component with infinite scroll */}
-          {!isLoading && viewMode === 'grid' && (
-            <TransactionGrid
-              transactions={transactions}
-              onViewDetails={viewDetails}
-              onRetryTransaction={retryTransaction}
-              showRetryButton={true}
-              onLoadMore={loadMore}
-              isLoadingMore={isLoadingMore}
-              hasNextPage={hasNextPage}
-              total={total}
-            />
-          )}
-
-          {/* Empty State - Using New EmptyState Component */}
-          {!isLoading && transactions.length === 0 && (
-            <EmptyState
-              icon={BanknotesIcon}
-              title="No Payment Records Found"
-              description="Adjust search parameters or transaction filters to view relevant financial operations"
-              actionLabel="Clear Filters"
-              onAction={handleClearFilters}
-              variant="teal"
-            />
-          )}
+          {/* Transactions Data Section */}
+          <TransactionsDataSection
+            transactions={transactions}
+            isLoading={isLoading}
+            isLoadingMore={isLoadingMore}
+            hasNextPage={hasNextPage}
+            error={null}
+            viewMode={viewMode}
+            total={total}
+            onLoadMore={loadMore}
+            onViewDetails={viewDetails}
+            onRetryTransaction={retryTransaction}
+            showRetryButton={true}
+            onClearFilters={handleClearFilters}
+            selectedItems={new Set(selectedIds)}
+            onSelectItem={toggleItem}
+            onSelectAll={() => toggleAll(true)}
+          />
         </section>
       </PageContainer>
 
-      {/* ✅ Use new reusable TransactionFilterModal component */}
-      {/* ✅ Revolutionary GenericFilterModal with Same Design as SessionFilterModal */}
+      {/* Generic Filter Modal */}
       <GenericFilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
@@ -516,7 +362,18 @@ const WalletsPage: React.FC = () => {
         description="Filter transactions by type, status, and amount range"
         filterGroups={filterGroups}
         onClearFilters={handleClearFilters}
-        variant="emerald"
+        variant="teal"
+      />
+
+      <TransactionBulkActions 
+          transactions={transactions}
+          selectedIds={selectedIds}
+          selectedCount={selectedCount}
+          clearSelection={clearSelection}
+          totalCount={totalBalance.amount}
+          viewDetails={viewDetails}
+          retryTransaction={retryTransaction}
+          refundTransaction={refundTransaction}
       />
     </MainLayout>
   );
