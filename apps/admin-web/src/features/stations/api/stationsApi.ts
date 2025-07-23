@@ -43,13 +43,13 @@ const stationsApi = evChargingApi.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: 'Station', id }],
     }),
 
-    // Admin endpoints
+    // Admin endpoints - Updated to match new API
     getAllStations: builder.query<
       ApiResponse<AdminStationsResponse>,
       AdminStationsQueryParams
     >({
       query: (params: any) => ({
-        url: '/admin/stations',
+        url: '/api/admin/charge-stations',
         params,
       }),
       providesTags: ['Station'],
@@ -58,7 +58,7 @@ const stationsApi = evChargingApi.injectEndpoints({
     createStation: builder.mutation<ApiResponse<Station>, CreateStationRequest>(
       {
         query: (station: any) => ({
-          url: '/admin/stations',
+          url: '/api/admin/charge-stations',
           method: 'POST',
           body: station,
         }),
@@ -66,13 +66,31 @@ const stationsApi = evChargingApi.injectEndpoints({
       },
     ),
 
+    updateStationStatus: builder.mutation<
+      ApiResponse<Station>,
+      { status: string }
+    >({
+      query: ({ status }: any) => ({
+        url: '/api/admin/charge-stations',
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['Station'],
+    }),
+
+    // Admin station detail endpoint
+    getAdminStation: builder.query<ApiResponse<Station>, string>({
+      query: (stationId: any) => `/api/admin/charge-stations/${stationId}`,
+      providesTags: (_result, _error, id) => [{ type: 'Station', id }],
+    }),
+
     updateStation: builder.mutation<
       ApiResponse<Station>,
       { id: string; data: UpdateStationRequest }
     >({
       query: ({ id, data }: any) => ({
-        url: `/admin/stations/${id}`,
-        method: 'PUT',
+        url: `/api/admin/charge-stations/${id}`,
+        method: 'PATCH',
         body: data,
       }),
       invalidatesTags: (_result, _error, { id }) => [
@@ -83,7 +101,7 @@ const stationsApi = evChargingApi.injectEndpoints({
 
     deleteStation: builder.mutation<ApiResponse<void>, string>({
       query: (stationId: any) => ({
-        url: `/admin/stations/${stationId}`,
+        url: `/api/admin/charge-stations/${stationId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (_result, _error, id) => [
@@ -98,7 +116,9 @@ export const {
   useGetNearbyStationsQuery,
   useGetStationQuery,
   useGetAllStationsQuery,
+  useGetAdminStationQuery,
   useCreateStationMutation,
+  useUpdateStationStatusMutation,
   useUpdateStationMutation,
   useDeleteStationMutation,
 } = stationsApi;

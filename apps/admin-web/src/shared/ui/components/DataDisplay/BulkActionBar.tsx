@@ -332,11 +332,11 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
 };
 
 // Helper hook for managing bulk selections
-export const useBulkSelection = <T extends { id: string }>(items: T[]) => {
+export const useBulkSelection = <T extends { id: string }>(items: readonly T[] = []) => {
   const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set());
 
   const selectedItems = React.useMemo(
-    () => items.filter((item) => selectedIds.has(item.id)),
+    () => items.filter((item) => item && item.id && selectedIds.has(item.id)),
     [items, selectedIds],
   );
 

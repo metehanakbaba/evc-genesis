@@ -1,9 +1,11 @@
 import type {
   ConnectorStatus,
   Location,
+  LegacyLocation,
   StationStatus,
 } from '@/types/global.types';
 
+// Legacy types - keeping for compatibility with existing mock data only
 export interface Connector {
   readonly id: string;
   readonly type: 'CCS2' | 'CHAdeMO' | 'Type2' | 'AC' | 'DC';
@@ -21,21 +23,25 @@ export interface StationPricing {
   readonly currency: string;
 }
 
+// Station interface aligned with new API schema
 export interface Station {
   readonly id: string;
   readonly name: string;
   readonly location: Location;
-  readonly connectors: ReadonlyArray<Connector>;
   readonly status: StationStatus;
+  readonly powerOutput: number;
+  readonly connectorType: string;
+  readonly pricePerKWh: number;
+  
+  // Optional fields for compatibility
   readonly amenities?: ReadonlyArray<string>;
   readonly operating_hours?: string;
-  readonly pricing?: StationPricing;
   readonly distance?: number;
 }
 
 export interface StationsQueryParams {
-  readonly lat: number;
-  readonly lng: number;
+  readonly latitude: number;
+  readonly longitude: number;
   readonly radius?: number;
   readonly available_only?: boolean;
 }
@@ -43,23 +49,42 @@ export interface StationsQueryParams {
 export interface AdminStationsQueryParams {
   readonly page?: number;
   readonly limit?: number;
-  readonly status?: StationStatus;
+  readonly status?: string;
   readonly search?: string;
   readonly connectorType?: string;
 }
 
+// CreateStationRequest to match new API schema
 export interface CreateStationRequest {
   readonly name: string;
-  readonly location: Location;
-  readonly connectors: ReadonlyArray<{
-    readonly type: Connector['type'];
-    readonly power: number;
-  }>;
+  readonly location: {
+    readonly latitude: number;
+    readonly longitude: number;
+    readonly address: string;
+    readonly city: string;
+    readonly country: string;
+  };
+  readonly powerOutput: number;
+  readonly connectorType: string;
+  readonly pricePerKWh: number;
 }
 
+
+
+// UpdateStationRequest to match new API schema
 export interface UpdateStationRequest {
   readonly name?: string;
-  readonly status?: StationStatus;
-  readonly operating_hours?: string;
-  readonly amenities?: ReadonlyArray<string>;
+  readonly location?: {
+    readonly latitude: number;
+    readonly longitude: number;
+    readonly address: string;
+    readonly city: string;
+    readonly country: string;
+  };
+  readonly powerOutput?: number;
+  readonly connectorType?: string;
+  readonly pricePerKWh?: number;
+  readonly status?: string;
 }
+
+

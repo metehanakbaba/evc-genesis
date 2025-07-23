@@ -51,8 +51,17 @@ export type SessionStatus =
   | 'failed'
   | 'cancelled';
 
-// Location types
+// Location types - Updated for new API schema
 export interface Location {
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly address: string;
+  readonly city: string;
+  readonly country: string;
+}
+
+// Legacy Location interface for backward compatibility with mock data
+export interface LegacyLocation {
   readonly lat: number;
   readonly lng: number;
   readonly address: string;

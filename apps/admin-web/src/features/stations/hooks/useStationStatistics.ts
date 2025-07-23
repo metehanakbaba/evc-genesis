@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { mockStations } from '../data/mockStations';
+import { useGetAllStationsQuery } from '../api/stationsApi';
 import type { Station } from '../types/station.types';
 
 interface StationStatistics {
@@ -30,25 +30,41 @@ interface StationStatistics {
 }
 
 export const useStationStatistics = (): StationStatistics => {
+  // Get all stations for statistics calculation
+  const { data: apiResponse } = useGetAllStationsQuery({ 
+    page: 1, 
+    limit: 1000 // Get all stations for accurate statistics
+  });
+
   const statistics = useMemo(() => {
-    const stations: Station[] = mockStations;
+    // Handle actual API response format: data is directly an array
+    const rawStations = apiResponse?.data || [];
+    const stations: Station[] = Array.isArray(rawStations) 
+      ? rawStations 
+      : rawStations.stations || [];
 
     const totalStationsCount = stations.length;
-    const activeStationsCount = stations.filter(
-      (s: Station) => s.status === 'active',
-    ).length;
-    const offlineStationsCount = stations.filter(
-      (s: Station) => s.status === 'offline',
-    ).length;
-    const maintenanceStationsCount = stations.filter(
-      (s: Station) => s.status === 'maintenance',
-    ).length;
+    const activeStationsCount = stations.filter((s: Station) => {
+      const status = (s.status as string).toLowerCase();
+      return status === 'active' || status === 'available';
+    }).length;
+    
+    const offlineStationsCount = stations.filter((s: Station) => {
+      const status = (s.status as string).toLowerCase();
+      return status === 'offline';
+    }).length;
+    
+    const maintenanceStationsCount = stations.filter((s: Station) => {
+      const status = (s.status as string).toLowerCase();
+      return status === 'maintenance';
+    }).length;
 
-    const allConnectors = stations.flatMap((s: Station) => s.connectors);
-    const totalConnectorsCount = allConnectors.length;
-    const availableConnectorsCount = allConnectors.filter(
-      (c) => c.status === 'available',
-    ).length;
+    // Handle both old (connectors array) and new (single connectorType) data structure
+    const allConnectors = stations.flatMap((s: Station) => (s as any).connectors || []);
+    const totalConnectorsCount = allConnectors.length || stations.length; // Fallback to station count
+    const availableConnectorsCount = allConnectors.length 
+      ? allConnectors.filter((c) => c.status === 'available').length
+      : activeStationsCount; // Fallback to active stations count
 
     return {
       totalStations: {
@@ -76,7 +92,7 @@ export const useStationStatistics = (): StationStatistics => {
         formatted: availableConnectorsCount.toLocaleString(),
       },
     };
-  }, []); // Empty dependency array since we're using static mock data
+  }, [apiResponse]);
 
   return statistics;
 };
