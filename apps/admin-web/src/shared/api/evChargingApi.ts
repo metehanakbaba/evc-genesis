@@ -23,7 +23,7 @@ import type { RootState } from '@/lib/store/store';
  */
 // Create the API instance with proper typing
 const apiInstance = createWebApi({
-  baseUrl: 'http://0.0.0.0',
+  baseUrl: 'http://128.140.8.185',
 
   // Custom token getter that integrates with Redux state
   getToken: () => {
