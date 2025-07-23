@@ -153,8 +153,12 @@ export const SessionsDataSection: React.FC<SessionsDataSectionProps> = ({
             </div>
             <DataStatusBadge
               status={{
-                variant: session.status === 'completed' ? 'success' : 
-                        session.status === 'failed' ? 'danger' : 'warning',
+                variant: session.status === 'completed' ? 'info' : 
+                        session.status === 'failed' ? 'danger' : 
+                        session.status === 'charging' ? 'success' : 
+                        session.status === 'cancelled' ? 'neutral' : 
+                        session.status === 'starting' ? 'warning'
+                        : 'pending',
                 label: session.status.toUpperCase(),
                 size: 'sm',
               }}
