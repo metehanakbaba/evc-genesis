@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/lib/store/hooks';
 import { loginSuccess, logout } from '@/features/auth/authSlice';
-import { authStorage } from '@/lib/utils/auth-storage';
 import { evChargingApi } from '@/shared/api/evChargingApi';
 
 interface AuthGuardProps {
@@ -15,8 +14,8 @@ interface AuthGuardProps {
 /**
  * 🔒 Authentication Guard Component
  * 
- * Protects components by checking authentication status.
- * Synchronizes auth state between localStorage, cookies, and Redux.
+ * Simplified auth guard that works with Redux persistence middleware.
+ * Automatically validates stored tokens and fetches user data.
  */
 export const AuthGuard: React.FC<AuthGuardProps> = ({ 
   children, 
@@ -32,7 +31,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   const publicRoutes = ['/auth', '/login'];
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
   
-  // Get current user query to validate token (skip for public routes)
+  // Get current user query to validate token and fetch fresh user data
   const { data: currentUser, error, isLoading: isValidating } = evChargingApi.useGetCurrentUserQuery(
     undefined,
     { 
@@ -41,69 +40,90 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
     }
   );
 
-  // If on public route, render children directly without auth checks
-  if (isPublicRoute) {
-    return <>{children}</>;
-  }
-
+  // Initialize auth state
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        // Only run on client side
-        if (typeof window === 'undefined') {
-          setIsLoading(false);
-          return;
-        }
+    if (typeof window === 'undefined') {
+      setIsLoading(false);
+      return;
+    }
 
-        // Check for token in cookie storage (single source of truth)
-        const storedToken = authStorage.getToken();
+    // If we have a token but no user data yet, let the API query handle it
+    if (token && !user && !isValidating) {
+      setIsLoading(false);
+      return;
+    }
 
-        // If we have a stored token but no Redux state, restore auth state
-        if (storedToken && !isAuthenticated) {
-          // The useGetCurrentUserQuery will validate the token
-          // If valid, we'll update Redux state in the next useEffect
-          setIsLoading(false);
-          return;
-        }
+    // If no token and not authenticated, we're done loading
+    if (!token && !isAuthenticated) {
+      setIsLoading(false);
+      return;
+    }
 
-        // If no token at all, ensure we're logged out
-        if (!storedToken && !token) {
-          dispatch(logout());
-          setIsLoading(false);
-          return;
-        }
+    setIsLoading(false);
+  }, [token, user, isAuthenticated, isValidating]);
 
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        dispatch(logout());
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
-  }, [dispatch, isAuthenticated, token]);
-
-  // Handle current user query results
+  // Handle API query results
   useEffect(() => {
     if (currentUser && !isValidating && !error) {
-      // Valid token and user data - update Redux state
-      const storedToken = authStorage.getToken();
-      if (storedToken && !isAuthenticated) {
+      // If we have fresh user data from API but Redux state is incomplete, update it
+      if (token && (!user || user.id !== currentUser.id)) {
         dispatch(loginSuccess({
           user: currentUser,
-          token: storedToken
+          token: token
         }));
       }
     }
 
-    if (error && !isValidating) {
-      // Invalid token - clear everything and redirect to auth
-      authStorage.clear();
+    if (error && !isValidating && token) {
+      // Invalid token - clear auth state
+      console.warn('Auth token validation failed:', error);
       dispatch(logout());
-      router.push('/auth');
+      
+      // Clear persisted state
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('evc-auth-state');
+      }
+      
+      if (!isPublicRoute) {
+        router.push('/auth');
+      }
     }
-  }, [currentUser, error, isValidating, isAuthenticated, dispatch, router]);
+  }, [currentUser, error, isValidating, token, user, dispatch, router, isPublicRoute]);
+
+  // Handle redirects based on auth state
+  useEffect(() => {
+    if (isLoading || isValidating) return;
+
+    // Redirect unauthenticated users from protected routes
+    if (!isAuthenticated && !isPublicRoute) {
+      router.push('/auth');
+      return;
+    }
+
+    // Redirect authenticated users from auth pages to dashboard
+    if (isAuthenticated && user && isPublicRoute) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get('redirect');
+      
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        // Role-based redirection
+        switch (user.role) {
+          case 'ADMIN':
+            router.push('/admin');
+            break;
+          default:
+            router.push('/');
+        }
+      }
+    }
+  }, [isLoading, isValidating, isAuthenticated, user, isPublicRoute, router]);
+
+  // If on public route, render children directly
+  if (isPublicRoute) {
+    return <>{children}</>;
+  }
 
   // Show loading state
   if (isLoading || isValidating) {
@@ -111,25 +131,20 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   }
 
   // Check authentication status
-  const storedToken = authStorage.getToken();
-  
-  if (!isAuthenticated && !storedToken) {
-    router.push('/auth');
+  if (!isAuthenticated || !user) {
     return <>{fallback}</>;
   }
 
-  // User is authenticated, render children
+  // User is authenticated and has data, render children
   return <>{children}</>;
 };
 
-/**
- * Loading spinner component for auth check
- */
+// Simple loading spinner component
 const AuthLoadingSpinner: React.FC = () => (
-  <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
     <div className="flex flex-col items-center space-y-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      <p className="text-slate-400">Verifying authentication...</p>
+      <div className="w-12 h-12 border-4 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
+      <p className="text-white font-medium">Loading...</p>
     </div>
   </div>
 ); 

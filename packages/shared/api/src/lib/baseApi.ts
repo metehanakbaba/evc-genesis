@@ -60,11 +60,21 @@ export const createBaseQuery = (config: {
     return result;
   };
 
-  // Add retry logic for network errors
+  // Add retry logic for network errors, but exclude 401 errors (auth failures)
   return retry(baseQueryWithAuth, {
-    maxRetries: 3,
-    // Note: retryCondition may not be supported in this RTK Query version
-    // Falling back to basic retry behavior
+    maxRetries: 1, // Reduced from 3 to prevent excessive requests
+    retryCondition: (error: any, args: any, extraOptions: any) => {
+      // Don't retry on authentication errors (401)
+      if (error?.status === 401) {
+        return false;
+      }
+      // Don't retry on client errors (4xx)
+      if (error?.status && error.status >= 400 && error.status < 500) {
+        return false;
+      }
+      // Only retry on network errors and 5xx server errors
+      return error?.status === 'FETCH_ERROR' || (error?.status >= 500);
+    }
   } as any);
 };
 

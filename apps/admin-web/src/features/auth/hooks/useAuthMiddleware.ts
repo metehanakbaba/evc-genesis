@@ -2,103 +2,79 @@
 
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { loginSuccess, logout, type User } from '../authSlice';
-import { authStorage } from '@/lib/utils/auth-storage';
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useLogoutMutation } from '../authApi';
 
 /**
  * 🔒 Auth Middleware Hook
  * 
- * Provides auth functions that integrate with both Redux and middleware cookies.
- * Ensures proper synchronization between client state and server-side middleware.
+ * Simplified auth management with automatic persistence via Redux middleware.
+ * No manual localStorage handling needed - handled by store middleware.
  */
 export const useAuthMiddleware = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isAuthenticated, user, token } = useAppSelector((state) => state.auth);
+  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const [isLoading, setIsLoading] = useState(false);
 
   /**
-   * Login function that sets both Redux state and cookie storage
+   * Login function - only updates Redux state, persistence is automatic
    */
   const login = useCallback((userData: { user: User; token: string; expiresIn?: string }) => {
-    // Update Redux state
+    // Update Redux state - persistence happens automatically via middleware
     dispatch(loginSuccess(userData));
-    
-    // Store token in cookie (single source of truth)
-    authStorage.setToken(userData.token);
-    
-    // Navigate to appropriate dashboard based on user role
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirect');
-    
-    // Role-based redirection
-    if (redirectUrl) {
-      router.push(redirectUrl);
-    } else {
-      switch (userData.user.role) {
-        case 'ADMIN':
-          router.push('/admin');
-          break;
-        case 'CUSTOMER':
-          router.push('/');
-          break;
-        case 'FIELD_WORKER':
-          router.push('/');
-          break;
-        default:
-          router.push('/');
+  }, [dispatch]);
+
+  /**
+   * Enhanced logout function that calls API and clears state
+   */
+  const handleLogout = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      
+      // Try to call logout API to invalidate token on server
+      try {
+        await logoutMutation().unwrap();
+      } catch (error) {
+        // Log the error but don't prevent logout - security best practice
+        console.warn('Logout API call failed, proceeding with client logout:', error);
       }
-    }
-  }, [dispatch, router]);
-
-  /**
-   * Logout function that clears both Redux state and cookie storage
-   */
-  const handleLogout = useCallback(() => {
-    // Clear Redux state
-    dispatch(logout());
-    
-    // Clear cookie storage
-    authStorage.clear();
-    
-    // Navigate to auth page
-    router.push('/auth');
-  }, [dispatch, router]);
-
-  /**
-   * Check if user is authenticated (checks both Redux and cookie storage)
-   */
-  const isUserAuthenticated = useCallback(() => {
-    const storedToken = authStorage.getToken();
-    return isAuthenticated && !!token && !!storedToken;
-  }, [isAuthenticated, token]);
-
-  /**
-   * Sync auth state if there's a mismatch between cookie storage and Redux
-   */
-  const syncAuthState = useCallback(() => {
-    const storedToken = authStorage.getToken();
-    
-    // If we have a stored token but no Redux state, clear everything
-    if (storedToken && !isAuthenticated) {
-      authStorage.clear();
-    }
-    
-    // If we have Redux state but no stored token, clear Redux
-    if (!storedToken && isAuthenticated) {
+      
+      // Clear Redux state - localStorage will be cleared automatically via middleware
       dispatch(logout());
+      
+      // Clear the persisted state manually as well
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('evc-auth-state');
+      }
+      
+      // Navigate to auth page
+      router.push('/auth');
+    } catch (error) {
+      console.error('Logout error:', error);
+      
+      // Force logout even if API fails
+      dispatch(logout());
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('evc-auth-state');
+      }
+      router.push('/auth');
+    } finally {
+      setIsLoading(false);
     }
-  }, [isAuthenticated, dispatch]);
+  }, [dispatch, router, logoutMutation]);
 
   return {
     // State
-    isAuthenticated: isUserAuthenticated(),
+    isAuthenticated,
     user,
     token,
+    isLoggingOut: isLoggingOut || isLoading,
     
     // Actions
     login,
     logout: handleLogout,
-    syncAuthState,
   };
 }; 

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useAuthMiddleware } from '@/features/auth/hooks/useAuthMiddleware';
 import React from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components';
@@ -26,7 +25,7 @@ export interface AppHeaderProps {
 
 /**
  * EV Charging Admin Dashboard Header Component
- * Features Welcome Back message, user info, and logout functionality
+ * Features Welcome Back message, user info, logout functionality, and enterprise-grade design
  */
 export const AppHeader: React.FC<AppHeaderProps> = ({
   className = '',
@@ -38,7 +37,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onToggleIntelligenceSidebar,
   onToggleNotificationSidebar,
 }) => {
-  const router = useRouter();
   const { logout } = useAuthMiddleware();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 

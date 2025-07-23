@@ -82,7 +82,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
   const gridRenderer = useMemo(
     (): GridCardRenderer<EnhancedUser> => ({
       getStatusConfig: (user: EnhancedUser): DataGridStatusConfig => {
-        const roleConfig = getRoleConfig(user.role);
+        const roleConfig = getRoleConfig(user.role as any);
         return {
           bgColor: roleConfig.bgColor,
           borderColor: roleConfig.borderColor,
@@ -95,7 +95,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
       getAnimationDelay: (index: number): string => `${index * 100}ms`,
 
       renderHeader: (user: EnhancedUser): React.ReactNode => {
-        const roleConfig = getRoleConfig(user.role);
+        const roleConfig = getRoleConfig(user.role as any);
         const RoleIcon =
           roleConfig.icon === 'ShieldCheckIcon'
             ? CheckCircleIcon
@@ -221,7 +221,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
         label: 'Role',
         accessor: 'role',
         render: (user) => {
-          const roleConfig = getRoleConfig(user.role);
+          const roleConfig = getRoleConfig(user.role as any);
           return (
             <span className={`text-sm font-medium ${roleConfig.textColor}`}>
               {roleConfig.text}

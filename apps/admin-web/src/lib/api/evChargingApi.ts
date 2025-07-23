@@ -12,8 +12,6 @@
 
 import { createWebApi } from '@evc/shared-api';
 import { logout } from '@/features/auth/authSlice';
-import { authStorage } from '@/lib/utils/auth-storage';
-import type { RootState } from '@/lib/store/store';
 
 /**
  * 🌐 Web Admin API Instance
@@ -25,16 +23,36 @@ import type { RootState } from '@/lib/store/store';
 const apiInstance = createWebApi({
   baseUrl: 'http://soft-tech-edu.com',
 
-  // Custom token getter that integrates with cookie storage
+  // Custom token getter that integrates with Redux state
   getToken: () => {
-    // Get token from cookie storage (single source of truth)
-    return authStorage.getToken();
+    // Get token from Redux store if available
+    if (typeof window !== 'undefined') {
+      const store = (window as any).__REDUX_STORE__;
+      if (store) {
+        const state = store.getState();
+        return state.auth?.token || null;
+      }
+      
+      // Fallback to localStorage
+      try {
+        const stored = localStorage.getItem('evc-auth-state');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          return parsed.token || null;
+        }
+      } catch {
+        return null;
+      }
+    }
+    return null;
   },
 
   // Custom auth error handler that clears auth state
   onAuthError: () => {
-    // Clear auth storage
-    authStorage.clear();
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('evc-auth-state');
+    }
 
     // Dispatch logout action to Redux (if store is available)
     const store = (window as any).__REDUX_STORE__;

@@ -52,5 +52,5 @@ export interface ProfileUpdateRequest {
 export interface AuthSuccessResponse {
   token: string;
   user: User;
-  expiresAt: string;
+  expiresIn: string; // Changed from expiresAt to match API response
 } 

@@ -50,7 +50,7 @@ export interface ProfileUpdateRequest {
 export interface AuthSuccessResponse {
   token: string;
   user: User;
-  expiresIn: number;
+  expiresIn: string; // Changed from number to string to match API response
 }
 
 // 🔋 Station Types from Root Schema

@@ -1,65 +1,172 @@
 /**
  * 🔒 Authentication Storage Utilities
  * 
- * Unified auth token management using cookies only.
- * No localStorage confusion - single source of truth.
+ * Unified auth token management using localStorage with SSR safety.
+ * Platform-agnostic storage solution.
  * 
  * @author EV Charging Team
  */
 
 /**
- * 🍪 Cookie-based Auth Storage
- * SSR Safe and works with middleware
+ * 📦 Local Storage Helper with SSR Safety
+ */
+const localStorageHelper = {
+  /**
+   * Check if localStorage is available (SSR safe)
+   */
+  isAvailable(): boolean {
+    try {
+      return typeof window !== 'undefined' && window.localStorage !== undefined;
+    } catch {
+      return false;
+    }
+  },
+
+  /**
+   * Set item with TTL
+   */
+  setItem(key: string, value: string, ttlDays: number = 7): void {
+    if (!this.isAvailable()) {
+      console.warn('localStorage not available - storage operation skipped');
+      return;
+    }
+
+    try {
+      const item = {
+        value,
+        timestamp: Date.now(),
+        ttl: ttlDays * 24 * 60 * 60 * 1000, // Convert days to milliseconds
+      };
+      localStorage.setItem(`evc_${key}`, JSON.stringify(item));
+    } catch (error) {
+      console.error('Failed to set localStorage item:', error);
+    }
+  },
+
+  /**
+   * Get item with TTL check
+   */
+  getItem(key: string): string | null {
+    if (!this.isAvailable()) {
+      return null;
+    }
+
+    try {
+      const storedData = localStorage.getItem(`evc_${key}`);
+      if (!storedData) return null;
+
+      const item = JSON.parse(storedData);
+      
+      // Check if item has expired
+      if (item.ttl && Date.now() > item.timestamp + item.ttl) {
+        this.removeItem(key);
+        return null;
+      }
+
+      return item.value || storedData; // Fallback for backward compatibility
+    } catch (error) {
+      console.error('Failed to get localStorage item:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Remove item
+   */
+  removeItem(key: string): void {
+    if (!this.isAvailable()) {
+      return;
+    }
+
+    try {
+      localStorage.removeItem(`evc_${key}`);
+    } catch (error) {
+      console.error('Failed to remove localStorage item:', error);
+    }
+  },
+
+  /**
+   * Clear all EVC items
+   */
+  clear(): void {
+    if (!this.isAvailable()) {
+      return;
+    }
+
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('evc_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+    } catch (error) {
+      console.error('Failed to clear localStorage:', error);
+    }
+  }
+};
+
+/**
+ * 🔐 Auth Storage Interface
+ * 
+ * Unified interface using localStorage with SSR safety
  */
 export const authStorage = {
   /**
-   * Set authentication token in cookie
+   * Set authentication token in localStorage
    */
   setToken: (token: string): void => {
-    if (typeof document !== 'undefined') {
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + 7); // 7 days
-      document.cookie = `authToken=${token}; path=/; expires=${expiryDate.toUTCString()}; SameSite=Strict; Secure=${window.location.protocol === 'https:'}`;
-    }
+    localStorageHelper.setItem('authToken', token, 7); // 7 days TTL
   },
 
   /**
-   * Get authentication token from cookie
+   * Get authentication token from localStorage
    */
   getToken: (): string | null => {
-    if (typeof document !== 'undefined') {
-      const cookies = document.cookie.split(';');
-      const authCookie = cookies.find(cookie => 
-        cookie.trim().startsWith('authToken=')
-      );
-      
-      if (authCookie) {
-        return authCookie.split('=')[1]?.trim() || null;
-      }
-    }
-    return null;
+    return localStorageHelper.getItem('authToken');
   },
 
   /**
-   * Remove authentication token from cookie
+   * Remove authentication token from localStorage
    */
   removeToken: (): void => {
-    if (typeof document !== 'undefined') {
-      document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict';
-    }
+    localStorageHelper.removeItem('authToken');
   },
 
   /**
    * Check if user is authenticated
    */
   isAuthenticated: (): boolean => {
-    return !!authStorage.getToken();
+    return !!localStorageHelper.getItem('authToken');
   },
 
   /**
    * Clear all auth data
    */
   clear: (): void => {
-    authStorage.removeToken();
+    localStorageHelper.clear();
+  },
+
+  /**
+   * Set user data in localStorage
+   */
+  setUserData: (userData: any): void => {
+    localStorageHelper.setItem('userData', JSON.stringify(userData), 7);
+  },
+
+  /**
+   * Get user data from localStorage
+   */
+  getUserData: (): any => {
+    const userData = localStorageHelper.getItem('userData');
+    if (!userData) return null;
+    
+    try {
+      return JSON.parse(userData);
+    } catch {
+      return null;
+    }
   }
 } as const; 

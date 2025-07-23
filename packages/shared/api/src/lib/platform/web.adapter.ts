@@ -24,9 +24,24 @@ export const createWebApi = (config?: {
   const webConfig = {
     baseUrl: config?.baseUrl || defaultApiConfig.baseUrl,
     getToken: config?.getToken || (() => {
-      // SSR Safe: get token from localStorage only on client side
+      // SSR Safe: get token from localStorage with TTL check only on client side
       if (typeof window !== 'undefined' && window.localStorage) {
-        return localStorage.getItem('authToken');
+        try {
+          const storedData = localStorage.getItem('evc_authToken');
+          if (!storedData) return null;
+
+          const item = JSON.parse(storedData);
+          
+          // Check if item has expired
+          if (item.ttl && Date.now() > item.timestamp + item.ttl) {
+            localStorage.removeItem('evc_authToken');
+            return null;
+          }
+
+          return item.value || storedData; // Fallback for backward compatibility
+        } catch {
+          return null;
+        }
       }
       return null;
     }),
@@ -49,33 +64,59 @@ export const createWebApi = (config?: {
  * Utility functions for web-specific operations (SSR Safe)
  */
 export const webApiHelpers = {
-  // Store token in localStorage (SSR Safe)
-  setAuthToken: (token: string) => {
+  // Store token in localStorage with TTL (SSR Safe)
+  setAuthToken: (token: string, ttlDays: number = 7) => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('authToken', token);
+      try {
+        const item = {
+          value: token,
+          timestamp: Date.now(),
+          ttl: ttlDays * 24 * 60 * 60 * 1000, // Convert days to milliseconds
+        };
+        localStorage.setItem('evc_authToken', JSON.stringify(item));
+      } catch (error) {
+        console.error('Failed to set auth token:', error);
+      }
     }
   },
 
   // Remove token from localStorage (SSR Safe)
   clearAuthToken: () => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.removeItem('authToken');
+      try {
+        localStorage.removeItem('evc_authToken');
+      } catch (error) {
+        console.error('Failed to clear auth token:', error);
+      }
     }
   },
 
-  // Get token from localStorage (SSR Safe)
+  // Get token from localStorage with TTL check (SSR Safe)
   getAuthToken: () => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('authToken');
+      try {
+        const storedData = localStorage.getItem('evc_authToken');
+        if (!storedData) return null;
+
+        const item = JSON.parse(storedData);
+        
+        // Check if item has expired
+        if (item.ttl && Date.now() > item.timestamp + item.ttl) {
+          localStorage.removeItem('evc_authToken');
+          return null;
+        }
+
+        return item.value || storedData; // Fallback for backward compatibility
+      } catch (error) {
+        console.error('Failed to get auth token:', error);
+        return null;
+      }
     }
     return null;
   },
 
   // Check if user is authenticated (SSR Safe)
   isAuthenticated: () => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return !!localStorage.getItem('authToken');
-    }
-    return false;
+    return !!webApiHelpers.getAuthToken();
   },
 } as const; 

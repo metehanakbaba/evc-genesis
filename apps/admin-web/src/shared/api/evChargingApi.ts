@@ -23,12 +23,30 @@ import type { RootState } from '@/lib/store/store';
  */
 // Create the API instance with proper typing
 const apiInstance = createWebApi({
-  baseUrl: 'http://128.140.8.185',
+  baseUrl: 'http://0.0.0.0',
 
-  // Custom token getter that integrates with cookie storage
+  // Custom token getter that integrates with Redux state
   getToken: () => {
-    // Get token from cookie storage (single source of truth)
-    return authStorage.getToken();
+    // Get token from Redux store if available
+    if (typeof window !== 'undefined') {
+      const store = (window as any).__REDUX_STORE__;
+      if (store) {
+        const state = store.getState();
+        return state.auth?.token || null;
+      }
+      
+      // Fallback to localStorage
+      try {
+        const stored = localStorage.getItem('evc-auth-state');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          return parsed.token || null;
+        }
+      } catch {
+        return null;
+      }
+    }
+    return null;
   },
 
   // Custom auth error handler that clears auth state
@@ -38,8 +56,10 @@ const apiInstance = createWebApi({
       return; // Do nothing if we're on login page
     }
 
-    // Clear auth storage
-    authStorage.clear();
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('evc-auth-state');
+    }
 
     // Dispatch logout action to Redux (if store is available)
     const store = (window as any).__REDUX_STORE__;
@@ -56,13 +76,6 @@ const apiInstance = createWebApi({
 
 // Type assertion to fix TypeScript compilation
 export const evChargingApi = apiInstance as any;
-
-/**
- * 🔧 Web Admin API Helpers
- *
- * Re-export shared-api helpers for backward compatibility
- */
-export { webApiHelpers };
 
 /**
  * 🎯 Available Hooks (No direct export needed)

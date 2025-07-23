@@ -12,6 +12,8 @@ import {
 import React from 'react';
 import { RevolutionaryStationIcon } from '@/features/admin/components';
 import { useAppSelector } from '@/lib/store/hooks';
+import { useAuthMiddleware } from '@/features/auth/hooks/useAuthMiddleware';
+import { ProfileModal } from './ProfileModal';
 
 export interface AppHeaderProps {
   /** Additional CSS classes */
@@ -34,7 +36,7 @@ export interface AppHeaderProps {
 
 /**
  * EV Charging Admin Dashboard Header Component
- * Features Welcome Back message, user info, and logout functionality
+ * Features Welcome Back message, user info, logout functionality, and enterprise-grade design
  */
 export const AppHeader: React.FC<AppHeaderProps> = ({
   className = '',
@@ -48,10 +50,20 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 }) => {
   const user = useAppSelector((state) => state.auth.user);
   const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
+  const [modalTab, setModalTab] = React.useState<'profile' | 'security'>('profile');
+  const { logout: handleLogout, isLoggingOut } = useAuthMiddleware();
 
-  const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
+  const handleProfileClick = () => {
+    setShowUserMenu(false);
+    setModalTab('profile');
+    setShowProfileModal(true);
+  };
+
+  const handlePreferencesClick = () => {
+    setShowUserMenu(false);
+    setModalTab('security'); // Security settings as preferences
+    setShowProfileModal(true);
   };
 
   const getGreeting = () => {
@@ -96,10 +108,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
             {/* Welcome Message */}
             {variant === 'default' && (
-              <div className="hidden lg:block border-l border-gray-700 pl-6">
+              <div className="hidden lg:block border-l border-gray-700/50 pl-6">
                 <p className="text-sm text-gray-400">{getGreeting()},</p>
                 <p className="text-lg font-semibold text-white">
-                  Welcome Back {user?.email?.split('@')[0] || 'Administrator'}
+                  Welcome Back {user?.firstName || user?.email?.split('@')[0] || 'Administrator'}
                 </p>
               </div>
             )}
@@ -157,55 +169,108 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <Cog6ToothIcon className="w-6 h-6" />
             </button>
 
-            {/* User Menu */}
+            {/* Enhanced User Avatar & Menu with Enterprise Styling */}
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center space-x-3 p-2 text-gray-300 hover:text-white transition-colors duration-200 hover:bg-gray-700/50 rounded-lg"
+                className="flex items-center space-x-3 p-3 rounded-2xl bg-gradient-to-r from-gray-800/60 via-gray-700/40 to-gray-800/60 border border-gray-600/30 hover:border-cyan-400/30 backdrop-blur-xl transition-all duration-300 group hover:shadow-lg hover:shadow-cyan-500/10"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <UserCircleIcon className="w-5 h-5 text-white" />
+                <div className="relative">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 via-blue-500/30 to-purple-500/20 rounded-xl flex items-center justify-center border border-cyan-400/20 shadow-lg">
+                    <UserCircleIcon className="w-6 h-6 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
+                  </div>
+                  {/* Online status indicator */}
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-gray-900 rounded-full animate-pulse"></div>
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium">
-                    {user?.email?.split('@')[0] || 'Admin'}
+                  <p className="text-sm font-semibold text-white group-hover:text-cyan-200 transition-colors">
+                    {user?.firstName || user?.email?.split('@')[0] || 'Admin'}
                   </p>
-                  <p className="text-xs text-gray-400">Administrator</p>
+                  <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+                    System Administrator
+                  </p>
                 </div>
                 <ChevronDownIcon
-                  className={`w-4 h-4 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 text-gray-400 group-hover:text-cyan-300 transition-all duration-300 ${showUserMenu ? 'rotate-180 text-cyan-400' : ''}`}
                 />
               </button>
 
-              {/* User Dropdown Menu */}
+              {/* Enhanced User Dropdown Menu with Enterprise Design */}
               {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl shadow-black/20 py-2 z-50">
-                  <div className="px-4 py-2 border-b border-gray-700">
-                    <p className="text-sm font-medium text-white">
-                      {user?.email || 'admin@example.com'}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      System Administrator
-                    </p>
+                <div className="absolute right-0 mt-3 w-56 bg-gradient-to-br from-gray-800/95 via-gray-700/90 to-gray-900/95 backdrop-blur-2xl border border-gray-600/40 rounded-2xl shadow-2xl shadow-black/40 py-3 z-50 animate-in slide-in-from-top-2 duration-200">
+                  {/* User Info Header */}
+                  <div className="px-5 py-3 border-b border-gray-600/30">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-cyan-500/20 to-blue-500/30 rounded-lg flex items-center justify-center border border-cyan-400/20">
+                        <UserCircleIcon className="w-5 h-5 text-cyan-300" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">
+                          {user?.firstName ? `${user.firstName} ${user.lastName}` : user?.email || 'admin@evc.com'}
+                        </p>
+                        <p className="text-xs text-cyan-400 font-medium">
+                          System Administrator
+                        </p>
+                      </div>
+                    </div>
+                    {/* Account stats */}
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-600/20">
+                      <span className="text-xs text-gray-400">Role</span>
+                      <span className="text-xs font-medium text-emerald-400">{user?.role || 'ADMIN'}</span>
+                    </div>
                   </div>
 
-                  <button className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors duration-200 flex items-center space-x-2">
-                    <UserCircleIcon className="w-4 h-4" />
-                    <span>Profile Settings</span>
-                  </button>
+                  {/* Menu Items */}
+                  <div className="px-2 py-1">
+                    <button 
+                      onClick={handleProfileClick}
+                      className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 hover:border-cyan-400/20 border border-transparent rounded-xl transition-all duration-200 flex items-center space-x-3 group"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <UserCircleIcon className="w-4 h-4 text-cyan-400" />
+                      </div>
+                      <div>
+                        <span className="font-medium">Profile Settings</span>
+                        <p className="text-xs text-gray-500">Manage your account</p>
+                      </div>
+                    </button>
 
-                  <button className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors duration-200 flex items-center space-x-2">
-                    <Cog6ToothIcon className="w-4 h-4" />
-                    <span>Preferences</span>
-                  </button>
+                    <button 
+                      onClick={handlePreferencesClick}
+                      className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-pink-500/10 hover:border-purple-400/20 border border-transparent rounded-xl transition-all duration-200 flex items-center space-x-3 group"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Cog6ToothIcon className="w-4 h-4 text-purple-400" />
+                      </div>
+                      <div>
+                        <span className="font-medium">Preferences</span>
+                        <p className="text-xs text-gray-500">Customize settings</p>
+                      </div>
+                    </button>
+                  </div>
 
-                  <div className="border-t border-gray-700 mt-2 pt-2">
+                  {/* Logout Section */}
+                  <div className="border-t border-gray-600/30 mt-2 pt-2 px-2">
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors duration-200 flex items-center space-x-2"
+                      disabled={isLoggingOut}
+                      className="w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-600/10 hover:border-red-400/20 border border-transparent rounded-xl transition-all duration-200 flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed group"
                     >
-                      <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                      <span>Sign Out</span>
+                      <div className="w-8 h-8 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        {isLoggingOut ? (
+                          <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                        ) : (
+                          <ArrowRightOnRectangleIcon className="w-4 h-4 text-red-400" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="font-medium">
+                          {isLoggingOut ? 'Signing Out...' : 'Sign Out'}
+                        </span>
+                        <p className="text-xs text-gray-500">
+                          {isLoggingOut ? 'Please wait...' : 'End your session'}
+                        </p>
+                      </div>
                     </button>
                   </div>
                 </div>
@@ -214,6 +279,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Profile Settings Modal */}
+      <ProfileModal 
+        isOpen={showProfileModal} 
+        onClose={() => setShowProfileModal(false)}
+        initialTab={modalTab}
+      />
 
       {/* Revolutionary Background Effects */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

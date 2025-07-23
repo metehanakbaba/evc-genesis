@@ -1,6 +1,6 @@
 'use client';
 
-import { ShieldCheckIcon, BoltIcon, ChartBarIcon, CheckCircleIcon, SparklesIcon, BeakerIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon, BoltIcon, CheckCircleIcon, SparklesIcon, BeakerIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { Suspense, use, useEffect, useState } from 'react';
 import { LoginForm } from '../components/LoginForm';

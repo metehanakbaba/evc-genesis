@@ -2,12 +2,12 @@
 
 import { LockClosedIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuthForm } from '../hooks/useAuthForm';
 import { Button } from '@/shared/ui/components/Forms/Button/Button';
 
 export const LoginForm: React.FC = () => {
-  const { submitAction, isLoading, error, handleForgotPassword } = useAuthForm();
+  const { submitAction, isLoading, handleForgotPassword } = useAuthForm();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -15,11 +15,25 @@ export const LoginForm: React.FC = () => {
   });
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Combined loading state for better UX
+  const isFormDisabled = isLoading || isSubmitting;
 
   // Handle input changes to preserve form state
   const handleInputChange = (field: 'email' | 'password', value: string) => {
-    if (isLoading) return; // Prevent changes during submission
+    if (isFormDisabled) return; // Prevent changes during submission
     
     setFormData(prev => ({
       ...prev,
@@ -37,13 +51,30 @@ export const LoginForm: React.FC = () => {
     }
   };
 
-  // Enhanced form submission with error handling
+  // Enhanced form submission with error handling and deduplication
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // Prevent form submission and page reload
     event.preventDefault();
     event.stopPropagation();
     
-    if (isLoading) return; // Prevent double submission
+    // Prevent double submission - check both loading states
+    if (isLoading || isSubmitting) {
+      console.warn('🛑 Form submission prevented - already in progress');
+      return;
+    }
+
+    // Clear any existing timeout to prevent race conditions
+    if (submitTimeoutRef.current) {
+      clearTimeout(submitTimeoutRef.current);
+    }
+    
+    // Basic validation before API call
+    if (!formData.email.trim() || !formData.password.trim()) {
+      setSubmitError('Please fill in all fields');
+      return;
+    }
+
+    setIsSubmitting(true);
     
     try {
       const form = event.currentTarget;
@@ -60,6 +91,7 @@ export const LoginForm: React.FC = () => {
       setIsSuccess(true);
       setFormData({ email: '', password: '' });
     } catch (error) {
+      console.log('🔴 Form level error caught:', error);
       // Extract error message - handle both API errors and regular errors
       let errorMessage = 'An unexpected error occurred';
       
@@ -70,6 +102,11 @@ export const LoginForm: React.FC = () => {
       }
       setSubmitError(errorMessage);
       setIsSuccess(false);
+    } finally {
+      // Add a minimum delay to prevent rapid resubmission
+      submitTimeoutRef.current = setTimeout(() => {
+        setIsSubmitting(false);
+      }, 1000); // 1 second minimum between submissions
     }
   };
 
@@ -102,7 +139,7 @@ export const LoginForm: React.FC = () => {
           {/* 📝 Enhanced Form */}
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-5" noValidate aria-labelledby="login-form-heading">
             
-            <fieldset className="space-y-5" disabled={isLoading}>
+            <fieldset className="space-y-5" disabled={isFormDisabled}>
               <legend className="sr-only">Login credentials</legend>
               
               {/* 📧 Email Input - Simplified */}
@@ -114,7 +151,7 @@ export const LoginForm: React.FC = () => {
                   {/* Icon Container */}
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10" aria-hidden="true">
                     <EnvelopeIcon className={`w-4 h-4 transition-colors duration-200 ${
-                      isLoading ? 'text-slate-500' : 'text-slate-400'
+                      isFormDisabled ? 'text-slate-500' : 'text-slate-400'
                     }`} />
                   </div>
                   
@@ -125,13 +162,13 @@ export const LoginForm: React.FC = () => {
                     type="email"
                     placeholder="Enter your email address"
                     required
-                    disabled={isLoading}
+                    disabled={isFormDisabled}
                     autoComplete="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     aria-describedby={submitError ? 'form-error' : undefined}
                     className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 transition-all duration-200 ${
-                      isLoading 
+                      isFormDisabled 
                         ? 'cursor-not-allowed opacity-60' 
                         : 'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:border-slate-500/50'
                     }`}
@@ -148,7 +185,7 @@ export const LoginForm: React.FC = () => {
                   {/* Icon Container */}
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10" aria-hidden="true">
                     <LockClosedIcon className={`w-4 h-4 transition-colors duration-200 ${
-                      isLoading ? 'text-slate-500' : 'text-slate-400'
+                      isFormDisabled ? 'text-slate-500' : 'text-slate-400'
                     }`} />
                   </div>
                   
@@ -159,13 +196,13 @@ export const LoginForm: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     required
-                    disabled={isLoading}
+                    disabled={isFormDisabled}
                     autoComplete="current-password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     aria-describedby={submitError ? 'form-error' : 'password-visibility-toggle'}
                     className={`w-full pl-10 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 transition-all duration-200 ${
-                      isLoading 
+                      isFormDisabled 
                         ? 'cursor-not-allowed opacity-60' 
                         : 'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:border-slate-500/50'
                     }`}
@@ -175,11 +212,11 @@ export const LoginForm: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    disabled={isLoading}
+                    disabled={isFormDisabled}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     aria-describedby="password-visibility-toggle"
                     className={`absolute right-3 top-1/2 transform -translate-y-1/2 z-10 p-1 rounded-md transition-all duration-200 ${
-                      isLoading 
+                      isFormDisabled 
                         ? 'text-slate-500 cursor-not-allowed' 
                         : 'text-slate-400 hover:text-blue-400 hover:bg-slate-600/50'
                     }`}
@@ -199,7 +236,7 @@ export const LoginForm: React.FC = () => {
             </fieldset>
 
             {/* 🚨 Enhanced Error Display */}
-            {submitError && !isLoading && !isSuccess && (
+            {submitError && !isFormDisabled && !isSuccess && (
               <aside className="relative" role="alert" aria-live="polite">
                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                   <div id="form-error" className="flex items-center space-x-3">
@@ -213,7 +250,7 @@ export const LoginForm: React.FC = () => {
 
 
             {/* ✅ Success Display */}
-            {isSuccess && !isLoading && (
+            {isSuccess && !isFormDisabled && (
               <aside className="relative" role="status" aria-live="polite">
                 <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
                   <div className="flex items-center space-x-3">
@@ -230,15 +267,15 @@ export const LoginForm: React.FC = () => {
                 type="submit"
                 variant="primary"
                 size="lg"
-                loading={isLoading}
-                disabled={!formData.email || !formData.password || isLoading}
+                loading={isFormDisabled}
+                disabled={!formData.email || !formData.password || isFormDisabled}
                 aria-describedby="submit-button-description"
                 className="w-full"
               >
                 <div className="flex items-center justify-center space-x-2">
                   <LockClosedIcon className="w-4 h-4" aria-hidden="true" />
                   <span className="font-semibold">
-                    {isLoading ? 'Signing In...' : 'Sign In'}
+                    {isFormDisabled ? 'Signing In...' : 'Sign In'}
                   </span>
                 </div>
               </Button>
@@ -252,10 +289,10 @@ export const LoginForm: React.FC = () => {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                disabled={isLoading}
+                disabled={isFormDisabled}
                 aria-describedby="forgot-password-description"
                 className={`text-sm transition-colors duration-200 ${
-                  isLoading 
+                  isFormDisabled 
                     ? 'text-slate-500 cursor-not-allowed' 
                     : 'text-slate-400 hover:text-blue-400 focus:outline-none focus:text-blue-400'
                 }`}

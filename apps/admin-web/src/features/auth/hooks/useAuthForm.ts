@@ -2,26 +2,39 @@
 
 // ✅ Import shared business logic
 import { validateEmail, validatePassword } from '@evc/shared-business-logic';
-import { useCallback } from 'react';
-import { getApiErrorMessage, formatApiError, isApiError } from '@/shared/api/apiHelpers';
+import { useCallback, useRef } from 'react';
+import { formatApiError } from '@/shared/api/apiHelpers';
 import { useToast } from '@/shared/ui';
 import { useLoginMutation } from '../authApi';
 import { useAuthMiddleware } from './useAuthMiddleware';
-
-// Simplified login state interface
-interface LoginState {
-  success?: boolean;
-  error?: string;
-}
 
 export const useAuthForm = () => {
   const { showToast } = useToast();
   const [login, { isLoading: isLoginLoading, error: loginError }] = useLoginMutation();
   const { login: authLogin } = useAuthMiddleware();
+  
+  // Request deduplication to prevent rapid successive calls
+  const lastSubmissionRef = useRef<number>(0);
+  const activeRequestRef = useRef<Promise<any> | null>(null);
 
   // Simplified login action without useActionState
   const submitAction = useCallback(async (formData: FormData) => {
     try {
+      // Request deduplication: prevent rapid successive calls
+      const now = Date.now();
+      if (now - lastSubmissionRef.current < 2000) { // 2 second minimum between requests
+        console.warn('🛑 Login request blocked - too frequent');
+        throw new Error('Please wait before trying again');
+      }
+
+      // If there's an active request, wait for it to complete
+      if (activeRequestRef.current) {
+        console.warn('🛑 Login request blocked - already in progress');
+        throw new Error('Login already in progress');
+      }
+
+      lastSubmissionRef.current = now;
+
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
@@ -40,31 +53,43 @@ export const useAuthForm = () => {
         throw new Error(passwordValidation.error);
       }
 
-      // Perform login
-      const result = await login({ email, password }).unwrap();
+      // Perform login with active request tracking
+      const loginPromise = login({ email, password }).unwrap();
+      activeRequestRef.current = loginPromise;
 
-      if (result.success && result.data) {
-        // Use auth middleware to handle login (Redux + cookies + navigation)
-        authLogin({
-          user: {
-            ...result.data.user,
-            name: `${result.data.user.firstName} ${result.data.user.lastName}`, // Backward compatibility
-          },
-          token: result.data.token,
-          expiresIn: result.data.expiresIn,
-        });
+      try {
+        const result = await loginPromise;
+        
 
-        showToast({
-          type: 'success',
-          title: result.message || 'Welcome back!',
-          message: `Successfully signed in as ${result.data.user.firstName} ${result.data.user.lastName}`,
-        });
 
-        return { success: true };
+        if (result.success && result.data) {
+          // Use auth middleware to handle login (Redux + cookies + navigation)
+          authLogin({
+            user: {
+              ...result.data.user,
+              name: `${result.data.user.firstName} ${result.data.user.lastName}`, // Backward compatibility
+            },
+            token: result.data.token,
+            expiresIn: result.data.expiresIn,
+          });
+
+          showToast({
+            type: 'success',
+            title: result.message || 'Welcome back!',
+            message: `Successfully signed in as ${result.data.user.firstName} ${result.data.user.lastName}`,
+          });
+
+          return { success: true };
+        }
+
+        throw new Error('Login failed. Please check your credentials.');
+      } finally {
+        // Clear active request reference
+        activeRequestRef.current = null;
       }
-
-      throw new Error('Login failed. Please check your credentials.');
     } catch (error) {
+      // Clear active request reference on error
+      activeRequestRef.current = null;
       const formattedError = formatApiError(error);
       
       showToast({

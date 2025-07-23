@@ -162,7 +162,7 @@ export interface AdminProcessRefundRequest {
 export interface AuthSuccessResponse {
   token: string;
   user: User;
-  expiresAt: string;
+  expiresIn: string; // Changed from expiresAt to match API response
 }
 
 // 🔗 API Base Query Configuration

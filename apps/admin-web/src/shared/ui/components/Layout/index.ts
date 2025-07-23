@@ -43,7 +43,6 @@ export { IntelligenceSidebar } from './IntelligenceSidebar';
 export type { MainLayoutProps } from './MainLayout';
 export { MainLayout } from './MainLayout';
 export type { NotificationSidebarProps } from './NotificationSidebar';
-
 export { NotificationSidebar } from './NotificationSidebar';
 export type { PageContainerProps } from './PageContainer';
 export { PageContainer } from './PageContainer';
@@ -52,3 +51,4 @@ export { PageHeader } from './PageHeader';
 export { ScrollToTop } from './ScrollToTop';
 export type { IconComponent, SectionHeaderProps } from './SectionHeader';
 export { SectionHeader } from './SectionHeader';
+export { ProfileModal } from './ProfileModal';

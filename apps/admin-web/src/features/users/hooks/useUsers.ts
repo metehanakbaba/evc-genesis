@@ -15,7 +15,7 @@ const MOCK_USERS: UserProfile[] = [
     email: 'admin@evcharging.com',
     name: 'Sarah Mitchell',
     phone: '+905551234567',
-    role: 'admin',
+    role: 'ADMIN' as const,
     created_at: '2024-01-10T08:30:00Z',
     last_login: '2024-01-15T10:45:00Z',
     is_active: true,
@@ -26,7 +26,7 @@ const MOCK_USERS: UserProfile[] = [
     email: 'john.tech@field.com',
     name: 'John Anderson',
     phone: '+905551234568',
-    role: 'operator',
+    role: 'CUSTOMER' as any,
     created_at: '2024-01-12T14:20:00Z',
     last_login: '2024-01-15T09:15:00Z',
     is_active: true,
@@ -37,7 +37,7 @@ const MOCK_USERS: UserProfile[] = [
     email: 'customer@example.com',
     name: 'Alice Thompson',
     phone: '+905551234569',
-    role: 'user',
+    role: 'CUSTOMER' as any,
     created_at: '2024-01-14T16:10:00Z',
     last_login: '2024-01-15T11:20:00Z',
     is_active: true,
@@ -48,7 +48,7 @@ const MOCK_USERS: UserProfile[] = [
     email: 'inactive@user.com',
     name: 'Mike Wilson',
     phone: '+905551234570',
-    role: 'user',
+    role: 'CUSTOMER' as any,
     created_at: '2024-01-08T12:00:00Z',
     last_login: '2024-01-10T15:30:00Z',
     is_active: false,
@@ -60,7 +60,7 @@ const MOCK_USERS: UserProfile[] = [
     email: 'manager@company.com',
     name: 'Emma Davis',
     phone: '+905551234571',
-    role: 'admin',
+    role: 'ADMIN' as const,
     created_at: '2024-01-05T09:00:00Z',
     last_login: '2024-01-15T08:30:00Z',
     is_active: true,
@@ -75,7 +75,7 @@ const MOCK_USERS: UserProfile[] = [
 export const useUserStatistics = () => {
   const totalUsers = MOCK_USERS.length;
   const activeUsers = MOCK_USERS.filter((user) => user.is_active).length;
-  const adminUsers = MOCK_USERS.filter((user) => user.role === 'admin').length;
+  const adminUsers = MOCK_USERS.filter((user) => user.role === 'ADMIN').length;
   const newUsersThisMonth = MOCK_USERS.filter(
     (user) =>
       new Date(user.created_at) >
@@ -170,7 +170,7 @@ export const useInfiniteUsers = ({
   // ✅ Generate more mock users for pagination testing
   const generateMockUsers = useCallback((count: number = 50): UserProfile[] => {
     const additionalUsers: UserProfile[] = [];
-    const roles: UserProfile['role'][] = ['admin', 'operator', 'user'];
+    const roles: UserProfile['role'][] = ['ADMIN', 'CUSTOMER'];
     const companies = [
       'TechCorp',
       'EV Solutions',
