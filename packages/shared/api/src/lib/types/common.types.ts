@@ -51,7 +51,17 @@ export interface PaginatedResponse<T> {
 }
 
 // 🏷️ RTK Query Tag Types
-export type ApiTagType = 'Station' | 'Session' | 'User' | 'Transaction' | 'Wallet';
+export type ApiTagType = 
+  | 'Station' 
+  | 'Session' 
+  | 'User' 
+  | 'Transaction' 
+  | 'Wallet'
+  | 'AdminProfile'
+  | 'UserProfile' 
+  | 'WalletBalance'
+  | 'PaymentMethods'
+  | 'WalletStats';
 
 export interface ApiTag {
   type: ApiTagType;

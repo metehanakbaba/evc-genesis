@@ -89,11 +89,22 @@ export const createTypedApi = <TReducerPath extends string>(
   return createApi({
     reducerPath,
     baseQuery,
-    tagTypes: ['Station', 'Session', 'User', 'Transaction', 'Wallet'] as const,
+    tagTypes: [
+      'Station', 
+      'Session', 
+      'User', 
+      'Transaction', 
+      'Wallet',
+      'AdminProfile',
+      'UserProfile',
+      'WalletBalance',
+      'PaymentMethods',
+      'WalletStats'
+    ] as const,
     endpoints: () => ({}),
-    keepUnusedDataFor: 60, // Cache for 60 seconds
-    refetchOnMountOrArgChange: 30, // Refetch if data older than 30s
-    refetchOnFocus: true,
+    keepUnusedDataFor: 300, // Cache for 5 minutes (improved from 60s)
+    refetchOnMountOrArgChange: 120, // Refetch if data older than 2 minutes (improved from 30s)
+    refetchOnFocus: false, // Disable refetch on window focus to prevent excessive calls
     refetchOnReconnect: true,
   });
 };
@@ -165,5 +176,10 @@ export const createApiTags = {
   user: (id?: string) => ({ type: 'User' as const, id }),
   transaction: (id?: string) => ({ type: 'Transaction' as const, id }),
   wallet: (id?: string) => ({ type: 'Wallet' as const, id }),
+  adminProfile: (id?: string) => ({ type: 'AdminProfile' as const, id }),
+  userProfile: (id?: string) => ({ type: 'UserProfile' as const, id }),
+  walletBalance: (id?: string) => ({ type: 'WalletBalance' as const, id }),
+  paymentMethods: (id?: string) => ({ type: 'PaymentMethods' as const, id }),
+  walletStats: (id?: string) => ({ type: 'WalletStats' as const, id }),
   list: (type: ApiTagType) => ({ type, id: 'LIST' }),
 } as const; 
