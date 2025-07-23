@@ -184,14 +184,16 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       icon: EyeIcon,
       label: 'View',
       onClick: (item) => onViewDetails(item.id),
-      variant: 'ghost',
+      variant: 'secondary',
+      className: 'opacity-0 group-hover:opacity-100 transition-opacity',
     },
     {
       icon: WrenchScrewdriverIcon,
       label: 'Edit',
       onClick: (item) => onEdit(item as Station),
-      variant: 'primary',
-    },
+      variant: 'danger',
+      className: 'opacity-0 group-hover:opacity-100 transition-opacity'
+    }
   ], [onViewDetails, onEdit]);
 
   // Table columns
