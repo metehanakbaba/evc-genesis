@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useGetAllStationsQuery } from '../api/stationsApi';
-import type { Station } from '../types/station.types';
+import { ChargingStation } from '@evc/shared-business-logic';
 
 interface UseInfiniteStationsFilters {
   readonly searchQuery?: string;
@@ -14,7 +14,7 @@ interface UseInfiniteStationsParams {
 }
 
 interface UseInfiniteStationsReturn {
-  readonly stations: ReadonlyArray<Station>;
+  readonly stations: ReadonlyArray<ChargingStation>;
   readonly isLoading: boolean;
   readonly isLoadingMore: boolean;
   readonly hasNextPage: boolean;
@@ -28,7 +28,7 @@ export const useInfiniteStations = ({
   pageSize = 20,
 }: UseInfiniteStationsParams): UseInfiniteStationsReturn => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [allStations, setAllStations] = useState<Station[]>([]);
+  const [allStations, setAllStations] = useState<ChargingStation[]>([]);
 
   // Query parameters for API
   const queryParams = useMemo(() => ({

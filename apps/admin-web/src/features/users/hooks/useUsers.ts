@@ -10,7 +10,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { UserProfile } from '@evc/shared-business-logic';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/shared/ui';
+import { useDebounce, useToast } from '@/shared/ui';
+import { isApiError } from '@/shared/api/apiHelpers';
 
 import { 
   useGetAllUsersQuery,
@@ -59,68 +60,136 @@ export const useUserStatistics = (users: UserProfile[]) => {
  * Provides user management actions similar to transaction actions
  */
 export const useUserActions = () => {
+  const { showToast } = useToast();
   const [deleteUserApi] = useDeleteUserMutation();
   const [updateUserApi] = useUpdateUserMutation();
   const router = useRouter();
 
   const viewDetails = useCallback((user: UserProfile) => {
     router.push(`/users/${user.id}`);
-  }, [router]);
+  }, [router, showToast]);
 
   const editUser = useCallback(async (id: string, data: UpdateUserRequest) => {
     try {
-      await updateUserApi({
-        id: id,
-        data: data
-      }).unwrap();
-      return { success: true }
-    } catch (error){
+      await updateUserApi({ id, data }).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'Profile Updated',
+        message: 'User information has been successfully saved',
+        duration: 3000
+      });
+      
+      return { success: true };
+    } catch (error) {
+      const errorMessage = isApiError(error) 
+        ? error.data.error.message 
+        : error instanceof Error 
+          ? error.message 
+          : 'Failed to update user';
+      
+      showToast({
+        type: 'error',
+        title: 'Update Failed',
+        message: errorMessage,
+        duration: 5000,
+      });
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: errorMessage 
       };
     }
-  }, [updateUserApi]);
+  }, [updateUserApi, showToast]);
 
   const toggleUserStatus = useCallback(async (user: UserProfile) => {
+    const newStatus = !user.isActive;
+    
     try {
       await updateUserApi({
         id: user.id,
-        data: { is_active: !user.isActive }
+        data: { isActive: newStatus }
       }).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'Status Changed',
+        message: `${user.firstName} is now ${newStatus ? 'active' : 'inactive'}`,
+        duration: 3000
+      });
+      
       return { success: true };
     } catch (error) {
+      const errorMessage = isApiError(error)
+        ? error.data.error.message
+        : `Failed to ${newStatus ? 'activate' : 'deactivate'} user`;
+      
+      showToast({
+        type: 'error',
+        title: 'Operation Failed',
+        message: errorMessage,
+        duration: 5000
+      });
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: errorMessage 
       };
     }
-  }, [updateUserApi]);
+  }, [updateUserApi, showToast]);
 
-  const deleteUser = useCallback(async (userId: string) => {
+  const deleteUser = useCallback(async (userId: string, userName?: string) => {
     try {
       await deleteUserApi(userId).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'User Deleted',
+        message: userName 
+          ? `${userName} has been removed from the system`
+          : 'User account deleted',
+        duration: 4000,
+      });
+      
       return { success: true };
     } catch (error) {
+      const errorMessage = isApiError(error)
+        ? error.data.error.message
+        : 'Failed to delete user account';
+      
+      showToast({
+        type: 'error',
+        title: 'Deletion Failed',
+        message: errorMessage,
+        duration: 6000,
+      });
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to delete user'
+        error: errorMessage
       };
     }
-  }, [deleteUserApi]);
+  }, [deleteUserApi, showToast]);
 
-  // const resendVerificationEmail = useCallback(async (email: string) => {
+  const resendVerificationEmail = useCallback(async (email: string) => {
+    showToast({
+      type: 'info',
+      title: 'Feature Coming Soon',
+      message: 'Email verification resend will be available in the next update',
+      duration: 4000,
+    });
     
-  //   // TODO: API for resending verification code 
-
-  // }, []);
+    // TODO: Implement actual API call
+    console.log('Resend verification to:', email);
+    return { success: false, error: 'Not implemented' };
+  }, [showToast]);
 
   return {
     viewDetails,
     editUser,
     toggleUserStatus,
     deleteUser,
-    // resendVerificationEmail,
+    resendVerificationEmail,
   };
 };
 

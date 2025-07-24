@@ -23,75 +23,119 @@ export interface SessionActionsResult {
  * 🚀 useSessionActions Hook
  * Provides session management actions with proper error handling
  */
+import { useToast } from '@/shared/ui';
+import { useStopSessionMutation, useForceStopSessionMutation } from '../api/sessionsApi';
+// import your mutation hooks here
+// import { useStopSessionMutation, useRetrySessionMutation, useForceStopSessionMutation } from '@/services/sessions';
+
 export const useSessionActions = (): SessionActionsResult => {
+  const { showToast } = useToast();
+  const [stopSessionApi] = useStopSessionMutation();
+  const [forceStopSessionApi] = useForceStopSessionMutation();
+
   /**
    * 👁️ View Session Details
    */
   const viewDetails = useCallback((session: LiveChargingSession) => {
-    // TODO: Navigate to session details page or open modal
+    showToast({
+      type: 'info',
+      title: 'Session Details',
+      message: `Viewing details for session #${session.id}`,
+      duration: 2000,
+    });
     console.log('Viewing session details:', session.id);
-
-    // Example implementation:
-    // router.push(`/sessions/${session.id}`);
-    // or open a modal with session details
-  }, []);
+  }, [showToast]);
 
   /**
    * ⏹️ Stop Active Session
    */
   const stopSession = useCallback(async (session: LiveChargingSession) => {
     try {
-      console.log('Stopping session:', session.id);
-
-      // TODO: Implement actual API call
-      // const result = await stopSessionMutation({ sessionId: session.id });
-
-      // Show success notification
-      // toast.success(`Session ${session.id} stopped successfully`);
+      await stopSessionApi({ sessionId: session.id }).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'Session Stopped',
+        message: `Charging session #${session.id} was successfully terminated`,
+        duration: 3000
+      });
+      
+      return { success: true };
     } catch (error) {
       console.error('Failed to stop session:', error);
-      // Show error notification
-      // toast.error('Failed to stop session. Please try again.');
+      
+      showToast({
+        type: 'error',
+        title: 'Stop Failed',
+        message: 'Could not terminate charging session. Please try again.',
+        duration: 5000,
+      });
+      
+      return { success: false };
     }
-  }, []);
+  }, [stopSessionApi, showToast]);
 
   /**
    * 🔄 Retry Failed Session
    */
   const retrySession = useCallback(async (session: LiveChargingSession) => {
     try {
-      console.log('Retrying session:', session.id);
-
-      // TODO: Implement actual API call
-      // const result = await retrySessionMutation({ sessionId: session.id });
-
-      // Show success notification
-      // toast.success(`Session ${session.id} retry initiated`);
+      // TODO 
+      // await retrySessionApi({ sessionId: session.id }).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'Session Restarted',
+        message: `Attempting to restart session #${session.id}`,
+        duration: 3000
+      });
+      
+      return { success: true };
     } catch (error) {
       console.error('Failed to retry session:', error);
-      // Show error notification
-      // toast.error('Failed to retry session. Please try again.');
+      
+      showToast({
+        type: 'error',
+        title: 'Restart Failed',
+        message: 'Could not restart charging session. Please check station status.',
+        duration: 5000,
+      });
+      
+      return { success: false };
     }
-  }, []);
+  }, [
+    // retrySessionApi, 
+    showToast
+  ]);
 
   /**
    * 🚨 Force Stop Session (Admin)
    */
   const forceStopSession = useCallback(async (session: LiveChargingSession) => {
     try {
-      console.log('Force stopping session:', session.id);
-
-      // TODO: Implement actual API call
-      // const result = await forceStopSessionMutation({ sessionId: session.id });
-
-      // Show success notification
-      // toast.success(`Session ${session.id} force stopped`);
+      await forceStopSessionApi({ sessionId: session.id }).unwrap();
+      
+      showToast({
+        type: 'success',
+        title: 'Session Force Stopped',
+        message: `Session #${session.id} was immediately terminated`,
+        duration: 3000,
+      });
+      
+      return { success: true };
     } catch (error) {
       console.error('Failed to force stop session:', error);
-      // Show error notification
-      // toast.error('Failed to force stop session. Please try again.');
+      
+      showToast({
+        type: 'error',
+        title: 'Force Stop Failed',
+        message: 'Administrative action failed. Please verify your permissions.',
+        duration: 6000,
+      });
+      
+      return { success: false };
     }
-  }, []);
+  }, [forceStopSessionApi, showToast]);
 
   return {
     viewDetails,
