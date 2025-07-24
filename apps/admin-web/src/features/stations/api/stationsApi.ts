@@ -49,7 +49,7 @@ const stationsApi = evChargingApi.injectEndpoints({
       AdminStationsQueryParams
     >({
       query: (params: any) => ({
-        url: '/api/charge-stations',
+        url: '/api/admin/charge-stations',
         params,
       }),
       providesTags: ['Station'],
@@ -58,7 +58,7 @@ const stationsApi = evChargingApi.injectEndpoints({
     createStation: builder.mutation<ApiResponse<Station>, CreateStationRequest>(
       {
         query: (station: any) => ({
-          url: '/api/charge-stations',
+          url: '/api/admin/charge-stations',
           method: 'POST',
           body: station,
         }),
@@ -68,10 +68,10 @@ const stationsApi = evChargingApi.injectEndpoints({
 
     updateStationStatus: builder.mutation<
       ApiResponse<Station>,
-      { status: string }
+      { status: string, id: string }
     >({
-      query: ({ status }: any) => ({
-        url: '/api/charge-stations',
+      query: ({ status, id }: any) => ({
+        url: `/api/admin/charge-stations/${id}/status`,
         method: 'PATCH',
         body: { status },
       }),
@@ -80,7 +80,7 @@ const stationsApi = evChargingApi.injectEndpoints({
 
     // Admin station detail endpoint
     getAdminStation: builder.query<ApiResponse<Station>, string>({
-      query: (stationId: any) => `/api/charge-stations/${stationId}`,
+      query: (stationId: any) => `/api/admin/charge-stations/${stationId}`,
       providesTags: (_result, _error, id) => [{ type: 'Station', id }],
     }),
 
@@ -89,7 +89,7 @@ const stationsApi = evChargingApi.injectEndpoints({
       { id: string; data: UpdateStationRequest }
     >({
       query: ({ id, data }: any) => ({
-        url: `/api/charge-stations/${id}`,
+        url: `/api/admin/charge-stations/${id}`,
         method: 'PATCH',
         body: data,
       }),
@@ -101,7 +101,7 @@ const stationsApi = evChargingApi.injectEndpoints({
 
     deleteStation: builder.mutation<ApiResponse<void>, string>({
       query: (stationId: any) => ({
-        url: `/api/charge-stations/${stationId}`,
+        url: `/api/admin/charge-stations/${stationId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (_result, _error, id) => [

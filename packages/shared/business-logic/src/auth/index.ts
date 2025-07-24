@@ -74,25 +74,20 @@ export const validatePhone = (
     return { isValid: false, error: 'Phone is required' };
   }
 
-  if (phone.length < 10) {
+  const cleanedPhone = phone.replace(/[\s-]/g, '');
+
+  const re = /^\+?[1-9]\d{6,14}$/;
+
+  if (!re.test(cleanedPhone)) {
     return {
       isValid: false,
-      error: 'Phone number must be at least 10 digits',
-    };
-  }
-
-  // 正ый RegExp-литерал, без кавычек
-  const re = /^\+\d{6,15}$/;
-
-  if (!re.test(phone)) {
-    return {
-      isValid: false,
-      error: 'Phone number must be in the format +1234567890',
+      error: 'Phone number must be in international format (e.g. +123456789 or 123456789) and contain 7 to 15 digits',
     };
   }
 
   return { isValid: true };
 };
+
 /**
  * 📝 Complete Login Form Validation
  * Extracted from: apps/admin-web/src/features/auth/hooks/useFormState.tsx (lines 67-87)

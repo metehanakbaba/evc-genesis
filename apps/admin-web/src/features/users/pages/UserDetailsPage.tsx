@@ -3,7 +3,6 @@
 import {
   ArrowLeftIcon,
   CheckCircleIcon,
-  CogIcon,
   EnvelopeIcon,
   PencilIcon,
   PhoneIcon,
@@ -19,9 +18,9 @@ import { useMemo, useState, useCallback } from 'react';
 import { UserDetailsPageProps } from '.';
 
 // Import shared components
-import { Card, Modal, Spinner, StatCard } from '@/shared/ui/components/Display';
-import { Badge } from '@/shared/ui/components/Display';
+import { Card, Modal, Spinner, StatCard, Badge } from '@/shared/ui/components/Display';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
+import { EditUserModal } from '../components/EditUserModal';
 
 // Import business logic and types
 import { formatLastLogin, getRoleConfig } from '@evc/shared-business-logic';
@@ -29,8 +28,8 @@ import type { IconComponent } from '../types/components.types';
 
 // Import API hooks
 import { useGetUserQuery, useDeleteUserMutation, useUpdateUserMutation } from '../api/usersApi';
-import { useUserActions } from '../hooks/useUsers';
 import { useRouter } from 'next/navigation';
+import {UserProfile} from "../../../../../../packages/shared/business-logic/src/users/index"
 
 /**
  * Activity item interface
@@ -46,33 +45,19 @@ interface ActivityItem {
   readonly iconColor: string;
 }
 
-/**
- * 👤 User Details Page Component
- * 
- * Comprehensive user profile view with activity history,
- * role management, and administrative actions.
- * 
- * @param props - Component props
- * @returns JSX.Element
- */
 const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
-
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
 
   // API hooks
   const { data: userResponse, isLoading, error, refetch } = useGetUserQuery(userId);
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
-  // User actions
-  const {
-     editUser, 
-    //  resendVerificationEmail
-   } = useUserActions();
-
-  const user = userResponse?.data;
+  const user: UserProfile = userResponse?.data;
 
   /**
    * Handle user deletion
@@ -95,6 +80,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
    const handleToggleStatus = useCallback(async (): Promise<void> => {
     if (!userResponse?.data) return;
 
+    // TODO toggling status and refetch 
     try {
       await updateUser({
         id: userResponse.data.id,
@@ -130,14 +116,14 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
    * Generate mock activity data
    */
   const activityItems = useMemo((): ActivityItem[] => {
-    if (!user) return [];
+    if (!user) return [];  
 
     return [
       {
         id: '1',
         type: 'login',
         description: 'Last login from Chrome on Windows',
-        timestamp: user.last_login || user.created_at,
+        timestamp: user.lastLogin || user.createdAt,
         icon: UserIcon,
         iconColor: 'text-blue-400',
       },
@@ -145,7 +131,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
         id: '2',
         type: 'profile_update',
         description: 'Profile information updated',
-        timestamp: user.created_at,
+        timestamp: user.createdAt,
         icon: PencilIcon,
         iconColor: 'text-emerald-400',
       },
@@ -153,7 +139,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
         id: '3',
         type: 'role_change',
         description: `Role assigned: ${user.role}`,
-        timestamp: user.created_at,
+        timestamp: user.createdAt,
         icon: ShieldCheckIcon,
         iconColor: 'text-purple-400',
       },
@@ -200,7 +186,6 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
         <Breadcrumb
           items={[
             { label: 'Users', href: '/users' },
-            { label: user.name, href: `/users/${user.id}` },
           ]}
           currentPageLabel="User Details"
           variant="purple"
@@ -219,14 +204,16 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
         </div>
         
         <PageHeader
-          title={user.name}
+          title={user.firstName}
           description={`${roleConfig.text} • ${user.email}`}
           variant="purple"
           actionButton={{
-            label: 'Edit User',
-            onClick: () => editUser(user),
-            icon: PencilIcon,
-          }}
+              label: 'Back to users',
+              onClick: () => {
+                router.push('/users');
+              },
+              icon: UserIcon
+            }}
         />
       </PageContainer>
 
@@ -249,12 +236,12 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-white">{user.name}</h3>
+                      <h3 className="text-xl font-semibold text-white">{user.firstName} {user.lastName}</h3>
                       <Badge
-                        variant={user.is_active ? 'success' : 'danger'}
+                        variant={user.isActive ? 'success' : 'danger'}
                         size="sm"
                       >
-                        {user.is_active ? 'Active' : 'Inactive'}
+                        {user.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </div>
                     <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg ${roleConfig.badgeColor}`}>
@@ -286,7 +273,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
                     <PhoneIcon className="w-5 h-5 text-gray-400" />
                     <div>
                       <div className="text-sm text-gray-400">Phone</div>
-                      <div className="text-white font-medium">{user.phone}</div>
+                      <div className="text-white font-medium">{user.phoneNumber}</div>
                     </div>
                   </div>
                 </div>
@@ -296,7 +283,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
                   <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
                     <div className="text-sm text-gray-400 mb-1">Member Since</div>
                     <div className="text-white font-medium">
-                      {new Date(user.created_at).toLocaleDateString('en-US', {
+                      {new Date(user.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
@@ -307,7 +294,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
                   <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
                     <div className="text-sm text-gray-400 mb-1">Last Login</div>
                     <div className="text-white font-medium">
-                      {formatLastLogin(user.last_login)}
+                      {formatLastLogin(user.lastLogin)}
                     </div>
                   </div>
                 </div>
@@ -321,57 +308,84 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
             {/* Account Status */}
             <StatCard
               title="Account Status"
-              value={user.is_active ? 'Active' : 'Inactive'}
-              icon={user.is_active ? CheckCircleIcon : XCircleIcon}
+              value={user.isActive ? 'Active' : 'Inactive'}
+              icon={user.isActive ? CheckCircleIcon : XCircleIcon}
               // trend={user.is_active ? 'Account is active' : 'Account is disabled'}
-              variant={user.is_active ? 'emerald' : 'blue'}
+              variant={user.isActive ? 'emerald' : 'blue'}
             />
 
             {/* Quick Actions */}
-            <Card variant="secondary">
-              <Card.Header title="Quick Actions" />
-              <Card.Body>
-              <div className="space-y-3">
-                <Button
-                  onClick={() => editUser(user)}
-                  className="w-full justify-start"
-                  variant="ghost"
-                >
-                  <PencilIcon className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
+              <Card variant="secondary">
+                <Card.Header title="Quick Actions" />
+                <Card.Body>
+                  <div className="space-y-2">
+                    {/* Activate/Deactivate */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center">
+                        {user.isActive ? (
+                          <XCircleIcon className="w-6 h-6 text-red-400" />
+                        ) : (
+                          <CheckCircleIcon className="w-6 h-6 text-emerald-400" />
+                        )}
+                      </div>
+                      <Button
+                        onClick={() => setIsStatusModalOpen(true)}
+                        className="w-[95%] justify-start"
+                        variant="primary"
+                      >
+                        {user.isActive ? 'Deactivate Account' : 'Activate Account'}
+                      </Button>
+                    </div>
 
-                <Button
-                  onClick={() => setIsStatusModalOpen(true)}
-                  className="w-full justify-start"
-                  variant="ghost"
-                >
-                  <CogIcon className="w-4 h-4 mr-2" />
-                  {user.is_active ? 'Deactivate' : 'Activate'} Account
-                </Button>
+                    {/* Resend Verification */}
+                    {!user.verified_email && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center">
+                          <EnvelopeIcon className="w-6 h-6 text-blue-400" />
+                        </div>
+                        <Button
+                          // onClick={handleResendVerification}
+                          className="w-[95%] justify-start"
+                          variant="ghost"
+                        >
+                          Resend Verification Email
+                        </Button>
+                      </div>
+                    )}
 
-                {!user.verified_email && (
-                  <Button
-                    // onClick={handleResendVerification}
-                    className="w-full justify-start"
-                    variant="ghost"
-                  >
-                    <EnvelopeIcon className="w-4 h-4 mr-2" />
-                    Resend Verification
-                  </Button>
-                )}
+                    {/* Delete User */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center">
+                        <TrashIcon className="w-6 h-6 text-red-400" />
+                      </div>
+                      <Button
+                        onClick={() => setIsDeleteModalOpen(true)}
+                        className="w-[95%] justify-end text-red-400 hover:text-red-300"
+                        variant="destructive"
+                      >
+                        Delete User Account
+                      </Button>
+                    </div>
 
-                <Button
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  className="w-full justify-start text-red-400 hover:text-red-300"
-                  variant="ghost"
-                >
-                  <TrashIcon className="w-4 h-4 mr-2" />
-                  Delete User
-                </Button>
-              </div>
-              </Card.Body>
-            </Card>
+                    {/* Edit User */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center">
+                        <PencilIcon className="w-6 h-6 text-blue-400" />
+                      </div>
+                      <Button
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setOpenEditModal(true);
+                        }}
+                        className="w-[95%] justify-start"
+                        variant="secondary"
+                      >
+                        Edit User Profile
+                      </Button>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
           </div>
         </div>
 
@@ -413,7 +427,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
       >
         <div className="space-y-4">
           <p className="text-gray-300">
-            Are you sure you want to permanently delete <strong>{user.name}</strong>'s account?
+            Are you sure you want to permanently delete <strong>{user.firstName}</strong>'s account?
             This action cannot be undone and will remove all associated data.
           </p>
           <div className="flex gap-3 justify-end">
@@ -439,13 +453,13 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
       <Modal
         isOpen={isStatusModalOpen}
         onClose={() => setIsStatusModalOpen(false)}
-        title={`${user.is_active ? 'Deactivate' : 'Activate'} User Account`}
-        variant={user.is_active ? 'warning' : 'success'}
+        title={`${user.isActive ? 'Deactivate' : 'Activate'} User Account`}
+        variant={user.isActive ? 'warning' : 'success'}
       >
         <div className="space-y-4">
           <p className="text-gray-300">
-            Are you sure you want to {user.is_active ? 'deactivate' : 'activate'}{' '}
-            <strong>{user.name}</strong>'s account?
+            Are you sure you want to {user.isActive ? 'deactivate' : 'activate'}{' '}
+            <strong>{user.firstName}</strong>'s account?
           </p>
           <div className="flex gap-3 justify-end">
             <Button
@@ -457,14 +471,22 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
             </Button>
             <Button
               onClick={handleToggleStatus}
-              variant={user.is_active ? 'secondary' : 'primary'}
+              variant={user.isActive ? 'secondary' : 'primary'}
               loading={isUpdating}
             >
-              {user.is_active ? 'Deactivate' : 'Activate'}
+              {user.isActive ? 'Deactivate' : 'Activate'}
             </Button>
           </div>
         </div>
       </Modal>
+      {/* Edit User Modal */}
+      {selectedUser && (
+        <EditUserModal
+          user={user}
+          isOpen={openEditModal}
+          onClose={() => setOpenEditModal(false)}
+        />
+      )}
     </MainLayout>
   );
 };

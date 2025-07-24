@@ -34,12 +34,13 @@ export interface UserFilterOptions {
 export interface UserProfile {
   readonly id: string;
   readonly email: string;
-  readonly name: string;
-  readonly phone: string;
+  readonly firstName: string;
+  readonly lastName: string; 
+  readonly phoneNumber: string;
   readonly role: UserRole;
-  readonly created_at: string;
-  readonly last_login?: string;
-  readonly is_active: boolean;
+  readonly createdAt: string;
+  readonly lastLogin?: string;
+  readonly isActive: boolean;
   readonly verified_email: boolean;
 }
 
@@ -147,17 +148,18 @@ export const filterUsers = (
   return users.filter((user) => {
     // Search filter - name, email, phone
     const matchesSearch = searchQuery === '' || 
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) || 
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.phone.includes(searchQuery);
+      user.phoneNumber.includes(searchQuery);
 
     // Role filter
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
     
     // Status filter
     const matchesStatus = statusFilter === 'all' ||
-      (statusFilter === 'active' && user.is_active) ||
-      (statusFilter === 'inactive' && !user.is_active);
+      (statusFilter === 'active' && user.isActive) ||
+      (statusFilter === 'inactive' && !user.isActive);
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -256,8 +258,12 @@ export const validateUserData = (userData: Partial<UserProfile>): {
   const errors: Record<string, string> = {};
   
   // Name validation
-  if (!userData.name || userData.name.trim().length < 2) {
-    errors.name = 'Name must be at least 2 characters long';
+  if (!userData.firstName || userData.firstName.trim().length < 2) {
+    errors.name = 'First name must be at least 2 characters long';
+  }
+
+  if (!userData.lastName || userData.lastName.trim().length < 2) {
+    errors.name = 'Last name must be at least 2 characters long';
   }
   
   // Email validation
@@ -268,7 +274,7 @@ export const validateUserData = (userData: Partial<UserProfile>): {
   
   // Phone validation (Polish format)
   const phoneRegex = /^\+48[0-9]{9}$/;
-  if (!userData.phone || !phoneRegex.test(userData.phone)) {
+  if (!userData.phoneNumber || !phoneRegex.test(userData.phoneNumber)) {
     errors.phone = 'Please enter a valid Polish phone number (+48XXXXXXXXX)';
   }
   
@@ -306,7 +312,7 @@ export const getDefaultFilters = (): UserFilterOptions => ({
  */
 export const calculateUserStats = (users: UserProfile[]) => {
   const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.is_active).length;
+  const activeUsers = users.filter(u => u.isActive).length;
   const adminUsers = users.filter(u => u.role === 'ADMIN').length;
   const operatorUsers = users.filter(u => u.role === 'FIELD_WORKER').length;
   const customerUsers = users.filter(u => u.role === 'CUSTOMER').length;
@@ -315,7 +321,7 @@ export const calculateUserStats = (users: UserProfile[]) => {
   // Recent registrations (last 24 hours)
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const recentRegistrations = users.filter(
-    u => new Date(u.created_at) > oneDayAgo
+    u => new Date(u.createdAt) > oneDayAgo
   ).length;
   
   return {

@@ -1,4 +1,5 @@
 'use client'
+
 /**
  * 👥 Users API Hooks
  *
@@ -16,6 +17,7 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "@/features/users/api/usersApi";
+import { UpdateUserRequest } from '../types/user.types';
 
 /**
  * 📊 User Statistics Hook
@@ -23,11 +25,11 @@ import {
  */
 export const useUserStatistics = (users: UserProfile[]) => {
   const totalUsers = users.length;
-  const activeUsers = users.filter((user) => user.is_active).length;
+  const activeUsers = users.filter((user) => user.isActive).length;
   const adminUsers = users.filter((user) => user.role === 'ADMIN').length;
   const newUsersThisMonth = users.filter(
     (user) =>
-      new Date(user.created_at) >
+      new Date(user.createdAt) >
       new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
   ).length;
 
@@ -65,15 +67,26 @@ export const useUserActions = () => {
     router.push(`/users/${user.id}`);
   }, [router]);
 
-  const editUser = useCallback((user: UserProfile) => {
-    router.push(`/users/${user.id}/edit`);
-  }, [router]);
+  const editUser = useCallback(async (id: string, data: UpdateUserRequest) => {
+    try {
+      await updateUserApi({
+        id: id,
+        data: data
+      }).unwrap();
+      return { success: true }
+    } catch (error){
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      };
+    }
+  }, [updateUserApi]);
 
   const toggleUserStatus = useCallback(async (user: UserProfile) => {
     try {
       await updateUserApi({
         id: user.id,
-        data: { is_active: !user.is_active }
+        data: { is_active: !user.isActive }
       }).unwrap();
       return { success: true };
     } catch (error) {
@@ -146,8 +159,11 @@ export const useFetchUsers = ({
     error: queryError,
     isLoading,
     isFetching,
+    refetch 
   } = useGetAllUsersQuery(queryParams, {
-    skip: !hasNextPage, // Skip request if there's no next page
+    skip: !hasNextPage,
+    refetchOnMountOrArgChange: true,
+    keepUnusedDataFor: 60, 
   });
 
   // Error handling
@@ -195,6 +211,7 @@ export const useFetchUsers = ({
 
   return {
     users,
+    refetch,
     isLoading,
     isLoadingMore: isFetching,
     hasNextPage,

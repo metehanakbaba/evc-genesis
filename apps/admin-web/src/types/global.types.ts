@@ -56,8 +56,8 @@ export interface Location {
   readonly latitude: number;
   readonly longitude: number;
   readonly address: string;
-  readonly city: string;
-  readonly country: string;
+  readonly city?: string;
+  readonly country?: string;
 }
 
 // Legacy Location interface for backward compatibility with mock data

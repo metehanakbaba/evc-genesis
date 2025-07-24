@@ -3,12 +3,13 @@ import type { UserRole } from '@/types/global.types';
 export interface UserProfile {
   readonly id: string;
   readonly email: string;
-  readonly name: string;
-  readonly phone: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly phoneNumber: string;
   readonly role: UserRole;
-  readonly created_at: string;
+  readonly createdAt: string;
   readonly last_login?: string;
-  readonly is_active: boolean;
+  readonly isActive: boolean;
   readonly verified_email: boolean;
   readonly payment_methods?: ReadonlyArray<PaymentMethod>;
 }
@@ -42,17 +43,14 @@ export interface UsersQueryParams {
 export interface CreateUserRequest {
   readonly email: string;
   readonly password: string;
-  readonly name: string;
-  readonly phone: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly phoneNumber: string;
   readonly role: UserRole;
+  readonly isActive: boolean; 
 }
 
-export interface UpdateUserRequest {
-  readonly name?: string;
-  readonly phone?: string;
-  readonly role?: UserRole;
-  readonly is_active?: boolean;
-}
+export type UpdateUserRequest = Partial<Omit<CreateUserRequest, 'email' | 'password'>>;
 
 export interface UserStatistics {
   readonly total_users: number;

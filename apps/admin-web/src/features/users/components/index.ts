@@ -11,29 +11,15 @@
 
 // Re-export types for convenience
 export type {
-  UserActionHandlers,
-  UserBulkSelection,
-  UserDataState,
-  UserFilterState,
-  UserStatsData,
-  // New comprehensive types
   UserStatsSectionProps,
   UserSearchSectionProps,
   UserBulkActionsProps,
   UserDataSectionProps,
-  IconComponent,
-  ViewMode,
   ColorVariant,
-} from '../types/components.types';
+  UserStatsData,
+  ViewMode,
+} from '@/features/users/types/components.types';
 
-// Legacy types for backward compatibility
-export type {
-  UserActionHandlers as LegacyUserActionHandlers,
-  UserBulkSelection as LegacyUserBulkSelection,
-  UserDataState as LegacyUserDataState,
-  UserFilterState as LegacyUserFilterState,
-  UserStatsData as LegacyUserStatsData,
-} from '../types/usersPage.types';
 
 // Component exports
 export { default as UserBulkActions } from './UserBulkActions';

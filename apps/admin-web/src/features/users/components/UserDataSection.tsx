@@ -119,7 +119,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
                   {roleConfig.text}
                 </div>
                 <div className="text-white font-semibold text-lg">
-                  {user.name}
+                  {user.firstName} {user.lastName}
                 </div>
               </div>
             </div>
@@ -127,9 +127,9 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
             {/* ✅ Use shared StatusBadge */}
             <DataStatusBadge
               status={{
-                variant: user.is_active ? 'success' : 'danger',
-                label: user.is_active ? 'Active' : 'Inactive',
-                pulse: user.is_active,
+                variant: user.isActive ? 'success' : 'danger',
+                label: user.isActive ? 'Active' : 'Inactive',
+                pulse: user.isActive,
               }}
             />
           </div>
@@ -149,7 +149,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
             </div>
             <div className="flex items-center gap-2 text-gray-300">
               <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="text-sm">{user.phone}</span>
+              <span className="text-sm">{user.phoneNumber}</span>
             </div>
           </div>
 
@@ -158,11 +158,11 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
             <div className="flex items-center gap-2">
               <UserIcon className="w-4 h-4 flex-shrink-0" />
               <span>
-                Joined {new Date(user.created_at).toLocaleDateString()}
+                Joined {new Date(user.createdAt).toLocaleDateString()}
               </span>
             </div>
             <div className="text-gray-300">
-              Last: {formatLastLogin(user.last_login)}
+              Last: {formatLastLogin(user.lastLogin)}
             </div>
           </div>
         </>
@@ -210,7 +210,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
               <UserIcon className="w-4 h-4 text-purple-400" />
             </div>
             <div>
-              <div className="font-medium text-white">{user.name}</div>
+              <div className="font-medium text-white">{user.firstName}</div>
               <div className="text-sm text-gray-400">{user.email}</div>
             </div>
           </div>
@@ -236,8 +236,8 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
         render: (user) => (
           <DataStatusBadge
             status={{
-              variant: user.is_active ? 'success' : 'danger',
-              label: user.is_active ? 'Active' : 'Inactive',
+              variant: user.isActive ? 'success' : 'danger',
+              label: user.isActive ? 'Active' : 'Inactive',
               size: 'sm',
             }}
           />
@@ -249,7 +249,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
         accessor: 'last_login',
         render: (user) => (
           <span className="text-sm text-gray-300">
-            {formatLastLogin(user.last_login)}
+            {formatLastLogin(user.lastLogin)}
           </span>
         ),
       },

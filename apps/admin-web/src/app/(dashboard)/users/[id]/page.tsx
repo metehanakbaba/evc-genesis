@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  { use } from 'react';
 import { UserDetailsPage } from '@/features/users';
 
 export default function Page({
@@ -6,8 +6,6 @@ export default function Page({
 }: {
   params: Promise<{ id: string }>
 }) {
-  // unwrap params promise
-  const { id } = React.use(paramsPromise)
-
+  const { id } = use(paramsPromise)
   return <UserDetailsPage userId={id} />
 }

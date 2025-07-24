@@ -18,14 +18,12 @@ export interface UserDetailsPageProps {
   userId: string;
 }
 
-
 // Re-export component types for convenience
 export type {
   UserActionHandlers,
   UserBulkSelection,
   UserDataState,
   UserFilterState,
-  UserStatsData,
   UserStatsSectionProps,
   UserSearchSectionProps,
   UserBulkActionsProps,
@@ -33,4 +31,4 @@ export type {
   IconComponent,
   ViewMode,
   ColorVariant,
-} from '../types/components.types';
+} from '@/features/users/types/components.types';

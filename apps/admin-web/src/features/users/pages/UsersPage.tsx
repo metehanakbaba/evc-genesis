@@ -23,7 +23,6 @@ import {
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 // ✅ Import new component sections
 import {
-  UserBulkActions,
   UserDataSection,
   UserSearchSection,
   type UserStatsData,
@@ -33,6 +32,8 @@ import {
 import { useUserActions, useUserStatistics } from '@/features/users/hooks';
 import { useFetchUsers } from '../hooks/useUsers';
 import { useRouter } from 'next/navigation';
+import { EditUserModal } from '../components/EditUserModal';
+import { UserProfile } from '@evc/shared-business-logic';
 
 /**
  * 🚀 Revolutionary Users Management Page - Purple Theme
@@ -50,6 +51,8 @@ const UsersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
@@ -72,10 +75,10 @@ const UsersPage: React.FC = () => {
   const { totalUsers, activeUsers, adminUsers, newUsersThisMonth } =
     useUserStatistics(users);
 
-  const { viewDetails, editUser, deleteUser } = useUserActions();
+  const { viewDetails, deleteUser } = useUserActions();
 
   // ✅ Bulk selection management
-  const { selectedIds, selectedCount, toggleItem, toggleAll, clearSelection } =
+  const { selectedIds, toggleItem, toggleAll } =
     useBulkSelection(users);
 
   // ✅ Prepare user stats data
@@ -261,7 +264,10 @@ const UsersPage: React.FC = () => {
           onLoadMore={loadMore}
           onRefresh={refresh}
           onViewDetails={viewDetails}
-          onEditUser={editUser}
+          onEditUser={(user: UserProfile) => {
+            setSelectedUser(user);
+            setOpenEditModal(true);
+          }}
           onDeleteUser={(user) => deleteUser(user.id)}
           onClearFilters={handleClearFilters}
           selectedItems={new Set(selectedIds)}
@@ -281,13 +287,16 @@ const UsersPage: React.FC = () => {
         variant="purple"
       />
 
-      {/* ✅ Bulk Actions */}
-      <UserBulkActions
-        selectedCount={selectedCount}
-        totalCount={totalUsers.count}
-        selectedIds={selectedIds}
-        onClearSelection={clearSelection}
-      />
+
+      {/* Render EditUserModal */}
+      {selectedUser && (
+        <EditUserModal
+          user={selectedUser}
+          isOpen={openEditModal}
+          onClose={() => setOpenEditModal(false)}
+          refresh={refresh}
+        />
+      )}
     </MainLayout>
   );
 };

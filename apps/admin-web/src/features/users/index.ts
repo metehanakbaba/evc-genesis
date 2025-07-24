@@ -15,11 +15,12 @@
 export {
   UsersPage,
   UserDetailsPage,
-} from './pages';
+  CreateUserPage,
+} from '@/features/users/pages';
 
 export type {
   UserDetailsPageProps,
-} from './pages';
+} from '@/features/users/pages';
 
 // ===============================
 // COMPONENTS EXPORTS
@@ -29,49 +30,43 @@ export {
   UserDataSection,
   UserSearchSection,
   UserStatsSection,
-} from './components';
+} from '@/features/users/components';
 
 // ===============================
 // TYPES EXPORTS
 // ===============================
 export type {
-  // Core component types
-  UserActionHandlers,
-  UserBulkSelection,
-  UserDataState,
-  UserFilterState,
-  UserStatsData,
   UserStatsSectionProps,
   UserSearchSectionProps,
   UserBulkActionsProps,
   UserDataSectionProps,
-  
-  // UI types
-  IconComponent,
-  ViewMode,
   ColorVariant,
-  
-  // Form and API types
-  UserFormData,
-  UserFormErrors,
-  UserFormProps,
-  UserQueryParams,
-  UsersApiResponse,
-  UseFetchUsersParams,
-  UseFetchUsersReturn,
-  
-  // Configuration types
-  UserStatConfig,
-  FilterOption,
-  
-} from './types/components.types';
+  ViewMode,
+  UserActionHandlers,
+  UserBulkSelection,
+  UserDataState,
+  UserFilterState,
+} from '@/features/users/types/components.types';
+
+export type {
+  PaymentMethod,
+  UpdateProfileRequest,
+  UsersQueryParams,
+  CreateUserRequest,
+  UpdateUserRequest,
+  UserStatistics,
+} from '@/features/users/types/user.types';
 
 // ===============================
 // HOOKS EXPORTS
 // ===============================
 export {
+  useSearchDebounce,
+  useInfiniteScrollTrigger,
+  useIntersectionObserver,
   useUserActions,
-} from './hooks/useUsers';
+  useUserStatistics,
+} from '@/features/users/hooks';
 
 // ===============================
 // API EXPORTS
@@ -81,22 +76,17 @@ export {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-} from './api/usersApi';
+} from '@/features/users/api/usersApi';
 
 // ===============================
 // BUSINESS LOGIC RE-EXPORTS
 // ===============================
 export {
-  // User role management
   getRoleConfig,
   getRoleOptions,
   getStatusOptions,
-  
-  // User filtering
   filterUsers,
   getDefaultFilters,
-  
-  // User utilities
   formatLastLogin,
   hasPermission,
   getAvailableActions,

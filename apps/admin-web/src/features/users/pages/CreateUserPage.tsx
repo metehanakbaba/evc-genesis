@@ -3,24 +3,13 @@
 import React, { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { MainLayout, PageContainer, PageHeader } from '@ui/layout'
-import { Breadcrumb } from '@/shared/ui/components/Navigation'
-import {Button} from '@/shared/ui'
-import { Input, Checkbox } from '@/components/ui/Forms'
+import { Breadcrumb, Button, useToast } from '@/shared/ui'
+import { Input, Checkbox } from '@/shared/ui'
 import { ShieldCheckIcon, WrenchScrewdriverIcon, UserIcon } from '@heroicons/react/20/solid'
-import type { UserRole } from '../types/components.types'
-import { useToast } from '@/shared/ui'
-import {useCreateUserMutation} from "./../api/usersApi";
+import type { UserRole } from '@/features/users/types/components.types'
+import { useCreateUserMutation } from '@/features/users/api/usersApi'
 import { getFieldValidationState, validateEmail, validatePassword, validatePhone} from '@evc/shared-business-logic'
-
-interface UserFormData {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    role: UserRole,
-    isActive: boolean;
-}
+import { CreateUserRequest } from '../types/user.types'
 
 const ROLE_OPTIONS: Array<{
   value: UserRole;
@@ -57,7 +46,7 @@ export const CreateUserPage: React.FC = () => {
   const { showToast } = useToast();
   const [createUser, { isLoading }] = useCreateUserMutation();
 
-  const [formData, setFormData] = useState<UserFormData>({
+  const [formData, setFormData] = useState<CreateUserRequest>({
     email: '',
     password: '',
     firstName: '',
@@ -69,7 +58,7 @@ export const CreateUserPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateField = (
-    field: keyof UserFormData,
+    field: keyof CreateUserRequest,
     value: string
   ): { isValid: boolean; error?: string } => {
     switch (field) {
@@ -94,7 +83,7 @@ export const CreateUserPage: React.FC = () => {
 
   const handleChange = useCallback(
     (
-      field: keyof UserFormData,
+      field: keyof CreateUserRequest,
       value: string | boolean | UserRole
     ) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
