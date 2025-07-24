@@ -38,7 +38,7 @@ interface EnhancedUser extends UserProfile, DataGridItem {
 }
 
 interface UserDataSectionProps {
-  users: UserProfile[];
+  users: readonly UserProfile[];
   isLoading: boolean;
   isLoadingMore: boolean;
   hasNextPage: boolean;

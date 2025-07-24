@@ -14,18 +14,18 @@ import {
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
 import {
-  EyeIcon,
   WrenchScrewdriverIcon,
   MapPinIcon,
+  TrashIcon,
   SignalIcon,
   BoltIcon,
 } from '@heroicons/react/24/outline';
-import type { Station } from '../types/station.types';
+import type { ChargingStation } from '@evc/shared-business-logic';
 
-interface EnhancedStation extends Station, DataGridItem {}
+interface EnhancedStation extends ChargingStation, DataGridItem {}
 
 interface StationsDataSectionProps {
-  stations: readonly Station[];
+  stations: readonly ChargingStation[];
   isLoading: boolean;
   isLoadingMore: boolean;
   hasNextPage: boolean;
@@ -33,8 +33,8 @@ interface StationsDataSectionProps {
   viewMode: 'grid' | 'table';
   onLoadMore: () => void;
   onRefresh: () => void;
-  onViewDetails: (stationId: string) => void;
-  onEdit: (station: Station) => void;
+  onDelete: (station: ChargingStation) => void;
+  onEdit: (station: ChargingStation) => void;
   onClearFilters: () => void;
   selectedItems: Set<string>;
   onSelectItem: (id: string) => void;
@@ -53,36 +53,44 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
   selectedItems,
   onSelectItem,
   onSelectAll,
-  onViewDetails,
+  onDelete,
   onEdit,
   onClearFilters,
 }) => {
   // ✅ Helper function to get station status config
   const getStationStatusConfig = (station: EnhancedStation): DataGridStatusConfig => {
     const statusConfigs = {
-      active: {
+      AVAILABLE: {
         bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
         borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
         badgeColor: 'bg-emerald-500/10',
         textColor: 'text-emerald-400',
         pulseColor: 'bg-emerald-500',
       },
-      offline: {
+      OFFLINE: {
         bgColor: 'from-red-500/15 via-red-400/8 to-transparent',
         borderColor: 'border-red-400/30 hover:border-red-300/50',
         badgeColor: 'bg-red-500/10',
         textColor: 'text-red-400',
         pulseColor: 'bg-red-500',
       },
-      maintenance: {
+      MAINTENANCE: {
         bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
         borderColor: 'border-amber-400/30 hover:border-amber-300/50',
         badgeColor: 'bg-amber-500/10',
         textColor: 'text-amber-400',
         pulseColor: 'bg-amber-500',
       },
+      CHARGING: {
+        bgColor: 'from-blue-500/15 via-blue-400/8 to-transparent',
+        borderColor: 'border-blue-400/30 hover:border-blue-300/50',
+        badgeColor: 'bg-blue-500/10',
+        textColor: 'text-blue-400',
+        pulseColor: 'bg-blue-500',
+      },
+
     };
-    return statusConfigs[station.status] || statusConfigs.offline;
+    return statusConfigs[station.status] || statusConfigs.OFFLINE;
   };
 
   // ✅ CREATE GRID RENDERER for GenericDataGrid
@@ -120,10 +128,10 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
             {/* ✅ Use shared StatusBadge */}
             <DataStatusBadge
               status={{
-                variant: station.status === 'active' ? 'success' : 
-                         station.status === 'maintenance' ? 'warning' : 'danger',
+                variant: station.status === 'AVAILABLE' ? 'success' : 
+                         station.status === 'MAINTENANCE' ? 'warning' : 'danger',
                 label: station.status.charAt(0).toUpperCase() + station.status.slice(1),
-                pulse: station.status === 'active',
+                pulse: station.status === 'AVAILABLE',
               }}
             />
           </div>
@@ -131,12 +139,9 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       },
 
       renderContent: (station: EnhancedStation): React.ReactNode => {
-        // Handle both old (connectors array) and new (single connectorType) data structure
-        const connectors = (station as any).connectors || [];
-        const available = Array.isArray(connectors) ? 
-          connectors.filter((c) => c && typeof c === 'object' && (c as any).status === 'available').length : 0;
-        const total = connectors.length || 1; // Fallback to 1 for single connector stations
-        
+        const availableConnectors = stations.filter(item => item.status === 'AVAILABLE').map(item => item.connectorType).length;
+        const totalConnectors = stations.map(item => item.connectorType).length;
+
         // Support both new (latitude/longitude) and legacy (lat/lng) location formats
         const locationData = station.location as any;
         const displayLocation = locationData.address || 
@@ -154,7 +159,7 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
               <span className="text-sm">
                 {station.connectorType ? 
                   `${station.connectorType} • ${station.powerOutput}kW` : 
-                  `${available}/${total} connectors available`
+                  `${availableConnectors}/${totalConnectors} connectors available`
                 }
               </span>
             </div>
@@ -164,7 +169,7 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
             <div className="flex items-center justify-between text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <BoltIcon className="w-4 h-4 flex-shrink-0" />
-                <span>{station.pricePerKWh ? `${station.pricePerKWh} PLN/kWh` : `ID: ${station.id.slice(-11)}`}</span>
+                <span>{station.pricePerKwh ? `${station.pricePerKwh} PLN/kWh` : `ID: ${station.id.slice(-11)}`}</span>
               </div>
               <div className="text-gray-300">
                 {locationData.city || locationData.address}
@@ -181,18 +186,18 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
   // Grid action buttons
   const gridActions = useMemo<GridActionButton[]>(() => [
     {
-      icon: EyeIcon,
-      label: 'View',
-      onClick: (item) => onViewDetails(item.id),
-      variant: 'ghost',
-    },
-    {
       icon: WrenchScrewdriverIcon,
       label: 'Edit',
-      onClick: (item) => onEdit(item as Station),
+      onClick: (item) => onEdit(item as EnhancedStation),
       variant: 'primary',
     },
-  ], [onViewDetails, onEdit]);
+    {
+      icon: TrashIcon,
+      label: 'Delete',
+      onClick: (item) => onDelete(item as EnhancedStation),
+      variant: 'danger',
+    },
+  ], [onDelete, onEdit]);
 
   // Table columns
   const tableColumns = useMemo<TableColumn<EnhancedStation>[]>(() => [
@@ -216,7 +221,7 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       render: (st) => (
         <DataStatusBadge
           status={{
-            variant: st.status === 'active' ? 'success' : 'danger',
+            variant: st.status === 'AVAILABLE' ? 'success' : 'danger',
             label: st.status[0].toUpperCase() + st.status.slice(1),
           }}
         />
@@ -227,17 +232,14 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       label: 'Available',
       accessor: 'connectors',
       render: (st) => {
-        // Handle both old (connectors array) and new (single connectorType) data structure
-        const connectors = (st as any).connectors || [];
-        const available = Array.isArray(connectors) ? 
-          connectors.filter((c: any) => c && c.status === 'available').length : 0;
-        const total = connectors.length || 1;
+        const allConnectors = stations.map(item => item.connectorType);
+        const availableConnectors = stations.filter(item => item.status === 'AVAILABLE').map(item => item.connectorType);
         
         return (
           <span className="text-gray-300">
             {(st as any).connectorType ? 
               `${(st as any).connectorType} • ${(st as any).powerOutput}kW` : 
-              `${available}/${total}`
+              `${availableConnectors}/${allConnectors}`
             }
           </span>
         );

@@ -25,9 +25,9 @@ import {
 import { PageContainer } from '@/shared/ui/components/Layout';
 import { useSearchDebounce } from '@/shared/ui';
 import { useInfiniteStations, useStationStatistics, useStationActions } from '@/features/stations/hooks';
-import { StationsSearchSection, StationStatsSection, StationsDataSection } from '@/features/stations/components/index';
+import { StationsSearchSection, StationStatsSection, StationsDataSection, EditStationModal } from '@/features/stations/components/index';
 import StationBulkActions from '@/features/stations/components/StationBulkActions';
-import { Station } from '@/features/stations/types/station.types';
+import { ChargingStation, ConnectorType, StationStatus } from '@evc/shared-business-logic';
 
 /**
  * ⚡ Station Management Statistics
@@ -42,20 +42,34 @@ interface StationStats {
   readonly isLive?: boolean;
 }
 
-const statusOptions = [
+interface StatusOption {
+  id: StationStatus | 'all',
+  label: string;
+  icon: IconComponent;
+  color: 'blue' | 'emerald' | 'amber' | 'red' | 'gray'
+}
+
+interface ConnectorOption {
+  id: ConnectorType | 'all';
+  label: string;
+  icon: IconComponent;
+  color: 'teal' | 'blue' | 'emerald' | 'purple' | 'red' | 'gray'
+}
+
+const statusOptions: StatusOption[] = [
   { id: 'all', label: 'All Status', icon: FunnelIcon, color: 'gray' },
-  { id: 'active', label: 'Operational', icon: CheckCircleIcon, color: 'emerald' },
-  { id: 'offline', label: 'Offline', icon: XCircleIcon, color: 'red' },
-  { id: 'maintenance', label: 'Maintenance', icon: WrenchScrewdriverIcon, color: 'amber' },
+  { id: 'AVAILABLE', label: 'Operational', icon: CheckCircleIcon, color: 'emerald' },
+  { id: 'OFFLINE', label: 'Offline', icon: XCircleIcon, color: 'red' },
+  { id: 'MAINTENANCE', label: 'Maintenance', icon: WrenchScrewdriverIcon, color: 'amber' },
+  { id: 'CHARGING', label: 'Charging', icon: BoltIcon, color: 'blue'}
 ] as const;
 
-const connectorOptions = [
+const connectorOptions: ConnectorOption[] = [
   { id: 'all', label: 'All Standards', icon: BoltIcon, color: 'gray' },
-  { id: 'CCS2', label: 'CCS2', icon: BoltIcon, color: 'blue' },
+  { id: 'CCS', label: 'CCS2', icon: BoltIcon, color: 'blue' },
   { id: 'CHAdeMO', label: 'CHAdeMO', icon: BoltIcon, color: 'purple' },
   { id: 'Type2', label: 'Type 2', icon: BoltIcon, color: 'emerald' },
-  { id: 'AC', label: 'AC', icon: BoltIcon, color: 'teal' },
-  { id: 'DC', label: 'DC', icon: BoltIcon, color: 'red' },
+  { id: 'CCS_CHAdeMO', label: 'AC', icon: BoltIcon, color: 'teal' },
 ] as const;
 
 const StationsPage: React.FC = () => {
@@ -66,6 +80,7 @@ const StationsPage: React.FC = () => {
   const [connectorTypeFilter, setConnectorTypeFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [editingStation, setEditingStation] = useState<ChargingStation | null>(null)
 
   // Debounced search
   const debouncedSearch = useSearchDebounce(searchQuery, 300);
@@ -106,7 +121,7 @@ const StationsPage: React.FC = () => {
   } = useBulkSelection(stations)
 
   // Actions hook
-  const {handleToggleStatus, handleDelete, handleEdit, handleViewDetails} = useStationActions();
+  const {handleToggleStatus, handleDelete} = useStationActions();
 
   // Revolutionary floating stats with station data
   const stationStats: StationStats[] = [
@@ -183,31 +198,39 @@ const StationsPage: React.FC = () => {
     [statusFilter, connectorTypeFilter]
   );
 
-const quickFilterGroups = useMemo<QuickFilterGroup[]>(
-  () => [
-    {
-      id: 'status',
-      title: 'Status',
-      icon: FunnelIcon,
-      selectedValue: statusFilter,
-      onChange: setStatusFilter,
-      options: statusOptions.map(({ id, label, icon, color }) => ({
-        id, label, icon: icon as IconComponent, color,
-      })),
-    },
-    {
-      id: 'connectorType',
-      title: 'Connector',
-      icon: BoltIcon,
-      selectedValue: connectorTypeFilter,
-      onChange: setConnectorTypeFilter,
-      options: connectorOptions.map(({ id, label, icon, color }) => ({
-        id, label, icon: icon as IconComponent, color,
-      })),
-    },
-  ],
-  [statusFilter, connectorTypeFilter]
-);
+  const quickFilterGroups = useMemo<QuickFilterGroup[]>(
+    () => [
+      {
+        id: 'status',
+        title: 'Status',
+        icon: FunnelIcon,
+        selectedValue: statusFilter,
+        onChange: setStatusFilter,
+        options: statusOptions.map(({ id, label, icon, color }) => ({
+          id, label, icon: icon as IconComponent, color,
+        })),
+      },
+      {
+        id: 'connectorType',
+        title: 'Connector',
+        icon: BoltIcon,
+        selectedValue: connectorTypeFilter,
+        onChange: setConnectorTypeFilter,
+        options: connectorOptions.map(({ id, label, icon, color }) => ({
+          id, label, icon: icon as IconComponent, color,
+        })),
+      },
+    ],
+    [statusFilter, connectorTypeFilter]
+  );
+
+  const handleOpenEditModal = (station: ChargingStation) => {
+    setEditingStation(station);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingStation(null);
+  };
 
   return (
     <MainLayout showNotifications notificationCount={3} headerVariant="default">
@@ -256,8 +279,8 @@ const quickFilterGroups = useMemo<QuickFilterGroup[]>(
           viewMode={viewMode}
           onRefresh={refresh}
           onLoadMore={loadMore}
-          onViewDetails={handleViewDetails}
-          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onEdit={handleOpenEditModal}
           onClearFilters={handleClearFilters}
           selectedItems={new Set(selectedIds)}
           onSelectItem={toggleItem}
@@ -283,6 +306,19 @@ const quickFilterGroups = useMemo<QuickFilterGroup[]>(
           onDelete={handleDelete}
           onToggleStatus={handleToggleStatus}
       />
+
+      {editingStation && (
+        <EditStationModal
+          station={editingStation}
+          isOpen={!!editingStation}
+          onClose={handleCloseEditModal}
+          queryParams={{
+            status: statusFilter !== 'all' ? statusFilter : undefined,
+            connectorType: connectorTypeFilter !== 'all' ? connectorTypeFilter : undefined,
+            search: debouncedSearch,
+          }}
+        />
+      )}
 
     </MainLayout>
   );

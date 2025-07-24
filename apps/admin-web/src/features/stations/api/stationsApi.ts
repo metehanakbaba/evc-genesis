@@ -8,6 +8,7 @@ import type {
   StationsQueryParams,
   UpdateStationRequest,
 } from '../types/station.types';
+import { ChargingStation } from '@evc/shared-business-logic';
 
 interface StationsResponse {
   readonly stations: ReadonlyArray<Station>;
@@ -55,7 +56,13 @@ const stationsApi = evChargingApi.injectEndpoints({
       providesTags: ['Station'],
     }),
 
-    createStation: builder.mutation<ApiResponse<Station>, CreateStationRequest>(
+    // Admin station detail endpoint
+    getAdminStation: builder.query<ApiResponse<ChargingStation>, string>({
+      query: (stationId: any) => `/api/admin/charge-stations/${stationId}`,
+      providesTags: (_result, _error, id) => [{ type: 'Station', id }],
+    }),
+
+    createStation: builder.mutation<ApiResponse<ChargingStation>, CreateStationRequest>(
       {
         query: (station: any) => ({
           url: '/api/admin/charge-stations',
@@ -67,7 +74,7 @@ const stationsApi = evChargingApi.injectEndpoints({
     ),
 
     updateStationStatus: builder.mutation<
-      ApiResponse<Station>,
+      ApiResponse<ChargingStation>,
       { status: string, id: string }
     >({
       query: ({ status, id }: any) => ({
@@ -78,14 +85,8 @@ const stationsApi = evChargingApi.injectEndpoints({
       invalidatesTags: ['Station'],
     }),
 
-    // Admin station detail endpoint
-    getAdminStation: builder.query<ApiResponse<Station>, string>({
-      query: (stationId: any) => `/api/admin/charge-stations/${stationId}`,
-      providesTags: (_result, _error, id) => [{ type: 'Station', id }],
-    }),
-
     updateStation: builder.mutation<
-      ApiResponse<Station>,
+      ApiResponse<ChargingStation>,
       { id: string; data: UpdateStationRequest }
     >({
       query: ({ id, data }: any) => ({

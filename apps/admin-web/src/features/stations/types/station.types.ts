@@ -1,7 +1,6 @@
 import type {
   ConnectorStatus,
   Location,
-  LegacyLocation,
   StationStatus,
 } from '@/types/global.types';
 

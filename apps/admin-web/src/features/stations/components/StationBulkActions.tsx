@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { XCircleIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BulkActionBar, type BulkAction } from '@/shared/ui';
+import { ChargingStation } from '@evc/shared-business-logic';
 
 interface StationsBulkActionsProps {
   selectedCount: number;
@@ -10,7 +11,7 @@ interface StationsBulkActionsProps {
   selectedIds: string[];
   onClearSelection: () => void;
   onToggleStatus: (stationId: string) => void;
-  onDelete: (stationId: string) => void;
+  onDelete: (station: ChargingStation) => void;
 }
 
 const StationsBulkActions: React.FC<StationsBulkActionsProps> = ({
