@@ -88,6 +88,7 @@ const StationsPage: React.FC = () => {
     pageSize: 20,
   });
 
+<<<<<<< HEAD
   // Debug logs
   console.log('🎯 StationsPage render:', {
     stationsCount: stations.length,
@@ -99,6 +100,8 @@ const StationsPage: React.FC = () => {
     stations: stations.slice(0, 2) // Log first 2 stations for debugging
   });
 
+=======
+>>>>>>> f6e6e02fb34e981b3a331f25217c7f70c134be95
   // Statistics hook
   const {
     totalStations,
@@ -114,7 +117,11 @@ const StationsPage: React.FC = () => {
     clearSelection,
     toggleItem,
     toggleAll
+<<<<<<< HEAD
   } = useBulkSelection(stations)
+=======
+  } = useBulkSelection(stations as Station[])
+>>>>>>> f6e6e02fb34e981b3a331f25217c7f70c134be95
 
   // Actions hook
   const {handleToggleStatus, handleDelete, handleEdit, handleViewDetails} = useStationActions();
@@ -295,8 +302,11 @@ const quickFilterGroups = useMemo<QuickFilterGroup[]>(
           onToggleStatus={handleToggleStatus}
       />
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f6e6e02fb34e981b3a331f25217c7f70c134be95
     </MainLayout>
   );
 };

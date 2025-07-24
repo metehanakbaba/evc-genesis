@@ -15,7 +15,6 @@ import {
   useGetAllUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useCreateUserMutation
 } from "@/features/users/api/usersApi";
 
 /**

@@ -10,6 +10,20 @@
  */
 
 
+// TODO create UserListRequest contract 
+
+export interface CreateUserRequest {}
+
+export interface UpdateUserRequest {}
+
+export interface UserListResponse {}
+
+export interface UserQuery {}
+
+export interface UserProfile {}
+
+export interface ApiSuccessResponse {}
+
 export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
 
 // 👤 User Entity

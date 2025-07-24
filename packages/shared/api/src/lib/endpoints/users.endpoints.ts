@@ -16,18 +16,17 @@ import type {
   CreateUserRequest,
   UpdateUserRequest,
   UserListResponse,
-  UserQuery,
   UserProfile,
-  ApiSuccessResponse
 } from '../types/user.types';
 import type { 
   AdminUserQuery 
 } from '../types/admin.types';
-import { transformResponse, transformVoidResponse, createApiTags } from '../baseApi';
+import { transformResponse, transformVoidResponse } from '../baseApi';
 
 export const usersEndpoints = (
   builder: EndpointBuilder<any, any, any>
 ) => ({
+
   // 📊 Get All Users (Admin)
   getUsers: builder.query<UserListResponse, AdminUserQuery>({
     query: (params) => ({

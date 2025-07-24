@@ -9,7 +9,7 @@ import { Input, Checkbox } from '@/components/ui/Forms'
 import { ShieldCheckIcon, WrenchScrewdriverIcon, UserIcon } from '@heroicons/react/20/solid'
 import type { UserRole } from '../types/components.types'
 import { useToast } from '@/shared/ui'
-import {useCreateUserMutation} from "./../api/usersApi"
+import {useCreateUserMutation} from "./../api/usersApi";
 import { getFieldValidationState, validateEmail, validatePassword, validatePhone} from '@evc/shared-business-logic'
 
 interface UserFormData {

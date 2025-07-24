@@ -20,7 +20,7 @@ import {
   SignalIcon,
   BoltIcon,
 } from '@heroicons/react/24/outline';
-import type { Station, Connector } from '../types/station.types';
+import type { Connector, Station } from '../types/station.types';
 
 interface EnhancedStation extends Station, DataGridItem {}
 
@@ -131,31 +131,18 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       },
 
       renderContent: (station: EnhancedStation): React.ReactNode => {
-        // Handle both old (connectors array) and new (single connectorType) data structure
-        const connectors = (station as any).connectors || [];
-        const available = Array.isArray(connectors) ? 
-          connectors.filter((c) => c && typeof c === 'object' && (c as any).status === 'available').length : 0;
-        const total = connectors.length || 1; // Fallback to 1 for single connector stations
-        
-        // Support both new (latitude/longitude) and legacy (lat/lng) location formats
-        const locationData = station.location as any;
-        const displayLocation = locationData.address || 
-          `${locationData.latitude || locationData.lat}, ${locationData.longitude || locationData.lng}`;
-        
+        const available = station.connectors.filter((c: Connector) => c.status === 'available').length;
         return (
         <div className="h-full flex flex-1 flex-col">
           <div className="space-y-3 mb-4">
             <div className="flex items-center gap-2 text-gray-300">
               <MapPinIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="text-sm truncate">{displayLocation}</span>
+              <span className="text-sm truncate">{station.location.address}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-300">
               <SignalIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
               <span className="text-sm">
-                {station.connectorType ? 
-                  `${station.connectorType} • ${station.powerOutput}kW` : 
-                  `${available}/${total} connectors available`
-                }
+                {available}/{station.connectors.length} connectors available
               </span>
             </div>
           </div>
@@ -164,10 +151,10 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
             <div className="flex items-center justify-between text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <BoltIcon className="w-4 h-4 flex-shrink-0" />
-                <span>{station.pricePerKWh ? `${station.pricePerKWh} PLN/kWh` : `ID: ${station.id.slice(-11)}`}</span>
+                <span>ID: {station.id.slice(-11)}</span>
               </div>
               <div className="text-gray-300">
-                {locationData.city || locationData.address}
+                {station.location.address}
               </div>
             </div>
           </div>
@@ -184,16 +171,14 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       icon: EyeIcon,
       label: 'View',
       onClick: (item) => onViewDetails(item.id),
-      variant: 'secondary',
-      className: 'opacity-0 group-hover:opacity-100 transition-opacity',
+      variant: 'ghost',
     },
     {
       icon: WrenchScrewdriverIcon,
       label: 'Edit',
       onClick: (item) => onEdit(item as Station),
-      variant: 'danger',
-      className: 'opacity-0 group-hover:opacity-100 transition-opacity'
-    }
+      variant: 'primary',
+    },
   ], [onViewDetails, onEdit]);
 
   // Table columns
@@ -229,25 +214,13 @@ export const StationsDataSection: React.FC<StationsDataSectionProps> = ({
       label: 'Available',
       accessor: 'connectors',
       render: (st) => {
-        // Handle both old (connectors array) and new (single connectorType) data structure
-        const connectors = (st as any).connectors || [];
-        const available = Array.isArray(connectors) ? 
-          connectors.filter((c: any) => c && c.status === 'available').length : 0;
-        const total = connectors.length || 1;
-        
-        return (
-          <span className="text-gray-300">
-            {(st as any).connectorType ? 
-              `${(st as any).connectorType} • ${(st as any).powerOutput}kW` : 
-              `${available}/${total}`
-            }
-          </span>
-        );
+        const available = st.connectors.filter((c: Connector) => c.status === 'available').length;
+        return <span className="text-gray-300">{available}/{st.connectors.length}</span>;
       },
     },
   ], []);
 
-  const enhanced = (stations || []) as EnhancedStation[];
+  const enhanced = stations as EnhancedStation[];
 
   // Loading state
   if (isLoading) {

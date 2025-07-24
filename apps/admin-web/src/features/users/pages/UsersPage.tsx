@@ -32,7 +32,6 @@ import {
 // ✅ Import API hooks and types
 import { useUserActions, useUserStatistics } from '@/features/users/hooks';
 import { useFetchUsers } from '../hooks/useUsers';
-import { Route } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 /**
