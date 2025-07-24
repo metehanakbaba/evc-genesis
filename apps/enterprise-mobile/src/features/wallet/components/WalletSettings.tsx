@@ -141,7 +141,7 @@ export function WalletSettings({
           <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.md }}>
             <View>
               <Text className="text-white text-base font-medium">Primary Currency</Text>
-              <Text className="text-gray-400 text-sm">Turkish Lira (₺)</Text>
+              <Text className="text-gray-400 text-sm">Polish Zloty (zł)</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#6B7280" />
           </View>
@@ -149,11 +149,11 @@ export function WalletSettings({
           <View className="border-t border-gray-700" style={{ paddingTop: SPACING.md, marginTop: SPACING.md }}>
             <View className="flex-row justify-between" style={{ marginBottom: SPACING.sm }}>
               <Text className="text-gray-400 text-sm">Daily limit</Text>
-              <Text className="text-white text-sm font-medium">₺500.00</Text>
+              <Text className="text-white text-sm font-medium">zł850.00</Text>
             </View>
             <View className="flex-row justify-between">
               <Text className="text-gray-400 text-sm">Monthly limit</Text>
-              <Text className="text-white text-sm font-medium">₺5,000.00</Text>
+              <Text className="text-white text-sm font-medium">zł8,500.00</Text>
             </View>
           </View>
         </View>

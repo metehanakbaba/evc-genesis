@@ -7,13 +7,13 @@
 import { WalletData, Transaction, PaymentMethod } from '../types/wallet.types';
 
 export const mockWalletData: WalletData = {
-  balance: 145.80,
-  currency: '₺',
-  monthlySpent: 234.50,
+  balance: 247.30,
+  currency: 'zł',
+  monthlySpent: 396.80,
   pendingAmount: 0,
-  autoRechargeThreshold: 50,
-  autoRechargeAmount: 100,
-  totalSavings: 1250.30
+  autoRechargeThreshold: 85,
+  autoRechargeAmount: 170,
+  totalSavings: 2118.50
 };
 
 export const mockTransactions: Transaction[] = [
@@ -21,8 +21,8 @@ export const mockTransactions: Transaction[] = [
     id: 1,
     type: 'charge_payment',
     title: 'Charging Session Payment',
-    subtitle: 'Maltepe EV Station • Port 3',
-    amount: -25.80,
+    subtitle: 'Warsaw Central EV Hub • Port 3',
+    amount: -43.70,
     date: '2024-01-20T14:30:00Z',
     status: 'completed',
     icon: 'battery-charging-full',
@@ -32,8 +32,8 @@ export const mockTransactions: Transaction[] = [
     id: 2,
     type: 'auto_recharge',
     title: 'Auto-recharge',
-    subtitle: 'Threshold triggered at ₺48.20',
-    amount: +100.00,
+    subtitle: 'Threshold triggered at zł81.70',
+    amount: +170.00,
     date: '2024-01-20T09:15:00Z',
     status: 'completed',
     icon: 'refresh-circle',
@@ -44,7 +44,7 @@ export const mockTransactions: Transaction[] = [
     type: 'manual_topup',
     title: 'Manual Top-up',
     subtitle: 'Credit Card ****4532',
-    amount: +50.00,
+    amount: +85.00,
     date: '2024-01-19T16:45:00Z',
     status: 'completed',
     icon: 'add-circle',
@@ -54,8 +54,8 @@ export const mockTransactions: Transaction[] = [
     id: 4,
     type: 'charge_payment',
     title: 'Charging Session Payment',
-    subtitle: 'Kadıköy Plaza • Port 1',
-    amount: -42.30,
+    subtitle: 'Kraków Old Town • Port 1',
+    amount: -71.90,
     date: '2024-01-19T11:20:00Z',
     status: 'completed',
     icon: 'battery-charging-full',
@@ -66,7 +66,7 @@ export const mockTransactions: Transaction[] = [
     type: 'refund',
     title: 'Session Refund',
     subtitle: 'Incomplete session compensation',
-    amount: +12.50,
+    amount: +21.20,
     date: '2024-01-18T08:30:00Z',
     status: 'completed',
     icon: 'arrow-undo-circle',
@@ -87,8 +87,8 @@ export const mockPaymentMethods: PaymentMethod[] = [
   {
     id: 2,
     type: 'bank_account',
-    title: 'İş Bankası',
-    subtitle: 'TR33 0006 4000 0011 2345 6789',
+    title: 'PKO Bank Polski',
+    subtitle: 'PL84 1020 1026 0000 4202 0501 9283',
     isDefault: false,
     icon: 'business',
     brand: 'bank'

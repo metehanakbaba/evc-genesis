@@ -4,18 +4,16 @@
  * Modern, clean implementation using feature-based architecture
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuthGuard } from '../AuthGuard';
+import { openModal } from './MainStackNavigator';
 
 // 🎯 CLEAN ARCHITECTURE IMPORTS
 import { SPACING, DESIGN_SYSTEM_COLORS } from '../../../../shared/constants';
-import { StationMapModal } from '../../../charging-stations';
-import { QRScannerModal } from '../../../qr-scanner'; 
-import { WalletManagementModal } from '../../../wallet';
 
 // ============================================================================
 // HOME SCREEN COMPONENT
@@ -23,9 +21,6 @@ import { WalletManagementModal } from '../../../wallet';
 
 function HomeScreen() {
   const { user, logout } = useAuthGuard();
-  const [qrScannerVisible, setQrScannerVisible] = useState(false);
-  const [walletModalVisible, setWalletModalVisible] = useState(false);
-  const [stationMapVisible, setStationMapVisible] = useState(false);
 
   // Mock recent activity data
   const recentActivities = [
@@ -33,7 +28,7 @@ function HomeScreen() {
       id: 1,
       type: 'session_completed',
       title: 'Charging session completed',
-      subtitle: '2 hours ago • Maltepe Station',
+      subtitle: '2 hours ago • Warsaw Central',
       value: '45.2 kWh',
       icon: 'battery-charging-full' as const,
       iconFamily: 'MaterialIcons' as const,
@@ -45,7 +40,7 @@ function HomeScreen() {
       type: 'payment',
       title: 'Payment processed',
       subtitle: '3 hours ago • Auto-charge',
-      value: '₺25.80',
+      value: 'zł43.70',
       icon: 'credit-card' as const,
       iconFamily: 'Ionicons' as const,
       color: DESIGN_SYSTEM_COLORS.Wallet.primary,
@@ -53,45 +48,125 @@ function HomeScreen() {
     }
   ];
 
-  const handleQRScanSuccess = (data: string) => {
-    setQrScannerVisible(false);
-    Alert.alert(
-      "Station Found! 🎉",
-      `Connected to: ${data.replace(/_/g, ' ')}\n\nStarting charging session...`,
-      [
-        { 
-          text: "Start Charging", 
-          onPress: () => console.log('Starting charging session with data:', data)
-        }
-      ]
-    );
+  // ============================================================================
+  // NAVIGATION HANDLERS
+  // ============================================================================
+
+  const handleQRScanPress = () => {
+    openModal('qr');
+  };
+
+  const handleWalletPress = () => {
+    openModal('wallet');
+  };
+
+  const handleStationMapPress = () => {
+    openModal('stations');
   };
 
   return (
     <View className="flex-1 bg-gray-900">
-      {/* Floating Profile Header */}
-      <View className="flex-row items-center justify-between" style={{ 
+      {/* Modern EV-Aware Header - NO SafeAreaView here */}
+      <View style={{ 
         paddingHorizontal: SPACING.lg, 
         paddingTop: SPACING.lg, 
         paddingBottom: SPACING.md 
       }}>
-        <View>
-          <Text className="text-white text-2xl font-bold">EV Charging</Text>
-          <Text className="text-gray-400 text-sm">Welcome back, {user?.name || 'Driver'}</Text>
+        {/* Time-based Greeting Row */}
+        <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.sm }}>
+          <View className="flex-row items-center">
+            {(() => {
+              const hour = new Date().getHours();
+              const isEvening = hour >= 18 || hour < 6;
+              const isMorning = hour >= 6 && hour < 12;
+              const isAfternoon = hour >= 12 && hour < 18;
+              
+              return (
+                <View className="flex-row items-center">
+                  <LinearGradient
+                    colors={
+                      isEvening ? ['#6366F1', '#4F46E5', '#3730A3'] :
+                      isMorning ? ['#F59E0B', '#D97706', '#92400E'] :
+                      ['#10B981', '#059669', '#047857']
+                    }
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 12,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: SPACING.md,
+                      shadowColor: isEvening ? '#6366F1' : isMorning ? '#F59E0B' : '#10B981',
+                      shadowOpacity: 0.4,
+                      shadowRadius: 8,
+                      elevation: 4
+                    }}
+                  >
+                    <Ionicons 
+                      name={
+                        isEvening ? "moon" : 
+                        isMorning ? "sunny" : 
+                        "partly-sunny"
+                      } 
+                      size={20} 
+                      color="#FFF" 
+                    />
+                  </LinearGradient>
+                  <View>
+                    <Text className="text-white text-xl font-bold">
+                      {isEvening ? "Good Evening" : isMorning ? "Good Morning" : "Good Afternoon"}
+                    </Text>
+                    <Text className="text-gray-400 text-sm">
+                      {user?.name || 'Driver'} • Ready to charge
+                    </Text>
+                  </View>
+                </View>
+              );
+            })()}
+          </View>
+          
+          {/* Profile & Notifications */}
+          <View className="flex-row items-center" style={{ gap: SPACING.sm }}>
+            {/* Notification Bell */}
+            <Pressable
+              onPress={() => console.log('Notifications pressed')}
+              className="w-10 h-10 rounded-2xl items-center justify-center bg-gray-800 active:scale-95"
+              style={{
+                shadowColor: '#10B981',
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 2
+              }}
+            >
+              <Ionicons name="notifications" size={18} color="#10B981" />
+              {/* Notification Badge */}
+              <View 
+                className="absolute -top-1 -right-1 w-5 h-5 rounded-full items-center justify-center"
+                style={{ backgroundColor: '#EF4444' }}
+              >
+                <Text className="text-white text-xs font-bold">2</Text>
+              </View>
+            </Pressable>
+            
+            {/* Profile */}
+            <Pressable
+              onPress={() => console.log('Profile pressed')}
+              className="w-10 h-10 rounded-2xl items-center justify-center bg-gray-800 active:scale-95"
+            >
+              <Ionicons name="person-circle" size={20} color="#8B5CF6" />
+            </Pressable>
+          </View>
         </View>
-        <Pressable
-          onPress={() => console.log('Profile pressed')}
-          className="w-12 h-12 rounded-full items-center justify-center bg-gray-800 active:scale-95"
-        >
-          <Ionicons name="person-circle" size={28} color="#8B5CF6" />
-        </Pressable>
+
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Wallet Balance Card - Header Priority */}
         <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
           <Pressable
-            onPress={() => setWalletModalVisible(true)}
+            onPress={handleWalletPress}
             className="overflow-hidden active:scale-98"
             style={{
               borderRadius: 20,
@@ -119,7 +194,7 @@ function HomeScreen() {
               <View className="flex-row items-center justify-between">
                 <View>
                   <Text className="text-gray-400 text-sm">Wallet Balance</Text>
-                  <Text className="text-white text-2xl font-bold">₺145.80</Text>
+                  <Text className="text-white text-2xl font-bold">zł247.30</Text>
                 </View>
                 <View className="flex-row items-center">
                   <View 
@@ -256,7 +331,7 @@ function HomeScreen() {
                   <Text className="text-gray-400 text-xs">Charging speed</Text>
                 </View>
                 <View className="flex-1 items-end">
-                  <Text className="text-white text-lg font-bold">₺45</Text>
+                  <Text className="text-white text-lg font-bold">zł76</Text>
                   <Text className="text-gray-400 text-xs">Starting price</Text>
                 </View>
               </View>
@@ -264,14 +339,12 @@ function HomeScreen() {
           </Pressable>
         </View>
 
-
-
         {/* Smart Action Grid */}
         <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
           <View className="flex-row" style={{ gap: SPACING.sm, marginBottom: SPACING.md }}>
             {/* Find Stations Navigation */}
             <Pressable
-              onPress={() => setStationMapVisible(true)}
+              onPress={handleStationMapPress}
               className="flex-1 overflow-hidden active:scale-96"
               style={{ 
                 borderRadius: 18,
@@ -345,7 +418,7 @@ function HomeScreen() {
 
             {/* Quick Start QR Action */}
             <Pressable
-              onPress={() => setQrScannerVisible(true)}
+              onPress={handleQRScanPress}
               className="flex-1 overflow-hidden active:scale-96"
               style={{ 
                 borderRadius: 18,
@@ -465,34 +538,17 @@ function HomeScreen() {
           </View>
         </View>
       </ScrollView>
-
-      {/* Modals - Using Clean Architecture Components */}
-      <QRScannerModal
-        visible={qrScannerVisible}
-        onClose={() => setQrScannerVisible(false)}
-        onSuccess={handleQRScanSuccess}
-      />
-
-      <WalletManagementModal
-        visible={walletModalVisible}
-        onClose={() => setWalletModalVisible(false)}
-      />
-
-      <StationMapModal
-        visible={stationMapVisible}
-        onClose={() => setStationMapVisible(false)}
-      />
     </View>
   );
 }
 
 // ============================================================================
-// MAIN TAB NAVIGATOR
+// MAIN TAB NAVIGATOR - Transparent Bottom SafeArea
 // ============================================================================
 
 export function MainTabNavigator() {
   return (
-    <SafeAreaView className="flex-1 bg-gray-900" edges={['top', 'left', 'right', 'bottom']}>
+    <SafeAreaView className="flex-1" edges={['bottom']} style={{ backgroundColor: 'transparent' }}>
       <HomeScreen />
     </SafeAreaView>
   );

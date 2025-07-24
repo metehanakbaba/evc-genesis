@@ -13,13 +13,23 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 // ============================================================================
 
 export type RootStackParamList = {
-  Auth: NavigatorScreenParams<AuthStackParamList>;
-  Main: NavigatorScreenParams<MainTabParamList>;
-  Welcome: undefined;
+  Auth: undefined;
+  Main: NavigatorScreenParams<MainStackParamList>;
 };
 
-export type RootStackScreenProps<T extends keyof RootStackParamList> =
-  StackScreenProps<RootStackParamList, T>;
+// ============================================================================
+// MAIN STACK (Ana Stack Navigator - Modal'lar burada)
+// ============================================================================
+
+export type MainStackParamList = {
+  MainTabs: NavigatorScreenParams<MainTabParamList>;
+  // Modal Screens
+  QRScannerModal: undefined;
+  WalletModal: undefined;
+  StationMapModal: undefined;
+  StationDetailsModal: { stationId: string };
+  TransactionDetailsModal: { transactionId: string };
+};
 
 // ============================================================================
 // AUTH STACK
@@ -33,12 +43,6 @@ export type AuthStackParamList = {
   SetupProfile: { userId: string };
 };
 
-export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
-  CompositeScreenProps<
-    StackScreenProps<AuthStackParamList, T>,
-    RootStackScreenProps<keyof RootStackParamList>
-  >;
-
 // ============================================================================
 // MAIN TAB NAVIGATOR
 // ============================================================================
@@ -50,12 +54,6 @@ export type MainTabParamList = {
   Wallet: NavigatorScreenParams<WalletStackParamList>;
   Profile: NavigatorScreenParams<ProfileStackParamList>;
 };
-
-export type MainTabScreenProps<T extends keyof MainTabParamList> =
-  CompositeScreenProps<
-    BottomTabScreenProps<MainTabParamList, T>,
-    RootStackScreenProps<keyof RootStackParamList>
-  >;
 
 // ============================================================================
 // FEATURE STACKS
@@ -69,9 +67,9 @@ export type StationsStackParamList = {
 };
 
 export type SessionsStackParamList = {
-  SessionsHistory: undefined;
+  SessionsList: undefined;
+  ActiveSession: undefined;
   SessionDetails: { sessionId: string };
-  ActiveSession: { sessionId: string };
 };
 
 export type WalletStackParamList = {
@@ -91,30 +89,46 @@ export type ProfileStackParamList = {
 };
 
 // ============================================================================
-// FEATURE SCREEN PROPS
+// SCREEN PROPS (Type-Safe Navigation)
 // ============================================================================
 
-export type StationsStackScreenProps<T extends keyof StationsStackParamList> =
+export type RootStackScreenProps<Screen extends keyof RootStackParamList> = 
+  StackScreenProps<RootStackParamList, Screen>;
+
+export type MainStackScreenProps<Screen extends keyof MainStackParamList> = 
   CompositeScreenProps<
-    StackScreenProps<StationsStackParamList, T>,
+    StackScreenProps<MainStackParamList, Screen>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
+
+export type MainTabScreenProps<Screen extends keyof MainTabParamList> = 
+  CompositeScreenProps<
+    BottomTabScreenProps<MainTabParamList, Screen>,
+    MainStackScreenProps<keyof MainStackParamList>
+  >;
+
+// Feature stack screen props
+export type StationsStackScreenProps<Screen extends keyof StationsStackParamList> = 
+  CompositeScreenProps<
+    StackScreenProps<StationsStackParamList, Screen>,
     MainTabScreenProps<keyof MainTabParamList>
   >;
 
-export type SessionsStackScreenProps<T extends keyof SessionsStackParamList> =
+export type SessionsStackScreenProps<Screen extends keyof SessionsStackParamList> = 
   CompositeScreenProps<
-    StackScreenProps<SessionsStackParamList, T>,
+    StackScreenProps<SessionsStackParamList, Screen>,
     MainTabScreenProps<keyof MainTabParamList>
   >;
 
-export type WalletStackScreenProps<T extends keyof WalletStackParamList> =
+export type WalletStackScreenProps<Screen extends keyof WalletStackParamList> = 
   CompositeScreenProps<
-    StackScreenProps<WalletStackParamList, T>,
+    StackScreenProps<WalletStackParamList, Screen>,
     MainTabScreenProps<keyof MainTabParamList>
   >;
 
-export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> =
+export type ProfileStackScreenProps<Screen extends keyof ProfileStackParamList> = 
   CompositeScreenProps<
-    StackScreenProps<ProfileStackParamList, T>,
+    StackScreenProps<ProfileStackParamList, Screen>,
     MainTabScreenProps<keyof MainTabParamList>
   >;
 

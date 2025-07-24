@@ -29,9 +29,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
     }
 
     // Basic phone validation
-    const phoneRegex = /^(\+90|0)?[5][0-9]{9}$/;
+    const phoneRegex = /^(\+48|0)?[4-9][0-9]{8}$/;
     if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
-      setError('Please enter a valid Turkish phone number');
+      setError('Please enter a valid Polish phone number');
       return;
     }
 
@@ -49,17 +49,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
     // Remove all non-digits
     const cleaned = text.replace(/\D/g, '');
     
-    // Format as Turkish phone number
-    if (cleaned.length <= 11) {
+    // Format as Polish phone number
+    if (cleaned.length <= 9) {
       let formatted = cleaned;
       if (formatted.length > 3) {
         formatted = formatted.slice(0, 3) + ' ' + formatted.slice(3);
       }
       if (formatted.length > 7) {
         formatted = formatted.slice(0, 7) + ' ' + formatted.slice(7);
-      }
-      if (formatted.length > 10) {
-        formatted = formatted.slice(0, 10) + ' ' + formatted.slice(10);
       }
       setPhoneNumber(formatted);
     }
@@ -106,7 +103,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onContinue }) => {
                   variant="emerald"
                   value={phoneNumber}
                   onChangeText={formatPhoneNumber}
-                  placeholder="+90 5XX XXX XX XX"
+                  placeholder="+48 XXX XXX XXX"
                   keyboardType="phone-pad"
                   maxLength={14}
                   error={error}

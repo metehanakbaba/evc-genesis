@@ -30,7 +30,7 @@ export function useStations() {
   const handleStationReserve = useCallback((station: ChargingStation) => {
     Alert.alert(
       "Reserve Charging Port 🔌",
-      `Reserve a port at ${station.name}?\n\nEstimated arrival: ${station.estimatedTime} minutes\nPrice: ₺${station.pricePerKwh}/kWh`,
+      `Reserve a port at ${station.name}?\n\nEstimated arrival: ${station.estimatedTime} minutes\nPrice: zł${station.pricePerKwh}/kWh`,
       [
         { text: "Cancel", style: "cancel" },
         { 

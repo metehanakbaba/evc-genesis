@@ -1,7 +1,7 @@
 /**
  * 🧭 Main Navigation Container
  * 
- * Root navigation setup with auth integration (simplified for React 19 compatibility)
+ * Root navigation setup with auth integration
  */
 
 import React from 'react';
@@ -10,10 +10,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuthGuard } from './AuthGuard';
 import { AuthNavigator } from '../../../../auth/AuthNavigator';
-import { MainTabNavigator } from './stacks/MainTabNavigator';
+import { MainStackNavigator } from './stacks/MainStackNavigator';
 
 // ============================================================================
-// MAIN NAVIGATION CONTAINER (SIMPLIFIED)
+// SIMPLE NAVIGATION CONTAINER
 // ============================================================================
 
 export function AppNavigationContainer() {
@@ -21,7 +21,6 @@ export function AppNavigationContainer() {
 
   const handleAuthComplete = () => {
     console.log('🎉 Auth flow completed - transitioning to main app');
-    // Use the completeAuth method to properly set authentication state
     completeAuth({
       name: 'EV Driver',
       email: 'driver@example.com'
@@ -37,9 +36,9 @@ export function AppNavigationContainer() {
     );
   }
 
-  // Simple conditional rendering without NavigationContainer for React 19 compatibility
-  return isAuthenticated ? (
-    <MainTabNavigator />
+  // Simple conditional rendering - works with React 19
+  return !isAuthenticated ? (
+    <MainStackNavigator />
   ) : (
     <AuthNavigator onAuthComplete={handleAuthComplete} />
   );
