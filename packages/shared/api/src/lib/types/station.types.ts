@@ -12,7 +12,7 @@
 import type { PaginationParams } from './common.types.js';
 
 // 🔋 Station Status Enumeration
-export type StationStatus = 'available' | 'charging' | 'offline' | 'maintenance';
+export type StationStatus = 'AVAILABLE' | 'CHARGING' | 'OFFLINE' | 'MAINTENANCE';
 
 // 🔌 Connector Type Enumeration
 export type ConnectorType = 'Type1' | 'Type2' | 'CCS' | 'CHAdeMO';

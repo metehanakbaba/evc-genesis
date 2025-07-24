@@ -23,10 +23,18 @@ export interface StationStatusConfig {
   readonly textColor: string;
 }
 
+export interface StationLocation {
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly address: string;
+  readonly city: string;
+  readonly country: string;
+}
+
 export interface ChargingStation {
   readonly id: string;
   readonly name: string;
-  readonly location: string;
+  readonly location: StationLocation;
   readonly status: StationStatus;
   readonly powerOutput: number;
   readonly connectorType: ConnectorType;
@@ -118,8 +126,12 @@ export const filterStations = (
     // Search filter - name, location
     const matchesSearch = searchQuery === '' ||
       station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      station.location.toLowerCase().includes(searchQuery.toLowerCase());
-      
+      station.location.address.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      station.location.city.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      station.location.country.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      station.location.latitude.toString().toLocaleLowerCase().includes(searchQuery.toLowerCase()) || 
+      station.location.longitude.toString().toLocaleLowerCase().includes(searchQuery.toLowerCase())
+
     // Status filter
     const matchesStatus = statusFilter === 'all' || station.status === statusFilter;
     
@@ -337,7 +349,7 @@ export const validateStationData = (stationData: Partial<ChargingStation>): {
   }
   
   // Location validation
-  if (!stationData.location || stationData.location.trim().length < 5) {
+  if (!stationData.location || stationData.location.address.trim().length < 5) {
     errors.location = 'Location must be at least 5 characters long';
   }
   
