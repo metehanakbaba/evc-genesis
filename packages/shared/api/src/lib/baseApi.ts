@@ -28,6 +28,10 @@ import type {
  * 🔧 Base Query Configuration
  * Platform-agnostic base query with authentication and error handling
  */
+
+// Retriable errors 
+const retryableStatusCodes = [502, 503, 504];
+
 export const createBaseQuery = (config: {
   baseUrl: string;
   getToken: () => string | null;
@@ -72,8 +76,16 @@ export const createBaseQuery = (config: {
       if (error?.status && error.status >= 400 && error.status < 500) {
         return false;
       }
-      // Only retry on network errors and 5xx server errors
-      return error?.status === 'FETCH_ERROR' || (error?.status >= 500);
+      // Retry on network errors
+      if (error?.status === 'FETCH_ERROR') {
+        return true;
+      }
+
+      if (typeof error?.status === 'number' && retryableStatusCodes.includes(error.status)){
+        return true;         
+      }
+
+      return false; 
     }
   } as any);
 };
