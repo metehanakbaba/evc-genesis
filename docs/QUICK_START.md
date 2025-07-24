@@ -14,10 +14,13 @@ npm install
 cd apps/admin-web && npm run dev
 # → http://localhost:3000
 
-# 3. Setup Notion integration (optional)
+# 3. Start mobile development (optional)
+cd apps/enterprise-mobile && npm run start
+
+# 4. Setup Notion integration (optional)
 cd tools/notion && npm install && npm run test
 
-# 4. Production Docker
+# 5. Production Docker
 ./infrastructure/docker/docker-start.sh prod
 ```
 
@@ -25,8 +28,11 @@ cd tools/notion && npm install && npm run test
 
 ### **Development**
 ```bash
-# Local development with hot reload
+# Web admin development with hot reload
 cd apps/admin-web && npm run dev
+
+# Mobile development with NativeWind
+cd apps/enterprise-mobile && npm run start
 
 # Quick build test (NX optimized)
 ./infrastructure/docker/docker-start.sh dev
@@ -150,6 +156,7 @@ import { GlowOrb, AccentDot, IconContainer, GeometricDecoration, TextElement } f
 ## 🔗 **Quick Access**
 
 - **Admin Panel**: http://localhost:3000
+- **Mobile App**: Expo development server (scan QR code)
 - **NX Graph**: `npx nx graph`
 - **Notion Workspace**: Connected to 4 production databases
 - **Documentation**: Auto-synced to Notion Engineering Docs
@@ -162,6 +169,6 @@ import { GlowOrb, AccentDot, IconContainer, GeometricDecoration, TextElement } f
 
 ---
 
-**Tech Stack**: Next.js 15 + React 19 + NX + Docker
-**Status**: ✅ Production ready with NX optimization
+**Tech Stack**: Next.js 15 + React 19 + React Native 0.79 + Expo 53 + NativeWind + NX + Docker
+**Status**: ✅ Production ready with NX optimization and mobile app
 **Performance**: 80%+ build improvement with smart caching 

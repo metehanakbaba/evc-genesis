@@ -26,11 +26,11 @@ cd apps/admin-web && npm run dev
 ## 🎯 Project Overview
 
 ### Current Status
-- ✅ **React 19.1.0 + Next.js 15** with App Router
+- ✅ **React 19.0.0 + Next.js 15** with App Router
 - ✅ **NX Monorepo** with optimized build system  
 - ✅ **Admin Web App** fully functional
 - ✅ **Shared Business Logic** across platforms
-- 🔄 **Mobile App** in development (Expo 52)
+- ✅ **Mobile App** with NativeWind + Expo 53 (React Native 0.79.5)
 
 ### Key Features
 - **Real-time Charging Station Monitoring**
@@ -46,7 +46,7 @@ cd apps/admin-web && npm run dev
 evc-frontend-admin/
 ├── 📱 apps/                    # Applications
 │   ├── admin-web/              # Next.js 15 Admin Panel
-│   └── admin-mobile/           # React Native + Expo 52
+│   └── enterprise-mobile/      # React Native + Expo 53 + NativeWind
 ├── 📦 packages/               # Shared Packages
 │   ├── shared/
 │   │   ├── api/               # RTK Query API client
@@ -63,9 +63,9 @@ evc-frontend-admin/
 
 ### Tech Stack
 - **Frontend**: React 19, Next.js 15, TypeScript
-- **Mobile**: React Native, Expo 52, Tamagui
+- **Mobile**: React Native 0.79, Expo 53, NativeWind
 - **State Management**: Redux Toolkit, RTK Query
-- **Styling**: Tailwind CSS, Headless UI
+- **Styling**: Tailwind CSS, NativeWind, Headless UI
 - **Build System**: NX, Turbopack
 - **Deployment**: Docker, Vercel
 
@@ -159,16 +159,18 @@ The project uses a comprehensive **Atomic Design System** for UI components:
 npm install -g @expo/cli eas-cli
 
 # Start development
-cd apps/admin-mobile
+cd apps/enterprise-mobile
 expo start
 ```
 
 ### Mobile Features
-- **Cross-platform**: iOS & Android support
-- **Biometric Auth**: Fingerprint/Face ID
-- **Push Notifications**: Real-time alerts
-- **Offline Support**: Local data caching
-- **Maps Integration**: Station locations
+- **Cross-platform**: iOS & Android support with React Native 0.79.5
+- **NativeWind Styling**: Tailwind CSS for React Native with consistent design system
+- **Biometric Auth**: Fingerprint/Face ID integration
+- **Push Notifications**: Real-time alerts and updates
+- **Offline Support**: Local data caching and sync
+- **Maps Integration**: Station locations and navigation
+- **Shared Components**: Consistent UI with web admin using atomic design principles
 
 ## 📚 Documentation
 
@@ -232,11 +234,12 @@ docker system prune -a
 - Shared business logic
 - Docker deployment setup
 - **Atomic Design System Foundation** with comprehensive type system
+- **Mobile App with NativeWind**: React Native 0.79 + Expo 53 + Tailwind CSS styling
 - **Notion integration** with full content sync and live database connections
 - Automated documentation and KPI tracking
 
 ### In Progress 🔄
-- Mobile application development
+- Mobile application feature completion
 - API endpoint completion
 - Performance optimizations
 - Documentation improvements
