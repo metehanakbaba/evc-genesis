@@ -63,7 +63,7 @@ evc-frontend-admin/
 
 ### Tech Stack
 - **Frontend**: React 19, Next.js 15, TypeScript
-- **Mobile**: React Native 0.79, Expo 53, NativeWind
+- **Mobile**: React Native 0.79.5, Expo 53, NativeWind
 - **State Management**: Redux Toolkit, RTK Query
 - **Styling**: Tailwind CSS, NativeWind, Headless UI
 - **Build System**: NX, Turbopack
@@ -234,7 +234,7 @@ docker system prune -a
 - Shared business logic
 - Docker deployment setup
 - **Atomic Design System Foundation** with comprehensive type system
-- **Mobile App with NativeWind**: React Native 0.79 + Expo 53 + Tailwind CSS styling
+- **Mobile App with NativeWind**: React Native 0.79.5 + Expo 53 + Tailwind CSS styling
 - **Notion integration** with full content sync and live database connections
 - Automated documentation and KPI tracking
 

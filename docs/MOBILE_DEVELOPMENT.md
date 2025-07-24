@@ -4,16 +4,17 @@
 
 ## Overview
 
-The enterprise mobile application is built using the latest React Native 0.79 with Expo 53 and NativeWind for styling. This setup provides a modern, performant mobile development experience with Tailwind CSS styling that matches the web admin interface.
+The enterprise mobile application is built using the latest React Native 0.79.5 with Expo 53 and NativeWind for styling. This setup provides a modern, performant mobile development experience with Tailwind CSS styling that matches the web admin interface.
 
 ## Tech Stack
 
 - **React Native**: 0.79.5 (Latest stable)
-- **Expo**: ~53.0.20 (SDK 53)
+- **Expo**: ~53.0.0 (SDK 53)
 - **React**: 19.0.0 (Latest)
 - **NativeWind**: ^4.1.23 (Tailwind CSS for React Native)
-- **Tailwind CSS**: ^4.1.11
-- **React Native Reanimated**: ^4.0.0 (60fps animations)
+- **Tailwind CSS**: ^3.4.0
+- **React Native Reanimated**: ~3.17.4 (60fps animations)
+- **React Native SVG**: ~15.11.2 (Latest)
 - **TypeScript**: ~5.8.3
 
 ## Quick Start
