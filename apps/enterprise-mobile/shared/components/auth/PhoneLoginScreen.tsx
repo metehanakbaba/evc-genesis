@@ -14,6 +14,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, AntDesign } from '@expo/vector-icons';
+import { useI18n } from '../../../src/features/common/i18n';
 import { GlassCard } from '../GlassCard';
 import { GlassInput } from './GlassInput';
 import { AuthButton } from './AuthButton';
@@ -27,6 +28,7 @@ interface PhoneLoginScreenProps {
 export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
   onContinue
 }) => {
+  const { t } = useI18n();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -73,12 +75,12 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
     setError('');
     
     if (!phoneNumber.trim()) {
-      setError('Phone number is required');
+      setError(t.auth.phoneRequired);
       return;
     }
 
     if (!validatePhoneNumber(phoneNumber)) {
-      setError('Please enter a valid phone number');
+      setError(t.auth.phoneInvalid);
       return;
     }
 
@@ -147,7 +149,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
             }}
             className="flex-1 px-6 justify-center"
           >
-                        {/* Header Section */}
+            {/* Header Section */}
             <View className="items-center" style={{ marginBottom: 20 }}>
               {/* User Icon */}
               <View className="w-18 h-18 rounded-2xl bg-white/8 items-center justify-center" style={{ marginBottom: 16 }}>
@@ -155,10 +157,10 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
               </View>
               
               <Text className="text-xl font-bold text-white" style={{ marginBottom: 6 }}>
-                Welcome to EVC
+                {t.auth.welcomeToEvc}
               </Text>
               <Text className="text-gray-400 text-center text-sm px-8 leading-5">
-                Telefon numaranızla EV şarj ağımıza başlayın
+                {t.auth.phoneSubtitle}
               </Text>
             </View>
 
@@ -167,7 +169,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
               {/* Phone Input */}
               <View style={{ marginBottom: 16 }}>
                 <GlassInput
-                  placeholder="Telefon numaranızı girin"
+                  placeholder={t.auth.phonePlaceholder}
                   value={phoneNumber}
                   onChangeText={handlePhoneChange}
                   keyboardType="phone-pad"
@@ -188,7 +190,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
 
               {/* Continue Button - No icon as requested */}
               <AuthButton
-                title="Continue"
+                title={t.auth.continue}
                 variant="emerald"
                 size="lg"
                 loading={isLoading}
@@ -203,7 +205,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
             {/* OR Divider with proper spacing */}
             <View className="flex-row items-center space-x-4" style={{ paddingVertical: 12, marginBottom: 24 }}>
               <View className="flex-1 h-px bg-gray-600" />
-              <Text className="text-gray-400 text-sm px-4">or</Text>
+              <Text className="text-gray-400 text-sm px-4">{t.auth.or}</Text>
               <View className="flex-1 h-px bg-gray-600" />
             </View>
 
@@ -211,7 +213,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
             <View>
               <View style={{ marginBottom: 16 }}>
                 <AuthButton
-                  title="Continue with Google"
+                  title={t.auth.continueWithGoogle}
                   variant="blue"
                   size="lg"
                   type="social"
@@ -222,7 +224,7 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
               </View>
 
               <AuthButton
-                title="Continue with Apple"
+                title={t.auth.continueWithApple}
                 variant="blue"
                 size="lg"
                 type="social"
@@ -236,9 +238,9 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
           {/* Footer */}
           <View className="items-center" style={{ marginTop: 24 }}>
             <Text className="text-gray-500 text-xs text-center leading-4 px-4">
-              By signing up, you agree to our{' '}
-              <Text className="text-blue-400">Terms & Conditions</Text>, acknowledge our{' '}
-              <Text className="text-blue-400">Privacy Policy</Text>, and confirm that you're over 18.
+              {t.auth.termsText}{' '}
+              <Text className="text-blue-400">{t.auth.termsConditions}</Text>, {t.auth.termsText.toLowerCase()}{' '}
+              <Text className="text-blue-400">{t.auth.privacyPolicy}</Text>, {t.auth.ageConfirmation}
             </Text>
           </View>
           </Animated.View>

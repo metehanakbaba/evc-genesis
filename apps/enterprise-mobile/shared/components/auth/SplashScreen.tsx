@@ -9,6 +9,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { useI18n } from '../../../src/features/common/i18n';
 
 const { width } = Dimensions.get('window');
 
@@ -17,6 +18,7 @@ interface SplashScreenProps {
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
+  const { t } = useI18n();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -75,12 +77,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
           {/* Brand Name */}
           <Text className="text-4xl font-bold text-emerald-400 text-center">
-            EcoVoltCharge
+            {t.auth.brandName}
           </Text>
 
           {/* Tagline */}
           <Text className="text-gray-300 text-center text-lg px-4">
-            Smart EV Charging Network
+            {t.auth.tagline}
           </Text>
         </Animated.View>
 
