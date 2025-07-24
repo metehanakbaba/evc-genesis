@@ -7,11 +7,13 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
-  Pressable
+  Pressable,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import { GlassCard } from '../GlassCard';
 import { GlassInput } from './GlassInput';
 import { AuthButton } from './AuthButton';
@@ -137,94 +139,110 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          }}
-          className="flex-1 px-6 justify-center"
-        >
-          {/* Header Section */}
-          <View className="items-center mb-12">
-            {/* User Icon */}
-            <View className="w-24 h-24 mb-8 rounded-3xl bg-white/10 items-center justify-center">
-              <Feather name="user" size={40} color="#60A5FA" />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            }}
+            className="flex-1 px-6 justify-center"
+          >
+                        {/* Header Section */}
+            <View className="items-center" style={{ marginBottom: 20 }}>
+              {/* User Icon */}
+              <View className="w-18 h-18 rounded-2xl bg-white/8 items-center justify-center" style={{ marginBottom: 16 }}>
+                <Feather name="user" size={28} color="#6B7280" />
+              </View>
+              
+              <Text className="text-xl font-bold text-white" style={{ marginBottom: 6 }}>
+                Welcome to EVC
+              </Text>
+              <Text className="text-gray-400 text-center text-sm px-8 leading-5">
+                Telefon numaranızla EV şarj ağımıza başlayın
+              </Text>
             </View>
-            
-            <Text className="text-3xl font-bold text-white mb-3">
-              Welcome to EVC
-            </Text>
-            <Text className="text-gray-400 text-center text-base px-8 leading-6">
-              Enter your phone number to get started with our EV charging network
-            </Text>
-          </View>
 
-          {/* Main Input Container */}
-          <View className="space-y-6 mb-8">
-            {/* Phone Input */}
-            <View className="space-y-2">
-              <GlassInput
-                placeholder="Enter your phone here"
-                value={phoneNumber}
-                onChangeText={handlePhoneChange}
-                keyboardType="phone-pad"
-                variant="blue"
+            {/* Main Input Container - Better positioned */}
+            <View style={{ marginBottom: 28 }}>
+              {/* Phone Input */}
+              <View style={{ marginBottom: 16 }}>
+                <GlassInput
+                  placeholder="Telefon numaranızı girin"
+                  value={phoneNumber}
+                  onChangeText={handlePhoneChange}
+                  keyboardType="phone-pad"
+                  variant="blue"
+                  size="lg"
+                  error={error}
+                  leftIcon={
+                    <View className="flex-row items-center">
+                      <Text className="text-white text-sm font-medium mr-2">🇹🇷</Text>
+                      <Text className="text-gray-400 text-sm">+90</Text>
+                    </View>
+                  }
+                  rightIcon={phoneNumber.length > 0 ? (
+                    <Feather name="check-circle" size={18} color="#059669" />
+                  ) : undefined}
+                />
+              </View>
+
+              {/* Continue Button - No icon as requested */}
+              <AuthButton
+                title="Continue"
+                variant="emerald"
                 size="lg"
-                error={error}
-                leftIcon={
-                  <View className="flex-row items-center">
-                    <Text className="text-white text-base font-medium mr-2">🇹🇷</Text>
-                    <Text className="text-gray-400 text-base">+90</Text>
-                  </View>
-                }
-                rightIcon={phoneNumber.length > 0 ? (
-                  <Feather name="check-circle" size={20} color="#10B981" />
-                ) : undefined}
+                loading={isLoading}
+                onPress={handleContinue}
+                type="primary"
+                iconPosition="none"
               />
             </View>
 
-            {/* Continue Button */}
-            <AuthButton
-              title="Continue"
-              variant="emerald"
-              size="lg"
-              loading={isLoading}
-              onPress={handleContinue}
-              icon={<Feather name="arrow-right" size={20} color="#FFFFFF" />}
-            />
-          </View>
-
           {/* Alternative Login Options */}
-          <View className="space-y-4">
-            <View className="flex-row items-center space-x-4">
-              <View className="flex-1 h-px bg-gray-700" />
-              <Text className="text-gray-500 text-sm">or</Text>
-              <View className="flex-1 h-px bg-gray-700" />
+          <View style={{ marginBottom: 24 }}>
+            {/* OR Divider with proper spacing */}
+            <View className="flex-row items-center space-x-4" style={{ paddingVertical: 12, marginBottom: 24 }}>
+              <View className="flex-1 h-px bg-gray-600" />
+              <Text className="text-gray-400 text-sm px-4">or</Text>
+              <View className="flex-1 h-px bg-gray-600" />
             </View>
 
-            {/* Social Login Buttons */}
-            <View className="space-y-3">
-              <Pressable className="flex-row items-center justify-center h-14 rounded-xl bg-white/5 border border-white/10">
-                <Feather name="globe" size={20} color="#DB4437" />
-                <Text className="text-white font-medium ml-3">Continue with Google</Text>
-              </Pressable>
+            {/* Social Login Buttons with proper spacing between them */}
+            <View>
+              <View style={{ marginBottom: 16 }}>
+                <AuthButton
+                  title="Continue with Google"
+                  variant="blue"
+                  size="lg"
+                  type="social"
+                  iconPosition="absolute-left"
+                  icon={<AntDesign name="google" size={22} color="#DB4437" />}
+                  onPress={() => console.log('Google login')}
+                />
+              </View>
 
-              <Pressable className="flex-row items-center justify-center h-14 rounded-xl bg-white/5 border border-white/10">
-                <Feather name="smartphone" size={20} color="#000000" />
-                <Text className="text-white font-medium ml-3">Continue with Apple</Text>
-              </Pressable>
+              <AuthButton
+                title="Continue with Apple"
+                variant="blue"
+                size="lg"
+                type="social"
+                iconPosition="absolute-left"
+                icon={<AntDesign name="apple1" size={22} color="#FFFFFF" />}
+                onPress={() => console.log('Apple login')}
+              />
             </View>
           </View>
 
           {/* Footer */}
-          <View className="mt-8 items-center">
-            <Text className="text-gray-500 text-xs text-center leading-5 px-4">
+          <View className="items-center" style={{ marginTop: 24 }}>
+            <Text className="text-gray-500 text-xs text-center leading-4 px-4">
               By signing up, you agree to our{' '}
               <Text className="text-blue-400">Terms & Conditions</Text>, acknowledge our{' '}
               <Text className="text-blue-400">Privacy Policy</Text>, and confirm that you're over 18.
             </Text>
           </View>
-        </Animated.View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
