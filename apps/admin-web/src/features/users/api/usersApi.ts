@@ -36,23 +36,23 @@ const usersApi = (evChargingApi as any).injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-    getPaymentMethods: builder.query<
-      ApiResponse<{ methods: ReadonlyArray<PaymentMethod> }>,
-      void
-    >({
-      query: () => '/user/payment-methods',
-    }),
+    // getUserPaymentMethods: builder.query<
+    //   ApiResponse<{ methods: ReadonlyArray<PaymentMethod> }>,
+    //   void
+    // >({
+    //   query: () => '/user/payment-methods',
+    // }),
 
-    addPaymentMethod: builder.mutation<
-      ApiResponse<PaymentMethod>,
-      { token: string }
-    >({
-      query: (data: any) => ({
-        url: '/user/payment-methods',
-        method: 'POST',
-        body: data,
-      }),
-    }),
+    // addUserPaymentMethod: builder.mutation<
+    //   ApiResponse<PaymentMethod>,
+    //   { token: string }
+    // >({
+    //   query: (data: any) => ({
+    //     url: '/user/payment-methods',
+    //     method: 'POST',
+    //     body: data,
+    //   }),
+    // }),
 
     deletePaymentMethod: builder.mutation<ApiResponse<void>, string>({
       query: (paymentMethodId: any) => ({
@@ -64,14 +64,14 @@ const usersApi = (evChargingApi as any).injectEndpoints({
     // Admin endpoints
     getAllUsers: builder.query<ApiResponse<UsersResponse>, UsersQueryParams>({
       query: (params: any) => ({
-        url: '/admin/users',
+        url: '/api/admin/users',
         params,
       }),
       providesTags: ['User'],
     }),
 
     getUser: builder.query<ApiResponse<UserProfile>, string>({
-      query: (userId: any) => `/admin/users/${userId}`,
+      query: (userId: any) => `/api/admin/users/${userId}`,
       providesTags: (_result: any, _error: any, id: any) => [
         { type: 'User', id },
       ],
@@ -79,7 +79,7 @@ const usersApi = (evChargingApi as any).injectEndpoints({
 
     createUser: builder.mutation<ApiResponse<UserProfile>, CreateUserRequest>({
       query: (data: any) => ({
-        url: '/admin/users',
+        url: '/api/admin/users',
         method: 'POST',
         body: data,
       }),
@@ -91,7 +91,7 @@ const usersApi = (evChargingApi as any).injectEndpoints({
       { id: string; data: UpdateUserRequest }
     >({
       query: ({ id, data }: any) => ({
-        url: `/admin/users/${id}`,
+        url: `/api/admin/users/${id}`,
         method: 'PUT',
         body: data,
       }),
@@ -103,14 +103,14 @@ const usersApi = (evChargingApi as any).injectEndpoints({
 
     deleteUser: builder.mutation<ApiResponse<void>, string>({
       query: (userId: any) => ({
-        url: `/admin/users/${userId}`,
+        url: `/api/users/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (_result, _error, id) => [{ type: 'User', id }, 'User'],
     }),
 
     getUserStatistics: builder.query<ApiResponse<UserStatistics>, void>({
-      query: () => '/admin/users/statistics',
+      query: () => '/api/users/statistics',
     }),
 
     resetUserPassword: builder.mutation<
@@ -118,7 +118,7 @@ const usersApi = (evChargingApi as any).injectEndpoints({
       { userId: string; newPassword: string }
     >({
       query: ({ userId, newPassword }: any) => ({
-        url: `/admin/users/${userId}/reset-password`,
+        url: `/users/${userId}/reset-password`,
         method: 'POST',
         body: { new_password: newPassword },
       }),
@@ -129,8 +129,8 @@ const usersApi = (evChargingApi as any).injectEndpoints({
 export const {
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
-  useGetPaymentMethodsQuery,
-  useAddPaymentMethodMutation,
+  // useGetUserPaymentMethodsQuery,
+  // useAddUserPaymentMethodMutation,
   useDeletePaymentMethodMutation,
   useGetAllUsersQuery,
   useGetUserQuery,

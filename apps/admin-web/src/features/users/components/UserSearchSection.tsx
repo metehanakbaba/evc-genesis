@@ -4,14 +4,8 @@ import { UserGroupIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { SearchFilterBar } from '@/shared/ui/molecules';
 
-interface UserSearchSectionProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  viewMode: 'grid' | 'table';
-  onViewModeChange: (mode: 'grid' | 'table') => void;
-  onOpenFilterModal: () => void;
-  isFilterActive: boolean;
-}
+// Import types from the centralized types file
+import type { UserSearchSectionProps } from '../types/components.types';
 
 /**
  * 🔍 User Search Section Component

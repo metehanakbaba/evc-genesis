@@ -1,0 +1,473 @@
+'use client';
+
+import {
+  ArrowLeftIcon,
+  CheckCircleIcon,
+  CogIcon,
+  EnvelopeIcon,
+  PencilIcon,
+  PhoneIcon,
+  ShieldCheckIcon,
+  TrashIcon,
+  UserIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
+import { Button } from '@ui/forms';
+import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
+import type React from 'react';
+import { useMemo, useState, useCallback } from 'react';
+import { UserDetailsPageProps } from '.';
+
+// Import shared components
+import { Card, Modal, Spinner, StatCard } from '@/shared/ui/components/Display';
+import { Badge } from '@/shared/ui/components/Display';
+import { Breadcrumb } from '@/shared/ui/components/Navigation';
+
+// Import business logic and types
+import { formatLastLogin, getRoleConfig } from '@evc/shared-business-logic';
+import type { IconComponent } from '../types/components.types';
+
+// Import API hooks
+import { useGetUserQuery, useDeleteUserMutation, useUpdateUserMutation } from '../api/usersApi';
+import { useUserActions } from '../hooks/useUsers';
+import { useRouter } from 'next/navigation';
+
+/**
+ * Activity item interface
+ * 
+ * @interface ActivityItem
+ */
+interface ActivityItem {
+  readonly id: string;
+  readonly type: 'login' | 'profile_update' | 'role_change' | 'status_change';
+  readonly description: string;
+  readonly timestamp: string;
+  readonly icon: IconComponent;
+  readonly iconColor: string;
+}
+
+/**
+ * 👤 User Details Page Component
+ * 
+ * Comprehensive user profile view with activity history,
+ * role management, and administrative actions.
+ * 
+ * @param props - Component props
+ * @returns JSX.Element
+ */
+const UserDetailsPage: React.FC<UserDetailsPageProps> = ({ userId }) => {
+
+  const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+
+  // API hooks
+  const { data: userResponse, isLoading, error, refetch } = useGetUserQuery(userId);
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+
+  // User actions
+  const {
+     editUser, 
+    //  resendVerificationEmail
+   } = useUserActions();
+
+  const user = userResponse?.data;
+
+  /**
+   * Handle user deletion
+   */
+  const handleDeleteUser = useCallback(async () => {
+    // if (!user) return;
+    // try {
+    //   await deleteUser(user.id);
+    //   router.push('/users');
+    // } catch (error) {
+    //   console.error('Failed to delete user:', error);
+    // }
+    // TODO uncomment 
+    console.log("Delete user")
+  }, [user, deleteUser]);
+
+  /**
+   * Handle user status toggle
+   * */
+   const handleToggleStatus = useCallback(async (): Promise<void> => {
+    if (!userResponse?.data) return;
+
+    try {
+      await updateUser({
+        id: userResponse.data.id,
+        data: { is_active: !userResponse.data.is_active }
+      });
+      refetch();
+    } catch (error) {
+      console.error('Failed to update user status:', error);
+    } 
+    // finally {
+    //   statusModal.onClose();
+    // }
+  }, [userResponse?.data, updateUser, refetch
+    // statusModal
+  ]);
+
+  /**
+   * Handle resend verification email
+   */
+  // const handleResendVerification = async (): Promise<void> => {
+  //   if (!user) return;
+
+  //   const result = await resendVerificationEmail(user);
+  //   if (result.success) {
+  //     // Show success message
+  //     console.log('Verification email sent successfully');
+  //   } else {
+  //     console.error('Failed to send verification email:', result.error);
+  //   }
+  // };
+
+  /**
+   * Generate mock activity data
+   */
+  const activityItems = useMemo((): ActivityItem[] => {
+    if (!user) return [];
+
+    return [
+      {
+        id: '1',
+        type: 'login',
+        description: 'Last login from Chrome on Windows',
+        timestamp: user.last_login || user.created_at,
+        icon: UserIcon,
+        iconColor: 'text-blue-400',
+      },
+      {
+        id: '2',
+        type: 'profile_update',
+        description: 'Profile information updated',
+        timestamp: user.created_at,
+        icon: PencilIcon,
+        iconColor: 'text-emerald-400',
+      },
+      {
+        id: '3',
+        type: 'role_change',
+        description: `Role assigned: ${user.role}`,
+        timestamp: user.created_at,
+        icon: ShieldCheckIcon,
+        iconColor: 'text-purple-400',
+      },
+    ];
+  }, [user]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <PageContainer paddingY="lg" className="flex items-center justify-center min-h-[400px]">
+          <Spinner size="lg" />
+        </PageContainer>
+      </MainLayout>
+    );
+  }
+
+  // Error state
+  if (error || !user) {
+    return (
+      <MainLayout>
+        <PageContainer paddingY="lg">
+          <div className="text-center py-12">
+            <XCircleIcon className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">User Not Found</h3>
+            <p className="text-gray-400 mb-4">
+              The requested user could not be found or you don't have permission to view it.
+            </p>
+            <Button onClick={() => router.push('/users')} variant="primary">
+              Back to Users
+            </Button>
+          </div>
+        </PageContainer>
+      </MainLayout>
+    );
+  }
+
+  const roleConfig = getRoleConfig(user.role);
+
+  return (
+    <MainLayout>
+      <PageContainer paddingY="md">
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            { label: 'Users', href: '/users' },
+            { label: user.name, href: `/users/${user.id}` },
+          ]}
+          currentPageLabel="User Details"
+          variant="purple"
+        />
+
+        {/* Page Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <Button
+            onClick={() => router.push('/users')}
+            variant="ghost"
+            className="flex items-center gap-2"
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Back to Users
+          </Button>
+        </div>
+        
+        <PageHeader
+          title={user.name}
+          description={`${roleConfig.text} • ${user.email}`}
+          variant="purple"
+          actionButton={{
+            label: 'Edit User',
+            onClick: () => editUser(user),
+            icon: PencilIcon,
+          }}
+        />
+      </PageContainer>
+
+      <PageContainer paddingY="lg" className="space-y-8">
+        {/* User Overview Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Information */}
+          <div className="lg:col-span-2">
+            <Card variant="secondary">
+              <Card.Header
+                title="Profile Information"
+                description="User account details and contact information"
+              />
+              <Card.Body>
+                <div className="space-y-6">
+                {/* User Avatar and Basic Info */}
+                <div className="flex items-start gap-4">
+                  <div className={`w-16 h-16 rounded-2xl ${roleConfig.badgeColor} flex items-center justify-center`}>
+                    <UserIcon className={`w-8 h-8 ${roleConfig.textColor}`} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-xl font-semibold text-white">{user.name}</h3>
+                      <Badge
+                        variant={user.is_active ? 'success' : 'danger'}
+                        size="sm"
+                      >
+                        {user.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </div>
+                    <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg ${roleConfig.badgeColor}`}>
+                      <ShieldCheckIcon className={`w-4 h-4 ${roleConfig.textColor}`} />
+                      <span className={`text-sm font-medium ${roleConfig.textColor}`}>
+                        {roleConfig.text}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                    <EnvelopeIcon className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-400">Email</div>
+                      <div className="text-white font-medium">{user.email}</div>
+                      {user.verified_email && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
+                          <span className="text-xs text-emerald-400">Verified</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                    <PhoneIcon className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-400">Phone</div>
+                      <div className="text-white font-medium">{user.phone}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Account Timestamps */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                    <div className="text-sm text-gray-400 mb-1">Member Since</div>
+                    <div className="text-white font-medium">
+                      {new Date(user.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                    <div className="text-sm text-gray-400 mb-1">Last Login</div>
+                    <div className="text-white font-medium">
+                      {formatLastLogin(user.last_login)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </Card.Body>
+            </Card>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="space-y-6">
+            {/* Account Status */}
+            <StatCard
+              title="Account Status"
+              value={user.is_active ? 'Active' : 'Inactive'}
+              icon={user.is_active ? CheckCircleIcon : XCircleIcon}
+              // trend={user.is_active ? 'Account is active' : 'Account is disabled'}
+              variant={user.is_active ? 'emerald' : 'blue'}
+            />
+
+            {/* Quick Actions */}
+            <Card variant="secondary">
+              <Card.Header title="Quick Actions" />
+              <Card.Body>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => editUser(user)}
+                  className="w-full justify-start"
+                  variant="ghost"
+                >
+                  <PencilIcon className="w-4 h-4 mr-2" />
+                  Edit Profile
+                </Button>
+
+                <Button
+                  onClick={() => setIsStatusModalOpen(true)}
+                  className="w-full justify-start"
+                  variant="ghost"
+                >
+                  <CogIcon className="w-4 h-4 mr-2" />
+                  {user.is_active ? 'Deactivate' : 'Activate'} Account
+                </Button>
+
+                {!user.verified_email && (
+                  <Button
+                    // onClick={handleResendVerification}
+                    className="w-full justify-start"
+                    variant="ghost"
+                  >
+                    <EnvelopeIcon className="w-4 h-4 mr-2" />
+                    Resend Verification
+                  </Button>
+                )}
+
+                <Button
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="w-full justify-start text-red-400 hover:text-red-300"
+                  variant="ghost"
+                >
+                  <TrashIcon className="w-4 h-4 mr-2" />
+                  Delete User
+                </Button>
+              </div>
+              </Card.Body>
+            </Card>
+          </div>
+        </div>
+
+        {/* Activity History */}
+        <Card variant="secondary">
+          <Card.Header
+            title="Recent Activity"
+            description="User account activity and system interactions"
+          />
+          <Card.Body>
+          <div className="space-y-4">
+            {activityItems.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start gap-4 p-4 bg-gray-800/30 rounded-xl border border-gray-700/30"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center">
+                  <activity.icon className={`w-5 h-5 ${activity.iconColor}`} />
+                </div>
+                <div className="flex-1">
+                  <div className="text-white font-medium mb-1">{activity.description}</div>
+                  <div className="text-sm text-gray-400">
+                    {new Date(activity.timestamp).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          </Card.Body>
+        </Card>
+      </PageContainer>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Delete User Account"
+        variant="danger"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            Are you sure you want to permanently delete <strong>{user.name}</strong>'s account?
+            This action cannot be undone and will remove all associated data.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={() => setIsDeleteModalOpen(false)}
+              variant="ghost"
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteUser}
+              variant="destructive"
+              loading={isDeleting}
+            >
+              Delete User
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Status Change Confirmation Modal */}
+      <Modal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        title={`${user.is_active ? 'Deactivate' : 'Activate'} User Account`}
+        variant={user.is_active ? 'warning' : 'success'}
+      >
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            Are you sure you want to {user.is_active ? 'deactivate' : 'activate'}{' '}
+            <strong>{user.name}</strong>'s account?
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              onClick={() => setIsStatusModalOpen(false)}
+              variant="ghost"
+              disabled={isUpdating}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleToggleStatus}
+              variant={user.is_active ? 'secondary' : 'primary'}
+              loading={isUpdating}
+            >
+              {user.is_active ? 'Deactivate' : 'Activate'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </MainLayout>
+  );
+};
+
+
+export default UserDetailsPage

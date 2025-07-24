@@ -10,7 +10,6 @@ export {
   useIntersectionObserver,
 } from './useIntersectionObserver';
 export {
-  useInfiniteUsers,
   useUserActions,
   useUserStatistics,
 } from './useUsers';

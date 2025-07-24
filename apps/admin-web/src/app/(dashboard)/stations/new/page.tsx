@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   MapPinIcon, 
@@ -21,7 +21,6 @@ import { PageContainer } from '@/shared/ui/components/Layout';
 import { Button } from '@/shared/ui';
 import { useCreateStationMutation } from '@/features/stations/api/stationsApi';
 import { useToast } from '@/shared/ui';
-import type { CreateStationRequest } from '@/features/stations/types/station.types';
 
 interface StationFormData {
   name: string;

@@ -10,12 +10,8 @@ import { useMemo } from 'react';
 
 import { type BulkAction, BulkActionBar } from '@/shared/ui';
 
-interface UserBulkActionsProps {
-  selectedCount: number;
-  totalCount: number;
-  selectedIds: string[];
-  onClearSelection: () => void;
-}
+// Import types from the centralized types file
+import type { UserBulkActionsProps } from '../types/components.types';
 
 /**
  * 🔧 User Bulk Actions Component
@@ -36,6 +32,7 @@ const UserBulkActions: React.FC<UserBulkActionsProps> = ({
         icon: CheckCircleIcon,
         variant: 'success',
         onClick: async (selectedIds) => {
+          // TODO
           // Implementation would call API to activate selected users
           console.log('Activating users:', selectedIds);
           onClearSelection();
@@ -50,6 +47,7 @@ const UserBulkActions: React.FC<UserBulkActionsProps> = ({
         icon: ShieldExclamationIcon,
         variant: 'secondary',
         onClick: async (selectedIds) => {
+          // TODO
           // Implementation would call API to deactivate selected users
           console.log('Deactivating users:', selectedIds);
           onClearSelection();
@@ -64,6 +62,7 @@ const UserBulkActions: React.FC<UserBulkActionsProps> = ({
         icon: TrashIcon,
         variant: 'danger',
         onClick: async (selectedIds) => {
+          // TODO
           // Implementation would call API to delete selected users
           console.log('Deleting users:', selectedIds);
           onClearSelection();

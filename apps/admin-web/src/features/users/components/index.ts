@@ -5,7 +5,7 @@
  * Provides clean imports for reusable user components.
  *
  * @module UserComponents
- * @version 1.0.0
+ * @version 2.0.0
  * @author EV Charging Team
  */
 
@@ -16,9 +16,27 @@ export type {
   UserDataState,
   UserFilterState,
   UserStatsData,
+  // New comprehensive types
+  UserStatsSectionProps,
+  UserSearchSectionProps,
+  UserBulkActionsProps,
+  UserDataSectionProps,
+  IconComponent,
+  ViewMode,
+  ColorVariant,
+} from '../types/components.types';
+
+// Legacy types for backward compatibility
+export type {
+  UserActionHandlers as LegacyUserActionHandlers,
+  UserBulkSelection as LegacyUserBulkSelection,
+  UserDataState as LegacyUserDataState,
+  UserFilterState as LegacyUserFilterState,
+  UserStatsData as LegacyUserStatsData,
 } from '../types/usersPage.types';
+
+// Component exports
 export { default as UserBulkActions } from './UserBulkActions';
 export { default as UserDataSection } from './UserDataSection';
 export { default as UserSearchSection } from './UserSearchSection';
-// User Management Components Export Index
 export { default as UserStatsSection } from './UserStatsSection';

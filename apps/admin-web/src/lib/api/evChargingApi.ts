@@ -105,5 +105,4 @@ export type {
   User,
   UserLoginRequest,
   UserRegistrationRequest,
-  UserRole,
 } from '@evc/shared-api';

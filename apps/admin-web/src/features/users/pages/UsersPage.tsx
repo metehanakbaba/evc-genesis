@@ -19,7 +19,6 @@ import {
   type QuickFilterGroup,
   QuickFilterButtons,
   useBulkSelection,
-  useSearchDebounce,
 } from '@/shared/ui';
 import { Breadcrumb } from '@/shared/ui/components/Navigation';
 // ✅ Import new component sections
@@ -31,7 +30,10 @@ import {
   UserStatsSection,
 } from '@/features/users/components';
 // ✅ Import API hooks and types
-import { useInfiniteUsers, useUserActions, useUserStatistics } from '@/features/users/hooks';
+import { useUserActions, useUserStatistics } from '@/features/users/hooks';
+import { useFetchUsers } from '../hooks/useUsers';
+import { Route } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 /**
  * 🚀 Revolutionary Users Management Page - Purple Theme
@@ -45,20 +47,13 @@ import { useInfiniteUsers, useUserActions, useUserStatistics } from '@/features/
  * - ✅ Improved maintainability
  */
 const UsersPage: React.FC = () => {
+  const route = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // ✅ Use shared debounce hook
-  const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
-
-  // ✅ Use API hooks for data and actions
-  const { totalUsers, activeUsers, adminUsers, newUsersThisMonth } =
-    useUserStatistics();
-
-  // ✅ Use infinite scroll hook for data fetching
   const {
     users,
     isLoading,
@@ -67,14 +62,16 @@ const UsersPage: React.FC = () => {
     loadMore,
     refresh,
     error,
-  } = useInfiniteUsers({
-    filters: {
-      searchQuery: debouncedSearchQuery,
-      roleFilter,
-      statusFilter,
-    },
-    pageSize: 20,
+  } = useFetchUsers({
+    searchQuery,
+    roleFilter,
+    statusFilter,
+    pageSize: 20
   });
+
+    // ✅ Use API hooks for data and actions
+  const { totalUsers, activeUsers, adminUsers, newUsersThisMonth } =
+    useUserStatistics(users);
 
   const { viewDetails, editUser, deleteUser } = useUserActions();
 
@@ -154,15 +151,15 @@ const UsersPage: React.FC = () => {
         onChange: setRoleFilter,
         options: [
           { id: 'all', label: 'All Roles', icon: UserGroupIcon, color: 'purple' },
-          { id: 'user', label: 'Customer', icon: UserIcon, color: 'blue' },
+          { id: 'CUSTOMER', label: 'Customer', icon: UserIcon, color: 'blue' },
           {
-            id: 'admin',
+            id: 'ADMIN',
             label: 'Administrator',
             icon: ShieldCheckIcon,
             color: 'purple',
           },
           {
-            id: 'operator',
+            id: 'FIELD_WORKER',
             label: 'Field Worker',
             icon: CogIcon,
             color: 'amber',
@@ -225,7 +222,7 @@ const UsersPage: React.FC = () => {
           actionButton={{
             label: 'Provision Account',
             onClick: () => {
-              /* Add user logic */
+              route.push('/users/new')
             },
             icon: UserPlusIcon,
             iconAnimation: 'rotate-90',
@@ -266,7 +263,7 @@ const UsersPage: React.FC = () => {
           onRefresh={refresh}
           onViewDetails={viewDetails}
           onEditUser={editUser}
-          onDeleteUser={deleteUser}
+          onDeleteUser={(user) => deleteUser(user.id)}
           onClearFilters={handleClearFilters}
           selectedItems={new Set(selectedIds)}
           onSelectItem={toggleItem}

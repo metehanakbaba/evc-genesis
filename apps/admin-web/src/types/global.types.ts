@@ -68,4 +68,7 @@ export interface LegacyLocation {
 }
 
 // User role types - Updated to match API specification
-export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
+// export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
+
+
+export type { UserRole } from "@evc/shared-business-logic"

@@ -10,36 +10,11 @@ import {
 } from '@heroicons/react/24/outline';
 import type React from 'react';
 
-// Type for icon components
-type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
-/**
- * 👥 User Management Statistics
- * Revolutionary floating stats with role-based data
- */
-interface UserStats {
-  readonly title: string;
-  readonly value: string;
-  readonly icon: IconComponent;
-  readonly bgColor: string;
-  readonly borderColor: string;
-  readonly iconColor: string;
-  readonly accentColor: string;
-  readonly trend: string;
-  readonly description: string;
-  readonly isLive?: boolean;
-}
-
-interface UserStatsData {
-  totalUsers: { formatted: string; count: number };
-  activeUsers: { formatted: string; percentage: string };
-  adminUsers: { formatted: string };
-  newUsersThisMonth: { formatted: string };
-}
-
-interface UserStatsSectionProps {
-  userStats: UserStatsData;
-}
+// Import types from the centralized types file
+import type {
+  UserStatsSectionProps,
+  UserStatConfig,
+} from '../types/components.types';
 
 /**
  * 📊 User Statistics Section Component
@@ -49,7 +24,7 @@ const UserStatsSection: React.FC<UserStatsSectionProps> = ({ userStats }) => {
   const { totalUsers, activeUsers, adminUsers, newUsersThisMonth } = userStats;
 
   // Enterprise identity and access management statistics
-  const statsConfig: UserStats[] = [
+  const statsConfig: UserStatConfig[] = [
     {
       title: 'Total Users',
       value: totalUsers.formatted,

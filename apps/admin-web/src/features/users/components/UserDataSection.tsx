@@ -28,7 +28,7 @@ import {
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
 // Import types
-import type { UserProfile } from '../types/user.types';
+import type { UserProfile } from '@evc/shared-business-logic';
 
 /**
  * 🔄 Extend UserProfile to work with shared components
@@ -82,7 +82,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
   const gridRenderer = useMemo(
     (): GridCardRenderer<EnhancedUser> => ({
       getStatusConfig: (user: EnhancedUser): DataGridStatusConfig => {
-        const roleConfig = getRoleConfig(user.role as any);
+        const roleConfig = getRoleConfig(user.role);
         return {
           bgColor: roleConfig.bgColor,
           borderColor: roleConfig.borderColor,
@@ -95,7 +95,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
       getAnimationDelay: (index: number): string => `${index * 100}ms`,
 
       renderHeader: (user: EnhancedUser): React.ReactNode => {
-        const roleConfig = getRoleConfig(user.role as any);
+        const roleConfig = getRoleConfig(user.role);
         const RoleIcon =
           roleConfig.icon === 'ShieldCheckIcon'
             ? CheckCircleIcon
@@ -177,19 +177,19 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
       {
         icon: EyeIcon,
         label: 'View',
-        onClick: (user) => onViewDetails(user as UserProfile),
+        onClick: (user) => onViewDetails(user as EnhancedUser),
         variant: 'ghost',
       },
       {
         icon: PencilIcon,
         label: 'Edit',
-        onClick: (user) => onEditUser(user as UserProfile),
+        onClick: (user) => onEditUser(user as EnhancedUser),
         variant: 'primary',
       },
       {
         icon: TrashIcon,
         label: 'Delete',
-        onClick: (user) => onDeleteUser(user as UserProfile),
+        onClick: (user) => onDeleteUser(user as EnhancedUser),
         variant: 'danger',
       },
     ],
@@ -221,7 +221,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
         label: 'Role',
         accessor: 'role',
         render: (user) => {
-          const roleConfig = getRoleConfig(user.role as any);
+          const roleConfig = getRoleConfig(user.role);
           return (
             <span className={`text-sm font-medium ${roleConfig.textColor}`}>
               {roleConfig.text}
@@ -309,6 +309,7 @@ const UserDataSection: React.FC<UserDataSectionProps> = ({
             items={enhancedUsers}
             columns={tableColumns}
             actions={gridActions}
+            isLoading={isLoading}
             onLoadMore={onLoadMore}
             isLoadingMore={isLoadingMore}
             hasNextPage={hasNextPage}
