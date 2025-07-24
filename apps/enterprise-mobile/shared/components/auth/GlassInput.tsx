@@ -79,10 +79,10 @@ export const GlassInput: React.FC<GlassInputProps> = ({
       ? `border-${variant}-300/60` 
       : `border-${variant}-400/25`;
 
-  const inputHeight = size === 'lg' ? 'h-16' : 'h-14';
+  const inputHeight = size === 'lg' ? 'h-14' : 'h-12'; // Reduced height for better proportions
 
   return (
-    <View className="space-y-2">
+    <View className="space-y-1">
       <View className={`relative ${inputHeight} rounded-xl border ${borderColor} overflow-hidden`}>
         {/* Glassmorphism Background */}
                  <LinearGradient
@@ -109,7 +109,7 @@ export const GlassInput: React.FC<GlassInputProps> = ({
         <View className="flex-1 flex-row items-center px-4 relative z-10">
           {/* Left Icon */}
           {leftIcon && (
-            <View className="mr-3 opacity-70">
+            <View className="mr-3 opacity-80">
               {leftIcon}
             </View>
           )}
@@ -129,7 +129,7 @@ export const GlassInput: React.FC<GlassInputProps> = ({
                       : isFocused 
                         ? variantConfig.primary 
                         : '#9CA3AF',
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: '500',
                     backgroundColor: 'transparent',
                     paddingHorizontal: 4,
@@ -145,13 +145,21 @@ export const GlassInput: React.FC<GlassInputProps> = ({
               onChangeText={onChangeText}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              className={`
-                text-white text-base font-medium bg-transparent
-                ${label ? 'pt-3' : ''}
-                ${size === 'lg' ? 'text-lg' : 'text-base'}
-              `}
-              placeholderTextColor="rgba(156, 163, 175, 0.6)"
+              style={{
+                color: '#FFFFFF',
+                fontSize: size === 'lg' ? 16 : 14,
+                fontWeight: '500',
+                backgroundColor: 'transparent',
+                paddingTop: label ? 8 : 0,
+                paddingBottom: 0,
+                lineHeight: size === 'lg' ? 18 : 20,
+                textAlignVertical: 'center',
+                includeFontPadding: false,
+                height: '100%',
+              }}
+              placeholderTextColor="rgba(156, 163, 175, 0.5)"
               selectionColor={variantConfig.primary}
+              multiline={false}
               {...props}
             />
           </View>

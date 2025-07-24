@@ -199,9 +199,9 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
                 inputRange: [0, 1],
                 outputRange: ['0%', '100%'],
               }),
-              backgroundColor: currentSlide.variant === 'blue' ? '#3B82F6' :
-                             currentSlide.variant === 'emerald' ? '#10B981' :
-                             currentSlide.variant === 'teal' ? '#14B8A6' : '#8B5CF6'
+              backgroundColor: currentSlide.variant === 'blue' ? '#2563EB' :
+                             currentSlide.variant === 'emerald' ? '#059669' :
+                             currentSlide.variant === 'teal' ? '#0891B2' : '#7C3AED'
             }}
           />
         </View>
@@ -235,20 +235,20 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
                 {/* Icon Container */}
                 <View 
                   className={`
-                    w-24 h-24 rounded-3xl items-center justify-center
-                    ${slide.variant === 'blue' ? 'bg-blue-500/20' : ''}
-                    ${slide.variant === 'emerald' ? 'bg-emerald-500/20' : ''}
-                    ${slide.variant === 'teal' ? 'bg-teal-500/20' : ''}
-                    ${slide.variant === 'purple' ? 'bg-purple-500/20' : ''}
+                    w-20 h-20 rounded-2xl items-center justify-center
+                    ${slide.variant === 'blue' ? 'bg-blue-500/12' : ''}
+                    ${slide.variant === 'emerald' ? 'bg-emerald-500/12' : ''}
+                    ${slide.variant === 'teal' ? 'bg-teal-500/12' : ''}
+                    ${slide.variant === 'purple' ? 'bg-purple-500/12' : ''}
                   `}
                 >
                   <Feather 
                     name={slide.iconName} 
-                    size={40} 
+                    size={36} 
                     color={
-                      slide.variant === 'blue' ? '#60A5FA' :
-                      slide.variant === 'emerald' ? '#34D399' :
-                      slide.variant === 'teal' ? '#4DD0E1' : '#A78BFA'
+                      slide.variant === 'blue' ? '#2563EB' :
+                      slide.variant === 'emerald' ? '#059669' :
+                      slide.variant === 'teal' ? '#0891B2' : '#7C3AED'
                     } 
                   />
                 </View>
@@ -264,32 +264,32 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
               </View>
 
               {/* Features List */}
-              <View className="space-y-4">
+              <View className="space-y-3">
                 {slide.features.map((feature, featureIndex) => (
                   <View
                     key={featureIndex}
-                    className="flex-row items-center space-x-4 px-4"
+                    className="flex-row items-start space-x-3 px-6"
                   >
                     <View 
                       className={`
-                        w-8 h-8 rounded-xl items-center justify-center
-                        ${slide.variant === 'blue' ? 'bg-blue-500/20' : ''}
-                        ${slide.variant === 'emerald' ? 'bg-emerald-500/20' : ''}
-                        ${slide.variant === 'teal' ? 'bg-teal-500/20' : ''}
-                        ${slide.variant === 'purple' ? 'bg-purple-500/20' : ''}
+                        w-5 h-5 rounded-lg items-center justify-center mt-0.5
+                        ${slide.variant === 'blue' ? 'bg-blue-500/15' : ''}
+                        ${slide.variant === 'emerald' ? 'bg-emerald-500/15' : ''}
+                        ${slide.variant === 'teal' ? 'bg-teal-500/15' : ''}
+                        ${slide.variant === 'purple' ? 'bg-purple-500/15' : ''}
                       `}
                     >
                       <Feather 
                         name="check" 
-                        size={16} 
+                        size={12} 
                         color={
-                          slide.variant === 'blue' ? '#60A5FA' :
-                          slide.variant === 'emerald' ? '#34D399' :
-                          slide.variant === 'teal' ? '#4DD0E1' : '#A78BFA'
+                          slide.variant === 'blue' ? '#2563EB' :
+                          slide.variant === 'emerald' ? '#059669' :
+                          slide.variant === 'teal' ? '#0891B2' : '#7C3AED'
                         } 
                       />
                     </View>
-                    <Text className="flex-1 text-gray-300 text-base leading-6">
+                    <Text className="flex-1 text-gray-300 text-sm leading-5">
                       {feature}
                     </Text>
                   </View>
@@ -314,9 +314,9 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
               }
             `}
             style={index === currentIndex ? {
-              backgroundColor: currentSlide.variant === 'blue' ? '#3B82F6' :
-                             currentSlide.variant === 'emerald' ? '#10B981' :
-                             currentSlide.variant === 'teal' ? '#14B8A6' : '#8B5CF6'
+              backgroundColor: currentSlide.variant === 'blue' ? '#2563EB' :
+                             currentSlide.variant === 'emerald' ? '#059669' :
+                             currentSlide.variant === 'teal' ? '#0891B2' : '#7C3AED'
             } : undefined}
           />
         ))}
@@ -348,7 +348,8 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
             variant={currentSlide.variant}
             size="lg"
             onPress={nextSlide}
-            icon={<Feather name={isLastSlide ? 'check' : 'arrow-right'} size={20} color="#FFFFFF" />}
+            type="primary"
+            iconPosition="none"
           />
         </View>
 
