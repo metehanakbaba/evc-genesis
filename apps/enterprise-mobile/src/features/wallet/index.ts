@@ -1,11 +1,13 @@
 /**
- * 💳 Wallet Feature
+ * 💳 Wallet Feature Exports
  * 
- * Export all wallet related components, hooks, and utilities
+ * Clean architecture exports for Wallet functionality
  */
 
-// Components
-export { WalletManagementModal } from './components/WalletManagementModal';
+// Main Components
+export { WalletScreen } from './screens/WalletScreen';
+
+// Sub Components
 export { WalletOverview } from './components/WalletOverview';
 export { TransactionHistory } from './components/TransactionHistory';
 export { PaymentMethods } from './components/PaymentMethods';
@@ -16,12 +18,12 @@ export { useWallet } from './hooks/useWallet';
 
 // Types
 export type { 
+  WalletManagementModalProps,
+  WalletTab,
   WalletData,
   Transaction,
   PaymentMethod,
-  WalletManagementModalProps,
-  WalletSettings as WalletSettingsType,
-  WalletTab
+  WalletSettings as WalletSettingsType
 } from './types/wallet.types';
 
 // Data

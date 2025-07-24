@@ -18,7 +18,7 @@ export function useWallet() {
     autoRechargeEnabled: true,
     notifications: true,
     biometric: false,
-    currency: '₺'
+    currency: 'zł'
   });
 
   const formatDate = useCallback((dateString: string) => {
@@ -30,7 +30,7 @@ export function useWallet() {
     if (diffDays === 1) return 'Today';
     if (diffDays === 2) return 'Yesterday';
     if (diffDays <= 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+    return date.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' });
   }, []);
 
   const handleTopUp = useCallback(() => {
@@ -38,9 +38,9 @@ export function useWallet() {
       "Top-up Wallet 💳",
       "How much would you like to add to your wallet?",
       [
-        { text: "₺50", onPress: () => console.log('Top-up ₺50') },
-        { text: "₺100", onPress: () => console.log('Top-up ₺100') },
-        { text: "₺200", onPress: () => console.log('Top-up ₺200') },
+        { text: "zł85", onPress: () => console.log('Top-up zł85') },
+        { text: "zł170", onPress: () => console.log('Top-up zł170') },
+        { text: "zł340", onPress: () => console.log('Top-up zł340') },
         { text: "Custom", onPress: () => console.log('Custom top-up') }
       ]
     );

@@ -123,7 +123,7 @@ export function StationDetailBottomSheet({
             </View>
             <View>
               <Text className="text-gray-400 text-xs">Price</Text>
-              <Text className="text-white text-sm font-medium">₺{station.pricePerKwh}/kWh</Text>
+              <Text className="text-white text-sm font-medium">zł{station.pricePerKwh}/kWh</Text>
             </View>
             <View>
               <Text className="text-gray-400 text-xs">Network</Text>

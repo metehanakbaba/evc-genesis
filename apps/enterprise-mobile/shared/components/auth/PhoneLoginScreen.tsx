@@ -56,19 +56,19 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
     // Clean phone number for validation
     const cleaned = phone.replace(/\D/g, '');
     
-    // Turkish mobile numbers: +90 5XX XXX XX XX
-    if (cleaned.startsWith('90')) {
+    // Polish mobile numbers: +48 XXX XXX XXX
+    if (cleaned.startsWith('48')) {
       const number = cleaned.slice(2);
-      return number.length === 10 && number.startsWith('5');
+      return number.length === 9 && /^[4-9]/.test(number);
     }
     
-    // Direct mobile number: 5XX XXX XX XX
-    if (cleaned.startsWith('5')) {
-      return cleaned.length === 10;
+    // Direct mobile number: XXX XXX XXX
+    if (/^[4-9]/.test(cleaned)) {
+      return cleaned.length === 9;
     }
     
     // International format validation for other countries
-    return cleaned.length >= 10 && cleaned.length <= 15;
+    return cleaned.length >= 9 && cleaned.length <= 15;
   };
 
   const handleContinue = async () => {
@@ -97,23 +97,21 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
     // Remove all non-digits
     const cleaned = text.replace(/\D/g, '');
     
-    // Format Turkish numbers
-    if (cleaned.startsWith('90') || (!cleaned.startsWith('5') && cleaned.length > 10)) {
+    // Format Polish numbers
+    if (cleaned.startsWith('48') || (!(/^[4-9]/.test(cleaned)) && cleaned.length > 9)) {
       // International format
       const countryCode = cleaned.slice(0, 2);
-      const number = cleaned.slice(2, 12);
+      const number = cleaned.slice(2, 11);
       if (number.length <= 3) return `+${countryCode} ${number}`;
       if (number.length <= 6) return `+${countryCode} ${number.slice(0, 3)} ${number.slice(3)}`;
-      if (number.length <= 8) return `+${countryCode} ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
-      return `+${countryCode} ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 8)} ${number.slice(8)}`;
+      return `+${countryCode} ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
     }
     
-    // Domestic format for Turkish numbers
-    if (cleaned.startsWith('5') || cleaned.length <= 10) {
+    // Domestic format for Polish numbers
+    if (/^[4-9]/.test(cleaned) || cleaned.length <= 9) {
       if (cleaned.length <= 3) return cleaned;
       if (cleaned.length <= 6) return `${cleaned.slice(0, 3)} ${cleaned.slice(3)}`;
-      if (cleaned.length <= 8) return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6)}`;
-      return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6, 8)} ${cleaned.slice(8, 10)}`;
+      return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6)}`;
     }
     
     return text;
@@ -178,8 +176,8 @@ export const PhoneLoginScreen: React.FC<PhoneLoginScreenProps> = ({
                   error={error}
                   leftIcon={
                     <View className="flex-row items-center">
-                      <Text className="text-white text-sm font-medium mr-2">🇹🇷</Text>
-                      <Text className="text-gray-400 text-sm">+90</Text>
+                      <Text className="text-white text-sm font-medium mr-2">🇵🇱</Text>
+                      <Text className="text-gray-400 text-sm">+48</Text>
                     </View>
                   }
                   rightIcon={phoneNumber.length > 0 ? (

@@ -95,7 +95,7 @@ export function StationCard({ station, onPress }: StationCardProps) {
           </View>
           <View>
             <Text className="text-gray-500 text-xs">Price</Text>
-            <Text className="text-white text-sm font-medium">₺{station.pricePerKwh}</Text>
+            <Text className="text-white text-sm font-medium">zł{station.pricePerKwh}</Text>
           </View>
         </View>
       </LinearGradient>

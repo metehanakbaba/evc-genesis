@@ -1,11 +1,13 @@
 /**
- * ⚡ Charging Stations Feature
+ * 🔌 Charging Stations Feature Exports
  * 
- * Export all charging station related components, hooks, and utilities
+ * Clean architecture exports for Charging Stations functionality
  */
 
-// Components
-export { StationMapModal } from './components/StationMapModal';
+// Main Components
+export { StationMapScreen } from './screens/StationMapScreen';
+
+// Sub Components
 export { StationCard } from './components/StationCard';
 export { StationDetailBottomSheet } from './components/StationDetailBottomSheet';
 
@@ -15,11 +17,11 @@ export { useLocation } from './hooks/useLocation';
 
 // Types
 export type { 
-  ChargingStation, 
-  StationMapModalProps, 
+  StationMapModalProps,
+  ChargingStation,
   StationCardProps,
-  StationDetailBottomSheetProps 
+  StationDetailBottomSheetProps
 } from './types/station.types';
 
-// Data
+// Mock Data
 export { mockChargingStations } from './data/mockStations'; 
