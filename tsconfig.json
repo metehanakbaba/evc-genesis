@@ -26,6 +26,9 @@
     },
     {
       "path": "./packages/shared/business-logic"
+    },
+    {
+      "path": "./apps/enterprise-mobile"
     }
   ]
 }

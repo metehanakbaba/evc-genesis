@@ -1,0 +1,89 @@
+{
+  "name": "@evc/enterprise-mobile",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/enterprise-mobile",
+  "projectType": "application",
+  "tags": ["type:app", "platform:mobile"],
+  "targets": {
+    "start": {
+      "executor": "@nx/expo:start",
+      "options": {
+        "port": 8081
+      }
+    },
+    "serve": {
+      "executor": "@nx/expo:serve",
+      "options": {
+        "port": 8081
+      }
+    },
+    "run-ios": {
+      "executor": "@nx/expo:run",
+      "options": {
+        "platform": "ios"
+      }
+    },
+    "run-android": {
+      "executor": "@nx/expo:run",
+      "options": {
+        "platform": "android"
+      }
+    },
+    "build": {
+      "executor": "@nx/expo:build",
+      "options": {}
+    },
+    "build-ios": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "ios"
+      }
+    },
+    "build-android": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "android"
+      }
+    },
+    "prebuild": {
+      "executor": "@nx/expo:prebuild",
+      "options": {}
+    },
+    "install": {
+      "executor": "@nx/expo:install",
+      "options": {}
+    },
+    "export": {
+      "executor": "@nx/expo:export",
+      "options": {
+        "platform": "all",
+        "outputDir": "dist/apps/enterprise-mobile"
+      }
+    },
+    "submit": {
+      "executor": "@nx/expo:submit",
+      "options": {}
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/enterprise-mobile/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/enterprise-mobile"],
+      "options": {
+        "jestConfig": "apps/enterprise-mobile/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "apps/enterprise-mobile/tsconfig.json"
+      }
+    }
+  }
+}

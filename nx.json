@@ -13,7 +13,9 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/**/*.md"
+      "!{projectRoot}/**/*.md",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s"
     ],
     "sharedGlobals": [
       "{workspaceRoot}/tools/tsconfig/jest.config.ts",
@@ -65,6 +67,22 @@
       "plugin": "@nx/jest/plugin",
       "options": {
         "targetName": "test"
+      }
+    },
+    {
+      "plugin": "@nx/expo/plugin",
+      "options": {
+        "startTargetName": "start",
+        "buildTargetName": "build",
+        "prebuildTargetName": "prebuild",
+        "serveTargetName": "serve",
+        "installTargetName": "install",
+        "exportTargetName": "export",
+        "submitTargetName": "submit",
+        "runIosTargetName": "run-ios",
+        "runAndroidTargetName": "run-android",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
       }
     }
   ],
@@ -153,20 +171,30 @@
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/tools/tsconfig/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/tools/tsconfig/jest.preset.js"
+      ],
       "options": {
         "passWithNoTests": true
       },
       "configurations": {
         "ci": {
           "ci": true,
-          "coverageReporters": ["text"]
+          "coverageReporters": [
+            "text"
+          ]
         }
       }
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/tools/tsconfig/vitest.workspace.ts"]
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/tools/tsconfig/vitest.workspace.ts"
+      ]
     }
   },
   "generators": {
