@@ -24,7 +24,7 @@ export * from './lib/endpoints/wallet.endpoints';
 
 // TODO: Fix missing types in these endpoints
 // export * from './lib/endpoints/stations.endpoints';
-// export * from './lib/endpoints/users.endpoints';
+export * from './lib/endpoints/users.endpoints';
 
 // 🎯 Easy-to-use Functions
 export {

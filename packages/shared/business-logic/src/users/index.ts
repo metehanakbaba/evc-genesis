@@ -8,7 +8,7 @@
  */
 
 // User role type definition
-export type UserRole = 'admin' | 'operator' | 'user';
+export type UserRole = 'ADMIN' | 'FIELD_WORKER' | 'CUSTOMER';
 
 // ===============================
 // TYPES & INTERFACES
@@ -70,7 +70,7 @@ export interface StatusOption {
  */
 export const getRoleConfig = (role: UserRole): UserRoleConfig => {
   const configs: Record<UserRole, UserRoleConfig> = {
-    admin: {
+    ADMIN: {
       color: 'purple',
       icon: 'ShieldCheckIcon',
       text: 'Admin',
@@ -80,7 +80,7 @@ export const getRoleConfig = (role: UserRole): UserRoleConfig => {
       badgeColor: 'bg-purple-500/10 border border-purple-500/20',
       pulseColor: 'bg-purple-500',
     },
-    operator: {
+    FIELD_WORKER: {
       color: 'teal',
       icon: 'CogIcon',
       text: 'Field Worker',
@@ -90,7 +90,7 @@ export const getRoleConfig = (role: UserRole): UserRoleConfig => {
       badgeColor: 'bg-teal-500/10 border border-teal-500/20',
       pulseColor: 'bg-teal-500',
     },
-    user: {
+    CUSTOMER: {
       color: 'blue',
       icon: 'UserIcon',
       text: 'Customer',
@@ -111,9 +111,9 @@ export const getRoleConfig = (role: UserRole): UserRoleConfig => {
  */
 export const getRoleOptions = (): RoleOption[] => [
   { id: 'all', label: 'All Roles', icon: 'UserGroupIcon', color: 'gray' },
-  { id: 'admin', label: 'Admin', icon: 'ShieldCheckIcon', color: 'purple' },
-  { id: 'operator', label: 'Field Worker', icon: 'CogIcon', color: 'teal' },
-  { id: 'user', label: 'Customer', icon: 'UserIcon', color: 'blue' },
+  { id: 'ADMIN', label: 'Admin', icon: 'ShieldCheckIcon', color: 'purple' },
+  { id: 'FIELD_WORKER', label: 'Field Worker', icon: 'CogIcon', color: 'teal' },
+  { id: 'CUSTOMER', label: 'Customer', icon: 'UserIcon', color: 'blue' },
 ];
 
 /**
@@ -202,9 +202,9 @@ export const hasPermission = (
   permission: 'read' | 'write' | 'delete' | 'admin'
 ): boolean => {
   const rolePermissions: Record<UserRole, string[]> = {
-    admin: ['read', 'write', 'delete', 'admin'],
-    operator: ['read', 'write'],
-    user: ['read'],
+    ADMIN: ['read', 'write', 'delete', 'admin'],
+    FIELD_WORKER: ['read', 'write'],
+    CUSTOMER: ['read'],
   };
   
   return rolePermissions[userRole]?.includes(permission) || false;
@@ -307,9 +307,9 @@ export const getDefaultFilters = (): UserFilterOptions => ({
 export const calculateUserStats = (users: UserProfile[]) => {
   const totalUsers = users.length;
   const activeUsers = users.filter(u => u.is_active).length;
-  const adminUsers = users.filter(u => u.role === 'admin').length;
-  const operatorUsers = users.filter(u => u.role === 'operator').length;
-  const customerUsers = users.filter(u => u.role === 'user').length;
+  const adminUsers = users.filter(u => u.role === 'ADMIN').length;
+  const operatorUsers = users.filter(u => u.role === 'FIELD_WORKER').length;
+  const customerUsers = users.filter(u => u.role === 'CUSTOMER').length;
   const verifiedUsers = users.filter(u => u.verified_email).length;
   
   // Recent registrations (last 24 hours)

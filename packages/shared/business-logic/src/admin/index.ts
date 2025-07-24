@@ -3,6 +3,8 @@
  * Centralized logic for dashboard components, time formatting, and admin utilities
  */
 
+import { UserRole } from "../users";
+
 // =====================================
 // Time & Date Formatting Utilities
 // =====================================
@@ -348,16 +350,16 @@ export const getRouteConfig = (path: string): DashboardRoute | null => {
  * Check if user has access to route
  */
 export const hasRouteAccess = (
-  userRole: 'admin' | 'operator' | 'user',
+  userRole: UserRole,
   route: string
 ): boolean => {
   const adminOnlyRoutes = ['/users', '/system'];
   
-  if (userRole === 'admin') return true;
-  if (userRole === 'operator') {
+  if (userRole === 'ADMIN') return true;
+  if (userRole === 'FIELD_WORKER') {
     return !adminOnlyRoutes.includes(route);
   }
-  if (userRole === 'user') {
+  if (userRole === 'CUSTOMER') {
     return ['/sessions', '/wallets'].includes(route);
   }
   

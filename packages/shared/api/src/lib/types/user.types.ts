@@ -9,7 +9,7 @@
  * @author EV Charging Team
  */
 
-// 🎭 User Role Enumeration
+
 export type UserRole = 'CUSTOMER' | 'ADMIN' | 'FIELD_WORKER';
 
 // 👤 User Entity

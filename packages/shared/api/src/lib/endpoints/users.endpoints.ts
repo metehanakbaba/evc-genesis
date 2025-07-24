@@ -31,7 +31,7 @@ export const usersEndpoints = (
   // 📊 Get All Users (Admin)
   getUsers: builder.query<UserListResponse, AdminUserQuery>({
     query: (params) => ({
-      url: '/admin/users',
+      url: '/users',
       params,
     }),
     transformResponse,
@@ -54,7 +54,7 @@ export const usersEndpoints = (
   // ➕ Create New User (Admin)
   createUser: builder.mutation<User, CreateUserRequest>({
     query: (newUser) => ({
-      url: '/admin/users',
+      url: '/users',
       method: 'POST',
       body: newUser,
     }),
@@ -76,7 +76,7 @@ export const usersEndpoints = (
   // 🗑️ Delete User (Admin)
   deleteUser: builder.mutation<void, string>({
     query: (id) => ({
-      url: `/admin/users/${id}`,
+      url: `/users/${id}`,
       method: 'DELETE',
     }),
     transformResponse: transformVoidResponse,
@@ -107,7 +107,7 @@ export const usersEndpoints = (
   // 🔄 Change User Role (Admin)
   changeUserRole: builder.mutation<User, { id: string; role: UserRole }>({
     query: ({ id, role }) => ({
-      url: `/admin/users/${id}/role`,
+      url: `/users/${id}/role`,
       method: 'PATCH',
       body: { role },
     }),
@@ -118,7 +118,7 @@ export const usersEndpoints = (
   // 🚫 Suspend User (Admin)
   suspendUser: builder.mutation<void, string>({
     query: (id) => ({
-      url: `/admin/users/${id}/suspend`,
+      url: `/users/${id}/suspend`,
       method: 'POST',
     }),
     transformResponse: transformVoidResponse,
@@ -128,7 +128,7 @@ export const usersEndpoints = (
   // ✅ Activate User (Admin)
   activateUser: builder.mutation<void, string>({
     query: (id) => ({
-      url: `/admin/users/${id}/activate`,
+      url: `/users/${id}/activate`,
       method: 'POST',
     }),
     transformResponse: transformVoidResponse,

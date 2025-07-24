@@ -63,6 +63,37 @@ export const validatePassword = (password: string): { isValid: boolean; error?: 
 };
 
 /**
+ * 📝 Validate Phone Number
+ * Extracted from: apps/admin-web/src/features/auth/hooks/useFormState.tsx (lines 77-82)
+ * Enhanced with additional validation rules
+ */
+export const validatePhone = (
+  phone: string
+): { isValid: boolean; error?: string } => {
+  if (!phone) {
+    return { isValid: false, error: 'Phone is required' };
+  }
+
+  if (phone.length < 10) {
+    return {
+      isValid: false,
+      error: 'Phone number must be at least 10 digits',
+    };
+  }
+
+  // 正ый RegExp-литерал, без кавычек
+  const re = /^\+\d{6,15}$/;
+
+  if (!re.test(phone)) {
+    return {
+      isValid: false,
+      error: 'Phone number must be in the format +1234567890',
+    };
+  }
+
+  return { isValid: true };
+};
+/**
  * 📝 Complete Login Form Validation
  * Extracted from: apps/admin-web/src/features/auth/hooks/useFormState.tsx (lines 67-87)
  * Combines email and password validation with field-level errors
