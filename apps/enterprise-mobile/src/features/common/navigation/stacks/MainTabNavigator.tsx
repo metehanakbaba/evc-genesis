@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,6 +14,12 @@ import { openModal } from './MainStackNavigator';
 
 // 🎯 CLEAN ARCHITECTURE IMPORTS
 import { SPACING, DESIGN_SYSTEM_COLORS } from '../../../../shared/constants';
+
+// 🖼️ DASHBOARD BACKGROUND IMAGES
+import sunsetCarsEvCharge from '../../../../../assets/dashboard/sunset-cars-ev-charge.jpg';
+import stationImage from '../../../../../assets/dashboard/station.jpg';
+import futuristicChargeStation from '../../../../../assets/dashboard/futuristic-charge-station.jpg';
+import carsCharging from '../../../../../assets/dashboard/cars-charging.jpg';
 
 // ============================================================================
 // HOME SCREEN COMPONENT
@@ -63,6 +69,8 @@ function HomeScreen() {
   const handleStationMapPress = () => {
     openModal('stations');
   };
+
+
 
   return (
     <View className="flex-1 bg-gray-900">
@@ -177,17 +185,34 @@ function HomeScreen() {
               elevation: 6
             }}
           >
+            {/* 🖼️ Wallet Card Background Image */}
+            <Image
+              source={sunsetCarsEvCharge}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0.5,
+                borderRadius: 20,
+              }}
+              resizeMode="cover"
+            />
+            
             <LinearGradient
-              colors={['#1F2937', '#111827', '#0F172A']}
+              colors={['rgba(31,41,55,0.8)', 'rgba(17,24,39,0.8)', 'rgba(15,23,42,0.8)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 20 }}
             />
             <LinearGradient
-              colors={['#14B8A620', '#0F766E15', '#134E4A10']}
+              colors={['rgba(20,184,166,0.2)', 'rgba(15,118,110,0.15)', 'rgba(19,78,74,0.1)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1.2, y: 0.8 }}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 20 }}
             />
             
             <View style={{ padding: SPACING.lg, borderWidth: 1, borderColor: '#14B8A625', borderRadius: 20 }}>
@@ -233,24 +258,41 @@ function HomeScreen() {
               elevation: 8
             }}
           >
+            {/* 🖼️ Premium Card Background Image */}
+            <Image
+              source={futuristicChargeStation}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0.6,
+                borderRadius: 24,
+              }}
+              resizeMode="cover"
+            />
+            
             {/* Complex Multi-Layer Gradient Background */}
             <LinearGradient
-              colors={['#1F2937', '#111827', '#0F172A']}
+              colors={['rgba(31,41,55,0.7)', 'rgba(17,24,39,0.7)', 'rgba(15,23,42,0.7)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 24 }}
             />
             <LinearGradient
-              colors={['#F59E0B20', '#D9770615', '#92400E10']}
+              colors={['rgba(245,158,11,0.2)', 'rgba(217,119,6,0.15)', 'rgba(146,64,14,0.1)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1.2, y: 0.8 }}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 24 }}
             />
             <LinearGradient
-              colors={['transparent', '#F59E0B08', 'transparent']}
+              colors={['transparent', 'rgba(245,158,11,0.08)', 'transparent']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 24 }}
             />
             
             <View style={{ padding: SPACING.xl, borderWidth: 1, borderColor: '#F59E0B25', borderRadius: 24 }}>
@@ -355,17 +397,34 @@ function HomeScreen() {
                 elevation: 4
               }}
             >
+              {/* 🖼️ Find Stations Background Image */}
+              <Image
+                source={stationImage}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.5,
+                  borderRadius: 18,
+                }}
+                resizeMode="cover"
+              />
+              
               <LinearGradient
-                colors={['#1F2937', '#111827', '#0F172A']}
+                colors={['rgba(31,41,55,0.8)', 'rgba(17,24,39,0.8)', 'rgba(15,23,42,0.8)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 18 }}
               />
               <LinearGradient
-                colors={['#3B82F620', '#1E40AF15', '#1E3A8A10']}
+                colors={['rgba(59,130,246,0.2)', 'rgba(30,64,175,0.15)', 'rgba(30,58,138,0.1)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1.2, y: 0.8 }}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 18 }}
               />
               
               <View style={{ padding: SPACING.md, borderWidth: 1, borderColor: '#3B82F620', borderRadius: 18 }}>
@@ -429,17 +488,34 @@ function HomeScreen() {
                 elevation: 4
               }}
             >
+              {/* 🖼️ QR Card Background Image */}
+              <Image
+                source={carsCharging}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.5,
+                  borderRadius: 18,
+                }}
+                resizeMode="cover"
+              />
+              
               <LinearGradient
-                colors={['#1F2937', '#111827', '#0F172A']}
+                colors={['rgba(31,41,55,0.8)', 'rgba(17,24,39,0.8)', 'rgba(15,23,42,0.8)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 18 }}
               />
               <LinearGradient
-                colors={['#10B98120', '#04785715', '#065F4610']}
+                colors={['rgba(16,185,129,0.2)', 'rgba(4,120,87,0.15)', 'rgba(6,95,70,0.1)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1.2, y: 0.8 }}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 18 }}
               />
               
               <View style={{ padding: SPACING.md, borderWidth: 1, borderColor: '#10B98120', borderRadius: 18 }}>

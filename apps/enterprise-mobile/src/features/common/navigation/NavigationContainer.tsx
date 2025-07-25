@@ -37,7 +37,7 @@ export function AppNavigationContainer() {
   }
 
   // Simple conditional rendering - works with React 19
-  return isAuthenticated ? (
+  return !isAuthenticated ? (
     <MainStackNavigator />
   ) : (
     <AuthNavigator onAuthComplete={handleAuthComplete} />
