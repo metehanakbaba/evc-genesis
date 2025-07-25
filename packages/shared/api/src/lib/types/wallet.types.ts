@@ -9,7 +9,7 @@
  * @author EV Charging Team
  */
 
-import type { PaginationParams, DateRangeParams } from './common.types.js';
+import type { PaginationParams, DateRangeParams, AmountRangeParams } from './common.types.js';
 
 // 💱 Transaction Type Enumeration
 export type TransactionType = 
@@ -26,6 +26,27 @@ export type TransactionStatus =
   | 'FAILED' 
   | 'CANCELLED';
 
+export type Period = "7d" | "30d" | "90d" | "1y" ;
+export type AlertSeverity = "LOW" | "MEDIUM" | "HIGH";
+export type AlertType = "HIGH_BALANCE";
+
+export type Currency = 
+  | 'ALL'
+  | 'BGN'
+  | 'CHF'
+  | 'CZK'
+  | 'DKK'
+  | 'EUR'
+  | 'GBP'
+  | 'HRK'
+  | 'HUF'
+  | 'ISK'
+  | 'NOK'
+  | 'PLN'
+  | 'RON'
+  | 'RSD'
+  | 'SEK';
+
 // 💰 PLN Amount Structure
 export interface PLNAmount {
   amount: number;
@@ -34,41 +55,47 @@ export interface PLNAmount {
 }
 
 // 💳 PLN Transaction Entity
-export interface PLNTransaction {
+export interface Transaction {
   id: string;
+  userId: string;
+  userEmail: string;
   type: TransactionType;
+  amount: number;
+  currency: Currency;
   status: TransactionStatus;
-  amount: PLNAmount;
   description: string;
-  stripePaymentIntentId?: string;
-  chargingSessionId?: string;
-  chargeStationId?: string;
-  metadata?: Record<string, unknown>;
-  errorMessage?: string;
-  processedAt?: string;
   createdAt: string;
-  updatedAt: string;
+  completedAt: string;
+}
+
+export interface TransactionSummary {
+  totalTransactions: number;
+  totalAmount: number;
+  averageAmount: number;
 }
 
 // 👛 Wallet Entity
 export interface Wallet {
-  id: string;
   userId: string;
-  balance: PLNAmount;
-  totalAdded: PLNAmount;
-  totalSpent: PLNAmount;
-  status: 'ACTIVE' | 'SUSPENDED' | 'CLOSED';
+  userEmail: string;
+  balance: number;
+  currency: Currency;
+  isActive: boolean;
   createdAt: string;
-  updatedAt: string;
+  lastTransactionAt: string;
 }
 
-// 💰 Wallet Balance Response
-export interface WalletBalance {
-  balance: PLNAmount;
-  pendingAmount: PLNAmount;
-  totalAdded: PLNAmount;
-  totalSpent: PLNAmount;
-  lastUpdated: string;
+export interface WalletStatistics {
+  totalDeposited: number;
+  totalSpent: number;
+  transactionCount: number;
+  averageTransactionAmount: number;
+}
+
+// 💰 Wallet Details Response
+export interface WalletDetails extends Wallet {
+  userFullName: string;
+  statistics: WalletStatistics;
 }
 
 // 🎫 Create Top-up Request
@@ -92,18 +119,22 @@ export interface ProcessPaymentRequest {
 }
 
 // 📋 Transaction Query Parameters
-export interface TransactionQuery extends PaginationParams, DateRangeParams {
+export interface TransactionsQuery extends PaginationParams, DateRangeParams, AmountRangeParams {
   type?: TransactionType;
   status?: TransactionStatus;
   userId?: string;
 }
 
 // 📊 Transaction List Response
-export interface TransactionListResponse {
-  transactions: PLNTransaction[];
-  total: number;
-  page: number;
-  limit: number;
+export interface Transactions {
+  transactions: Transaction[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
+  };
+  summary: TransactionSummary
 }
 
 // 💳 Payment Method
@@ -126,7 +157,7 @@ export interface RefundRequest {
 }
 
 // 💳 Full Transaction (Admin View - includes sensitive fields)
-export interface FullPLNTransaction extends PLNTransaction {
+export interface FullPransaction extends Transaction {
   userId: string;
   walletId: string;
 }
@@ -171,3 +202,87 @@ export interface WalletStats {
   completedTransactions: number;
   failedTransactions: number;
 } 
+
+export interface AdjustBalanceData {
+  amount: number;
+  reason: string;
+  reference: string;
+}
+
+export interface AdjustBalance {
+  transactionId: string;
+  userId: string;
+  previousBalance: number;
+  adjustmentAmount: number;
+  newBalance: number;
+  reason: string;
+  reference: string;
+  performedBy: string;
+  performedAt: string;
+}
+
+export interface TransactionRefundData {
+  amount: number;
+  reason: string;
+  notifyUser: boolean;
+}
+
+export interface TransactionRefund {
+  refundId: string;
+  originalTransactionId: string;
+  refundAmount: number;
+  reason: string;
+  status: TransactionStatus;
+  processedBy: string;
+  processedAt: string;
+  userNotified: boolean;
+}
+
+export interface WalletAnalyticsQueryParams {
+  period: Period;
+  includeCharts: boolean;
+}
+
+interface Averages {
+  depositAmount: number;
+  chargeAmount: number;
+  userBalance: number;
+}
+
+interface Trends {
+  balanceGrowth: string;
+  transactionGrowth: string;
+  userGrowth: string;
+}
+
+interface Alert {
+  type: AlertType;
+  message: string;
+  severity: AlertSeverity;
+}
+
+export interface WalletAnalyticsQueryParams {
+  period: Period;
+  includeCharts: boolean;
+}
+
+interface TransactionVolume {
+  total: number;
+  deposits: number;
+  charges: number;
+  refunds: number;
+}
+
+interface TransactionCounts extends TransactionVolume {}
+
+export interface WalletAnalytics { 
+  period: Period;
+  totalSystemBalance: number;
+  totalUsers: number;
+  activeUsers: number;
+  transactionVolume: TransactionVolume;
+  transactionCounts: TransactionCounts;
+  averages: Averages;
+  trends: Trends;
+  alerts: Alert[];
+}
