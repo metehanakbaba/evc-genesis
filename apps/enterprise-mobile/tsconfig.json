@@ -15,5 +15,10 @@
     "**/*.tsx",
     "nativewind.d.ts",
     "nativewind-env.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/shared/business-logic"
+    }
   ]
 }
