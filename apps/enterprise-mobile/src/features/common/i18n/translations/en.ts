@@ -79,7 +79,7 @@ export const en = {
     or: "or",
     
     // Splash
-    brandName: "EcoVoltCharge",
+    brandName: "EcoVolt",
     tagline: "Smart EV Charging Network",
     
     // Validation
