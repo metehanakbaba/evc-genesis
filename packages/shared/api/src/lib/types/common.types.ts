@@ -72,9 +72,15 @@ export interface ApiTag {
 export interface PaginationParams {
   page?: number;
   limit?: number;
+  offset?: number;
 }
 
 export interface DateRangeParams {
-  startDate?: string;
-  endDate?: string;
+  fromDate?: string;
+  toDate?: string;
 } 
+
+export interface AmountRangeParams {
+  minAmount?: number;
+  maxAmount?: number;
+}
