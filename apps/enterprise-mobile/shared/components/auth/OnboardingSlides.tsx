@@ -2,15 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   Text, 
-  SafeAreaView, 
   ScrollView,
   Animated,
   Dimensions,
-  Pressable
+  Pressable,
+  Platform
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Feather } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { Feather, MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { AuthButton } from './AuthButton';
 
 const { width, height } = Dimensions.get('window');
@@ -18,11 +20,22 @@ const { width, height } = Dimensions.get('window');
 interface OnboardingSlide {
   id: string;
   title: string;
+  subtitle: string;
   description: string;
-  iconName: keyof typeof Feather.glyphMap;
-  variant: 'blue' | 'emerald' | 'purple' | 'teal';
-  features: string[];
-  gradient: readonly [string, string, string];
+  iconName: string;
+  iconFamily: 'Feather' | 'MaterialIcons' | 'FontAwesome5' | 'Ionicons';
+  variant: 'blue' | 'emerald' | 'purple' | 'teal' | 'premium' | 'Tesla';
+  features: {
+    title: string;
+    description: string;
+    icon: string;
+    iconFamily: 'Feather' | 'MaterialIcons' | 'FontAwesome5' | 'Ionicons';
+    premium?: boolean;
+  }[];
+  gradient: readonly [string, string, string, string];
+  accentColor: string;
+  shadowColor: string;
+  category: 'core' | 'premium' | 'enterprise';
 }
 
 interface OnboardingSlidesProps {
@@ -34,58 +47,116 @@ const slides: OnboardingSlide[] = [
   {
     id: 'find-stations',
     title: 'Find Charging Stations',
-    description: 'Discover thousands of charging stations across Turkey with real-time availability',
-    iconName: 'map-pin',
+    subtitle: 'Real-time Availability',
+    description: 'Locate nearby charging stations with live availability and pricing information.',
+    iconName: 'location-on',
+    iconFamily: 'MaterialIcons',
     variant: 'blue',
+    category: 'core',
+    accentColor: '#4FACFE',
+    shadowColor: '#2563EB',
     features: [
-      'Real-time station status on map',
-      'Filter by distance and connector type',
-      'CCS, CHAdeMO and Type2 support',
-      'Station details and user reviews'
+      {
+        title: 'Live station status',
+        description: 'Real-time availability updates',
+        icon: 'activity',
+        iconFamily: 'Feather'
+      },
+      {
+        title: 'Price comparison',
+        description: 'Compare charging costs',
+        icon: 'attach-money',
+        iconFamily: 'MaterialIcons'
+      },
+      {
+        title: 'Quick navigation',
+        description: 'GPS directions to stations',
+        icon: 'navigation',
+        iconFamily: 'MaterialIcons'
+      }
     ],
-    gradient: ['rgba(59, 130, 246, 0.2)', 'rgba(147, 197, 253, 0.1)', 'transparent'] as const
+    gradient: [
+      'rgba(79, 172, 254, 0.25)', 
+      'rgba(59, 130, 246, 0.15)', 
+      'rgba(37, 99, 235, 0.08)', 
+      'transparent'
+    ] as const
   },
   {
     id: 'smart-charging',
     title: 'Smart Charging',
-    description: 'AI-powered charging optimization for the best experience and efficiency',
-    iconName: 'zap',
+    subtitle: 'Optimize Your Sessions',
+    description: 'Schedule charging sessions and track your energy consumption in real-time.',
+    iconName: 'electric-bolt',
+    iconFamily: 'MaterialIcons',
     variant: 'emerald',
+    category: 'core',
+    accentColor: '#10B981',
+    shadowColor: '#059669',
     features: [
-      'Automatic charging scheduling',
-      'Real-time charging status tracking',
-      'Energy cost calculation',
-      'Fast charging route planning'
+      {
+        title: 'Session scheduling',
+        description: 'Plan charging times',
+        icon: 'schedule',
+        iconFamily: 'MaterialIcons'
+      },
+      {
+        title: 'Energy tracking',
+        description: 'Monitor consumption',
+        icon: 'battery-charging-full',
+        iconFamily: 'MaterialIcons'
+      },
+      {
+        title: 'Cost calculator',
+        description: 'Track charging expenses',
+        icon: 'calculate',
+        iconFamily: 'MaterialIcons'
+      }
     ],
-    gradient: ['rgba(16, 185, 129, 0.2)', 'rgba(110, 231, 183, 0.1)', 'transparent'] as const
+    gradient: [
+      'rgba(16, 185, 129, 0.25)', 
+      'rgba(5, 150, 105, 0.18)', 
+      'rgba(4, 120, 87, 0.12)', 
+      'transparent'
+    ] as const
   },
   {
     id: 'digital-wallet',
     title: 'Digital Wallet',
-    description: 'Secure and fast payment system for seamless charging experience',
-    iconName: 'credit-card',
+    subtitle: 'Secure Payments',
+    description: 'Fast and secure payment system with automatic charging and expense tracking.',
+    iconName: 'account-balance-wallet',
+    iconFamily: 'MaterialIcons',
     variant: 'teal',
+    category: 'core',
+    accentColor: '#14B8A6',
+    shadowColor: '#0891B2',
     features: [
-      'Instant balance top-up and payments',
-      'Detailed spending analytics',
-      'Auto-pay and subscription options',
-      'Cashback and loyalty programs'
+      {
+        title: 'Auto-pay enabled',
+        description: 'Seamless transactions',
+        icon: 'payment',
+        iconFamily: 'MaterialIcons'
+      },
+      {
+        title: 'Expense tracking',
+        description: 'Monthly spending reports',
+        icon: 'bar-chart',
+        iconFamily: 'MaterialIcons'
+      },
+      {
+        title: 'Multiple payment methods',
+        description: 'Cards, mobile wallets',
+        icon: 'smartphone',
+        iconFamily: 'MaterialIcons'
+      }
     ],
-    gradient: ['rgba(20, 184, 166, 0.2)', 'rgba(45, 212, 191, 0.1)', 'transparent'] as const
-  },
-  {
-    id: 'premium-experience',
-    title: 'Premium Experience',
-    description: 'Advanced features and personalized services for power users',
-    iconName: 'star',
-    variant: 'purple',
-    features: [
-      'Personalized dashboard and analytics',
-      '24/7 premium customer support',
-      'Station reservations and priority access',
-      'Carbon footprint tracking'
-    ],
-    gradient: ['rgba(139, 92, 246, 0.2)', 'rgba(168, 85, 247, 0.1)', 'transparent'] as const
+    gradient: [
+      'rgba(20, 184, 166, 0.25)', 
+      'rgba(13, 148, 136, 0.18)', 
+      'rgba(15, 118, 110, 0.12)', 
+      'transparent'
+    ] as const
   }
 ];
 
@@ -96,33 +167,73 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLastSlide, setIsLastSlide] = useState(false);
   
-  // Animation refs
+  // Enhanced Animation System
   const scrollViewRef = useRef<ScrollView>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
+  const particleAnim = useRef(new Animated.Value(0)).current;
+  const featureAnimations = useRef(
+    slides.map(() => slides[0].features.map(() => new Animated.Value(0)))
+  ).current;
 
   useEffect(() => {
     setIsLastSlide(currentIndex === slides.length - 1);
     
-    // Animate current slide
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.timing(progressAnim, {
-        toValue: currentIndex / (slides.length - 1),
-        duration: 400,
-        useNativeDriver: false,
-      })
-    ]).start();
+    // Simple & Reliable Animation Sequence
+    // Reset animations first
+    fadeAnim.setValue(0);
+    slideAnim.setValue(30);
+    glowAnim.setValue(0);
+    particleAnim.setValue(0);
+    featureAnimations[currentIndex].forEach(anim => anim.setValue(0));
+    
+    // Start animations with delay to prevent conflicts
+    const timer = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          tension: 50,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+        Animated.timing(progressAnim, {
+          toValue: currentIndex / (slides.length - 1),
+          duration: 400,
+          useNativeDriver: false,
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(particleAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      ]).start();
+
+      // Feature animations with stagger
+      featureAnimations[currentIndex].forEach((anim, index) => {
+        setTimeout(() => {
+          Animated.spring(anim, {
+            toValue: 1,
+            tension: 60,
+            friction: 8,
+            useNativeDriver: true,
+          }).start();
+        }, index * 100);
+      });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [currentIndex]);
 
   const nextSlide = () => {
@@ -167,210 +278,465 @@ export const OnboardingSlides: React.FC<OnboardingSlidesProps> = ({
 
   const currentSlide = slides[currentIndex];
 
-  return (
-    <SafeAreaView className="flex-1 bg-gray-900">
-      <StatusBar style="light" />
+  const renderIcon = (iconName: string, iconFamily: string, size: number, color: string) => {
+    switch (iconFamily) {
+      case 'MaterialIcons':
+        return <MaterialIcons name={iconName as any} size={size} color={color} />;
+      case 'FontAwesome5':
+        return <FontAwesome5 name={iconName as any} size={size} color={color} />;
+      case 'Ionicons':
+        return <Ionicons name={iconName as any} size={size} color={color} />;
+      default:
+        return <Feather name={iconName as any} size={size} color={color} />;
+    }
+  };
+
+    return (
+    <View style={{ flex: 1 }}>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
       
-      {/* Clean Background */}
-      <LinearGradient
-        colors={['#111827', '#1F2937', '#111827'] as const}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-      />
+      {/* Advanced Multi-Layer Background */}
+      <View style={{ flex: 1 }}>
+        {/* Base Gradient */}
+        <LinearGradient
+          colors={['#0A0A0B', '#1A1A2E', '#16213E', '#0A0A0B']}
+          locations={[0, 0.3, 0.7, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        />
 
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-6 py-4">
-        <Text className="text-lg font-bold text-white">
-          EV Charging
-        </Text>
-        <Pressable onPress={onSkip}>
-          <Text className="text-gray-400 font-medium">Skip</Text>
-        </Pressable>
-      </View>
-
-      {/* Progress Bar */}
-      <View className="px-6 mb-8">
-        <View className="h-1 bg-gray-700 rounded-full overflow-hidden">
-          <Animated.View
-            className="h-full rounded-full"
-            style={{
-              width: progressAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%'],
-              }),
-              backgroundColor: currentSlide.variant === 'blue' ? '#2563EB' :
-                             currentSlide.variant === 'emerald' ? '#059669' :
-                             currentSlide.variant === 'teal' ? '#0891B2' : '#7C3AED'
-            }}
+        {/* Dynamic Slide Background */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: fadeAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 0.6],
+            }),
+          }}
+        >
+          <LinearGradient
+            colors={currentSlide.gradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ flex: 1 }}
           />
-        </View>
-        <Text className="text-gray-400 text-sm mt-2 text-center">
-          {currentIndex + 1} of {slides.length}
-        </Text>
-      </View>
+        </Animated.View>
 
-      {/* Slides Content */}
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={handleScroll}
-        className="flex-1"
-      >
-        {slides.map((slide, index) => (
-          <Animated.View
-            key={slide.id}
-            style={{
-              width,
-              opacity: index === currentIndex ? fadeAnim : 0.3,
-              transform: [{ translateY: index === currentIndex ? slideAnim : 20 }],
-            }}
-            className="flex-1 px-6"
-          >
-            <View className="flex-1 justify-center space-y-8">
-              {/* Icon and Title */}
-              <View className="items-center space-y-6">
-                {/* Icon Container */}
-                <View 
-                  className={`
-                    w-20 h-20 rounded-2xl items-center justify-center
-                    ${slide.variant === 'blue' ? 'bg-blue-500/12' : ''}
-                    ${slide.variant === 'emerald' ? 'bg-emerald-500/12' : ''}
-                    ${slide.variant === 'teal' ? 'bg-teal-500/12' : ''}
-                    ${slide.variant === 'purple' ? 'bg-purple-500/12' : ''}
-                  `}
+        {/* Ambient Particles */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: particleAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 0.3],
+            }),
+          }}
+        >
+          {[...Array(8)].map((_, i) => (
+            <Animated.View
+              key={i}
+              style={{
+                position: 'absolute',
+                width: 3,
+                height: 3,
+                borderRadius: 1.5,
+                backgroundColor: currentSlide.accentColor,
+                left: `${15 + (i * 12) % 70}%`,
+                top: `${20 + (i * 15) % 60}%`,
+                transform: [{
+                  scale: particleAnim.interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [0, 1.5, 0.8],
+                  }),
+                }],
+                shadowColor: currentSlide.accentColor,
+                shadowOpacity: 0.8,
+                shadowRadius: 6,
+                elevation: 4,
+              }}
+            />
+          ))}
+        </Animated.View>
+
+        {/* Transparent SafeAreaView */}
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['top', 'bottom']}>
+          {/* Premium Header */}
+          <View style={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 10,
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    borderWidth: 1,
+                    borderColor: 'rgba(255, 255, 255, 0.15)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 12,
+                  }}
                 >
-                  <Feather 
-                    name={slide.iconName} 
-                    size={36} 
-                    color={
-                      slide.variant === 'blue' ? '#2563EB' :
-                      slide.variant === 'emerald' ? '#059669' :
-                      slide.variant === 'teal' ? '#0891B2' : '#7C3AED'
-                    } 
-                  />
+                  <MaterialIcons name="electric-bolt" size={16} color={currentSlide.accentColor} />
                 </View>
-
-                <View className="space-y-3">
-                  <Text className="text-3xl font-bold text-white text-center">
-                    {slide.title}
-                  </Text>
-                  <Text className="text-gray-300 text-center text-lg leading-7 px-4">
-                    {slide.description}
-                  </Text>
-                </View>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF', letterSpacing: -0.5 }}>
+                  EVCharge
+                </Text>
               </View>
+              <Pressable
+                onPress={onComplete}
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 12,
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                }}
+              >
+                <Text style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 14, fontWeight: '500' }}>
+                  Start
+                </Text>
+              </Pressable>
+            </View>
+          </View>
 
-              {/* Features List */}
-              <View className="space-y-3">
-                {slide.features.map((feature, featureIndex) => (
+          {/* Enhanced Progress Bar */}
+          <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
+            <View
+              style={{
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                borderWidth: 1,
+                borderColor: 'rgba(255, 255, 255, 0.12)',
+                overflow: 'hidden',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+              }}
+            >
+              <Animated.View
+                style={{
+                  height: '100%',
+                  borderRadius: 3,
+                  width: progressAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0%', '100%'],
+                  }),
+                }}
+              >
+                <LinearGradient
+                  colors={[currentSlide.accentColor, currentSlide.shadowColor]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{ flex: 1, borderRadius: 3 }}
+                />
+              </Animated.View>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+              <Text style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12, fontWeight: '500' }}>
+                {currentIndex + 1} of {slides.length}
+              </Text>
+              <Text style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 12, fontWeight: '500' }}>
+                {currentSlide.category.toUpperCase()}
+              </Text>
+            </View>
+          </View>
+
+          {/* Semantic Layout: Header + Content + Footer Structure */}
+          <View style={{ flex: 1 }}>
+            
+            {/* HEADER SECTION - Fixed Height */}
+            <View style={{ paddingHorizontal: 24, paddingTop: 20 }}>
+              <Animated.View
+                style={{
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                  alignItems: 'center',
+                }}
+              >
+                {/* Compact Icon Container */}
+                <Animated.View
+                  style={{
+                    transform: [{ scale: glowAnim }],
+                    marginBottom: 20,
+                  }}
+                >
                   <View
-                    key={featureIndex}
-                    className="flex-row items-start space-x-3 px-6"
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 24,
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      borderWidth: 1,
+                      borderColor: 'rgba(255, 255, 255, 0.15)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: currentSlide.accentColor,
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 12,
+                      elevation: 8,
+                    }}
                   >
-                    <View 
-                      className={`
-                        w-5 h-5 rounded-lg items-center justify-center mt-0.5
-                        ${slide.variant === 'blue' ? 'bg-blue-500/15' : ''}
-                        ${slide.variant === 'emerald' ? 'bg-emerald-500/15' : ''}
-                        ${slide.variant === 'teal' ? 'bg-teal-500/15' : ''}
-                        ${slide.variant === 'purple' ? 'bg-purple-500/15' : ''}
-                      `}
-                    >
-                      <Feather 
-                        name="check" 
-                        size={12} 
-                        color={
-                          slide.variant === 'blue' ? '#2563EB' :
-                          slide.variant === 'emerald' ? '#059669' :
-                          slide.variant === 'teal' ? '#0891B2' : '#7C3AED'
-                        } 
-                      />
-                    </View>
-                    <Text className="flex-1 text-gray-300 text-sm leading-5">
-                      {feature}
-                    </Text>
+                    <LinearGradient
+                      colors={[
+                        `${currentSlide.accentColor}20`,
+                        `${currentSlide.shadowColor}10`,
+                        `${currentSlide.accentColor}05`,
+                      ]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        borderRadius: 23,
+                      }}
+                    />
+                    {renderIcon(currentSlide.iconName, currentSlide.iconFamily, 32, currentSlide.accentColor)}
                   </View>
+                </Animated.View>
+
+                {/* Compact Title Section */}
+                <View style={{ alignItems: 'center' }}>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      fontWeight: '800',
+                      color: '#FFFFFF',
+                      textAlign: 'center',
+                      marginBottom: 8,
+                      letterSpacing: -0.5,
+                    }}
+                  >
+                    {currentSlide.title}
+                  </Text>
+                  
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: currentSlide.accentColor,
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      marginBottom: 12,
+                    }}
+                  >
+                    {currentSlide.subtitle}
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      textAlign: 'center',
+                      lineHeight: 22,
+                      paddingHorizontal: 20,
+                    }}
+                  >
+                    {currentSlide.description}
+                  </Text>
+                </View>
+              </Animated.View>
+            </View>
+
+            {/* CONTENT SECTION - Flexible Height */}
+            <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 30, justifyContent: 'center' }}>
+              <View style={{ gap: 16 }}>
+                                 {currentSlide.features.map((feature, featureIndex) => (
+                   <Animated.View
+                     key={featureIndex}
+                     style={{
+                       opacity: featureAnimations[currentIndex] && featureAnimations[currentIndex][featureIndex] 
+                         ? featureAnimations[currentIndex][featureIndex] 
+                         : 1,
+                       transform: [{
+                         translateX: featureAnimations[currentIndex] && featureAnimations[currentIndex][featureIndex]
+                           ? featureAnimations[currentIndex][featureIndex].interpolate({
+                               inputRange: [0, 1],
+                               outputRange: [30, 0],
+                             })
+                           : 0,
+                       }],
+                     }}
+                   >
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        padding: 16,
+                        borderRadius: 12,
+                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                      }}
+                    >
+                      {/* Feature Icon */}
+                      <View
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: 10,
+                          backgroundColor: `${currentSlide.accentColor}15`,
+                          borderWidth: 1,
+                          borderColor: `${currentSlide.accentColor}25`,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 14,
+                        }}
+                      >
+                        {renderIcon(feature.icon, feature.iconFamily, 16, currentSlide.accentColor)}
+                      </View>
+
+                      {/* Feature Content */}
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontWeight: '600',
+                            color: '#FFFFFF',
+                            marginBottom: 4,
+                          }}
+                        >
+                          {feature.title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            lineHeight: 18,
+                          }}
+                        >
+                          {feature.description}
+                        </Text>
+                      </View>
+                    </View>
+                  </Animated.View>
                 ))}
               </View>
             </View>
-          </Animated.View>
-        ))}
-      </ScrollView>
+          </View>
 
-      {/* Navigation Dots */}
-      <View className="flex-row justify-center space-x-2 px-6 mb-8">
-        {slides.map((_, index) => (
-          <Pressable
-            key={index}
-            onPress={() => goToSlide(index)}
-            className={`
-              h-2 rounded-full transition-all duration-300
-              ${index === currentIndex 
-                ? 'w-8' 
-                : 'w-2 bg-gray-600'
-              }
-            `}
-            style={index === currentIndex ? {
-              backgroundColor: currentSlide.variant === 'blue' ? '#2563EB' :
-                             currentSlide.variant === 'emerald' ? '#059669' :
-                             currentSlide.variant === 'teal' ? '#0891B2' : '#7C3AED'
-            } : undefined}
-          />
-        ))}
+          {/* Navigation with Side Buttons */}
+          <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
+            {/* Navigation Dots - Lower Position */}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 32, gap: 8 }}>
+              {slides.map((_, index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => setCurrentIndex(index)}
+                  style={{
+                    height: 6,
+                    borderRadius: 3,
+                    width: index === currentIndex ? 24 : 6,
+                    backgroundColor: index === currentIndex 
+                      ? currentSlide.accentColor 
+                      : 'rgba(255, 255, 255, 0.3)',
+                    shadowColor: index === currentIndex ? currentSlide.accentColor : 'transparent',
+                    shadowOpacity: 0.6,
+                    shadowRadius: 4,
+                  }}
+                />
+              ))}
+            </View>
+
+            {/* Side Navigation Buttons */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Pressable
+                onPress={() => setCurrentIndex(currentIndex > 0 ? currentIndex - 1 : 0)}
+                disabled={currentIndex === 0}
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: currentIndex === 0 
+                    ? 'rgba(255, 255, 255, 0.03)' 
+                    : 'rgba(255, 255, 255, 0.08)',
+                  borderWidth: 1,
+                  borderColor: currentIndex === 0 
+                    ? 'rgba(255, 255, 255, 0.05)' 
+                    : 'rgba(255, 255, 255, 0.15)',
+                  shadowColor: currentIndex === 0 ? 'transparent' : currentSlide.accentColor,
+                  shadowOpacity: currentIndex === 0 ? 0 : 0.2,
+                  shadowRadius: 8,
+                  elevation: currentIndex === 0 ? 0 : 4,
+                }}
+              >
+                <Feather 
+                  name="arrow-left" 
+                  size={24} 
+                  color={currentIndex === 0 ? 'rgba(255, 255, 255, 0.3)' : '#FFFFFF'} 
+                />
+              </Pressable>
+
+                             <View style={{ flex: 1, alignItems: 'center', paddingHorizontal: 20 }}>
+                 <Text style={{ 
+                   color: 'rgba(255, 255, 255, 0.6)', 
+                   fontSize: 14, 
+                   fontWeight: '500',
+                   textAlign: 'center'
+                 }}>
+                   Use arrows to navigate features
+                 </Text>
+               </View>
+
+              <Pressable
+                onPress={() => {
+                  if (currentIndex < slides.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                  } else {
+                    onComplete();
+                  }
+                }}
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255, 255, 255, 0.15)',
+                  shadowColor: currentSlide.accentColor,
+                  shadowOpacity: 0.3,
+                  shadowRadius: 12,
+                  elevation: 6,
+                }}
+              >
+                {currentIndex === slides.length - 1 ? (
+                  <Feather 
+                    name="check" 
+                    size={24} 
+                    color={currentSlide.accentColor} 
+                  />
+                ) : (
+                  <Feather 
+                    name="arrow-right" 
+                    size={24} 
+                    color="#FFFFFF" 
+                  />
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </SafeAreaView>
       </View>
-
-      {/* Navigation Buttons */}
-      <View className="flex-row justify-between items-center px-6 pb-8">
-        <Pressable
-          onPress={previousSlide}
-          disabled={currentIndex === 0}
-          className={`
-            w-14 h-14 rounded-xl items-center justify-center border
-            ${currentIndex === 0 
-              ? 'bg-gray-700/50 border-gray-600/30' 
-              : 'bg-white/5 border-white/10'
-            }
-          `}
-        >
-          <Feather 
-            name="arrow-left" 
-            size={20} 
-            color={currentIndex === 0 ? '#6B7280' : '#FFFFFF'} 
-          />
-        </Pressable>
-
-        <View className="flex-1 px-6">
-          <AuthButton
-            title={isLastSlide ? 'Get Started!' : 'Continue'}
-            variant={currentSlide.variant}
-            size="lg"
-            onPress={nextSlide}
-            type="primary"
-            iconPosition="none"
-          />
-        </View>
-
-        <Pressable
-          onPress={nextSlide}
-          disabled={isLastSlide}
-          className={`
-            w-14 h-14 rounded-xl items-center justify-center border
-            ${isLastSlide 
-              ? 'bg-gray-700/50 border-gray-600/30' 
-              : 'bg-white/5 border-white/10'
-            }
-          `}
-        >
-          <Feather 
-            name="arrow-right" 
-            size={20} 
-            color={isLastSlide ? '#6B7280' : '#FFFFFF'} 
-          />
-        </Pressable>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }; 

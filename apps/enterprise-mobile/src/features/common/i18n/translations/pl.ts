@@ -81,7 +81,7 @@ export const pl: TranslationKeys = {
     or: "lub",
     
     // Splash
-    brandName: "EcoVoltCharge",
+    brandName: "EcoVolt",
     tagline: "Inteligentna Sieć Ładowania EV",
     
     // Validation
