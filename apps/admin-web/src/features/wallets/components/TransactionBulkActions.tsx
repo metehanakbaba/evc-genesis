@@ -2,17 +2,17 @@ import React from 'react';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import { EyeIcon, BanIcon} from 'lucide-react';
 import { BulkAction, BulkActionBar } from '@/shared/ui';
-import { PLNTransaction } from '@/features/wallets/types/wallet.types';
+import { Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 export interface TransactionBulkActionsProps {
-  transactions: PLNTransaction[];
+  transactions: Transaction[];
   selectedIds: string[];
   selectedCount: number;
   clearSelection: () => void;
   totalCount?: number;
-  viewDetails: (tx: PLNTransaction) => void;
-  retryTransaction: (tx: PLNTransaction) => void;
-  refundTransaction: (tx: PLNTransaction) => void;
+  viewDetails: (tx: Transaction) => void;
+  retryTransaction: (tx: Transaction) => void;
+  refundTransaction: (tx: Transaction) => void;
 }
 
 export const TransactionBulkActions: React.FC<TransactionBulkActionsProps> = ({

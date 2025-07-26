@@ -33,24 +33,13 @@ import { QuickFilterButtons, QuickFilterGroup, useBulkSelection } from '@/shared
 import { useAllTransactions, useTransactionStatistics } from '../hooks/useTransactions';
 import { TransactionType, TransactionStatus } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
-
 /**
- * 🚀 Revolutionary PLN Wallet Management Page - Teal Theme
- * Sophisticated floating card design with financial operations
- *
- * Features:
- * - Wallet balance overview with real-time updates
- * - Transaction history with filtering
- * - Payment processing with Stripe integration
- * - Refund management
- * - Financial analytics and reporting
- * - Revolutionary table view with glassmorphism
- * - Modal-based filtering system
- * - API schema compliant TypeScript
- * - ✅ Now uses reusable components and API hooks
- * - ✅ Clean separation of concerns
+ * Transactions Page
+ * Displays all transactions with search, filters, bulk actions, and refund modal
+ *  !! TODO Implement Transactions page 
  */
-const WalletsPage: React.FC = () => {
+
+const TransactionsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -353,4 +342,4 @@ const WalletsPage: React.FC = () => {
   );
 };
 
-export default WalletsPage;
+export default TransactionsPage;

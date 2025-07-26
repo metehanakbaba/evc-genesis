@@ -2,44 +2,20 @@
  * 💳 PLN Wallet Types
  * API Schema Ready types for wallet management
  */
+import { Transaction, WalletBalance, WalletStatistics } from "../../../../../../packages/shared/api/src/lib/types/wallet.types";
 
-export interface PLNAmount {
-  readonly amount: number;
-  readonly currency: 'PLN';
+export interface PLNTransaction extends Transaction {
+  readonly currency: 'PLN',
   readonly formatted: string;
-}
-
-export type TransactionType =
-  | 'ADD_PLN_FUNDS'
-  | 'CHARGING_PAYMENT'
-  | 'REFUND'
-  | 'TRANSFER';
-
-export type TransactionStatus =
-  | 'PENDING'
-  | 'COMPLETED'
-  | 'FAILED'
-  | 'CANCELLED';
-
-export interface PLNTransaction {
-  readonly id: string;
-  readonly type: TransactionType;
-  readonly status: TransactionStatus;
-  readonly amount: PLNAmount;
-  readonly description: string;
   readonly stripePaymentIntentId?: string;
   readonly metadata?: Record<string, unknown>;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
 
-export interface WalletBalance {
-  readonly balance: PLNAmount;
-  readonly pendingAmount: PLNAmount;
-  readonly lastUpdated: string;
-}
+export interface PLNWalletBalance extends WalletBalance {}
 
-export interface PaymentIntent {
+export interface ClientPaymentIntent {
   readonly amount: number;
   readonly returnUrl?: string;
   readonly cancelUrl?: string;
@@ -56,23 +32,21 @@ export interface ChargingPayment {
   readonly metadata?: Record<string, unknown>;
 }
 
-export interface TransactionQueryParams {
-  readonly page?: number;
-  readonly limit?: number;
-  readonly search?: string;
-  readonly type?: TransactionType;
-  readonly status?: TransactionStatus;
-  readonly sort_by?: 'created_at' | 'amount' | 'description';
-  readonly sort_order?: 'asc' | 'desc';
-  readonly date_from?: string;
-  readonly date_to?: string;
+export interface PLNWalletStatystics extends WalletStatistics {
+  readonly totalRefunds: number;
+  readonly totalBalance: number;
+  readonly thisMonthSpending: number;
 }
 
-export interface WalletStatistics {
-  readonly totalBalance: number;
-  readonly totalTransactions: number;
-  readonly totalSpent: number;
-  readonly totalRefunds: number;
-  readonly thisMonthSpending: number;
-  readonly averageTransactionAmount: number;
+export interface TransactionStatsData {
+  totalBalance: { formatted: string; amount: number };
+  dailyVolume: { formatted: string; count: number };
+  revenue: { formatted: string; percentage: string };
+  refundLiabilities: {
+    amount: {
+      formatted: string;
+      value: number;
+    },
+    pending: number 
+  };
 }

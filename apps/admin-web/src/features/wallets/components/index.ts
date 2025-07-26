@@ -11,8 +11,6 @@
 
 // Performance Hooks
 export { useDebounce, useSearchDebounce } from '../hooks/useDebounce';
-// Infinite Scroll Hooks
-export { useInfiniteTransactions } from '../hooks/useInfiniteTransactions';
 export {
   useInfiniteScrollTrigger,
   useIntersectionObserver,
