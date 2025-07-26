@@ -1,69 +1,36 @@
 'use client';
 
-import {
-  ArrowDownTrayIcon,
-  ArrowUpIcon,
-  BanknotesIcon,
-  BoltIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  PlusIcon,
-  ReceiptRefundIcon,
-  ViewColumnsIcon,
-  WalletIcon,
-  XCircleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-import { MainLayout, PageContainer, PageHeader } from '@ui/layout';
-import type React from 'react';
-import { useState, useMemo } from 'react';
-// ✅ Import shared GenericFilterModal instead of custom TransactionFilterModal
-import {
-  type FilterGroup,
-  GenericFilterModal,
-} from '@/shared/ui/components/DataDisplay/GenericFilterModal';
-import { Breadcrumb } from '@/shared/ui/components/Navigation';
-// ✅ Import shared debounce hook
-import { useSearchDebounce } from '@/shared/ui/hooks/useDebounce';
-// ✅ Import API hooks and types
-import { useTransactionActions } from '@/features/wallets/api/walletApi';
-// ✅ Import new reusable components
-import { TransactionStatsSection, TransactionSearchSection, TransactionsDataSection, TransactionBulkActions} from '@/features/wallets/components/index';
-import { QuickFilterButtons, QuickFilterGroup, useBulkSelection } from '@/shared/ui';
-import { useAllTransactions, useTransactionStatistics } from '../hooks/useTransactions';
-import { TransactionType, TransactionStatus } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import React, { useState, useMemo } from 'react';
+import type { Wallet } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { useAllWallets } from '../hooks/useWallets';
+import { CheckCircleIcon, XCircleIcon, ReceiptRefundIcon} from '@heroicons/react/24/outline';
+import { BulkActionBar, BulkAction } from '@/shared/ui/components/DataDisplay/BulkActionBar';
+import QuickFilterButtons, { QuickFilterGroup } from '@/shared/ui/components/DataDisplay/QuickFilterButtons';
+import { 
+  WalletAnalyticsModal, 
+  TransactionsModal, 
+  WalletDetailsModal, 
+  WalletsDataSection,
+  WalletsStatsSection
+ } from '../components';
+ import { MainLayout, PageHeader, Breadcrumb } from '@/shared/ui';
+ import { PageContainer } from '@/shared/ui/components/Layout';
+import { generateWalletsStats } from '../utils/walletStats';
 
-
-/**
- * 🚀 Revolutionary PLN Wallet Management Page - Teal Theme
- * Sophisticated floating card design with financial operations
- *
- * Features:
- * - Wallet balance overview with real-time updates
- * - Transaction history with filtering
- * - Payment processing with Stripe integration
- * - Refund management
- * - Financial analytics and reporting
- * - Revolutionary table view with glassmorphism
- * - Modal-based filtering system
- * - API schema compliant TypeScript
- * - ✅ Now uses reusable components and API hooks
- * - ✅ Clean separation of concerns
- */
 const WalletsPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [amountRangeFilter, setAmountRangeFilter] = useState<string>('small');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // ✅ Debounce search query to prevent excessive API calls
-  const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
+  // Filters state
+  const [search, setSearch] = useState('');
+  const [isActiveFilter, setIsActiveFilter] = useState<'all' | 'true' | 'false'>('all');
+  const [selectedWalletIds, setSelectedWalletIds] = useState<string[]>([]);
+  const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
+  const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
+  const [isWalletDetailsModalOpen, setIsWalletDetailsModalOpen] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
 
+  // Fetch wallets using custom hook
   const {
-    transactions,
-    summary,
+    wallets,
     isLoading,
     isLoadingMore,
     hasNextPage,
@@ -71,285 +38,172 @@ const WalletsPage: React.FC = () => {
     loadMore,
     refresh,
     total,
-  } = useAllTransactions({
-      search: debouncedSearchQuery,
-      type: typeFilter as TransactionType,
-      status: statusFilter as TransactionStatus,
-      amountRangeFilter: amountRangeFilter,
+  } = useAllWallets({
+    search,
+    isActive: isActiveFilter === 'all' ? 'all' : isActiveFilter === 'true',
   });
 
-  const { viewDetails, retryTransaction, refundTransaction } = useTransactionActions();
-
-  // ✅ Bulk selection management
-  const { selectedIds, selectedCount, toggleItem, toggleAll, clearSelection } =
-    useBulkSelection(transactions);
-
-  // ✅ Create revolutionary filter groups for GenericFilterModal
-  const filterGroups: FilterGroup[] = [
-    {
-      id: 'transaction-type',
-      title: 'Transaction Type',
-      selectedValue: typeFilter,
-      onChange: setTypeFilter,
-      options: [
-        {
-          id: 'all',
-          label: 'All Types',
-          icon: WalletIcon,
-          color: 'gray',
-        },
-        {
-          id: 'ADD_PLN_FUNDS',
-          label: 'Top-up',
-          icon: ArrowDownTrayIcon,
-          color: 'emerald',
-        },
-        {
-          id: 'PLN_CHARGING_PAYMENT',
-          label: 'Payment',
-          icon: BoltIcon,
-          color: 'blue',
-        },
-        {
-          id: 'PLN_REFUND',
-          label: 'Refund',
-          icon: ReceiptRefundIcon,
-          color: 'amber',
-        },
-        {
-          id: 'STRIPE_PLN_PAYMENT',
-          label: 'Transfer',
-          icon: ArrowUpIcon,
-          color: 'purple',
-        },
-      ],
+  // Wallet actions
+  const walletActions = {
+    viewDetails: (wallet: Wallet) => {
+      setSelectedWallet(wallet);
+      setIsWalletDetailsModalOpen(true);
     },
-    {
-      id: 'status',
-      title: 'Status',
-      selectedValue: statusFilter,
-      onChange: setStatusFilter,
-      options: [
-        {
-          id: 'all',
-          label: 'All Status',
-          icon: ViewColumnsIcon,
-          color: 'gray',
-        },
-        {
-          id: 'COMPLETED',
-          label: 'Completed',
-          icon: CheckCircleIcon,
-          color: 'emerald',
-        },
-        {
-          id: 'PENDING',
-          label: 'Pending',
-          icon: ClockIcon,
-          color: 'amber',
-        },
-        {
-          id: 'FAILED',
-          label: 'Failed',
-          icon: XCircleIcon,
-          color: 'red',
-        },
-        {
-          id: 'CANCELLED',
-          label: 'Cancelled',
-          icon: XMarkIcon,
-          color: 'red',
-        },
-      ],
-    },
-    {
-      id: 'amount-range',
-      title: 'Amount Range',
-      selectedValue: amountRangeFilter,
-      onChange: setAmountRangeFilter,
-      options: [
-        {
-          id: 'all',
-          label: 'All Amounts',
-          icon: ViewColumnsIcon,
-          color: 'gray',
-        },
-        {
-          id: 'large',
-          label: 'Large (500+ zł)',
-          icon: BanknotesIcon,
-          color: 'red',
-        },
-        {
-          id: 'medium',
-          label: 'Medium (100-500 zł)',
-          icon: BanknotesIcon,
-          color: 'amber',
-        },
-        {
-          id: 'small',
-          label: 'Small (<100 zł)',
-          icon: BanknotesIcon,
-          color: 'blue',
-        },
-      ],
-    },
-  ];
-
-  const quickFilterGroups: QuickFilterGroup[] = useMemo(
-    () => [
-      {
-        id: 'transaction-type',
-        title: 'Type',
-        icon: WalletIcon,
-        selectedValue: typeFilter,
-        onChange: setTypeFilter,
-        options: [
-          { id: 'all', label: 'All', icon: WalletIcon, color: 'gray' },
-          { id: 'ADD_PLN_FUNDS', label: 'Top-up', icon: ArrowDownTrayIcon, color: 'emerald' },
-          { id: 'PLN_CHARGING_PAYMENT', label: 'Payment', icon: BoltIcon, color: 'blue' },
-          { id: 'PLN_REFUND', label: 'Refund', icon: ReceiptRefundIcon, color: 'amber' },
-        ],
-      },
-      {
-        id: 'transaction-status',
-        title: 'Status',
-        icon: ViewColumnsIcon,
-        selectedValue: statusFilter,
-        onChange: setStatusFilter,
-        options: [
-          { id: 'all', label: 'All', icon: ViewColumnsIcon, color: 'gray' },
-          { id: 'COMPLETED', label: 'Done', icon: CheckCircleIcon, color: 'emerald' },
-          { id: 'PENDING', label: 'Pending', icon: ClockIcon, color: 'amber' },
-          { id: 'FAILED', label: 'Failed', icon: XCircleIcon, color: 'red' },
-        ],
-      },
-      {
-        id: 'amount-range',
-        title: 'Amount',
-        icon: BanknotesIcon,
-        selectedValue: amountRangeFilter,
-        onChange: setAmountRangeFilter,
-        options: [
-          { id: 'all', label: 'All', icon: BanknotesIcon, color: 'gray' },
-          { id: 'large', label: '500+ zł', icon: BanknotesIcon, color: 'red' },
-          { id: 'medium', label: '100-500 zł', icon: BanknotesIcon, color: 'amber' },
-          { id: 'small', label: '<100 zł', icon: BanknotesIcon, color: 'blue' },
-        ],
-      },
-    ],
-    [typeFilter, statusFilter, amountRangeFilter]
-  );
-
-  const transactionStatsData = useTransactionStatistics({ transactions: transactions, summary: summary});
-
-  // ✅ Filtering is now handled by useInfiniteTransactions hook
-
-  /**
-   * 🎨 Clear All Filters
-   */
-  const handleClearFilters = () => {
-    setTypeFilter('all');
-    setStatusFilter('all');
-    setAmountRangeFilter('all');
-    setSearchQuery('');
   };
 
-  return (
-    <MainLayout
-      showNotifications={true}
-      notificationCount={3}
-      headerVariant="default"
-    >
-      {/* Revolutionary Page Header with Teal Theme */}
+
+  // Bulk actions configuration
+  const bulkActions: BulkAction[] = useMemo(() => [
+    {
+      id: 'activate',
+      label: 'Activate',
+      icon: CheckCircleIcon,
+      variant: 'success',
+      onClick: (ids) => {
+        // TODO: Implement bulk activate logic
+        console.log('Bulk activate wallets:', ids);
+      },
+      show: (count) => count > 0,
+    },
+    {
+      id: 'deactivate',
+      label: 'Deactivate',
+      icon: XCircleIcon,
+      variant: 'danger',
+      onClick: (ids) => {
+        // TODO: Implement bulk deactivate logic
+        console.log('Bulk deactivate wallets:', ids);
+      },
+      show: (count) => count > 0,
+    },
+  ], [])
+
+  // Filter groups for QuickFilterButtons
+  const filterGroups: QuickFilterGroup[] = useMemo(() => [
+    {
+      id: 'activeStatus',
+      title: 'Status',
+      icon: CheckCircleIcon,
+      selectedValue: isActiveFilter,
+      onChange: (value) => setIsActiveFilter(value as 'all' | 'true' | 'false'),
+      options: [
+        { id: 'all', label: 'All', icon: CheckCircleIcon, color: 'gray' },
+        { id: 'true', label: 'Active', icon: CheckCircleIcon, color: 'emerald' },
+        { id: 'false', label: 'Inactive', icon: XCircleIcon, color: 'red' },
+      ],
+    },
+  ], [isActiveFilter]);
+
+  return (  
+  
+    <MainLayout>
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
-        <Breadcrumb currentPageLabel="Enterprise Treasury" variant="teal" />
+        <Breadcrumb
+          currentPageLabel="Wallets & Transactions Management"
+          variant="purple"
+        />
 
         <PageHeader
-          title="Enterprise Treasury Management"
-          description="Comprehensive financial operations, payment processing, and liquidity oversight"
-          variant="teal"
+          title="Payment system"
+          description="Comprehensive wallet lifecycle management and role-based access control administration"
+          variant="purple"
           actionButton={{
-            label: 'Initiate Transaction',
-            onClick: () => {
-              /* Add transaction logic */
-            },
-            icon: PlusIcon,
-            iconAnimation: 'rotate-90',
+            label: 'All transactions',
+            icon: ReceiptRefundIcon,
+            onClick: () => setIsTransactionsModalOpen(true)
           }}
         />
       </PageContainer>
 
       <PageContainer paddingY="lg" className="space-y-10">
-        {/* Revolutionary Network Stats Section */}
-        <TransactionStatsSection transactionStats={transactionStatsData} />
 
-        {/* Revolutionary Transaction Management Section */}
-        <section>
+        <WalletsStatsSection stats={generateWalletsStats(wallets)} />
 
-          <TransactionSearchSection 
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            onOpenFilterModal={() => setIsFilterModalOpen(true)}
-            isFilterActive={              
-              typeFilter !== 'all' ||
-              statusFilter !== 'all' ||
-              amountRangeFilter !== 'all'
+        {/* <WalletsSearchSection 
+          searchQuery={}
+          onSearchChange={}
+          viewMode={}
+          onViewModeChange={}
+          onOpenFilterModal={}
+          isFilterActive={}
+        /> */}
+      
+      <QuickFilterButtons filterGroups={filterGroups} variant="teal" />
+
+      <WalletsDataSection
+        wallets={wallets}
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+        hasNextPage={hasNextPage}
+        error={error}
+        viewMode="grid"
+        total={total}
+        onLoadMore={loadMore}
+        onRefresh={refresh}
+        onViewDetails={walletActions.viewDetails}
+        onEditWallet={() => {}}
+        onDeleteWallet={() => {}}
+        onClearFilters={() => {
+          setSearch('');
+          setIsActiveFilter('all');
+          setSelectedWalletIds([]);
+        }}
+        selectedItems={new Set(selectedWalletIds)}
+        onSelectItem={(id: string) => {
+          // handleSelectionChange expects string[], but onSelectItem provides string
+          // So update selectedWalletIds accordingly
+          setSelectedWalletIds((prevSelected) => {
+            const newSelected = new Set(prevSelected);
+            if (newSelected.has(id)) {
+              newSelected.delete(id);
+            } else {
+              newSelected.add(id);
             }
-          />
+            return Array.from(newSelected);
+          });
+        }}
+        onSelectAll={() => {
+          if (wallets.length === selectedWalletIds.length) {
+            setSelectedWalletIds([]);
+          } else {
+            setSelectedWalletIds(wallets.map(w => w.userId));
+          }
+        }}
+      />
 
-          <QuickFilterButtons 
-            filterGroups={quickFilterGroups} 
-            variant="teal"
-           />
+      <BulkActionBar
+        selectedCount={selectedWalletIds.length}
+        selectedIds={selectedWalletIds}
+        actions={bulkActions}
+        onClearSelection={() => setSelectedWalletIds([])}
+        entityName="wallets"
+        variant="emerald"
+      />
 
-          {/* Transactions Data Section */}
-          <TransactionsDataSection
-            transactions={transactions}
-            isLoading={isLoading}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            error={error}
-            viewMode={viewMode}
-            total={total}
-            onLoadMore={loadMore}
-            onViewDetails={viewDetails}
-            onRetryTransaction={retryTransaction}
-            showRetryButton={true}
-            onRefresh={refresh}
-            onClearFilters={handleClearFilters}
-            selectedItems={new Set(selectedIds)}
-            onSelectItem={toggleItem}
-            onSelectAll={() => toggleAll(true)}
-          />
-        </section>
+      <WalletDetailsModal
+        isOpen={isWalletDetailsModalOpen}
+        onClose={() => setIsWalletDetailsModalOpen(false)}
+        wallet={selectedWallet}
+      />
+
+      <WalletAnalyticsModal
+        isOpen={isAnalyticsModalOpen}
+        onClose={() => setIsAnalyticsModalOpen(false)}
+        isLoading={false}
+        isError={false}
+        error={null}
+        onRefresh={refresh}
+      />
+
+      <TransactionsModal
+        isOpen={isTransactionsModalOpen}
+        onClose={() => setIsTransactionsModalOpen(false)}
+      />
+
       </PageContainer>
-
-      {/* Generic Filter Modal */}
-      <GenericFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        title="Transaction Filters"
-        description="Filter transactions by type, status, and amount range"
-        filterGroups={filterGroups}
-        onClearFilters={handleClearFilters}
-        variant="teal"
-      />
-
-      <TransactionBulkActions 
-          transactions={transactions}
-          selectedIds={selectedIds}
-          selectedCount={selectedCount}
-          clearSelection={clearSelection}
-          totalCount={transactions.length}
-          viewDetails={viewDetails}
-          retryTransaction={retryTransaction}
-          refundTransaction={refundTransaction}
-      />
     </MainLayout>
+
   );
 };
 

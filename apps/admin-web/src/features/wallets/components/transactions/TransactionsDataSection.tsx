@@ -6,7 +6,6 @@ import {
   ClockIcon,
   EyeIcon,
   ShieldExclamationIcon,
-  LockClosedIcon,
   WalletIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
@@ -19,7 +18,6 @@ import {
   type DataGridStatusConfig,
   DataStatusBadge,
   GenericDataGrid,
-  GenericDataTable,
   type GridActionButton,
   type GridCardRenderer,
   GridSkeleton,
@@ -27,7 +25,7 @@ import {
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
 // Import types
-import { TransactionType, TransactionStatus, Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { TransactionType, Transaction } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 /**
  * 🔄 Extend PLNTransaction to work with shared components
@@ -334,45 +332,22 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
   // ✅ Data Views - NOW USING SHARED COMPONENTS! 🎉
   if (enhancedTransactions.length > 0) {
     return (
-      <>
-        {/* ✅ NEW: GenericDataTable for table view */}
-        {viewMode === 'table' && (
-          <GenericDataTable
-            items={enhancedTransactions}
-            columns={tableColumns}
-            actions={gridActions}
-            onLoadMore={onLoadMore}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            total={total}
-            selectable={!!selectedItems && !!onSelectItem}
-            hoverable={true}
-            selectedItems={selectedItems}
-            onSelectItem={onSelectItem}
-            onSelectAll={onSelectAll}
-          />
-        )}
-
-        {/* ✅ NEW: GenericDataGrid for grid view */}
-        {viewMode === 'grid' && (
-          <GenericDataGrid
-            items={enhancedTransactions}
-            renderer={gridRenderer}
-            actions={gridActions}
-            onLoadMore={onLoadMore}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            total={total}
-            columns={{
-              sm: 1,
-              md: 2,
-              lg: 2,
-              xl: 3,
-              '2xl': 4,
-            }}
-          />
-        )}
-      </>
+      <GenericDataGrid
+        items={enhancedTransactions}
+        renderer={gridRenderer}
+        actions={gridActions}
+        onLoadMore={onLoadMore}
+        isLoadingMore={isLoadingMore}
+        hasNextPage={hasNextPage}
+        total={total}
+        columns={{
+          sm: 1,
+          md: 2,
+          lg: 2,
+          xl: 3,
+          '2xl': 4,
+        }}
+      />
     );
   }
 

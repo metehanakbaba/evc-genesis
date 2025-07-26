@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import { WalletIcon } from 'lucide-react';
 import { SearchFilterBar } from '@/shared/ui';
 
-interface TransactionSearchSectionProps {
+interface WalletsSearchSectionProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
   viewMode: 'grid' | 'table';
@@ -12,10 +14,10 @@ interface TransactionSearchSectionProps {
 }
 
 /**
- * 💳 Transaction Search Section Component
- * Provides search, view toggles, and filter controls for transactions
+ * 👛 Wallets Search Section Component
+ * Provides search, view toggles, and filter controls for wallets
  */
-export const TransactionSearchSection: React.FC<TransactionSearchSectionProps> = ({
+export const WalletsSearchSection: React.FC<WalletsSearchSectionProps> = ({
   searchQuery,
   onSearchChange,
   viewMode,
@@ -30,10 +32,10 @@ export const TransactionSearchSection: React.FC<TransactionSearchSectionProps> =
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <WalletIcon className="w-6 h-6 text-emerald-400" />
-            Transaction Explorer
+            Wallet Explorer
           </h2>
           <p className="text-gray-400">
-            Search and manage payments, refunds, and transfers in real-time
+            Search and manage wallets and balances in real-time
           </p>
         </div>
       </div>
@@ -42,10 +44,10 @@ export const TransactionSearchSection: React.FC<TransactionSearchSectionProps> =
       <SearchFilterBar
         searchValue={searchQuery}
         onSearchChange={onSearchChange}
-        searchPlaceholder="Search transactions... (e.g., ID, email, status)"
+        searchPlaceholder="Search wallets... (e.g., email, user ID)"
         onFilterClick={onOpenFilterModal}
         isFilterActive={isFilterActive}
-        filterLabel="Transaction Filters"
+        filterLabel="Wallet Filters"
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         variant="emerald"

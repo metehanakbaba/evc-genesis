@@ -1,8 +1,10 @@
+'use client'
+
 import React from 'react';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import { EyeIcon, BanIcon} from 'lucide-react';
 import { BulkAction, BulkActionBar } from '@/shared/ui';
-import { Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { Transaction } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 export interface TransactionBulkActionsProps {
   transactions: Transaction[];

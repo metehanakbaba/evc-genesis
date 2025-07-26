@@ -29,7 +29,16 @@ export {
   type TransactionStatus,
   type TransactionType,
 } from '../utils/transactionColorUtils';
-export { TransactionBulkActions } from "./TransactionBulkActions";
-export { TransactionSearchSection }  from "./TransactionSearchSection";
-export { TransactionStatsSection } from "./TransactionStatsSection";
-export { TransactionsDataSection } from "./TransactionsDataSection"
+export { TransactionBulkActions } from "./transactions/TransactionBulkActions";
+export { TransactionSearchSection }  from "./transactions/TransactionSearchSection";
+export { TransactionStatsSection } from "./transactions/TransactionStatsSection";
+export { TransactionsDataSection } from "./transactions/TransactionsDataSection"
+export { TransactionsModal } from './transactions/TransactionsModal';
+
+export { WalletAnalyticsModal } from './wallets/WalletAnalyticsModal';
+export { WalletDetailsModal } from "./wallets/WalletDetailsModal";
+export { WalletsBulkActions } from "./wallets/WalletsBulkActions";
+export { WalletsDataSection } from "./wallets/WalletsDataSection";
+export { WalletsSearchSection } from "./wallets/WalletsSearchSection";
+export { WalletsStatsSection } from "./wallets/WalletsStatsSection";
+export { WalletUpdateModal } from './wallets/WalletUpdateModal';

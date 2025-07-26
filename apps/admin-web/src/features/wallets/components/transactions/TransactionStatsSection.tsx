@@ -9,7 +9,7 @@ import {
   WalletIcon,
 } from '@heroicons/react/24/outline';
 import type React from 'react';
-import { TransactionStatsData } from '../types/wallet.types';
+import { TransactionStatsData } from '../../types/wallet.types';
 
 // Type for icon components
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;

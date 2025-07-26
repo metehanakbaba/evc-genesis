@@ -107,6 +107,7 @@ export const createTypedApi = <TReducerPath extends string>(
       'User', 
       'Transaction', 
       'Wallet',
+      'WalletAnalytics',
       'AdminProfile',
       'UserProfile',
       'WalletBalance',

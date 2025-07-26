@@ -2,7 +2,7 @@
  * 💳 PLN Wallet Types
  * API Schema Ready types for wallet management
  */
-import { Transaction, WalletBalance, WalletStatistics } from "../../../../../../packages/shared/api/src/lib/types/wallet.types";
+import { Transaction, WalletBalance } from "../../../../../../packages/shared/api/src/lib/types/wallet.types";
 
 export interface PLNTransaction extends Transaction {
   readonly currency: 'PLN',
@@ -32,10 +32,37 @@ export interface ChargingPayment {
   readonly metadata?: Record<string, unknown>;
 }
 
-export interface PLNWalletStatystics extends WalletStatistics {
-  readonly totalRefunds: number;
-  readonly totalBalance: number;
-  readonly thisMonthSpending: number;
+export interface WalletsStatsData {
+  /** Total wallet balance across system */
+  readonly totalBalance: {
+    readonly formatted: string;
+    readonly amount: number;
+  };
+
+  /** Total wallets created */
+  readonly totalWallets: {
+    readonly formatted: string;
+    readonly count: number;
+  };
+
+  /** Active wallets */
+  readonly activeWallets: {
+    readonly formatted: string;
+    readonly percentage: string;
+    readonly count: number;
+  };
+
+  /** Wallets created this month */
+  readonly newWalletsThisMonth: {
+    readonly formatted: string;
+    readonly count: number;
+  };
+
+  /** Wallets with last transaction this month */
+  readonly walletsUsedThisMonth: {
+    readonly formatted: string;
+    readonly count: number;
+  };
 }
 
 export interface TransactionStatsData {
