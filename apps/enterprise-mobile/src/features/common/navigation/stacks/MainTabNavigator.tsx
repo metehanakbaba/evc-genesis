@@ -11,6 +11,7 @@ import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuthGuard } from '../AuthGuard';
 import { openModal } from './MainStackNavigator';
+import { ModernPattern } from '../../../../shared/components/HexagonPattern';
 
 // 🎯 CLEAN ARCHITECTURE IMPORTS
 import { SPACING, DESIGN_SYSTEM_COLORS } from '../../../../shared/constants';
@@ -73,7 +74,15 @@ function HomeScreen() {
 
 
   return (
-    <View className="flex-1 bg-gray-900">
+    <>
+      {/* 🎨 Modern Pattern Component */}
+      <ModernPattern
+        opacity={0.15}
+        size="medium"
+        color="rgba(59, 130, 246, 0.4)"
+        type="waves"
+      />
+      
       {/* Modern EV-Aware Header - NO SafeAreaView here */}
       <View style={{ 
         paddingHorizontal: SPACING.lg, 
@@ -614,7 +623,7 @@ function HomeScreen() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }
 
