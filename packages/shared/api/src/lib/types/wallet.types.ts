@@ -123,6 +123,7 @@ export interface TransactionsQuery extends PaginationParams, DateRangeParams, Am
   type?: TransactionType;
   status?: TransactionStatus;
   userId?: string;
+  search?: string;
 }
 
 // 📊 Transaction List Response
@@ -189,9 +190,11 @@ export interface ProcessChargingPaymentRequest {
 }
 
 // 🔍 Transaction Query Parameters
-export interface TransactionQuery extends PaginationParams, DateRangeParams {
+export interface TransactionQuery extends PaginationParams, DateRangeParams, AmountRangeParams {
   type?: TransactionType;
   status?: TransactionStatus;
+  userId?: string;
+  search?: string;
 }
 
 // 📊 Wallet Statistics

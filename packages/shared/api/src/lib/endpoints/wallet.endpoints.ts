@@ -49,54 +49,62 @@ export const walletEndpoints = (
 
   // TODO implement once contract made 
   // 📈 Top Up Wallet
-  // topUpWallet: builder.mutation<Transaction, CreateTopUpRequest>({
-  //   query: (topUpData) => ({
-  //     url: '/wallets/top-up',
-  //     method: 'POST',
-  //     body: topUpData,
-  //   }),
-  //   transformResponse,
-  //   invalidatesTags: (result, error, { walletId }) => [
-  //     { type: 'Wallet', id: walletId },
-  //     { type: 'WalletBalance', id: walletId },
-  //     'Transaction'
-  //   ],
-  // }),
+  topUpWallet: builder.mutation
+  // <Transaction, CreateTopUpRequest>
+  ({
+    query: (topUpData) => ({
+      url: '/wallets/top-up',
+      method: 'POST',
+      body: topUpData,
+    }),
+    transformResponse,
+    // invalidatesTags: (result, error, { walletId }) => [
+    //   { type: 'Wallet', id: walletId },
+    //   { type: 'WalletBalance', id: walletId },
+    //   'Transaction'
+    // ],
+  }),
 
   // // 💸 Process Payment
-  // processPayment: builder.mutation<PLNTransaction, ProcessPaymentRequest>({
-  //   query: (paymentData) => ({
-  //     url: '/payments/process',
-  //     method: 'POST',
-  //     body: paymentData,
-  //   }),
-  //   transformResponse,
-  //   invalidatesTags: (result, error, { walletId }) => [
-  //     { type: 'Wallet', id: walletId },
-  //     { type: 'WalletBalance', id: walletId },
-  //     'Transaction'
-  //   ],
-  // }),
+  processPayment: builder.mutation
+  // <PLNTransaction, ProcessPaymentRequest>
+  ({
+    query: (paymentData) => ({
+      url: '/payments/process',
+      method: 'POST',
+      body: paymentData,
+    }),
+    transformResponse,
+    // invalidatesTags: (result, error, { walletId }) => [
+    //   { type: 'Wallet', id: walletId },
+    //   { type: 'WalletBalance', id: walletId },
+    //   'Transaction'
+    // ],
+  }),
 
   // 📋 Get User Transactions
-  // getUserTransactions: builder.query<TransactionListResponse, { userId: string } & TransactionQuery>({
-  //   query: ({ userId, ...params }) => ({
-  //     url: `/users/${userId}/transactions`,
-  //     params,
-  //   }),
-  //   transformResponse,
-  //   providesTags: (result, error, { userId }) => [
-  //     { type: 'UserTransactions', id: userId },
-  //     'Transaction'
-  //   ],
-  // }),
+  getUserTransactions: builder.query
+  // <TransactionListResponse, { userId: string } & TransactionQuery>
+  ({
+    query: ({ userId, ...params }) => ({
+      url: `/users/${userId}/transactions`,
+      params,
+    }),
+    transformResponse,
+    // providesTags: (result, error, { userId }) => [
+    //   { type: 'UserTransactions', id: userId },
+    //   'Transaction'
+    // ],
+  }),
 
   // 🎯 Get Transaction by ID
-  // getTransaction: builder.query<PLNTransaction, string>({
-  //   query: (id) => `/transactions/${id}`,
-  //   transformResponse,
-  //   providesTags: (result, error, id) => [{ type: 'Transaction', id }],
-  // }),
+  getTransaction: builder.query
+  // <PLNTransaction, string>
+  ({
+    query: (id) => `/transactions/${id}`,
+    transformResponse,
+    providesTags: (result, error, id) => [{ type: 'Transaction', id }],
+  }),
 
   // 💳 Get Payment Methods
   getPaymentMethods: builder.query<PaymentMethod[], string>({
@@ -209,12 +217,15 @@ export const walletEndpoints = (
   }),
 
   // 🔍 Search Transactions (Admin)
-  // searchTransactions: builder.query<TransactionListResponse, { query: string; filters?: any }>({
-  //   query: ({ query, filters }) => ({
-  //     url: '/api/admin/transactions/search',
-  //     params: { q: query, ...filters },
-  //   }),
-  //   transformResponse,
-  //   providesTags: ['Transaction'],
-  // }),
+  searchTransactions: builder.query
+  // <TransactionListResponse, 
+  // { query: string; filters?: any }>
+  ({
+    query: ({ query, filters }) => ({
+      url: '/api/admin/transactions/search',
+      params: { q: query, ...filters },
+    }),
+    transformResponse,
+    providesTags: ['Transaction'],
+  }),
 }); 
