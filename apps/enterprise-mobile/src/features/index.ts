@@ -2,7 +2,7 @@
 export * from './common';
 
 // Dashboard Feature
-export * from './dashboard/components';
+export * from './dashboard';
 
 // Auth Feature  
 export * from './auth/components'; 
