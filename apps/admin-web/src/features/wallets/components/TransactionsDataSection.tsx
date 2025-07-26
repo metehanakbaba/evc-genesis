@@ -6,6 +6,7 @@ import {
   ClockIcon,
   EyeIcon,
   ShieldExclamationIcon,
+  LockClosedIcon,
   WalletIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
@@ -26,17 +27,17 @@ import {
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
 // Import types
-import type { PLNTransaction, TransactionType } from '../types/wallet.types';
+import { TransactionType, TransactionStatus, Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 /**
  * 🔄 Extend PLNTransaction to work with shared components
  */
-interface EnhancedTransaction extends PLNTransaction, DataGridItem {
+interface EnhancedTransaction extends Transaction, Omit<DataGridItem, 'id'> {
   // PLNTransaction already has `id` field, so this automatically works
 }
 
 interface TransactionsDataSectionProps {
-  transactions: PLNTransaction[];
+  transactions: Transaction[];
   isLoading: boolean;
   isLoadingMore: boolean;
   hasNextPage: boolean;
@@ -44,8 +45,9 @@ interface TransactionsDataSectionProps {
   viewMode: 'grid' | 'table';
   total: number;
   onLoadMore: () => void;
-  onViewDetails: (transaction: PLNTransaction) => void;
-  onRetryTransaction: (transaction: PLNTransaction) => void;
+  onRefresh: () => void;
+  onViewDetails: (transaction: Transaction) => void;
+  onRetryTransaction: (transaction: Transaction) => void;
   showRetryButton: boolean;
   onClearFilters: () => void;
   selectedItems?: Set<string>;
@@ -105,6 +107,13 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
         textColor: 'text-gray-400',
         pulseColor: 'bg-gray-500',
       },
+      PROCESSING: {
+        bgColor: 'from-purple-500/15 via-purple-400/8 to-transparent',
+        borderColor: 'border-purple-400/30 hover:border-purple-300/50',
+        badgeColor: 'bg-purple-500/10',
+        textColor: 'text-purple-400',
+        pulseColor: 'bg-purple-500',
+      }
     };
     return statusConfigs[transaction.status] || statusConfigs.FAILED;
   };
@@ -113,9 +122,9 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
   const getTransactionTypeIcon = (type: TransactionType) => {
     const typeIcons: Record<TransactionType, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
       ADD_PLN_FUNDS: WalletIcon,
-      CHARGING_PAYMENT: BanknotesIcon,
-      REFUND: ArrowPathIcon,
-      TRANSFER: ArrowPathIcon,
+      PLN_CHARGING_PAYMENT: BanknotesIcon,
+      PLN_REFUND: ArrowPathIcon,
+      STRIPE_PLN_PAYMENT: ArrowPathIcon,
     };
     return typeIcons[type] || WalletIcon;
   };
@@ -148,7 +157,7 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
                   {transaction.type.replace('_', ' ')}
                 </div>
                 <div className="text-white font-semibold text-lg">
-                  {transaction.amount.formatted}
+                  {transaction.amount}
                 </div>
               </div>
             </div>
@@ -178,7 +187,7 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
             </div>
             <div className="flex items-center gap-2 text-gray-300">
               <BanknotesIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="text-sm">{transaction.amount.currency}</span>
+              <span className="text-sm">{transaction.currency.toLowerCase()}</span>
             </div>
           </div>
 
@@ -206,13 +215,13 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
       {
         icon: EyeIcon,
         label: 'View',
-        onClick: (transaction) => onViewDetails(transaction as PLNTransaction),
+        onClick: (transaction) => onViewDetails(transaction as EnhancedTransaction),
         variant: 'ghost',
       },
       {
         icon: ArrowPathIcon,
         label: 'Retry',
-        onClick: (transaction) => onRetryTransaction(transaction as PLNTransaction),
+        onClick: (transaction) => onRetryTransaction(transaction as EnhancedTransaction),
         variant: 'primary',
       }],
     [onViewDetails, onRetryTransaction, showRetryButton],
@@ -247,7 +256,7 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
         accessor: 'amount',
         render: (transaction) => (
           <span className="text-sm font-medium text-white">
-            {transaction.amount.formatted}
+            {transaction.amount}
           </span>
         ),
       },
