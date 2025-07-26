@@ -1,7 +1,7 @@
 /**
  * 🏠 Dashboard Header Component
  * 
- * Header with greeting and notifications
+ * Header with greeting and notifications - Enhanced Integrated Design
  */
 
 import React from 'react';
@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useAuthGuard } from '../../common/navigation/AuthGuard';
 import { useGreeting } from '../hooks';
 import { SPACING } from '../../../shared/constants';
+import { NotificationCard } from '../../../../shared/components';
 
 export function DashboardHeader() {
   const { user } = useAuthGuard();
@@ -25,22 +26,28 @@ export function DashboardHeader() {
   };
 
   return (
-    <View style={{ 
-      paddingHorizontal: SPACING.lg, 
-      paddingTop: SPACING.lg, 
-      paddingBottom: SPACING.md 
-    }}>
-      {/* Time-based Greeting Row */}
-      <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.sm }}>
-        <View className="flex-row items-center">
+    <LinearGradient
+      colors={['#1F2937', '#111827', '#1F2937']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ 
+        paddingHorizontal: SPACING.lg, 
+        paddingTop: SPACING.lg,
+        paddingBottom: SPACING.sm
+      }}
+    >
+      {/* Main Header Row */}
+      <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.md }}>
+        {/* Enhanced Greeting Section */}
+        <View className="flex-row items-center flex-1">
           <LinearGradient
             colors={greeting.colors}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 12,
+              width: 42,
+              height: 42,
+              borderRadius: 14,
               alignItems: 'center',
               justifyContent: 'center',
               marginRight: SPACING.md,
@@ -52,52 +59,60 @@ export function DashboardHeader() {
           >
             <Ionicons 
               name={greeting.icon as any} 
-              size={20} 
+              size={22} 
               color="#FFF" 
             />
           </LinearGradient>
-          <View>
-            <Text className="text-white text-xl font-bold">
+          <View className="flex-1">
+            <Text className="text-white text-xl font-bold tracking-tight">
               {greeting.message}
             </Text>
-            <Text className="text-gray-400 text-sm">
-              {user?.name || 'Driver'} • Ready to charge
-            </Text>
+            <View className="flex-row items-center mt-1">
+              <View 
+                className="w-2 h-2 rounded-full mr-2"
+                style={{ backgroundColor: '#10B981' }}
+              />
+              <Text className="text-gray-400 text-sm">
+                {user?.name || 'Mehmet Yılmaz'} • Ready to charge
+              </Text>
+            </View>
           </View>
         </View>
         
-        {/* Profile & Notifications */}
-        <View className="flex-row items-center" style={{ gap: SPACING.sm }}>
-          {/* Notification Bell */}
-          <Pressable
-            onPress={handleNotificationsPress}
-            className="w-10 h-10 rounded-2xl items-center justify-center bg-gray-800 active:scale-95"
+        {/* User Profile Icon */}
+        <Pressable
+          onPress={handleProfilePress}
+          className="active:scale-95"
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 22,
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#8B5CF6',
+            shadowOpacity: 0.3,
+            shadowRadius: 6,
+            elevation: 4
+          }}
+        >
+          <LinearGradient
+            colors={['rgba(139, 92, 246, 0.2)', 'rgba(124, 58, 237, 0.1)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={{
-              shadowColor: '#10B981',
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 2
+              width: '100%',
+              height: '100%',
+              borderRadius: 22,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 2,
+              borderColor: '#8B5CF6'
             }}
           >
-            <Ionicons name="notifications" size={18} color="#10B981" />
-            {/* Notification Badge */}
-            <View 
-              className="absolute -top-1 -right-1 w-5 h-5 rounded-full items-center justify-center"
-              style={{ backgroundColor: '#EF4444' }}
-            >
-              <Text className="text-white text-xs font-bold">2</Text>
-            </View>
-          </Pressable>
-          
-          {/* Profile */}
-          <Pressable
-            onPress={handleProfilePress}
-            className="w-10 h-10 rounded-2xl items-center justify-center bg-gray-800 active:scale-95"
-          >
-            <Ionicons name="person-circle" size={20} color="#8B5CF6" />
-          </Pressable>
-        </View>
+            <Ionicons name="person" size={20} color="#8B5CF6" />
+          </LinearGradient>
+        </Pressable>
       </View>
-    </View>
+    </LinearGradient>
   );
 } 

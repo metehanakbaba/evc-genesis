@@ -1,6 +1,13 @@
-// Main Components
+/**
+ * 🎨 Shared Components
+ * 
+ * Export all shared UI components for the enterprise mobile app
+ */
+
 export { GlassCard } from './GlassCard';
 export { FloatingStatCard } from './FloatingStatCard';
+export { NotificationCard } from './NotificationCard';
+export type { NotificationType, NotificationCardProps } from './NotificationCard';
 export { NavigationGlassCard } from './NavigationGlassCard';
 
 // Auth Components
