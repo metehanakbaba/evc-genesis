@@ -1,6 +1,6 @@
 /**
  * 🎭 Staggered Grid Container Component
- * 
+ *
  * Orchestrates sophisticated grid-wide animations
  */
 
@@ -11,13 +11,11 @@ import { SPACING } from '../../../../shared/constants';
 interface StaggeredGridContainerProps {
   children: React.ReactNode;
   animationDelay?: number;
-  enablePullToRefreshAnimation?: boolean;
 }
 
-export function StaggeredGridContainer({ 
+export function StaggeredGridContainer({
   children,
   animationDelay = 200,
-  enablePullToRefreshAnimation = false
 }: StaggeredGridContainerProps) {
   // Container animations
   const containerOpacity = useRef(new Animated.Value(0)).current;
@@ -32,7 +30,7 @@ export function StaggeredGridContainer({
     Animated.sequence([
       // Wait for header to settle
       Animated.delay(animationDelay),
-      
+
       // Container entrance
       Animated.parallel([
         // Fade in container
@@ -60,30 +58,29 @@ export function StaggeredGridContainer({
     ]).start();
   }, [animationDelay]);
 
-  // Pull to refresh animation method
-  const triggerRefreshAnimation = () => {
-    Animated.sequence([
-      Animated.timing(refreshAnim, {
-        toValue: 1,
-        duration: 200,
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: true,
-      }),
-      Animated.timing(refreshAnim, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
+  // Pull to refresh animation method (for future use)
+  // const triggerRefreshAnimation = () => {
+  //   Animated.sequence([
+  //     Animated.timing(refreshAnim, {
+  //       toValue: 1,
+  //       duration: 200,
+  //       easing: Easing.out(Easing.quad),
+  //       useNativeDriver: true,
+  //     }),
+  //     Animated.timing(refreshAnim, {
+  //       toValue: 0,
+  //       duration: 300,
+  //       easing: Easing.out(Easing.cubic),
+  //       useNativeDriver: true,
+  //     }),
+  //   ]).start();
+  // };
 
   return (
     <Animated.View
       style={{
         paddingHorizontal: SPACING.lg,
-        marginBottom: SPACING.lg,
-        opacity: containerOpacity,
+        marginBottom: SPACING.md,
         transform: [
           {
             translateY: containerSlide.interpolate({
@@ -98,15 +95,13 @@ export function StaggeredGridContainer({
             }),
           },
         ],
-      }}
-    >
+      }}>
       {/* Grid Header with Animation */}
       <Animated.View
         style={{
           transform: [{ scale: headerScale }],
           marginBottom: SPACING.sm,
-        }}
-      >
+        }}>
         {/* Future: Add grid title/subtitle here if needed */}
       </Animated.View>
 
@@ -121,15 +116,13 @@ export function StaggeredGridContainer({
               }),
             },
           ],
-        }}
-      >
-        <View 
-          className="flex-row" 
-          style={{ 
+        }}>
+        <View
+          className="flex-row"
+          style={{
             gap: SPACING.sm,
-            marginBottom: SPACING.md 
-          }}
-        >
+            marginBottom: SPACING.sm,
+          }}>
           {children}
         </View>
       </Animated.View>
@@ -142,7 +135,7 @@ export function StaggeredGridContainer({
           left: SPACING.lg - 5,
           right: SPACING.lg - 5,
           bottom: -10,
-          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+          // backgroundColor: 'rgba(255, 255, 255, 0.02)',
           borderRadius: 24,
           opacity: containerOpacity.interpolate({
             inputRange: [0, 1],
@@ -153,4 +146,4 @@ export function StaggeredGridContainer({
       />
     </Animated.View>
   );
-} 
+}

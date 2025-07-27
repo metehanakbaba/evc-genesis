@@ -5,8 +5,8 @@
  * Psychology: Teal colors represent trust, reliability, and digital financial operations
  */
 
-import React, { useState } from 'react';
-import { View, Text, Pressable, Image, Dimensions } from 'react-native';
+import { useState } from 'react';
+import { View, Text, Pressable, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { WalletBalance } from '../types';
@@ -15,6 +15,7 @@ import { AnimatedCounter, PulseStatusIndicator } from './animations';
 
 // Background image
 import sunsetCarsEvCharge from '../../../../assets/dashboard/sunset-cars-ev-charge.jpg';
+import { Dimensions } from 'react-native';
 
 interface WalletBalanceCardProps {
   walletBalance: WalletBalance;
@@ -29,9 +30,9 @@ export function WalletBalanceCard({
   onPress, 
   isLoading = false 
 }: WalletBalanceCardProps) {
-  const [showBalance, setShowBalance] = useState(true);
+
   return (
-    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
+    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.md }}>
       <Pressable
         onPress={onPress}
         className="overflow-hidden active:scale-[0.98]"
@@ -109,16 +110,16 @@ export function WalletBalanceCard({
         </LinearGradient>
         
         <View style={{ 
-          padding: SPACING.xl, 
+          padding: SPACING.lg, 
           borderRadius: 24,
-          minHeight: 140 
+          minHeight: 100 
         }}>
-          {/* Header Section with Enhanced Typography */}
-          <View className="flex-row items-center justify-between mb-6">
+          {/* Compact Header Section */}
+          <View className="flex-row items-center justify-between mb-3">
             <View className="flex-1">
-              <View className="flex-row items-center mb-2">
-                <MaterialIcons name="account-balance-wallet" size={16} color="#14B8A6" />
-                <Text className="text-teal-300 text-sm font-semibold ml-2 tracking-wide">
+              <View className="flex-row items-center mb-1">
+                <MaterialIcons name="account-balance-wallet" size={14} color="#14B8A6" />
+                <Text className="text-teal-300 text-xs font-semibold ml-2 tracking-wide">
                   WALLET BALANCE
                 </Text>
               </View>
@@ -128,10 +129,10 @@ export function WalletBalanceCard({
                 isLoading={isLoading}
                 duration={2000}
                 textStyle={{
-                  fontSize: 30,
+                  fontSize: 24,
                   fontWeight: 'bold',
                   letterSpacing: -0.5,
-                  lineHeight: 36,
+                  lineHeight: 28,
                   color: '#FFF'
                 }}
                 onAnimationComplete={() => {
@@ -140,39 +141,39 @@ export function WalletBalanceCard({
               />
             </View>
             
-            {/* Premium Teal Icon */}
+            {/* Compact Premium Icon */}
             <View style={{
-              width: 56,
-              height: 56,
-              borderRadius: 18,
+              width: 44,
+              height: 44,
+              borderRadius: 14,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: 'rgba(20,184,166,0.1)',
               borderWidth: 1,
               borderColor: 'rgba(20,184,166,0.3)',
               shadowColor: '#14B8A6',
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: { width: 0, height: 3 },
               shadowOpacity: 0.2,
-              shadowRadius: 8,
-              elevation: 4
+              shadowRadius: 6,
+              elevation: 3
             }}>
-              <FontAwesome5 name="wallet" size={24} color="#5EEAD4" />
+              <FontAwesome5 name="wallet" size={18} color="#5EEAD4" />
             </View>
           </View>
 
-          {/* Enhanced Status Indicator */}
+          {/* Compact Status Indicator */}
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
               <PulseStatusIndicator
                 isActive={walletBalance.autoRechargeEnabled}
                 color={walletBalance.autoRechargeEnabled ? '#10B981' : '#6B7280'}
-                size={10}
+                size={8}
                 pulseIntensity={0.4}
                 pulseSpeed={1200}
                 showRing={walletBalance.autoRechargeEnabled}
               />
-              <View style={{ marginLeft: SPACING.sm }}>
-                <Text className={`text-sm font-medium ${
+              <View style={{ marginLeft: SPACING.xs }}>
+                <Text className={`text-xs font-medium ${
                   walletBalance.autoRechargeEnabled ? 'text-emerald-300' : 'text-gray-400'
                 }`}>
                   Auto-recharge {walletBalance.autoRechargeEnabled ? 'Active' : 'Inactive'}
@@ -180,11 +181,11 @@ export function WalletBalanceCard({
               </View>
             </View>
             
-            {/* Premium Status Badge */}
+            {/* Compact Status Badge */}
             <View style={{
-              paddingHorizontal: SPACING.md,
-              paddingVertical: SPACING.xs,
-              borderRadius: 12,
+              paddingHorizontal: SPACING.sm,
+              paddingVertical: 4,
+              borderRadius: 8,
               backgroundColor: 'rgba(20,184,166,0.12)',
               borderWidth: 1,
               borderColor: 'rgba(20,184,166,0.25)'

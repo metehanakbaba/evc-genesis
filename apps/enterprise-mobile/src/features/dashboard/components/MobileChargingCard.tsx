@@ -4,9 +4,9 @@
  * Premium mobile charging service card
  */
 
-import React from 'react';
+
 import { View, Text, Pressable, Image } from 'react-native';
-import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SPACING } from '../../../shared/constants';
 import { ChargingProgressAnimation, PulseStatusIndicator } from './animations';
@@ -35,8 +35,8 @@ export function MobileChargingCard({
   isAvailable = true
 }: MobileChargingCardProps) {
   return (
-    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
-      <Text className="text-gray-400 text-sm font-medium" style={{ marginBottom: SPACING.lg }}>
+    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.md }}>
+      <Text className="text-gray-400 text-sm font-medium" style={{ marginBottom: SPACING.md }}>
         Charging Solutions
       </Text>
       
@@ -44,7 +44,6 @@ export function MobileChargingCard({
         onPress={onPress}
         className="overflow-hidden active:scale-98"
         style={{ 
-          marginBottom: SPACING.lg,
           borderRadius: 24,
           shadowColor: '#F59E0B',
           shadowOffset: { width: 0, height: 8 },
@@ -84,19 +83,19 @@ export function MobileChargingCard({
           style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 24 }}
         />
         
-        <View style={{ padding: SPACING.xl, borderWidth: 1, borderColor: '#F59E0B25', borderRadius: 24 }}>
-          {/* Premium Header */}
-          <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.lg }}>
+        <View style={{ padding: SPACING.lg, borderWidth: 1, borderColor: '#F59E0B25', borderRadius: 24 }}>
+          {/* Compact Header */}
+          <View className="flex-row items-center justify-between" style={{ marginBottom: SPACING.md }}>
             <View className="flex-row items-center">
               <LinearGradient
                 colors={['#FCD34D', '#F59E0B', '#D97706']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
-                  paddingHorizontal: 12,
-                  paddingVertical: 4,
-                  borderRadius: 12,
-                  marginRight: SPACING.md
+                  paddingHorizontal: 10,
+                  paddingVertical: 3,
+                  borderRadius: 10,
+                  marginRight: SPACING.sm
                 }}
               >
                 <Text className="text-gray-900 text-xs font-black tracking-wider">PREMIUM</Text>
@@ -105,55 +104,55 @@ export function MobileChargingCard({
                 <PulseStatusIndicator
                   isActive={isAvailable}
                   color="#FCD34D"
-                  size={8}
+                  size={6}
                   pulseIntensity={0.5}
                   pulseSpeed={800}
                   showRing={isAvailable}
                 />
                 <View style={{ marginLeft: SPACING.xs }}>
-                  <Text className="text-amber-300 text-sm font-medium">{features.availability}</Text>
+                  <Text className="text-amber-300 text-xs font-medium">{features.availability}</Text>
                 </View>
               </View>
             </View>
             <ChargingProgressAnimation
               isCharging={isCharging}
               progress={chargingProgress}
-              size={60}
+              size={48}
               color="#FCD34D"
               showProgress={isCharging}
             />
           </View>
 
-          {/* Content */}
-          <Text className="text-white text-2xl font-bold tracking-tight" style={{ marginBottom: SPACING.sm }}>
+          {/* Compact Content */}
+          <Text className="text-white text-xl font-bold tracking-tight" style={{ marginBottom: SPACING.xs }}>
             Mobile Charging
           </Text>
-          <Text className="text-gray-300 text-base leading-relaxed" style={{ marginBottom: SPACING.lg }}>
+          <Text className="text-gray-300 text-sm leading-relaxed" style={{ marginBottom: SPACING.md }}>
             Premium concierge service • Tesla-certified technicians
           </Text>
           
-          {/* Features Grid */}
+          {/* Compact Features Grid */}
           <View className="flex-row justify-between">
             <View className="flex-1">
-              <View className="flex-row items-center" style={{ marginBottom: SPACING.xs }}>
-                <Ionicons name="time" size={16} color="#FCD34D" />
-                <Text className="text-amber-300 text-sm font-medium" style={{ marginLeft: SPACING.xs }}>
+              <View className="flex-row items-center" style={{ marginBottom: 2 }}>
+                <Ionicons name="time" size={14} color="#FCD34D" />
+                <Text className="text-amber-300 text-xs font-medium" style={{ marginLeft: SPACING.xs }}>
                   {features.estimatedArrival}
                 </Text>
               </View>
               <Text className="text-gray-400 text-xs">Estimated arrival</Text>
             </View>
             <View className="flex-1">
-              <View className="flex-row items-center" style={{ marginBottom: SPACING.xs }}>
-                <FontAwesome5 name="battery-full" size={14} color="#FCD34D" />
-                <Text className="text-amber-300 text-sm font-medium" style={{ marginLeft: SPACING.xs }}>
+              <View className="flex-row items-center" style={{ marginBottom: 2 }}>
+                <FontAwesome5 name="battery-full" size={12} color="#FCD34D" />
+                <Text className="text-amber-300 text-xs font-medium" style={{ marginLeft: SPACING.xs }}>
                   {features.chargingSpeed}
                 </Text>
               </View>
               <Text className="text-gray-400 text-xs">Charging speed</Text>
             </View>
             <View className="flex-1 items-end">
-              <Text className="text-white text-lg font-bold">{features.startingPrice}</Text>
+              <Text className="text-white text-base font-bold">{features.startingPrice}</Text>
               <Text className="text-gray-400 text-xs">Starting price</Text>
             </View>
           </View>

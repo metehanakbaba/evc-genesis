@@ -219,30 +219,67 @@ export default function AnimatedComponent() {
 
 ## Component Architecture
 
-### Shared Design System
+### Feature-Based Organization
 
-The mobile app shares design principles with the web admin using atomic design:
+The mobile app uses a feature-based architecture for better organization and maintainability:
+
+```
+apps/enterprise-mobile/src/features/
+├── common/ui/                 # Shared UI components
+├── auth/components/           # Authentication components
+├── dashboard/components/      # Dashboard-specific components
+├── charging-stations/         # Station management
+├── wallet/components/         # Wallet and payments
+└── qr-scanner/               # QR scanning functionality
+```
+
+### Glassmorphism Design System
+
+The mobile app features a comprehensive glassmorphism design system with premium glass-like effects:
 
 ```typescript
-// Atomic component example
-const Button = ({ variant = 'primary', size = 'md', children, ...props }) => {
-  const baseClasses = 'rounded-lg font-medium transition-colors';
+// WalletBalanceCard example with glassmorphism
+import { WalletBalanceCard } from '@/features/dashboard/components';
+
+<WalletBalanceCard
+  walletBalance={{
+    amount: 45200,
+    currency: 'TRY',
+    autoRechargeEnabled: true
+  }}
+  onPress={() => navigate('/wallet')}
+  isLoading={false}
+/>
+```
+
+### Shared Design System
+
+The mobile app shares design principles with the web admin using atomic design and color psychology:
+
+```typescript
+// Color psychology variants
+const variants = {
+  blue: 'Infrastructure & Technical Systems',
+  emerald: 'Live Operations & Real-time Data',
+  purple: 'User Management & Premium Features',
+  teal: 'Financial Systems & Wallet Operations'
+};
+
+// Component with variant system
+const GlassCard = ({ variant = 'blue', size = 'md', children, ...props }) => {
   const variantClasses = {
-    primary: 'bg-blue-500 text-white',
-    secondary: 'bg-gray-200 text-gray-900',
-  };
-  const sizeClasses = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-3 text-base',
-    lg: 'px-6 py-4 text-lg',
+    blue: 'border-blue-400/25 shadow-blue-500/20',
+    emerald: 'border-emerald-400/25 shadow-emerald-500/20',
+    purple: 'border-purple-400/25 shadow-purple-500/20',
+    teal: 'border-teal-400/25 shadow-teal-500/20',
   };
 
   return (
     <Pressable 
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`}
+      className={`rounded-2xl border ${variantClasses[variant]} shadow-2xl`}
       {...props}
     >
-      <Text className="text-center">{children}</Text>
+      {children}
     </Pressable>
   );
 };
@@ -295,13 +332,29 @@ apps/enterprise-mobile/
 ├── global.css             # Global styles
 ├── nativewind-env.d.ts    # TypeScript declarations
 ├── src/
-│   ├── components/        # Reusable components
-│   ├── screens/          # Screen components
-│   ├── navigation/       # Navigation setup
-│   ├── hooks/           # Custom hooks
-│   ├── utils/           # Utility functions
-│   └── types/           # TypeScript types
-└── assets/              # Images, fonts, etc.
+│   └── features/          # Feature-based organization
+│       ├── common/
+│       │   └── ui/        # Shared UI components
+│       ├── auth/
+│       │   └── components/ # Authentication components
+│       ├── dashboard/
+│       │   ├── components/ # Dashboard components
+│       │   │   ├── WalletBalanceCard.tsx
+│       │   │   ├── StatCard.tsx
+│       │   │   ├── NavigationCard.tsx
+│       │   │   └── animations/
+│       │   ├── screens/   # Dashboard screens
+│       │   ├── hooks/     # Dashboard hooks
+│       │   └── types/     # Dashboard types
+│       ├── charging-stations/
+│       ├── wallet/
+│       └── qr-scanner/
+├── shared/                # Legacy shared components
+│   ├── components/        # Glassmorphism components
+│   ├── constants/         # Design system constants
+│   └── design-tokens.ts   # Color psychology tokens
+└── assets/                # Images, fonts, etc.
+    └── dashboard/         # Dashboard-specific assets
 ```
 
 ### Development Commands
@@ -501,8 +554,26 @@ cd android && ./gradlew clean
 3. **State Management**: Keep state minimal and focused
 4. **Memory Leaks**: Clean up subscriptions and timers
 
+## Recent Updates
+
+### January 2025 - Component Optimizations
+
+#### WalletBalanceCard Improvements
+- **Compact Layout**: 25% reduction in padding, 29% reduction in height
+- **Mobile Typography**: Optimized font sizes for mobile readability
+- **Icon Optimization**: 22% smaller icon containers with proportional sizing
+- **Performance**: Improved rendering performance with optimized dimensions
+
+#### Dashboard Components
+- **Feature-Based Architecture**: Clean organization by features
+- **Glassmorphism Effects**: Premium glass-like UI with LinearGradient overlays
+- **Color Psychology**: Consistent variant system (blue, emerald, purple, teal)
+- **Animation System**: Smooth 60fps animations with React Native Reanimated
+
 ## Resources
 
+- **[Mobile Components Documentation](./MOBILE_COMPONENTS.md)**
+- **[WalletBalanceCard Updates](../apps/enterprise-mobile/WALLET_BALANCE_CARD_UPDATES.md)**
 - **[Expo Documentation](https://docs.expo.dev/)**
 - **[NativeWind Documentation](https://www.nativewind.dev/)**
 - **[React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)**
@@ -511,5 +582,5 @@ cd android && ./gradlew clean
 ---
 
 **Last Updated**: January 2025  
-**Version**: 1.0.0  
-**Status**: ✅ Complete Setup with NativeWind Verification
+**Version**: 1.1.0  
+**Status**: ✅ Complete Setup with Optimized Mobile Components
