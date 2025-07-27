@@ -10,4 +10,7 @@ export { RecentActivity } from './RecentActivity';
 export { MobileChargingCard } from './MobileChargingCard';
 export { WalletBalanceCard } from './WalletBalanceCard';
 export { NavigationCard } from './NavigationCard';
-export { StatCard } from './StatCard'; 
+export { StatCard } from './StatCard';
+
+// Animation components
+export * from './animations'; 

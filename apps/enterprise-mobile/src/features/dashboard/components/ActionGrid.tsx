@@ -1,15 +1,16 @@
 /**
- * 🏠 Action Grid Component
+ * 🏠 Enhanced Action Grid Component
  * 
- * Grid of action buttons for quick access
+ * Grid of action buttons with premium animations
  */
 
 import React from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ActionGridItem } from '../types';
 import { SPACING } from '../../../shared/constants';
+import { AnimatedGridItem, StaggeredGridContainer } from './animations';
 
 interface ActionGridProps {
   items: ActionGridItem[];
@@ -17,22 +18,15 @@ interface ActionGridProps {
 
 export function ActionGrid({ items }: ActionGridProps) {
   return (
-    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
-      <View className="flex-row" style={{ gap: SPACING.sm, marginBottom: SPACING.md }}>
-        {items.map((item) => (
-          <Pressable
-            key={item.id}
-            onPress={item.onPress}
-            className="flex-1 overflow-hidden active:scale-96"
-            style={{ 
-              borderRadius: 18,
-              shadowColor: item.shadowColor,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 4
-            }}
-          >
+    <StaggeredGridContainer animationDelay={300}>
+      {items.map((item, index) => (
+        <AnimatedGridItem 
+          key={item.id}
+          item={item}
+          index={index}
+          delay={200}
+        >
+          <View className="flex-1 overflow-hidden" style={{ borderRadius: 18 }}>
             {/* Background Image */}
             {item.backgroundImage && (
               <Image
@@ -124,9 +118,9 @@ export function ActionGrid({ items }: ActionGridProps) {
                 )}
               </View>
             </View>
-          </Pressable>
-        ))}
-      </View>
-    </View>
+          </View>
+        </AnimatedGridItem>
+      ))}
+    </StaggeredGridContainer>
   );
 } 

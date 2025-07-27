@@ -5,12 +5,13 @@
  * Psychology: Teal colors represent trust, reliability, and digital financial operations
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { WalletBalance } from '../types';
 import { SPACING } from '../../../shared/constants';
+import { AnimatedCounter, PulseStatusIndicator } from './animations';
 
 // Background image
 import sunsetCarsEvCharge from '../../../../assets/dashboard/sunset-cars-ev-charge.jpg';
@@ -18,11 +19,17 @@ import sunsetCarsEvCharge from '../../../../assets/dashboard/sunset-cars-ev-char
 interface WalletBalanceCardProps {
   walletBalance: WalletBalance;
   onPress: () => void;
+  isLoading?: boolean;
 }
 
 const { width } = Dimensions.get('window');
 
-export function WalletBalanceCard({ walletBalance, onPress }: WalletBalanceCardProps) {
+export function WalletBalanceCard({ 
+  walletBalance, 
+  onPress, 
+  isLoading = false 
+}: WalletBalanceCardProps) {
+  const [showBalance, setShowBalance] = useState(true);
   return (
     <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
       <Pressable
@@ -115,10 +122,22 @@ export function WalletBalanceCard({ walletBalance, onPress }: WalletBalanceCardP
                   WALLET BALANCE
                 </Text>
               </View>
-              <Text className="text-white text-3xl font-bold tracking-tight" style={{ lineHeight: 36 }}>
-                {walletBalance.currency}
-                <Text className="text-teal-200">{walletBalance.amount.toFixed(2)}</Text>
-              </Text>
+              <AnimatedCounter
+                value={walletBalance.amount}
+                currency={walletBalance.currency}
+                isLoading={isLoading}
+                duration={2000}
+                textStyle={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  letterSpacing: -0.5,
+                  lineHeight: 36,
+                  color: '#FFF'
+                }}
+                onAnimationComplete={() => {
+                  console.log('Balance animation completed');
+                }}
+              />
             </View>
             
             {/* Premium Teal Icon */}
@@ -144,22 +163,21 @@ export function WalletBalanceCard({ walletBalance, onPress }: WalletBalanceCardP
           {/* Enhanced Status Indicator */}
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
-              <View style={{
-                width: 8,
-                height: 8,
-                borderRadius: 4,
-                backgroundColor: walletBalance.autoRechargeEnabled ? '#10B981' : '#6B7280',
-                marginRight: SPACING.sm,
-                shadowColor: walletBalance.autoRechargeEnabled ? '#10B981' : '#374151',
-                shadowOpacity: 0.8,
-                shadowRadius: 3,
-                elevation: 2
-              }} />
-              <Text className={`text-sm font-medium ${
-                walletBalance.autoRechargeEnabled ? 'text-emerald-300' : 'text-gray-400'
-              }`}>
-                Auto-recharge {walletBalance.autoRechargeEnabled ? 'Active' : 'Inactive'}
-              </Text>
+              <PulseStatusIndicator
+                isActive={walletBalance.autoRechargeEnabled}
+                color={walletBalance.autoRechargeEnabled ? '#10B981' : '#6B7280'}
+                size={10}
+                pulseIntensity={0.4}
+                pulseSpeed={1200}
+                showRing={walletBalance.autoRechargeEnabled}
+              />
+              <View style={{ marginLeft: SPACING.sm }}>
+                <Text className={`text-sm font-medium ${
+                  walletBalance.autoRechargeEnabled ? 'text-emerald-300' : 'text-gray-400'
+                }`}>
+                  Auto-recharge {walletBalance.autoRechargeEnabled ? 'Active' : 'Inactive'}
+                </Text>
+              </View>
             </View>
             
             {/* Premium Status Badge */}

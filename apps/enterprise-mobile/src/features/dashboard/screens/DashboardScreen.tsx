@@ -5,7 +5,7 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { ScrollView, Animated, SafeAreaView } from 'react-native';
+import { ScrollView, Animated, SafeAreaView, Easing } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModernPattern } from '../../../shared/components/HexagonPattern';
 import { useDashboard } from '../hooks';
@@ -26,6 +26,11 @@ export function DashboardScreen() {
     walletBalance,
     mobileChargingFeatures,
     actionGridItems,
+    // Animation states
+    isCharging,
+    chargingProgress,
+    isAvailable,
+    isWalletLoading,
     handlers
   } = useDashboard();
 
@@ -39,31 +44,33 @@ export function DashboardScreen() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [hasScrolledDown, setHasScrolledDown] = useState(false);
 
-  // Reliable scroll detection
+  // Enhanced smooth scroll detection
   const handleScroll = (event: any) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     
-    // Track background visibility (show background when scrolled down)
-    setHasScrolledDown(currentScrollY > 20);
+    // Smooth background visibility transition
+    setHasScrolledDown(currentScrollY > 15);
     
-    // Existing header hide/show logic
-    if (currentScrollY > 80) {
+    // Enhanced header hide/show logic with smoother animations
+    if (currentScrollY > 100) {
       // Hide header when scrolling down past threshold
       if (isHeaderVisible) {
         setIsHeaderVisible(false);
         Animated.timing(headerTranslateY, {
           toValue: -HEADER_HEIGHT,
-          duration: 200,
+          duration: 350,
+          easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }).start();
       }
     } else {
-      // Show header when near top
+      // Show header when near top with spring animation
       if (!isHeaderVisible) {
         setIsHeaderVisible(true);
-        Animated.timing(headerTranslateY, {
+        Animated.spring(headerTranslateY, {
           toValue: 0,
-          duration: 200,
+          tension: 120,
+          friction: 8,
           useNativeDriver: true,
         }).start();
       }
@@ -119,12 +126,16 @@ export function DashboardScreen() {
       <WalletBalanceCard
         walletBalance={walletBalance}
         onPress={handlers.handleWalletPress}
+        isLoading={isWalletLoading}
       />
 
       {/* Mobile Charging Card */}
       <MobileChargingCard
         features={mobileChargingFeatures}
         onPress={handlers.handleMobileChargingPress}
+        isCharging={isCharging}
+        chargingProgress={chargingProgress}
+        isAvailable={isAvailable}
       />
 
       {/* Action Grid */}

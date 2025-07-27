@@ -4,7 +4,7 @@
  * Main business logic for dashboard functionality
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { ActivityItem, WalletBalance, ActionGridItem } from '../types';
 import { mockRecentActivities, mockWalletBalance, mobileChargingFeatures } from '../data';
@@ -17,6 +17,52 @@ import carsCharging from '../../../../assets/dashboard/cars-charging.jpg';
 export function useDashboard() {
   const [recentActivities] = useState<ActivityItem[]>(mockRecentActivities);
   const [walletBalance] = useState<WalletBalance>(mockWalletBalance);
+  
+  // Charging simulation states
+  const [isCharging, setIsCharging] = useState(false);
+  const [chargingProgress, setChargingProgress] = useState(0);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [isWalletLoading, setIsWalletLoading] = useState(false);
+
+  // Demo charging simulation
+  useEffect(() => {
+    // Start charging simulation after 2 seconds
+    const startChargingTimer = setTimeout(() => {
+      setIsCharging(true);
+    }, 2000);
+
+    // Progress simulation
+    let progressInterval: NodeJS.Timeout;
+    if (isCharging) {
+      progressInterval = setInterval(() => {
+        setChargingProgress(prev => {
+          if (prev >= 100) {
+            setIsCharging(false);
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 100);
+    }
+
+    // Availability simulation
+    const availabilityTimer = setInterval(() => {
+      setIsAvailable(prev => !prev);
+    }, 6000);
+
+    // Wallet loading simulation
+    const walletLoadingTimer = setTimeout(() => {
+      setIsWalletLoading(true);
+      setTimeout(() => setIsWalletLoading(false), 2500);
+    }, 4000);
+
+    return () => {
+      clearTimeout(startChargingTimer);
+      clearTimeout(walletLoadingTimer);
+      clearInterval(availabilityTimer);
+      if (progressInterval) clearInterval(progressInterval);
+    };
+  }, [isCharging]);
 
   // Navigation handlers
   const handleQRScanPress = useCallback(() => {
@@ -81,6 +127,11 @@ export function useDashboard() {
     walletBalance,
     mobileChargingFeatures,
     actionGridItems,
+    // Animation states
+    isCharging,
+    chargingProgress,
+    isAvailable,
+    isWalletLoading,
     handlers: {
       handleQRScanPress,
       handleWalletPress,

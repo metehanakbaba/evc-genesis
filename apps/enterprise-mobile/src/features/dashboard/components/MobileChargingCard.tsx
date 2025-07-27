@@ -9,6 +9,7 @@ import { View, Text, Pressable, Image } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SPACING } from '../../../shared/constants';
+import { ChargingProgressAnimation, PulseStatusIndicator } from './animations';
 
 // Background image
 import futuristicChargeStation from '../../../../assets/dashboard/futuristic-charge-station.jpg';
@@ -21,9 +22,18 @@ interface MobileChargingCardProps {
     availability: string;
   };
   onPress: () => void;
+  isCharging?: boolean;
+  chargingProgress?: number;
+  isAvailable?: boolean;
 }
 
-export function MobileChargingCard({ features, onPress }: MobileChargingCardProps) {
+export function MobileChargingCard({ 
+  features, 
+  onPress, 
+  isCharging = false,
+  chargingProgress = 0,
+  isAvailable = true
+}: MobileChargingCardProps) {
   return (
     <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
       <Text className="text-gray-400 text-sm font-medium" style={{ marginBottom: SPACING.lg }}>
@@ -92,35 +102,26 @@ export function MobileChargingCard({ features, onPress }: MobileChargingCardProp
                 <Text className="text-gray-900 text-xs font-black tracking-wider">PREMIUM</Text>
               </LinearGradient>
               <View className="flex-row items-center">
-                <View 
-                  className="w-2 h-2 rounded-full animate-pulse" 
-                  style={{ 
-                    backgroundColor: '#FCD34D',
-                    marginRight: SPACING.xs,
-                    shadowColor: '#F59E0B',
-                    shadowOpacity: 0.8,
-                    shadowRadius: 4
-                  }} 
+                <PulseStatusIndicator
+                  isActive={isAvailable}
+                  color="#FCD34D"
+                  size={8}
+                  pulseIntensity={0.5}
+                  pulseSpeed={800}
+                  showRing={isAvailable}
                 />
-                <Text className="text-amber-300 text-sm font-medium">{features.availability}</Text>
+                <View style={{ marginLeft: SPACING.xs }}>
+                  <Text className="text-amber-300 text-sm font-medium">{features.availability}</Text>
+                </View>
               </View>
             </View>
-            <LinearGradient
-              colors={['#FCD34D30', '#F59E0B25', '#D9770615']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderWidth: 1,
-                borderColor: '#F59E0B35'
-              }}
-            >
-              <MaterialIcons name="electric-car" size={28} color="#FCD34D" />
-            </LinearGradient>
+            <ChargingProgressAnimation
+              isCharging={isCharging}
+              progress={chargingProgress}
+              size={60}
+              color="#FCD34D"
+              showProgress={isCharging}
+            />
           </View>
 
           {/* Content */}
