@@ -6,6 +6,7 @@
 
 import React, { useRef, useState } from 'react';
 import { ScrollView, Animated, SafeAreaView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModernPattern } from '../../../shared/components/HexagonPattern';
 import { useDashboard } from '../hooks';
 import {
@@ -17,7 +18,7 @@ import {
 } from '../components';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const HEADER_HEIGHT = 140; // Adjusted for solid background header
+const HEADER_BASE_HEIGHT = 140; // Base header height without status bar
 
 export function DashboardScreen() {
   const {
@@ -28,16 +29,24 @@ export function DashboardScreen() {
     handlers
   } = useDashboard();
 
+  // Safe area insets for status bar handling
+  const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = HEADER_BASE_HEIGHT + insets.top; // Total header height with status bar
+
   // Animated values for reliable header
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerTranslateY = useRef(new Animated.Value(0)).current;
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [hasScrolledDown, setHasScrolledDown] = useState(false);
 
   // Reliable scroll detection
   const handleScroll = (event: any) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     
-    // Immediate response - no complex logic
+    // Track background visibility (show background when scrolled down)
+    setHasScrolledDown(currentScrollY > 20);
+    
+    // Existing header hide/show logic
     if (currentScrollY > 80) {
       // Hide header when scrolling down past threshold
       if (isHeaderVisible) {
@@ -92,7 +101,7 @@ export function DashboardScreen() {
         elevation: 10,
       }}
     >
-      <DashboardHeader />
+      <DashboardHeader hasBackground={hasScrolledDown} statusBarHeight={insets.top} />
     </Animated.View>
 
     {/* Main Content */}
@@ -103,6 +112,7 @@ export function DashboardScreen() {
       scrollEventThrottle={8}
       contentContainerStyle={{ 
         paddingTop: HEADER_HEIGHT,
+        paddingBottom: insets.bottom + 20, // Bottom safe area + extra spacing
       }}
     >
       {/* Wallet Balance Card */}

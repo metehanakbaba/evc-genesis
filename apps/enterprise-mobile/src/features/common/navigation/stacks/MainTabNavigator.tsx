@@ -14,7 +14,7 @@ import { DashboardScreen } from '../../../dashboard';
 
 export function MainTabNavigator() {
   return (
-    <SafeAreaView className="flex-1" edges={['bottom']} style={{ backgroundColor: 'transparent' }}>
+    <SafeAreaView className="flex-1" edges={[]} style={{ backgroundColor: 'transparent' }}>
       <DashboardScreen />
     </SafeAreaView>
   );

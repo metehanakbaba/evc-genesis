@@ -115,11 +115,11 @@ export function MainStackNavigator() {
 
   return (
     <>
-      {/* Status Bar Configuration */}
-      <StatusBar style="light" backgroundColor="#111827" translucent />
+      {/* Status Bar Configuration - Transparent */}
+      <StatusBar style="light" backgroundColor="transparent" translucent />
       
-      {/* Main App Container */}
-      <SafeAreaView className="flex-1 bg-gray-900" edges={['top']}>
+      {/* Main App Container - No top edge, let content extend under status bar */}
+      <SafeAreaView className="flex-1" edges={[]} style={{ backgroundColor: 'transparent' }}>
         <MainTabNavigator />
       </SafeAreaView>
       
