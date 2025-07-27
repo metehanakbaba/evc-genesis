@@ -88,6 +88,10 @@ export function useDashboard() {
     );
   }, []);
 
+  const handleRequestCharging = useCallback(() => {
+    openModal('chargingRequest');
+  }, []);
+
   const handleActivityPress = useCallback((activity: ActivityItem) => {
     console.log(`Navigate to ${activity.type} details:`, activity.id);
   }, []);
@@ -137,6 +141,7 @@ export function useDashboard() {
       handleWalletPress,
       handleStationMapPress,
       handleMobileChargingPress,
+      handleRequestCharging,
       handleActivityPress,
     }
   };

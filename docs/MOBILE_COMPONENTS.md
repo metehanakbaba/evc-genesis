@@ -20,6 +20,10 @@ apps/enterprise-mobile/src/features/
 │   └── components/            # Dashboard-specific components
 ├── charging-stations/
 │   └── components/            # Station management components
+├── charging-request/
+│   ├── components/            # Charging request components
+│   ├── screens/               # Request flow screens
+│   └── types/                 # Request type definitions
 ├── wallet/
 │   └── components/            # Wallet and payment components
 └── qr-scanner/
@@ -204,6 +208,246 @@ Navigation component for dashboard feature access with premium styling.
 - **Icon Support**: Customizable icons with glassmorphism containers
 - **Description Text**: Secondary information display
 - **Variant Theming**: Consistent color psychology across variants
+
+## Charging Request Components
+
+### ChargingRequestSelectionScreen
+
+**Location**: `apps/enterprise-mobile/src/features/charging-request/screens/ChargingRequestSelectionScreen.tsx`
+
+Main selection screen for choosing between station booking and mobile charging services.
+
+#### Features
+
+- **Dual Service Options**: Station booking vs mobile charging selection
+- **Glassmorphism Design**: Premium glass-like UI effects with gradient overlays
+- **Interactive Cards**: Touch-responsive selection cards with visual feedback
+- **Service Comparison**: Clear presentation of service differences and benefits
+- **Navigation Integration**: Seamless flow to specific booking processes
+
+### Charging Request Types
+
+**Location**: `apps/enterprise-mobile/src/features/charging-request/types/charging-request.types.ts`
+
+Comprehensive TypeScript definitions for the charging request system.
+
+#### Core Types
+
+**ChargingRequestType**
+```typescript
+export type ChargingRequestType = 'station' | 'mobile';
+```
+
+**Location Interface**
+```typescript
+export interface Location {
+  latitude: number;
+  longitude: number;
+  address: string;
+  city: string;
+  postalCode: string;
+}
+```
+
+**Vehicle Interface**
+```typescript
+export interface Vehicle {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  batteryCapacity: number;
+  currentBatteryLevel: number;
+  chargingPortType: 'CCS' | 'CHAdeMO' | 'Type2' | 'Tesla';
+  licensePlate: string;
+}
+```
+
+**ChargingStation Interface**
+```typescript
+export interface ChargingStation {
+  id: string;
+  name: string;
+  location: Location;
+  distance: number;
+  availableConnectors: number;
+  totalConnectors: number;
+  chargingSpeed: string;
+  pricePerKwh: number;
+  amenities: string[];
+  rating: number;
+  isOperational: boolean;
+  estimatedWaitTime: number;
+}
+```
+
+**MobileChargingTechnician Interface**
+```typescript
+export interface MobileChargingTechnician {
+  id: string;
+  name: string;
+  rating: number;
+  estimatedArrival: number;
+  vehicleInfo: string;
+  phoneNumber: string;
+  isAvailable: boolean;
+}
+```
+
+#### Request Data Types
+
+**Base ChargingRequestData**
+```typescript
+export interface ChargingRequestData {
+  type: ChargingRequestType;
+  vehicle: Vehicle;
+  requestedLocation: Location;
+  targetBatteryLevel: number;
+  urgencyLevel: 'low' | 'medium' | 'high';
+  specialInstructions?: string;
+  preferredTimeSlot?: {
+    start: Date;
+    end: Date;
+  };
+}
+```
+
+**Station Booking Data**
+```typescript
+export interface StationBookingData extends ChargingRequestData {
+  selectedStation: ChargingStation;
+  connectorType: string;
+  estimatedChargingTime: number;
+}
+```
+
+**Mobile Charging Data**
+```typescript
+export interface MobileChargingData extends ChargingRequestData {
+  serviceType: 'standard' | 'premium' | 'emergency';
+  assignedTechnician?: MobileChargingTechnician;
+  estimatedCost: number;
+  additionalServices: string[];
+}
+```
+
+**Request Step Interface**
+```typescript
+export interface ChargingRequestStep {
+  id: string;
+  title: string;
+  subtitle: string;
+  isCompleted: boolean;
+  isActive: boolean;
+  icon: string;
+}
+```
+
+#### Usage Examples
+
+**Station Booking Flow**
+```typescript
+import { StationBookingData, ChargingStation } from '@/features/charging-request/types';
+
+const createStationBooking = (
+  station: ChargingStation,
+  vehicle: Vehicle,
+  targetLevel: number
+): StationBookingData => ({
+  type: 'station',
+  vehicle,
+  requestedLocation: station.location,
+  targetBatteryLevel: targetLevel,
+  urgencyLevel: 'medium',
+  selectedStation: station,
+  connectorType: vehicle.chargingPortType,
+  estimatedChargingTime: calculateChargingTime(vehicle, targetLevel),
+});
+```
+
+**Mobile Charging Request**
+```typescript
+import { MobileChargingData } from '@/features/charging-request/types';
+
+const createMobileChargingRequest = (
+  vehicle: Vehicle,
+  location: Location,
+  serviceType: 'standard' | 'premium' | 'emergency'
+): MobileChargingData => ({
+  type: 'mobile',
+  vehicle,
+  requestedLocation: location,
+  targetBatteryLevel: 80,
+  urgencyLevel: serviceType === 'emergency' ? 'high' : 'medium',
+  serviceType,
+  estimatedCost: calculateMobileChargingCost(serviceType, vehicle),
+  additionalServices: [],
+});
+```
+
+#### Integration with Dashboard
+
+The charging request system integrates seamlessly with the dashboard components through the enhanced `useDashboard` hook:
+
+```typescript
+// Dashboard Hook Integration
+import { useDashboard } from '@/features/dashboard/hooks';
+
+const {
+  mobileChargingFeatures,
+  isCharging,
+  chargingProgress,
+  isAvailable,
+  handlers: { handleMobileChargingPress, handleRequestCharging }
+} = useDashboard();
+
+// MobileChargingCard with charging request integration
+<MobileChargingCard
+  features={mobileChargingFeatures}
+  onPress={handleMobileChargingPress}
+  onRequestCharging={handleRequestCharging}  // New charging request handler
+  isCharging={isCharging}
+  chargingProgress={chargingProgress}
+  isAvailable={isAvailable}
+/>
+```
+
+#### Navigation Flow Integration
+
+The `handleRequestCharging` handler provides seamless navigation to the charging request system:
+
+```typescript
+// useDashboard hook implementation
+const handleRequestCharging = useCallback(() => {
+  openModal('chargingRequest');  // Opens ChargingRequestSelectionScreen
+}, []);
+
+// Modal system integration in MainStackNavigator
+<ModalWrapper visible={activeModal === 'chargingRequest'} onClose={closeModal}>
+  <ChargingRequestSelectionScreen onClose={closeModal} />
+</ModalWrapper>
+```
+
+#### Design Specifications
+
+| Property | Value | Purpose |
+|----------|-------|---------|
+| **Request Types** | 2 types | Station booking and mobile charging |
+| **Vehicle Support** | 4 connector types | CCS, CHAdeMO, Type2, Tesla |
+| **Service Levels** | 3 levels | Standard, premium, emergency |
+| **Urgency Levels** | 3 levels | Low, medium, high priority |
+| **Location Precision** | GPS coordinates | Accurate positioning for services |
+| **Time Slots** | Flexible scheduling | User-preferred time windows |
+
+#### Recent Updates (January 2025)
+
+- **Comprehensive Type System**: Complete TypeScript definitions for all charging request scenarios
+- **Dual Service Support**: Both station booking and mobile charging request types
+- **Vehicle Integration**: Support for all major EV connector types
+- **Location Services**: Precise GPS-based location handling
+- **Technician Management**: Mobile charging technician assignment and tracking
+- **Service Tiers**: Multiple service levels with different pricing and features
+- **Step-by-Step Flow**: Structured request process with progress tracking
 
 ## Shared UI Components
 

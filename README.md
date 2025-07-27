@@ -40,6 +40,7 @@ cd apps/admin-web && npm run dev
 - **Admin Dashboard with Analytics**
 - **Mobile-first Design System**
 - **Multi-platform Support**
+- **Charging Request System** - Complete navigation setup with station booking and mobile charging flows, dashboard integration, and modal system
 
 ## 🏗️ Architecture
 
@@ -171,7 +172,8 @@ expo start
 - **Enhanced Glassmorphism Design System**: Premium glass-like UI effects with 3-layer gradient system
 - **Dashboard Components**: ActionGrid with mobile-first optimization, WalletBalanceCard, StatCard, NavigationCard
 - **ActionGrid Mobile-First**: Compact layout with colored borders, optimized readability (0.3 opacity), 18px radius
-- **Feature-Based Architecture**: Organized by features (auth, dashboard, charging-stations, wallet)
+- **Feature-Based Architecture**: Organized by features (auth, dashboard, charging-stations, wallet, charging-request)
+- **Charging Request System**: Complete navigation flows with 5 screens (selection, station flow, mobile flow, station list, confirmation) and seamless dashboard integration
 - **Biometric Auth**: Fingerprint/Face ID integration
 - **Push Notifications**: Real-time alerts and updates
 - **Offline Support**: Local data caching and sync
@@ -187,6 +189,7 @@ expo start
 - **[🎨 Atomic Design System](./docs/ATOMIC_DESIGN_SYSTEM.md)** - Component architecture guide
 - **[📱 Mobile Components](./docs/MOBILE_COMPONENTS.md)** - Mobile component library documentation
 - **[📱 Mobile Development](./docs/MOBILE_DEVELOPMENT.md)** - React Native + NativeWind guide
+- **[⚡ Charging Request API](./docs/api/charging-request-api.md)** - API documentation for charging requests
 - **[🐳 Docker Guide](./docs/README_DOCKER.md)** - Complete Docker setup
 - **[⚡ NX Optimization](./docs/README_NX_OPTIMIZATION.md)** - Build system optimization
 - **[📱 Mobile Plan](./docs/EXPO_MIGRATION_PLAN.md)** - Mobile development roadmap
@@ -247,12 +250,14 @@ docker system prune -a
 - **Enhanced Mobile Dashboard Components**: ActionGrid with mobile-first optimization, WalletBalanceCard, StatCard, NavigationCard
 - **ActionGrid Mobile-First Updates**: Compact layout, enhanced visual definition, improved readability, colored borders
 - **Feature-Based Mobile Architecture**: Clean organization by features with shared UI components
+- **Charging Request Navigation System**: Complete implementation with 5 screens, modal integration, mock data, and dashboard navigation flow
 - **Notion integration** with full content sync and live database connections
 - Automated documentation and KPI tracking
 
 ### In Progress 🔄
 - Mobile application feature completion
-- API endpoint completion
+- Charging request API integration
+- Real-time tracking implementation
 - Performance optimizations
 - Documentation improvements
 

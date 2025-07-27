@@ -133,6 +133,7 @@ export function DashboardScreen() {
       <MobileChargingCard
         features={mobileChargingFeatures}
         onPress={handlers.handleMobileChargingPress}
+        onRequestCharging={handlers.handleRequestCharging}
         isCharging={isCharging}
         chargingProgress={chargingProgress}
         isAvailable={isAvailable}

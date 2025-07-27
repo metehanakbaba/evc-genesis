@@ -229,6 +229,10 @@ apps/enterprise-mobile/src/features/
 ├── auth/components/           # Authentication components
 ├── dashboard/components/      # Dashboard-specific components
 ├── charging-stations/         # Station management
+├── charging-request/          # Charging request system
+│   ├── components/            # Request flow components
+│   ├── screens/               # Request screens
+│   └── types/                 # TypeScript definitions
 ├── wallet/components/         # Wallet and payments
 └── qr-scanner/               # QR scanning functionality
 ```
@@ -346,6 +350,12 @@ apps/enterprise-mobile/
 │       │   ├── screens/   # Dashboard screens
 │       │   ├── hooks/     # Dashboard hooks
 │       │   └── types/     # Dashboard types
+│       ├── charging-request/
+│       │   ├── components/ # Request components
+│       │   ├── screens/   # Request screens
+│       │   │   └── ChargingRequestSelectionScreen.tsx
+│       │   └── types/     # Request type definitions
+│       │       └── charging-request.types.ts
 │       ├── charging-stations/
 │       ├── wallet/
 │       └── qr-scanner/
@@ -569,6 +579,15 @@ cd android && ./gradlew clean
 - **Glassmorphism Effects**: Premium glass-like UI with LinearGradient overlays
 - **Color Psychology**: Consistent variant system (blue, emerald, purple, teal)
 - **Animation System**: Smooth 60fps animations with React Native Reanimated
+
+#### Charging Request System
+- **Dual Service Types**: Station booking and mobile charging requests
+- **Comprehensive Type System**: Complete TypeScript definitions for all request scenarios
+- **Vehicle Integration**: Support for all major EV connector types (CCS, CHAdeMO, Type2, Tesla)
+- **Location Services**: GPS-based location handling with address details
+- **Service Tiers**: Standard, premium, and emergency service levels
+- **Technician Management**: Mobile charging technician assignment and tracking
+- **Progress Tracking**: Step-by-step request flow with clear user journey
 
 ## Resources
 

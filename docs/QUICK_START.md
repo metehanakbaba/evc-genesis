@@ -14,7 +14,7 @@ npm install
 cd apps/admin-web && npm run dev
 # → http://localhost:3000
 
-# 3. Start mobile development (optional)
+# 3. Start mobile development with charging request system (optional)
 cd apps/enterprise-mobile && npm run start
 
 # 4. Setup Notion integration (optional)
@@ -31,7 +31,7 @@ cd tools/notion && npm install && npm run test
 # Web admin development with hot reload
 cd apps/admin-web && npm run dev
 
-# Mobile development with NativeWind
+# Mobile development with NativeWind and charging request flows
 cd apps/enterprise-mobile && npm run start
 
 # Quick build test (NX optimized)

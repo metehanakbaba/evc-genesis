@@ -29,6 +29,12 @@ export type MainStackParamList = {
   StationMapModal: undefined;
   StationDetailsModal: { stationId: string };
   TransactionDetailsModal: { transactionId: string };
+  // Charging Request Screens
+  ChargingRequestSelection: undefined;
+  StationChargingFlow: undefined;
+  MobileChargingFlow: undefined;
+  StationListScreen: undefined;
+  MobileChargingConfirmation: undefined;
 };
 
 // ============================================================================

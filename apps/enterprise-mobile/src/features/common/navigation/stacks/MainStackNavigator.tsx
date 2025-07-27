@@ -13,12 +13,19 @@ import { MainTabNavigator } from './MainTabNavigator';
 import { QRScannerScreen } from '../../../qr-scanner/screens/QRScannerScreen';
 import { WalletScreen } from '../../../wallet/screens/WalletScreen';
 import { StationMapScreen } from '../../../charging-stations/screens/StationMapScreen';
+import { 
+  ChargingRequestSelectionScreen,
+  StationChargingFlowScreen,
+  MobileChargingFlowScreen
+} from '../../../charging-request';
+import { StationListScreen } from '../../../charging-request/screens/StationListScreen';
+import { MobileChargingConfirmationScreen } from '../../../charging-request/screens/MobileChargingConfirmationScreen';
 
 // ============================================================================
 // MODAL STATE CONTEXT
 // ============================================================================
 
-type ModalType = 'qr' | 'wallet' | 'stations' | null;
+type ModalType = 'qr' | 'wallet' | 'stations' | 'chargingRequest' | 'stationCharging' | 'mobileCharging' | 'stationList' | 'mobileChargingConfirmation' | null;
 
 // Global modal state - simple approach for React 19
 let globalModalState: ModalType = null;
@@ -134,6 +141,26 @@ export function MainStackNavigator() {
       
       <ModalWrapper visible={activeModal === 'stations'} onClose={closeModal}>
         <StationMapScreen onClose={closeModal} />
+      </ModalWrapper>
+
+      <ModalWrapper visible={activeModal === 'chargingRequest'} onClose={closeModal}>
+        <ChargingRequestSelectionScreen onClose={closeModal} />
+      </ModalWrapper>
+
+      <ModalWrapper visible={activeModal === 'stationCharging'} onClose={closeModal}>
+        <StationChargingFlowScreen onClose={closeModal} />
+      </ModalWrapper>
+
+      <ModalWrapper visible={activeModal === 'mobileCharging'} onClose={closeModal}>
+        <MobileChargingFlowScreen onClose={closeModal} />
+      </ModalWrapper>
+
+      <ModalWrapper visible={activeModal === 'stationList'} onClose={closeModal}>
+        <StationListScreen onClose={closeModal} />
+      </ModalWrapper>
+
+      <ModalWrapper visible={activeModal === 'mobileChargingConfirmation'} onClose={closeModal}>
+        <MobileChargingConfirmationScreen onClose={closeModal} />
       </ModalWrapper>
       
     </>

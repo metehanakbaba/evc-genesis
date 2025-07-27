@@ -22,6 +22,7 @@ interface MobileChargingCardProps {
     availability: string;
   };
   onPress: () => void;
+  onRequestCharging?: () => void;
   isCharging?: boolean;
   chargingProgress?: number;
   isAvailable?: boolean;
@@ -30,6 +31,7 @@ interface MobileChargingCardProps {
 export function MobileChargingCard({ 
   features, 
   onPress, 
+  onRequestCharging,
   isCharging = false,
   chargingProgress = 0,
   isAvailable = true
@@ -132,7 +134,7 @@ export function MobileChargingCard({
           </Text>
           
           {/* Compact Features Grid */}
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-between" style={{ marginBottom: SPACING.md }}>
             <View className="flex-1">
               <View className="flex-row items-center" style={{ marginBottom: 2 }}>
                 <Ionicons name="time" size={14} color="#FCD34D" />
@@ -156,6 +158,29 @@ export function MobileChargingCard({
               <Text className="text-gray-400 text-xs">Starting price</Text>
             </View>
           </View>
+
+          {/* Request Charging Button */}
+          {onRequestCharging && (
+            <Pressable
+              onPress={onRequestCharging}
+              className="active:scale-98"
+              style={{
+                backgroundColor: 'rgba(245,158,11,0.15)',
+                borderWidth: 1,
+                borderColor: '#F59E0B40',
+                borderRadius: 12,
+                paddingVertical: SPACING.sm,
+                paddingHorizontal: SPACING.md,
+              }}
+            >
+              <View className="flex-row items-center justify-center">
+                <Ionicons name="add-circle" size={16} color="#FCD34D" />
+                <Text className="text-amber-300 text-sm font-bold ml-2">
+                  Şarj Talebi Oluştur
+                </Text>
+              </View>
+            </Pressable>
+          )}
         </View>
       </Pressable>
     </View>

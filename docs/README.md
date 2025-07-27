@@ -85,6 +85,7 @@ cd tools/notion && npm run project-report   # Generate status report
 - **Admin Dashboard with Analytics**
 - **Mobile-first Design System**
 - **Multi-platform Support**
+- **Charging Request System** - Comprehensive booking system for station and mobile charging services
 
 ### Tech Stack
 
@@ -595,6 +596,7 @@ DEBUG=notion:* npm test
 - **[Quick Start](./QUICK_START.md)**: Fast setup guide
 - **[Mobile Components](./MOBILE_COMPONENTS.md)**: Mobile component library documentation
 - **[Mobile Development](./MOBILE_DEVELOPMENT.md)**: React Native + NativeWind guide
+- **[Charging Request API](./api/charging-request-api.md)**: API documentation for charging requests
 - **[Expo Migration](./EXPO_MIGRATION_PLAN.md)**: Mobile development plan
 - **[Git Rules](./GIT_RULES.md)**: Git workflow guidelines
 
@@ -619,6 +621,8 @@ DEBUG=notion:* npm test
 - **Mobile App with NativeWind**: React Native 0.79 + Expo 53 + Tailwind CSS styling
 - **Mobile Dashboard Components**: WalletBalanceCard, StatCard, NavigationCard with glassmorphism effects
 - **Feature-Based Mobile Architecture**: Clean organization by features with shared UI components
+- **Charging Request System**: Complete TypeScript type system for station booking and mobile charging requests
+- **Charging Request API Documentation**: Comprehensive API documentation with endpoints and data structures
 - Notion integration system with live database connections
 - **Enhanced documentation sync with full content conversion**
 - **Rich markdown-to-Notion block transformation**
@@ -632,6 +636,7 @@ DEBUG=notion:* npm test
 
 - Atomic design system molecules (TrendIndicator, BackgroundEffects, FloatingAccents)
 - Mobile application feature completion
+- Charging request UI components implementation
 - API endpoint completion
 - Enhanced Notion workflow automation
 - Performance optimizations

@@ -5,7 +5,6 @@
  * Psychology: Teal colors represent trust, reliability, and digital financial operations
  */
 
-import { useState } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
@@ -15,15 +14,12 @@ import { AnimatedCounter, PulseStatusIndicator } from './animations';
 
 // Background image
 import sunsetCarsEvCharge from '../../../../assets/dashboard/sunset-cars-ev-charge.jpg';
-import { Dimensions } from 'react-native';
 
 interface WalletBalanceCardProps {
   walletBalance: WalletBalance;
   onPress: () => void;
   isLoading?: boolean;
 }
-
-const { width } = Dimensions.get('window');
 
 export function WalletBalanceCard({ 
   walletBalance, 
