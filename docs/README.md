@@ -407,6 +407,9 @@ expo start
 - **Push Notifications**: Real-time alerts
 - **Offline Support**: Local data caching
 - **Maps Integration**: Station location display
+- **Glassmorphism UI**: Premium glass-like effects with LinearGradient overlays
+- **Dashboard Components**: WalletBalanceCard, StatCard, NavigationCard with compact mobile layouts
+- **Feature-Based Architecture**: Clean organization by features (auth, dashboard, charging-stations, wallet)
 
 ### Development Status
 
@@ -590,6 +593,7 @@ DEBUG=notion:* npm test
 - **[Docker Guide](./README_DOCKER.md)**: Complete Docker setup
 - **[NX Optimization](./README_NX_OPTIMIZATION.md)**: Build system optimization
 - **[Quick Start](./QUICK_START.md)**: Fast setup guide
+- **[Mobile Components](./MOBILE_COMPONENTS.md)**: Mobile component library documentation
 - **[Mobile Development](./MOBILE_DEVELOPMENT.md)**: React Native + NativeWind guide
 - **[Expo Migration](./EXPO_MIGRATION_PLAN.md)**: Mobile development plan
 - **[Git Rules](./GIT_RULES.md)**: Git workflow guidelines
@@ -613,6 +617,8 @@ DEBUG=notion:* npm test
 - Shared business logic
 - Docker deployment setup
 - **Mobile App with NativeWind**: React Native 0.79 + Expo 53 + Tailwind CSS styling
+- **Mobile Dashboard Components**: WalletBalanceCard, StatCard, NavigationCard with glassmorphism effects
+- **Feature-Based Mobile Architecture**: Clean organization by features with shared UI components
 - Notion integration system with live database connections
 - **Enhanced documentation sync with full content conversion**
 - **Rich markdown-to-Notion block transformation**

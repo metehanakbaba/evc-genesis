@@ -39,9 +39,9 @@ const getActivityNotificationType = (activity: ActivityItem): NotificationType =
 
 export function RecentActivity({ activities, onActivityPress }: RecentActivityProps) {
   return (
-    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.xl }}>
+    <View style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
       {/* Apple-style simple header */}
-      <Text className="text-white text-lg font-bold" style={{ marginBottom: SPACING.md }}>
+      <Text className="text-white text-base font-bold" style={{ marginBottom: SPACING.sm }}>
         Recent Activity
       </Text>
       

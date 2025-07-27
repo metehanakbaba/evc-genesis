@@ -123,10 +123,6 @@ export function AnimatedGridItem({
         onPressOut={handlePressOut}
         style={{ 
           borderRadius: 18,
-          shadowColor: item.shadowColor,
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.15,
-          shadowRadius: 16,
           elevation: 8,
         }}
       >
