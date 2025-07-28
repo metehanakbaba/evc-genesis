@@ -474,8 +474,8 @@ describe('Card', () => {
     });
 
     it('handles invalid variant gracefully', () => {
-      // @ts-expect-error Testing invalid variant
       expect(() =>
+        // @ts-expect-error Testing invalid variant
         render(<Card variant="invalid">Content</Card>),
       ).not.toThrow();
     });

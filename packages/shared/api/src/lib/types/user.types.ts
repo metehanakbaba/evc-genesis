@@ -16,7 +16,12 @@ export interface CreateUserRequest {}
 
 export interface UpdateUserRequest {}
 
-export interface UserListResponse {}
+export interface UserListResponse {
+  data: User[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 export interface UserQuery {}
 

@@ -88,8 +88,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     if (formData.phoneNumber) {
       const phoneValidation = validatePhone(formData.phoneNumber);
       if (!phoneValidation.isValid) {
-        
-        return;
+        setIsSubmitting(false);
+        return { success: false, error: 'Invalid phone number' };
       }
     }
 
@@ -99,7 +99,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
         refresh();
       }
       onClose();
-      return { success: true }
+      return { success: true };
     } catch (error) {
       const errorMessage = isApiError(error) 
         ? formatApiError(error).message 
@@ -110,7 +110,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
             type: 'error',
             message: errorMessage,
             title: 'Failed to update user'
-          })
+          });
+          return { success: false, error: errorMessage };
     } finally {
       setIsSubmitting(false);
     }

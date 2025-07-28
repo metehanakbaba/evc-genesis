@@ -289,3 +289,46 @@ export const walletBusinessUtils = {
   isRefundEligible,
   DEFAULT_WALLET_RULES,
 }; 
+
+/**
+ * 📊 Wallet Analytics Response Interface
+ * Response structure for wallet analytics data
+ */
+export interface WalletAnalyticsResponse {
+  readonly period: string | null;
+  readonly totalSystemBalance: number;
+  readonly totalUsers: number;
+  readonly activeUsers: number;
+  readonly transactionVolume: {
+    readonly total: number;
+    readonly deposits: number;
+    readonly charges: number;
+    readonly refunds: number;
+  };
+  readonly transactionCounts: {
+    readonly total: number;
+    readonly deposits: number;
+    readonly charges: number;
+    readonly refunds: number;
+  };
+  readonly averages: {
+    readonly depositAmount: number;
+    readonly chargeAmount: number;
+    readonly userBalance: number;
+  };
+  readonly trends: {
+    readonly balanceGrowth: string;
+    readonly transactionGrowth: string;
+    readonly userGrowth: string;
+  };
+  readonly alerts: readonly string[];
+}
+
+/**
+ * 📊 Wallet Analytics Query Parameters
+ * Parameters for wallet analytics requests
+ */
+export interface WalletAnalyticsQueryParams {
+  readonly period: string | null;
+  readonly includeCharts: boolean;
+} 

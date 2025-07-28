@@ -182,14 +182,14 @@ export const useTransactionStatistics = (data: TransactionStatistics): Transacti
 
     // 2. Calculate daily volume (transactions per day)
     // Group transactions by day
-    const dailyCounts = transactions.reduce((acc, tx) => {
+    const dailyCounts: Record<string, number> = transactions.reduce((acc, tx) => {
       const date = new Date(tx.createdAt).toISOString().split('T')[0];
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
     const dailyVolume = {
-      count: Object.values(dailyCounts).reduce((sum, count) => sum + count, 0),
+      count: Object.values(dailyCounts).reduce((sum: number, count: number) => sum + count, 0),
       formatted: `${summary.totalTransactions} transactions across ${Object.keys(dailyCounts).length} days`,
     };
 

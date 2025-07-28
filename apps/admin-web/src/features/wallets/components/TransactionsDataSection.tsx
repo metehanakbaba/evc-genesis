@@ -6,7 +6,6 @@ import {
   ClockIcon,
   EyeIcon,
   ShieldExclamationIcon,
-  LockClosedIcon,
   WalletIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
@@ -27,13 +26,13 @@ import {
 } from '@/shared/ui';
 import { EmptyState } from '@/shared/ui/molecules';
 // Import types
-import { TransactionType, TransactionStatus, Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { TransactionType, Transaction } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 /**
- * 🔄 Extend PLNTransaction to work with shared components
+ * 🔄 Extend Transaction to work with shared components
  */
-interface EnhancedTransaction extends Transaction, Omit<DataGridItem, 'id'> {
-  // PLNTransaction already has `id` field, so this automatically works
+interface EnhancedTransaction extends Omit<Transaction, 'id'>, DataGridItem {
+  // DataGridItem provides the compatible `id` field
 }
 
 interface TransactionsDataSectionProps {
@@ -78,7 +77,7 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
 }) => {
   // ✅ Helper function to get transaction status config
   const getTransactionStatusConfig = (transaction: EnhancedTransaction): DataGridStatusConfig => {
-    const statusConfigs = {
+    const statusConfigs: Record<string, DataGridStatusConfig> = {
       COMPLETED: {
         bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
         borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
@@ -115,7 +114,7 @@ export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = (
         pulseColor: 'bg-purple-500',
       }
     };
-    return statusConfigs[transaction.status] || statusConfigs.FAILED;
+    return statusConfigs[transaction.status as string] || statusConfigs.FAILED;
   };
 
   // ✅ Helper function to get transaction type icon
