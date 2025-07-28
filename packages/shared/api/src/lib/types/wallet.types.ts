@@ -11,6 +11,8 @@
 
 import type { PaginationParams, DateRangeParams, AmountRangeParams } from './common.types.js';
 
+export type WalletStatus = 'ACTIVE';
+
 // 💱 Transaction Type Enumeration
 export type TransactionType = 
   | 'STRIPE_PLN_PAYMENT' 
@@ -21,7 +23,6 @@ export type TransactionType =
 // 📊 Transaction Status Enumeration
 export type TransactionStatus = 
   | 'PENDING' 
-  | 'PROCESSING' 
   | 'COMPLETED' 
   | 'FAILED' 
   | 'CANCELLED';
@@ -58,14 +59,13 @@ export interface PLNAmount {
 export interface Transaction {
   id: string;
   userId: string;
-  userEmail: string;
   type: TransactionType;
-  amount: number;
-  currency: Currency;
   status: TransactionStatus;
-  description: string;
+  amount: {
+    value: number;
+    currency: Currency
+  };
   createdAt: string;
-  completedAt: string;
 }
 
 export interface TransactionSummary {
@@ -76,13 +76,24 @@ export interface TransactionSummary {
 
 // 👛 Wallet Entity
 export interface Wallet {
+  id: string; 
   userId: string;
   userEmail: string;
-  balance: number;
-  currency: Currency;
-  isActive: boolean;
+  balance: {
+    value: number;
+    currency: Currency
+  };
+  status: WalletStatus;
   createdAt: string;
-  lastTransactionAt: string;
+}
+export interface WalletResult {
+  wallets: Wallet[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: 0;
+    hasMore: boolean;
+  }
 }
 
 export interface WalletStatistics {
@@ -93,8 +104,10 @@ export interface WalletStatistics {
 }
 
 // 💰 Wallet Details Response
-export interface WalletDetails extends Wallet {
-  userFullName: string;
+export interface WalletDetails extends Omit<Wallet, 'balance'> {
+  balance: number;
+  currency: Currency;
+  isActive: boolean;
   statistics: WalletStatistics;
 }
 
@@ -119,10 +132,10 @@ export interface ProcessPaymentRequest {
 }
 
 // 📋 Transaction Query Parameters
-export interface TransactionsQuery extends PaginationParams, DateRangeParams, AmountRangeParams {
+export interface TransactionsQuery extends PaginationParams, DateRangeParams {
+  userId?: string;
   type?: TransactionType;
   status?: TransactionStatus;
-  userId?: string;
   search?: string;
 }
 
@@ -219,7 +232,6 @@ export interface AdjustBalance {
   adjustmentAmount: number;
   newBalance: number;
   reason: string;
-  reference: string;
   performedBy: string;
   performedAt: string;
 }
@@ -235,15 +247,9 @@ export interface TransactionRefund {
   originalTransactionId: string;
   refundAmount: number;
   reason: string;
-  status: TransactionStatus;
+  status: string;
   processedBy: string;
   processedAt: string;
-  userNotified: boolean;
-}
-
-export interface WalletAnalyticsQueryParams {
-  period: Period;
-  includeCharts: boolean;
 }
 
 interface Averages {
@@ -278,14 +284,15 @@ interface TransactionVolume {
 
 interface TransactionCounts extends TransactionVolume {}
 
+export interface SystemHealth {
+  transactionSuccessRate: number;
+  averageWalletBalance: number;
+}
+
 export interface WalletAnalytics { 
   period: Period;
   totalSystemBalance: number;
   totalUsers: number;
   activeUsers: number;
-  transactionVolume: TransactionVolume;
-  transactionCounts: TransactionCounts;
-  averages: Averages;
-  trends: Trends;
-  alerts: Alert[];
+  systemHealth: SystemHealth
 }
