@@ -10,7 +10,7 @@
  */
 
 import { useGetAllTransactionsQuery, useProcessRefundMutation } from '../api/walletApi';
-import { Transaction, TransactionsQuery, TransactionSummary, TransactionType, TransactionStatus, TransactionQuery, RefundRequest } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { Transaction, TransactionsQuery, TransactionSummary, TransactionType, TransactionStatus, TransactionQuery, RefundRequest, TransactionRefundData } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 import { TransactionStatsData } from '../types/wallet.types';
 import { useDebounce } from './useDebounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -222,9 +222,10 @@ export const useTransactionActions = () => {
   const [processRefund] = useProcessRefundMutation();
   const { showToast } = useToast();
 
-  const refundTransaction = useCallback(async (refundData: RefundRequest) => {
+  const refundTransaction = useCallback(async (transactionId: string, data: TransactionRefundData) => {
     try {
-      await processRefund(refundData).unwrap();
+      await processRefund({transactionId, data}).unwrap();
+      console.log(transactionId)
       showToast({
         type: 'success',
         title: 'Refund processed',
@@ -239,6 +240,7 @@ export const useTransactionActions = () => {
         message: errorMessage,
         duration: 4000,
       });
+      throw error;
     }
   }, [processRefund, showToast]);
 
