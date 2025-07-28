@@ -34,7 +34,6 @@ export { TransactionSearchSection }  from "./transactions/TransactionSearchSecti
 export { TransactionStatsSection } from "./transactions/TransactionStatsSection";
 export { TransactionsDataSection } from "./transactions/TransactionsDataSection"
 export { TransactionsModal } from './transactions/TransactionsModal';
-export { TransactionRefundModal } from "./transactions/TransactionRefundModal";
 
 export { WalletAnalyticsModal } from './wallets/WalletAnalyticsModal';
 export { WalletDetailsModal } from "./wallets/WalletDetailsModal";

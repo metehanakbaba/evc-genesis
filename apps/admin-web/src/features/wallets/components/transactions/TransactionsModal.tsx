@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Modal } from '@ui/display';
-import { TransactionRefundModal } from './TransactionRefundModal';
 import { useAllTransactions, useTransactionStatistics } from '../../hooks/useTransactions';
 import { Transaction, TransactionStatus, TransactionType } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -46,11 +45,7 @@ export const TransactionsModal: React.FC<TransactionsModalProps> = ({
   const [maxAmount, setMaxAmount] = useState<number | undefined>();
 
   // Selected transaction ID from state or route param
-  const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
-
-  // Refund modal open state
-  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null)
 
   // Fetch transactions list with filters
   const {
@@ -70,7 +65,7 @@ export const TransactionsModal: React.FC<TransactionsModalProps> = ({
     fromDate,
     toDate,
     pageSize: 20,
-    enabled: isOpen,
+enabled: isOpen,
   });
 
   const refetchSelectedTransaction = () => {}; // noop since no separate fetch
@@ -246,77 +241,33 @@ export const TransactionsModal: React.FC<TransactionsModalProps> = ({
     setSelectedTransactionId(id);
   };
 
-  const onRefundSuccess = () => {
-    refresh();
-    refetchSelectedTransaction();
-  };
-
-  React.useEffect(() => {
-    const handleOpenRefundModal = (event: CustomEvent) => {
-      setSelectedTransactionId(event.detail);
-      setIsRefundModalOpen(true);
-    };
-    window.addEventListener('openRefundModal', handleOpenRefundModal as EventListener);
-    return () => {
-      window.removeEventListener('openRefundModal', handleOpenRefundModal as EventListener);
-    };
-  }, []);
-
-  const onOpenRefundModal = () => {
-    setIsRefundModalOpen(true);
-  };
-
-  const onCloseRefundModal = () => {
-    setIsRefundModalOpen(false);
-  };
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {
-        onClose();
-        setSelectedTransactionId(null);
-      }}
-      title="Transactions"
-      size="full"
-      variant="default"
-    >
-      <div className="flex flex-col space-y-4">
-        <TransactionSearchSection
-          searchQuery={search}
-          onSearchChange={onSearchChange}
-          viewMode="table"
-          onViewModeChange={() => {}}
-          onOpenFilterModal={() => {}}
-          isFilterActive={isFilterActive}
-        />
-
-        <TransactionsDataSection 
-          transactions={transactions}
-          hasNextPage={hasNextPage}
-          error={error}
-          onLoadMore={loadMore}
-          onRefresh={refresh}
-          onClearFilters={clearFilters}
-          isLoading={isLoading}
-          onSelectTransaction={(tx) => onSelectTransaction(tx.id)}
-          selectedTransaction={transactions.find(t => t.id === selectedTransactionId) ?? null}
-        />
-
-        <TransactionRefundModal
-          isOpen={isRefundModalOpen}
-          onClose={onCloseRefundModal}
-          transactionId={selectedTransactionId ?? ''}
-          onRefundSuccess={onRefundSuccess}
-        />
-
-        <GenericFilterModal 
-          isOpen={isFilterModalOpen}
-          onClose={() => setIsFilterModalOpen(false)}
-          filterGroups={filterGroups}
-          onClearFilters={onClearFilters}
-        />
-      </div>
-    </Modal>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          setSelectedTransactionId(null);
+        }}
+        title="Transactions"
+        size="full"
+        variant="default"
+        className="h-[90vh]"
+      >
+            <TransactionsDataSection 
+              transactions={transactions}
+              hasNextPage={hasNextPage}
+              error={error}
+              onLoadMore={loadMore}
+              onRefresh={refresh}
+              onClearFilters={clearFilters}
+              scrollHeight='350px'
+              scrollable={true}
+              isLoading={isLoading}
+              onSelectTransaction={(tx) => onSelectTransaction(tx.id)}
+              selectedTransaction={transactions.find(t => t.id === selectedTransactionId) ?? null}
+            />
+      </Modal>
+    </>
   );
 };
