@@ -94,6 +94,14 @@ export const createBaseQuery = (config: {
  * 🏭 Create Typed API
  * Factory function to create type-safe API instances
  */
+const walletTags = [
+  'Wallet',
+  'WalletList',
+  'WalletAnalytics',
+  'WalletStatistics',
+  'WalletDetails',
+]
+
 export const createTypedApi = <TReducerPath extends string>(
   reducerPath: TReducerPath,
   baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>
@@ -106,13 +114,10 @@ export const createTypedApi = <TReducerPath extends string>(
       'Session', 
       'User', 
       'Transaction', 
-      'Wallet',
-      'WalletAnalytics',
       'AdminProfile',
       'UserProfile',
-      'WalletBalance',
       'PaymentMethods',
-      'WalletStats'
+      ...walletTags
     ] as const,
     endpoints: () => ({}),
     keepUnusedDataFor: 300, // Cache for 5 minutes (improved from 60s)

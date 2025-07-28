@@ -14,8 +14,8 @@ import type {
   Wallet,
   WalletBalance,
   PaymentMethod,
-  RefundRequest,
   Transactions,
+  RefundRequest,
   TransactionsQuery,
   WalletAnalytics,
   WalletAnalyticsQueryParams,
@@ -23,7 +23,8 @@ import type {
   TransactionRefundData,
   WalletDetails,
   AdjustBalance,
-  AdjustBalanceData
+  AdjustBalanceData,
+  WalletResult
 } from '../types/wallet.types';
 import type {
   AdminWalletQuery,
@@ -146,13 +147,19 @@ export const walletEndpoints = (
   // === ADMIN ENDPOINTS ===
 
   // 📊 Get All Wallets (Admin)
-  getAllWallets: builder.query<Wallet[], AdminWalletQuery>({
+  getAllWallets: builder.query<WalletResult, AdminWalletQuery>({
     query: (params) => ({
       url: '/api/admin/wallets',
       params,
     }),
     transformResponse,
-    providesTags: ['Wallet'],
+    providesTags: (result) =>
+      result
+        ? [
+            { type: 'WalletList', id: 'ALL' },
+            ...result.wallets.map((w) => ({ type: 'WalletList', id: w.userId })),
+          ]
+        : [{ type: 'WalletList', id: 'ALL' }],
   }),
 
   // Get User Wallet details (Admin) 
@@ -161,7 +168,9 @@ export const walletEndpoints = (
       url: `/api/admin/wallets/${userId}/balance`,
     }),
     transformResponse,
-    providesTags: ['Wallet']
+    providesTags: (result, error, userId) => [
+      { type: 'WalletDetails', id: userId },
+    ],
   }),
 
   // 📋 Get All Transactions (Admin)
@@ -182,7 +191,9 @@ export const walletEndpoints = (
       body: data,
     }),
     transformResponse,
-    invalidatesTags: ['Transaction']
+    invalidatesTags: [
+      { type: 'WalletList', id: 'ALL' },
+    ],
   }),
 
   // ✅ Process Refund (Admin)
@@ -203,7 +214,7 @@ export const walletEndpoints = (
       params,
     }),
     transformResponse,
-    providesTags: ['WalletStats'],
+    providesTags: ['WalletStatistics'],
   }),
 
   // Get Wallet Analytics (Admin) 
