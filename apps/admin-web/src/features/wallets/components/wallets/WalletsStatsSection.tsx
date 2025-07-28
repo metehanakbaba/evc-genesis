@@ -3,12 +3,13 @@
 import React from 'react';
 import { WalletIcon, BanknotesIcon, ClockIcon, EyeIcon, ArrowTrendingUpIcon } from '@heroicons/react/20/solid';
 import { WalletsStatsData } from '../../types/wallet.types';
+import { Button } from '@/shared/ui';
 
 interface WalletsStatsSectionProps {
-  stats: WalletsStatsData | null;
+  stats: WalletsStatsData;
 }
 
-export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats }) => {
+export const WalletsStatsSection: React.FC<WalletsStatsSectionProps & { onOpenAnalytics: () => void }> = ({ stats, onOpenAnalytics }) => {
   if (!stats) {
     return (
       <div className="text-gray-400 text-center py-6">
@@ -22,13 +23,12 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
     totalWallets,
     activeWallets,
     newWalletsThisMonth,
-    walletsUsedThisMonth,
   } = stats;
 
   const statsConfig = [
     {
       title: 'Total Balance',
-      value: totalBalance.formatted,
+      value: totalBalance.amount,
       icon: BanknotesIcon,
       bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
       borderColor: 'border-amber-400/30 hover:border-amber-300/50',
@@ -39,7 +39,7 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
     },
     {
       title: 'Active Wallets',
-      value: activeWallets.formatted,
+      value: activeWallets.count,
       icon: WalletIcon,
       bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
       borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
@@ -50,7 +50,7 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
     },
     {
       title: 'New This Month',
-      value: newWalletsThisMonth.formatted,
+      value: newWalletsThisMonth.count,
       icon: ClockIcon,
       bgColor: 'from-indigo-500/15 via-indigo-400/8 to-transparent',
       borderColor: 'border-indigo-400/30 hover:border-indigo-300/50',
@@ -61,8 +61,8 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
     },
     {
       title: 'Used This Month',
-      value: walletsUsedThisMonth.formatted,
       icon: EyeIcon,
+      value: '-',
       bgColor: 'from-purple-500/15 via-purple-400/8 to-transparent',
       borderColor: 'border-purple-400/30 hover:border-purple-300/50',
       iconColor: 'text-purple-400',
@@ -74,20 +74,21 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
 
   return (
     <section>
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-3 h-8 bg-gradient-to-b from-amber-400 to-amber-300 rounded-full"></div>
-        <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <BanknotesIcon className="w-6 h-6 text-amber-400" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-300 rounded-full"></div>
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <BanknotesIcon className="w-5 h-5 text-amber-400" />
             Wallet System Overview
           </h2>
-          <p className="text-gray-400">
-            Current metrics related to balances and wallet lifecycle.
-          </p>
         </div>
+
+        <Button variant="outline" onClick={onOpenAnalytics}>
+          View Analytics
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {statsConfig.map((stat, index) => (
           <div
             key={stat.title}
@@ -95,41 +96,37 @@ export const WalletsStatsSection: React.FC<WalletsStatsSectionProps> = ({ stats 
             style={{ animationDelay: `${index * 150}ms` }}
           >
             <div
-              className={`relative p-6 bg-gradient-to-br ${stat.bgColor} border ${stat.borderColor} rounded-2xl backdrop-blur-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer h-[300px] flex flex-col`}
+              className={`relative p-4 bg-gradient-to-br ${stat.bgColor} border ${stat.borderColor} rounded-xl backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.015] cursor-pointer h-[220px] flex flex-col`}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
               <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div
-                    className={`w-14 h-14 rounded-2xl ${stat.bgColor} border ${stat.borderColor} flex items-center justify-center backdrop-blur-sm`}
+                    className={`w-10 h-10 rounded-xl ${stat.bgColor} border ${stat.borderColor} flex items-center justify-center backdrop-blur-sm`}
                   >
-                    <stat.icon className={`w-7 h-7 ${stat.iconColor}`} />
+                    <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
                   </div>
                   <ArrowTrendingUpIcon
-                    className={`w-5 h-5 ${stat.iconColor}`}
+                    className={`w-4 h-4 ${stat.iconColor}`}
                   />
                 </div>
 
                 <div className="flex-1 flex flex-col">
-                  <div className="mb-4">
-                    <div className="text-3xl font-bold text-white mb-2">
+                  <div className="mb-2">
+                    <div className="text-2xl font-bold text-white mb-1">
                       {stat.value}
                     </div>
                     <div className={`text-sm font-medium ${stat.iconColor}`}>
                       {stat.title}
                     </div>
                   </div>
-                  <div className={`text-xs ${stat.iconColor} mb-4 font-medium`}>
+                  <div className={`text-xs ${stat.iconColor} mb-2 font-medium`}>
                     {stat.trend}
                   </div>
                 </div>
 
-                <div className="mt-auto">
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    {stat.description}
-                  </p>
-                </div>
+                <p className="text-xs text-gray-300 mt-auto leading-relaxed">
+                  {stat.description}
+                </p>
               </div>
             </div>
           </div>

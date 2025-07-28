@@ -1,32 +1,42 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import type { Wallet } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
-import { useAllWallets } from '../hooks/useWallets';
-import { CheckCircleIcon, XCircleIcon, ReceiptRefundIcon} from '@heroicons/react/24/outline';
-import { BulkActionBar, BulkAction } from '@/shared/ui/components/DataDisplay/BulkActionBar';
+import { Wallet } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { useAllWallets, useWalletStatistics } from '../hooks/useWallets';
+import { CheckCircleIcon, XCircleIcon, ReceiptRefundIcon } from '@heroicons/react/24/outline';
+import { BulkActionBar, BulkAction, useBulkSelection } from '@/shared/ui/components/DataDisplay/BulkActionBar';
 import QuickFilterButtons, { QuickFilterGroup } from '@/shared/ui/components/DataDisplay/QuickFilterButtons';
-import { 
-  WalletAnalyticsModal, 
-  TransactionsModal, 
-  WalletDetailsModal, 
+import { GenericFilterModal } from '@/shared/ui/components/DataDisplay/GenericFilterModal';
+import {
+  WalletAnalyticsModal,
+  TransactionsModal,
+  WalletDetailsModal,
   WalletsDataSection,
-  WalletsStatsSection
- } from '../components';
- import { MainLayout, PageHeader, Breadcrumb } from '@/shared/ui';
- import { PageContainer } from '@/shared/ui/components/Layout';
-import { generateWalletsStats } from '../utils/walletStats';
+  WalletsStatsSection,
+  WalletsSearchSection,
+  AdjustBalanceModal 
+} from '../components';
 
-const WalletsPage: React.FC = () => {
+import { MainLayout, PageHeader, Breadcrumb } from '@/shared/ui';
+import { PageContainer } from '@/shared/ui/components/Layout';
 
+export const WalletsPage: React.FC = () => {
   // Filters state
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isActiveFilter, setIsActiveFilter] = useState<'all' | 'true' | 'false'>('all');
   const [selectedWalletIds, setSelectedWalletIds] = useState<string[]>([]);
+
+  // Modals state
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
   const [isWalletDetailsModalOpen, setIsWalletDetailsModalOpen] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
+  const [isWalletAdjustModalOpen, setIsWalletAdjustModalOpen] = useState(false);
+
+  // Adjust Balance modal state
+  const [chosenWallet, setChosenWallet] = useState<Wallet | null>(null);
+  // System state
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Fetch wallets using custom hook
   const {
@@ -39,18 +49,12 @@ const WalletsPage: React.FC = () => {
     refresh,
     total,
   } = useAllWallets({
-    search,
+    search: searchQuery,
     isActive: isActiveFilter === 'all' ? 'all' : isActiveFilter === 'true',
   });
 
-  // Wallet actions
-  const walletActions = {
-    viewDetails: (wallet: Wallet) => {
-      setSelectedWallet(wallet);
-      setIsWalletDetailsModalOpen(true);
-    },
-  };
-
+  const { toggleAll } = useBulkSelection(wallets);
+  const statistics = useWalletStatistics(wallets);
 
   // Bulk actions configuration
   const bulkActions: BulkAction[] = useMemo(() => [
@@ -59,24 +63,10 @@ const WalletsPage: React.FC = () => {
       label: 'Activate',
       icon: CheckCircleIcon,
       variant: 'success',
-      onClick: (ids) => {
-        // TODO: Implement bulk activate logic
-        console.log('Bulk activate wallets:', ids);
-      },
+      onClick: (data) => { },
       show: (count) => count > 0,
     },
-    {
-      id: 'deactivate',
-      label: 'Deactivate',
-      icon: XCircleIcon,
-      variant: 'danger',
-      onClick: (ids) => {
-        // TODO: Implement bulk deactivate logic
-        console.log('Bulk deactivate wallets:', ids);
-      },
-      show: (count) => count > 0,
-    },
-  ], [])
+  ], []);
 
   // Filter groups for QuickFilterButtons
   const filterGroups: QuickFilterGroup[] = useMemo(() => [
@@ -94,9 +84,32 @@ const WalletsPage: React.FC = () => {
     },
   ], [isActiveFilter]);
 
-  return (  
-  
-    <MainLayout>
+  const openAdjustModal = (wallet: Wallet) => {
+    setChosenWallet(wallet);
+    setIsWalletAdjustModalOpen(true);
+  };
+
+  const closeAdjustModal = () => {
+    setChosenWallet(null);
+    setIsWalletAdjustModalOpen(false);
+  };
+
+  const openDetailsModal = (wallet: Wallet) => {
+    setChosenWallet(wallet);
+    setIsWalletDetailsModalOpen(true);
+  }
+
+  const closeDetailsModal = () => {
+    setChosenWallet(null);
+    setIsWalletDetailsModalOpen(false);
+  }
+
+  return (
+    <MainLayout
+      showNotifications={true}
+      notificationCount={3}
+      headerVariant="default"
+    >
       <PageContainer paddingY="md">
         {/* Revolutionary Breadcrumb Navigation */}
         <Breadcrumb
@@ -118,92 +131,96 @@ const WalletsPage: React.FC = () => {
 
       <PageContainer paddingY="lg" className="space-y-10">
 
-        <WalletsStatsSection stats={generateWalletsStats(wallets)} />
+        <WalletsStatsSection
+          stats={statistics}
+          onOpenAnalytics={() => setIsAnalyticsModalOpen(true)}
+        />
 
-        {/* <WalletsSearchSection 
-          searchQuery={}
-          onSearchChange={}
-          viewMode={}
-          onViewModeChange={}
-          onOpenFilterModal={}
-          isFilterActive={}
-        /> */}
-      
-      <QuickFilterButtons filterGroups={filterGroups} variant="teal" />
+        <WalletsSearchSection
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onOpenFilterModal={() => setIsFilterModalOpen(true)}
+          isFilterActive={isActiveFilter !== 'all'}
+        />
 
-      <WalletsDataSection
-        wallets={wallets}
-        isLoading={isLoading}
-        isLoadingMore={isLoadingMore}
-        hasNextPage={hasNextPage}
-        error={error}
-        viewMode="grid"
-        total={total}
-        onLoadMore={loadMore}
-        onRefresh={refresh}
-        onViewDetails={walletActions.viewDetails}
-        onEditWallet={() => {}}
-        onDeleteWallet={() => {}}
-        onClearFilters={() => {
-          setSearch('');
-          setIsActiveFilter('all');
-          setSelectedWalletIds([]);
-        }}
-        selectedItems={new Set(selectedWalletIds)}
-        onSelectItem={(id: string) => {
-          // handleSelectionChange expects string[], but onSelectItem provides string
-          // So update selectedWalletIds accordingly
-          setSelectedWalletIds((prevSelected) => {
-            const newSelected = new Set(prevSelected);
-            if (newSelected.has(id)) {
-              newSelected.delete(id);
-            } else {
-              newSelected.add(id);
-            }
-            return Array.from(newSelected);
-          });
-        }}
-        onSelectAll={() => {
-          if (wallets.length === selectedWalletIds.length) {
+        <QuickFilterButtons
+          filterGroups={filterGroups}
+          variant="teal"
+        />
+
+        <WalletsDataSection
+          wallets={wallets}
+          isLoading={isLoading}
+          isLoadingMore={isLoadingMore}
+          hasNextPage={hasNextPage}
+          error={error}
+          viewMode={viewMode}
+          total={total}
+          onLoadMore={loadMore}
+          onRefresh={refresh}
+          selectedItems={new Set(selectedWalletIds)}
+          onSelectAll={() => toggleAll(true)}
+          onSelectItem={(walletId) => {
+            const wallet = wallets.find(w => w.id === walletId || w.userId === walletId);
+          }}
+          onAdjustBalance={openAdjustModal}
+          onOpenDetails={openDetailsModal}
+          onClearFilters={() => {
+            setSearchQuery('');
+            setIsActiveFilter('all');
             setSelectedWalletIds([]);
-          } else {
-            setSelectedWalletIds(wallets.map(w => w.userId));
-          }
-        }}
-      />
+          }}
+        />
 
-      <BulkActionBar
-        selectedCount={selectedWalletIds.length}
-        selectedIds={selectedWalletIds}
-        actions={bulkActions}
-        onClearSelection={() => setSelectedWalletIds([])}
-        entityName="wallets"
-        variant="emerald"
-      />
+        <BulkActionBar
+          selectedCount={selectedWalletIds.length}
+          selectedIds={selectedWalletIds}
+          actions={bulkActions}
+          onClearSelection={() => setSelectedWalletIds([])}
+          entityName="wallets"
+          variant="emerald"
+        />
 
-      <WalletDetailsModal
-        isOpen={isWalletDetailsModalOpen}
-        onClose={() => setIsWalletDetailsModalOpen(false)}
-        wallet={selectedWallet}
-      />
+        <GenericFilterModal
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+          title="Filter Wallets"
+          filterGroups={filterGroups}
+          onClearFilters={() => {
+            setSearchQuery('');
+            setIsActiveFilter('all');
+            setSelectedWalletIds([]);
+          }}
+        />
 
-      <WalletAnalyticsModal
-        isOpen={isAnalyticsModalOpen}
-        onClose={() => setIsAnalyticsModalOpen(false)}
-        isLoading={false}
-        isError={false}
-        error={null}
-        onRefresh={refresh}
-      />
+        <WalletDetailsModal
+          isOpen={isWalletDetailsModalOpen}
+          onClose={closeDetailsModal}
+          wallet={chosenWallet}
+        />
 
-      <TransactionsModal
-        isOpen={isTransactionsModalOpen}
-        onClose={() => setIsTransactionsModalOpen(false)}
-      />
+        <WalletAnalyticsModal
+          isOpen={isAnalyticsModalOpen}
+          onClose={() => setIsAnalyticsModalOpen(false)}
+          onRefresh={refresh}
+        />
+
+        <TransactionsModal
+          isOpen={isTransactionsModalOpen}
+          onClose={() => setIsTransactionsModalOpen(false)}
+        />
+
+        <AdjustBalanceModal
+          isOpen={isWalletAdjustModalOpen}
+          onClose={closeAdjustModal}
+          wallet={chosenWallet}
+          onRefresh={refresh}
+        />
 
       </PageContainer>
     </MainLayout>
-
   );
 };
 

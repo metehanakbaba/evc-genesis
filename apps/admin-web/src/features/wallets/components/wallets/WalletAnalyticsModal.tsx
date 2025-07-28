@@ -1,43 +1,47 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '@ui/display';
-import { Button } from '@ui/forms';
-import { useWalletAnalytics } from '../../api/walletApi';
+import { ChartBarIcon, Cog6ToothIcon} from '@heroicons/react/20/solid';
+import { Button, Select,  } from '@ui/forms';
+import { useWalletAnalytics } from '../../hooks/useWallets';
+import { Period } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
 export interface WalletAnalyticsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  isLoading: boolean;
-  isError: boolean;
-  error: unknown;
   onRefresh: () => void;
 }
+
 
 export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
   isOpen,
   onClose,
-  isLoading,
-  isError,
-  error,
   onRefresh,
 }) => {
-  // Use wallet analytics hook with default params
-  const { data, isLoading: hookLoading, isError: hookError, error: hookErrorData, refetch } = useWalletAnalytics({
-    period: '30d',
-    includeCharts: true,
-  });
+  const [period, setPeriod] = useState<Period>('30d');
+  const [includeCharts, setIncludeCharts] = useState<'true' | 'false'>('true');
 
-  // Combine loading and error states from props and hook
-  const loading = isLoading || hookLoading;
-  const errorState = isError || hookError;
-  const errorData = error || hookErrorData;
+  const { data, isLoading, isError, error, refetch } = useWalletAnalytics(
+    {
+      period,
+      includeCharts: includeCharts === 'true',
+    },
+    !isOpen
+  );
 
-  // Handle refresh click
+  const loading = isLoading;
+  const errorState = isError;
+  const errorData = error;
+
   const handleRefresh = () => {
     onRefresh();
     refetch();
   };
+
+  useEffect(() => {
+    if (isOpen) refetch();
+  }, [period, includeCharts]);
 
   return (
     <Modal
@@ -57,7 +61,31 @@ export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 text-gray-300">
+        <div className="flex gap-4">
+          <Select
+            label="Period"
+            value={period}
+            onChange={(val) => setPeriod(val as any)}
+            options={[
+              { value: '7d', label: 'Last 7 days' },
+              { value: '30d', label: 'Last 30 days' },
+              { value: '90d', label: 'Last 90 days' },
+              { value: '1y', label: 'Last year' },
+            ]}
+          />
+
+          <Select
+            label="Include Charts"
+            value={includeCharts}
+            onChange={(val) => setIncludeCharts(val as any)}
+            options={[
+              { value: 'true', label: 'Yes' },
+              { value: 'false', label: 'No' },
+            ]}
+          />
+        </div>
+
         {loading && (
           <div className="text-center text-gray-400">Loading analytics data...</div>
         )}
@@ -69,67 +97,32 @@ export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
         )}
 
         {!loading && !errorState && data && (
-          <div className="text-gray-300 space-y-4">
-            <div>
-              <strong>Period:</strong> {data.period}
-            </div>
-            <div>
-              <strong>Total System Balance:</strong> {data.totalSystemBalance.toFixed(2)}
-            </div>
-            <div>
-              <strong>Total Users:</strong> {data.totalUsers}
-            </div>
-            <div>
-              <strong>Active Users:</strong> {data.activeUsers}
-            </div>
-            <div>
-              <strong>Transaction Volume:</strong>
-              <ul className="list-disc list-inside ml-4">
-                <li>Total: {data.transactionVolume.total}</li>
-                <li>Deposits: {data.transactionVolume.deposits}</li>
-                <li>Charges: {data.transactionVolume.charges}</li>
-                <li>Refunds: {data.transactionVolume.refunds}</li>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Basic Info */}
+            <section className="bg-white/5 border border-white/10 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <ChartBarIcon className="w-5 h-5 text-sky-400" />
+                <h4 className="text-white font-semibold">General Overview</h4>
+              </div>
+              <ul className="text-sm space-y-1">
+                <li><strong>Period:</strong> {data.period}</li>
+                <li><strong>Total System Balance:</strong> {data.totalSystemBalance.toFixed(2)}</li>
+                <li><strong>Total Users:</strong> {data.totalUsers}</li>
+                <li><strong>Active Users:</strong> {data.activeUsers}</li>
               </ul>
-            </div>
-            <div>
-              <strong>Transaction Counts:</strong>
-              <ul className="list-disc list-inside ml-4">
-                <li>Total: {data.transactionCounts.total}</li>
-                <li>Deposits: {data.transactionCounts.deposits}</li>
-                <li>Charges: {data.transactionCounts.charges}</li>
-                <li>Refunds: {data.transactionCounts.refunds}</li>
+            </section>
+
+            {/* System Health */}
+            <section className="bg-white/5 border border-white/10 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Cog6ToothIcon className="w-5 h-5 text-purple-400" />
+                <h4 className="text-white font-semibold">System Health</h4>
+              </div>
+              <ul className="text-sm space-y-1">
+                <li>Average Wallet Balance: {data.systemHealth.averageWalletBalance.toFixed(2)}</li>
+                <li>Transaction Success Rate: {data.systemHealth.transactionSuccessRate.toFixed(2)}%</li>
               </ul>
-            </div>
-            <div>
-              <strong>Averages:</strong>
-              <ul className="list-disc list-inside ml-4">
-                <li>Deposit Amount: {data.averages.depositAmount.toFixed(2)}</li>
-                <li>Charge Amount: {data.averages.chargeAmount.toFixed(2)}</li>
-                <li>User Balance: {data.averages.userBalance.toFixed(2)}</li>
-              </ul>
-            </div>
-            <div>
-              <strong>Trends:</strong>
-              <ul className="list-disc list-inside ml-4">
-                <li>Balance Growth: {data.trends.balanceGrowth}</li>
-                <li>Transaction Growth: {data.trends.transactionGrowth}</li>
-                <li>User Growth: {data.trends.userGrowth}</li>
-              </ul>
-            </div>
-            <div>
-              <strong>Alerts:</strong>
-              {data.alerts.length === 0 ? (
-                <div>No alerts</div>
-              ) : (
-                <ul className="list-disc list-inside ml-4">
-                  {data.alerts.map((alert: any, idx: number) => (
-                    <li key={idx} className={`text-${alert.severity.toLowerCase()}`}>
-                      [{alert.severity}] {alert.message}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            </section>
           </div>
         )}
       </div>

@@ -70,7 +70,6 @@ const UsersPage: React.FC = () => {
     statusFilter,
     pageSize: 20
   });
-
     // ✅ Use API hooks for data and actions
   const { totalUsers, activeUsers, adminUsers, newUsersThisMonth } =
     useUserStatistics(users);
@@ -286,7 +285,6 @@ const UsersPage: React.FC = () => {
         onClearFilters={handleClearFilters}
         variant="purple"
       />
-
 
       {/* Render EditUserModal */}
       {selectedUser && (

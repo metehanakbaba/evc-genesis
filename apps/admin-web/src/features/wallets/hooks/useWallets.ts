@@ -10,13 +10,16 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGetAllWalletsQuery } from '../api/walletApi';
-import type { Wallet, WalletStats } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { useAdjustBalanceMutation,  useGetWalletAnalyticsQuery, useGetAllWalletsQuery, useGetUserWalletDetailsQuery } from '../api/walletApi';
+import { Wallet, WalletStats, WalletAnalyticsQueryParams, WalletAnalytics, AdjustBalanceData } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 import { useDebounce } from './useDebounce';
+import { WalletsStatsData } from '../types/wallet.types';
+import { useToast } from '@/shared/ui';
+import { isApiError } from '@/shared/api/apiHelpers';
 
 interface WalletsResult {
-  wallets: Wallet[];
-  stats: WalletStats | null;
+  readonly wallets: Wallet[];
+  readonly stats: WalletStats | null;
   isLoading: boolean;
   isLoadingMore: boolean;
   hasNextPage: boolean;
@@ -39,7 +42,6 @@ export const useAllWallets = ({
   isActive = 'all',
   userId,
   pageSize = 20,
-  enabled = true,
 }: UseWalletsOptions): WalletsResult => {
   const [currentPage, setCurrentPage] = useState(1);
   const [wallets, setWallets] = useState<Wallet[]>([]);
@@ -69,25 +71,23 @@ export const useAllWallets = ({
     isLoading,
     isFetching,
   } = useGetAllWalletsQuery(queryParams, {
-    skip: !enabled || !hasNextPage,
+    skip: !hasNextPage,
     refetchOnMountOrArgChange: true,
+    keepUnusedDataFor: 60, 
   });
 
   useEffect(() => {
     if (queryError) {
       setError(queryError as Error);
-    } else {
-      setError(null);
     }
   }, [queryError]);
 
   useEffect(() => {
     if (data) {
       setWallets(prev => {
-        console.log(data)
         const existingIds = new Set(prev.map(w => w.userId));
-        const newWallets = data.filter((w: Wallet) => !existingIds.has(w.userId));
-        return currentPage === 1 ? data : [...prev, ...newWallets];
+        const newWallets = data.wallets.filter((w: Wallet) => !existingIds.has(w.userId));
+        return currentPage === 1 ? data.wallets : [...prev, ...newWallets];
       });
 
       if (currentPage === 1) {
@@ -112,15 +112,13 @@ export const useAllWallets = ({
   }, []);
 
   useEffect(() => {
-    if (enabled) {
-      refresh();
-    }
-  }, [debouncedSearchQuery, isActive, userId, enabled, refresh]);
+    refresh();
+  }, [debouncedSearchQuery, isActive, userId, refresh]);
 
   return {
     wallets,
     stats,
-    isLoading: isLoading && currentPage === 1,
+    isLoading,
     isLoadingMore: isFetching && currentPage > 1,
     hasNextPage,
     error,
@@ -135,18 +133,168 @@ export const useAllWallets = ({
  * Group wallet-related actions such as view details, activate/deactivate, etc.
  */
 export const useWalletActions = () => {
+  const { showToast } = useToast();
+
+   const [adjustBalance] = useAdjustBalanceMutation();
+
+  const adjustWalletBalance = useCallback(async (userId: string, data: AdjustBalanceData) => {
+    
+    try {
+      const response = await adjustBalance({ userId, data }).unwrap();
+      showToast({
+        type: 'success',
+        title: 'Balance adjusted',
+        message: "Wallet balance was adjusted successfully",
+        duration: 4000,
+      });
+      return { success: true, data: response  }
+    } catch (error){
+      const errorMessage = isApiError(error)
+      ? error.data.error.message : 'Failed to adjust wallet baance'
+      showToast({
+        type: 'error',
+        title: 'Error adjusting wallet',
+        message: errorMessage,
+        duration: 4000,
+      });
+    }
+  }, [showToast, adjustBalance]);
+
+  const viewWalletBalance = useCallback(async (userId: string) => {
+    try {
+      const response = await useGetUserWalletDetailsQuery(userId).unwrap();
+      return { success: true, data: response.data }
+    } catch (error){
+      const errorMessage = isApiError(error)
+      ? error.data.error.message : 'Failed to adjust wallet baance'
+      showToast({
+        type: 'error',
+        title: 'Error getting walet details',
+        message: errorMessage,
+        duration: 4000,
+      });
+    }
+  }, [])
+
   return {
-    viewDetails: (wallet: Wallet) => {
-      console.log('👀 Viewing wallet details:', wallet.userId);
-      // TODO: Implement navigation or modal to wallet details page
+    adjustWalletBalance,
+    viewWalletBalance
+  }
+};
+
+
+export const useWalletStatistics = (wallets: Wallet[]): WalletsStatsData => {
+  if (wallets.length === 0) {
+    return {
+      totalBalance: {
+        amount: 0,
+        formatted: '0 PLN',
+      },
+      totalWallets: {
+        count: 0,
+        formatted: '0 wallets',
+      },
+      activeWallets: {
+        count: 0,
+        percentage: '0%',
+        formatted: '0 active',
+      },
+      newWalletsThisMonth: {
+        count: 0,
+        formatted: '0 new',
+      },
+    };
+  }
+
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const total = wallets.length;
+
+  const totalBalance = wallets.reduce((sum, w) => sum + w.balance.value, 0);
+  const currency = wallets[0].balance.currency;
+
+  const activeCount = wallets.filter(w => w.status === 'ACTIVE').length;
+
+  const recentlyCreated = wallets.filter(w => {
+    const createdAt = new Date(w.createdAt);
+    return createdAt.getMonth() === currentMonth && createdAt.getFullYear() === currentYear;
+  }).length;
+
+  const activePercentage = total === 0 ? 0 : (activeCount / total) * 100;
+
+  return {
+    totalBalance: {
+      amount: totalBalance,
+      formatted: `${totalBalance.toFixed(2)} ${currency}`,
     },
-    activateWallet: (wallet: Wallet) => {
-      console.log('✅ Activating wallet:', wallet.userId);
-      // TODO: Implement activation logic
+    totalWallets: {
+      count: total,
+      formatted: `${total} wallet${total === 1 ? '' : 's'}`,
     },
-    deactivateWallet: (wallet: Wallet) => {
-      console.log('❌ Deactivating wallet:', wallet.userId);
-      // TODO: Implement deactivation logic
+    activeWallets: {
+      count: activeCount,
+      percentage: `${activePercentage.toFixed(1)}%`,
+      formatted: `${activeCount} active`,
+    },
+    newWalletsThisMonth: {
+      count: recentlyCreated,
+      formatted: `${recentlyCreated} new`,
+    }
+  };
+};
+
+export const useWalletAnalytics = (
+  params: WalletAnalyticsQueryParams,
+  enabled: boolean
+) => {
+  const {
+    data: apiResponse,
+    isLoading,
+    error,
+    isError,
+    refetch,
+    isFetching,
+  } = useGetWalletAnalyticsQuery(params, {
+    skip: enabled
+  });
+
+  const analyticsData: WalletAnalytics = apiResponse || {
+    period: params.period,
+    totalSystemBalance: 0,
+    totalUsers: 0,
+    activeUsers: 0,
+    systemHealth: {
+      transactionSuccessRate: 0,
+      averageWalletBalance: 0,
+    },
+  };
+
+  // Вычисляемые производные данные
+  const derivedData = {
+    successRateFormatted: `${(analyticsData.systemHealth.transactionSuccessRate * 100).toFixed(1)}%`,
+    avgWalletBalance: analyticsData.systemHealth.averageWalletBalance,
+  };
+
+  return {
+    data: analyticsData,
+    period: analyticsData.period,
+    isEmpty: !apiResponse?.data,
+    lastUpdated: new Date().toISOString(),
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+    ...derivedData,
+    get mainMetrics() {
+      return {
+        totalBalance: analyticsData.totalSystemBalance,
+        activeUsers: analyticsData.activeUsers,
+        transactionSuccessRate: derivedData.successRateFormatted,
+        avgWalletBalance: derivedData.avgWalletBalance,
+      };
     },
   };
 };

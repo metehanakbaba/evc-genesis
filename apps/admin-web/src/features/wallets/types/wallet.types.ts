@@ -57,12 +57,6 @@ export interface WalletsStatsData {
     readonly formatted: string;
     readonly count: number;
   };
-
-  /** Wallets with last transaction this month */
-  readonly walletsUsedThisMonth: {
-    readonly formatted: string;
-    readonly count: number;
-  };
 }
 
 export interface TransactionStatsData {

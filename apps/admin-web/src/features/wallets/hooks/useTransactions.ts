@@ -9,11 +9,13 @@
  * @author EV Charging Team
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGetAllTransactionsQuery } from '../api/walletApi';
-import { Transaction, TransactionsQuery, TransactionSummary, TransactionType, TransactionStatus, TransactionQuery } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { useGetAllTransactionsQuery, useProcessRefundMutation } from '../api/walletApi';
+import { Transaction, TransactionsQuery, TransactionSummary, TransactionType, TransactionStatus, TransactionQuery, RefundRequest } from '../../../../../../packages/shared/api/src/lib/types/wallet.types';
 import { TransactionStatsData } from '../types/wallet.types';
 import { useDebounce } from './useDebounce';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useToast } from '@/shared/ui';
+import { isApiError } from '@/shared/api/apiHelpers';
 
 interface TransactionsResult {
   transactions: Transaction[];
@@ -40,8 +42,6 @@ export const useAllTransactions = ({
   type = 'all',
   status = 'all',
   fromDate,
-  minAmount,
-  maxAmount,
   toDate,
   userId,
   amountRangeFilter = 'all',
@@ -203,8 +203,8 @@ export const useTransactionStatistics = (data: TransactionStatistics): Transacti
     const refunds = transactions.filter(tx => tx.type === 'PLN_REFUND');
     const refundLiabilities = {
       amount: {
-        value: refunds.reduce((sum, tx) => sum + tx.amount, 0),
-        formatted: `${refunds.reduce((sum, tx) => sum + tx.amount, 0).toFixed(2)} PLN`,
+        value: refunds.reduce((sum, tx) => sum + tx.amount.value, 0),
+        formatted: `${refunds.reduce((sum, tx) => sum + tx.amount.value, 0).toFixed(2)} PLN`,
       },
       pending: refunds.filter(tx => tx.status === 'PENDING').length,
     };
@@ -216,4 +216,33 @@ export const useTransactionStatistics = (data: TransactionStatistics): Transacti
       refundLiabilities,
     };
   }, [data]);
+};
+
+export const useTransactionActions = () => {
+  const [processRefund] = useProcessRefundMutation();
+  const { showToast } = useToast();
+
+  const refundTransaction = useCallback(async (refundData: RefundRequest) => {
+    try {
+      await processRefund(refundData).unwrap();
+      showToast({
+        type: 'success',
+        title: 'Refund processed',
+        message: 'The refund was successfully processed.',
+        duration: 4000,
+      });
+    } catch (error) {
+      const errorMessage = isApiError(error) ? error.data.error.message : 'Failed to process refund';
+      showToast({
+        type: 'error',
+        title: 'Refund error',
+        message: errorMessage,
+        duration: 4000,
+      });
+    }
+  }, [processRefund, showToast]);
+
+  return {
+    refundTransaction,
+  };
 };

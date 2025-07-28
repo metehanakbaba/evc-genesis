@@ -33,6 +33,11 @@ export interface FilterGroup {
   readonly options: FilterOption[];
   readonly selectedValue: string;
   readonly onChange: (value: string) => void;
+
+  readonly type?: 'options' | 'range' | 'date';
+  readonly from?: number | string;
+  readonly to?: number | string;
+  readonly onRangeChange?: (from: number | string, to: number | string) => void;
 }
 
 // Modal props interface
@@ -217,27 +222,78 @@ export const GenericFilterModal: React.FC<GenericFilterModalProps> = ({
       }
     >
       <div className="space-y-8">
-        {filterGroups.map((group) => (
-          <div key={group.id}>
-            {/* Revolutionary Section Header */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-4">
-                {group.title}
-              </h3>
-            </div>
 
-            {/* Revolutionary Grid Layout - EXACTLY like SessionFilterModal */}
-            <div className="grid grid-cols-2 gap-3">
-              {group.options.map((option) =>
-                renderFilterOption(
-                  option,
-                  group.selectedValue === option.id,
-                  () => group.onChange(option.id),
-                ),
-              )}
-            </div>
+        {filterGroups.map((group) => (
+          // <div key={group.id}>
+          //   {/* Revolutionary Section Header */}
+          //   <div>
+          //     <h3 className="text-lg font-semibold text-white mb-4">
+          //       {group.title}
+          //     </h3>
+          //   </div>
+
+          //   {/* Revolutionary Grid Layout - EXACTLY like SessionFilterModal */}
+          //   <div className="grid grid-cols-2 gap-3">
+          //     {group.options.map((option) =>
+          //       renderFilterOption(
+          //         option,
+          //         group.selectedValue === option.id,
+          //         () => group.onChange(option.id),
+          //       ),
+          //     )}
+          //   </div>
+          // </div>
+
+          <div key={group.id}>
+            <h3 className="text-lg font-semibold text-white mb-4">{group.title}</h3>
+            {group.type === 'range' ? (
+              <div className="flex items-center gap-4">
+                <input
+                  type="number"
+                  value={group.from ?? ''}
+                  onChange={(e) => group.onRangeChange?.(+e.target.value, group.to as number)}
+                  className="bg-gray-700 border border-gray-600 px-3 py-2 rounded text-white w-full"
+                  placeholder="From"
+                />
+                <span className="text-gray-400">to</span>
+                <input
+                  type="number"
+                  value={group.to ?? ''}
+                  onChange={(e) => group.onRangeChange?.(group.from as number, +e.target.value)}
+                  className="bg-gray-700 border border-gray-600 px-3 py-2 rounded text-white w-full"
+                  placeholder="To"
+                />
+              </div>
+            ) : group.type === 'date' ? (
+              <div className="flex items-center gap-4">
+                <input
+                  type="date"
+                  value={group.from ?? ''}
+                  onChange={(e) => group.onRangeChange?.(e.target.value, group.to as string)}
+                  className="bg-gray-700 border border-gray-600 px-3 py-2 rounded text-white w-full"
+                />
+                <span className="text-gray-400">to</span>
+                <input
+                  type="date"
+                  value={group.to ?? ''}
+                  onChange={(e) => group.onRangeChange?.(group.from as string, e.target.value)}
+                  className="bg-gray-700 border border-gray-600 px-3 py-2 rounded text-white w-full"
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {group.options?.map((option) =>
+                  renderFilterOption(
+                    option,
+                    group.selectedValue === option.id,
+                    () => group.onChange?.(option.id),
+                  )
+                )}
+              </div>
+            )}
           </div>
         ))}
+        
       </div>
     </Modal>
   );

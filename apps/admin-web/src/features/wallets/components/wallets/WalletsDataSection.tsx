@@ -2,11 +2,9 @@
 
 import React, { useMemo } from 'react';
 import {
-  EyeIcon,
-  PencilIcon,
-  TrashIcon,
-  WalletIcon,
   UserIcon,
+  ScaleIcon,
+  EyeIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@ui/forms';
@@ -23,9 +21,9 @@ import {
   GridSkeleton,
   type TableColumn,
 } from '@/shared/ui';
-import type { Wallet } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { Wallet } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
 
-interface EnhancedWallet extends Wallet, DataGridItem {}
+interface EnhancedWallet extends Wallet, Omit<DataGridItem, 'id'> {}
 
 interface WalletsDataSectionProps {
   wallets: Wallet[];
@@ -37,13 +35,12 @@ interface WalletsDataSectionProps {
   total: number;
   onLoadMore: () => void;
   onRefresh: () => void;
-  onViewDetails: (wallet: Wallet) => void;
-  onEditWallet: (wallet: Wallet) => void;
-  onDeleteWallet: (wallet: Wallet) => void;
   onClearFilters: () => void;
   selectedItems: Set<string>;
   onSelectItem: (id: string) => void;
   onSelectAll: () => void;
+  onAdjustBalance: (wallet: Wallet) => void;
+  onOpenDetails: (wallet: Wallet) => void;
 }
 
 export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
@@ -56,10 +53,9 @@ export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
   total,
   onLoadMore,
   onRefresh,
-  onViewDetails,
-  onEditWallet,
-  onDeleteWallet,
   onClearFilters,
+  onAdjustBalance,
+  onOpenDetails,
   selectedItems,
   onSelectItem,
   onSelectAll,
@@ -126,7 +122,7 @@ export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
           <div className="flex items-center gap-2">
             <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <span>
-              Balance: {wallet.balance.toFixed(2)} {wallet.currency}
+              Balance: {wallet.balance.value} {wallet.balance.currency}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -145,29 +141,22 @@ export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
         </div>
       </>
     ),
-
-  }), [onViewDetails, onEditWallet, onDeleteWallet]);
+  }), [onAdjustBalance, onOpenDetails]);
 
   const gridActions = useMemo<GridActionButton[]>(() => [
     {
+      icon: ScaleIcon,
+      label: 'Adjust Balance',
+      onClick: (wallet) => onAdjustBalance(wallet as Wallet),
+      variant: 'secondary',
+    },
+    {
       icon: EyeIcon,
-      label: 'View',
-      onClick: (wallet) => onViewDetails(wallet as EnhancedWallet),
-      variant: 'ghost',
+      label: 'Details',
+      onClick: (wallet) => onOpenDetails(wallet as Wallet),
+      variant: 'secondary',
     },
-    {
-      icon: PencilIcon,
-      label: 'Edit',
-      onClick: (wallet) => onEditWallet(wallet as EnhancedWallet),
-      variant: 'primary',
-    },
-    {
-      icon: TrashIcon,
-      label: 'Delete',
-      onClick: (wallet) => onDeleteWallet(wallet as EnhancedWallet),
-      variant: 'danger',
-    },
-  ], [onViewDetails, onEditWallet, onDeleteWallet]);
+  ], [onAdjustBalance, onOpenDetails]);
 
   const tableColumns = useMemo<TableColumn<EnhancedWallet>[]>(() => [
     {
@@ -192,7 +181,7 @@ export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
       accessor: 'balance',
       render: (wallet) => (
         <span className="text-sm font-medium text-white">
-          {wallet.balance.toFixed(2)} {wallet.currency}
+          {wallet.balance.value} {wallet.balance.currency}
         </span>
       ),
     },

@@ -1,365 +1,333 @@
 'use client';
 
-import {
-  ArrowPathIcon,
-  BanknotesIcon,
-  ClockIcon,
-  EyeIcon,
-  ShieldExclamationIcon,
-  WalletIcon,
-} from '@heroicons/react/24/outline';
-import { Button } from '@ui/forms';
-import type React from 'react';
-import { useMemo } from 'react';
-
-// ✅ Import NEW shared components
-import {
-  type DataGridItem,
-  type DataGridStatusConfig,
-  DataStatusBadge,
-  GenericDataGrid,
-  type GridActionButton,
-  type GridCardRenderer,
-  GridSkeleton,
-  type TableColumn,
-} from '@/shared/ui';
-import { EmptyState } from '@/shared/ui/molecules';
-// Import types
-import { TransactionType, Transaction } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
-
-/**
- * 🔄 Extend PLNTransaction to work with shared components
- */
-interface EnhancedTransaction extends Transaction, Omit<DataGridItem, 'id'> {
-  // PLNTransaction already has `id` field, so this automatically works
-}
+import React, { useState, useMemo, useCallback } from 'react';
+import { GenericDataPane } from '@/shared/ui/components/DataDisplay/GeneticDataPane';
+import { QuickFilterGroup } from '@/shared/ui/components/DataDisplay/QuickFilterButtons';
+import { RangeOption } from '@/shared/ui/molecules/Ranges/RangeSelector';
+import { Transaction, TransactionType, TransactionStatus } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { ClockIcon, CurrencyDollarIcon, DocumentDuplicateIcon, UserIcon,  } from '@heroicons/react/20/solid';
+import { Button } from '@/shared/ui';
 
 interface TransactionsDataSectionProps {
   transactions: Transaction[];
-  isLoading: boolean;
-  isLoadingMore: boolean;
-  hasNextPage: boolean;
-  error: Error | null;
-  viewMode: 'grid' | 'table';
-  total: number;
-  onLoadMore: () => void;
-  onRefresh: () => void;
-  onViewDetails: (transaction: Transaction) => void;
-  onRetryTransaction: (transaction: Transaction) => void;
-  showRetryButton: boolean;
-  onClearFilters: () => void;
-  selectedItems?: Set<string>;
-  onSelectItem?: (id: string) => void;
-  onSelectAll?: () => void;
+  hasNextPage?: boolean;
+  userId?: string;
+  onSelectTransaction: (transaction: Transaction) => void;
+  selectedTransaction: Transaction | null;
+  scrollable?: boolean;
+  scrollHeight?: string;
+  error?: Error | null;
+  isLoading?: boolean;
+  onRefresh?: () => void;
+  onLoadMore?: () => void;
+  onClearFilters?: () => void;
 }
 
-/**
- * 📊 Transaction Data Section Component
- * Handles the display of transaction data in grid or table format
- */
+interface FilterParams {
+  type?: TransactionType | 'all';
+  status?: TransactionStatus | 'all';
+  userId?: string;
+  search?: string;
+  minAmount?: number;
+  maxAmount?: number;
+  fromDate?: string;
+  toDate?: string;
+}
+
+const amountRangeOptions: RangeOption[] = [
+  { id: 'upTo100', label: '> 100', from: undefined, to: 100 },
+  { id: '100to500', label: '100 to 500', from: 100, to: 500 },
+  { id: 'above500', label: '< 500', from: 500, to: undefined },
+];
+
+const dateRangeOptions: RangeOption[] = [
+  { id: '7d', label: '1w', from: undefined, to: undefined },
+  { id: '30d', label: '30d', from: undefined, to: undefined },
+  { id: '90d', label: '90d', from: undefined, to: undefined },
+  { id: '1y', label: '1y', from: undefined, to: undefined },
+];
+
+// Quick filter groups with fixed options
+const quickFilterGroups: QuickFilterGroup[] = [
+  {
+    id: 'type',
+    title: 'Transaction Type',
+    icon: () => null, // no icon for simplicity
+    selectedValue: 'all',
+    onChange: () => {},
+    options: [
+      { id: 'all', label: 'All', icon: () => null, color: 'gray' },
+      { id: 'deposit', label: 'Deposit', icon: () => null, color: 'emerald' },
+      { id: 'withdrawal', label: 'Withdrawal', icon: () => null, color: 'blue' },
+      { id: 'transfer', label: 'Transfer', icon: () => null, color: 'purple' },
+    ],
+  },
+  {
+    id: 'status',
+    title: 'Status',
+    icon: () => null,
+    selectedValue: 'all',
+    onChange: () => {},
+    options: [
+      { id: 'all', label: 'All', icon: () => null, color: 'gray' },
+      { id: 'pending', label: 'Pending', icon: () => null, color: 'amber' },
+      { id: 'completed', label: 'Completed', icon: () => null, color: 'emerald' },
+      { id: 'failed', label: 'Failed', icon: () => null, color: 'red' },
+    ],
+  },
+];
+
 export const TransactionsDataSection: React.FC<TransactionsDataSectionProps> = ({
   transactions,
-  isLoading,
-  isLoadingMore,
-  hasNextPage,
-  error,
-  viewMode,
-  total,
-  onLoadMore,
-  onViewDetails,
-  onRetryTransaction,
-  showRetryButton,
-  onClearFilters,
-  selectedItems,
-  onSelectItem,
-  onSelectAll,
+  userId,
+  onSelectTransaction,
+  selectedTransaction,
+  scrollable = false,
+  scrollHeight = '400px',
 }) => {
-  // ✅ Helper function to get transaction status config
-  const getTransactionStatusConfig = (transaction: EnhancedTransaction): DataGridStatusConfig => {
-    const statusConfigs = {
-      COMPLETED: {
-        bgColor: 'from-emerald-500/15 via-emerald-400/8 to-transparent',
-        borderColor: 'border-emerald-400/30 hover:border-emerald-300/50',
-        badgeColor: 'bg-emerald-500/10',
-        textColor: 'text-emerald-400',
-        pulseColor: 'bg-emerald-500',
-      },
-      PENDING: {
-        bgColor: 'from-amber-500/15 via-amber-400/8 to-transparent',
-        borderColor: 'border-amber-400/30 hover:border-amber-300/50',
-        badgeColor: 'bg-amber-500/10',
-        textColor: 'text-amber-400',
-        pulseColor: 'bg-amber-500',
-      },
-      FAILED: {
-        bgColor: 'from-red-500/15 via-red-400/8 to-transparent',
-        borderColor: 'border-red-400/30 hover:border-red-300/50',
-        badgeColor: 'bg-red-500/10',
-        textColor: 'text-red-400',
-        pulseColor: 'bg-red-500',
-      },
-      CANCELLED: {
-        bgColor: 'from-gray-500/15 via-gray-400/8 to-transparent',
-        borderColor: 'border-gray-400/30 hover:border-gray-300/50',
-        badgeColor: 'bg-gray-500/10',
-        textColor: 'text-gray-400',
-        pulseColor: 'bg-gray-500',
-      },
-      PROCESSING: {
-        bgColor: 'from-purple-500/15 via-purple-400/8 to-transparent',
-        borderColor: 'border-purple-400/30 hover:border-purple-300/50',
-        badgeColor: 'bg-purple-500/10',
-        textColor: 'text-purple-400',
-        pulseColor: 'bg-purple-500',
-      }
-    };
-    return statusConfigs[transaction.status] || statusConfigs.FAILED;
-  };
+  // Filter state
+  const [filterParams, setFilterParams] = useState<FilterParams>({
+    userId,
+    type: 'all',
+    status: 'all',
+    search: '',
+    minAmount: undefined,
+    maxAmount: undefined,
+    fromDate: undefined,
+    toDate: undefined,
+  });
 
-  // ✅ Helper function to get transaction type icon
-  const getTransactionTypeIcon = (type: TransactionType) => {
-    const typeIcons: Record<TransactionType, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-      ADD_PLN_FUNDS: WalletIcon,
-      PLN_CHARGING_PAYMENT: BanknotesIcon,
-      PLN_REFUND: ArrowPathIcon,
-      STRIPE_PLN_PAYMENT: ArrowPathIcon,
-    };
-    return typeIcons[type] || WalletIcon;
-  };
+  // Handlers for quick filter changes
+  const handleQuickFilterChange = useCallback((groupId: string, value: string) => {
+    setFilterParams((prev) => ({
+      ...prev,
+      [groupId]: value === 'all' ? undefined : value,
+    }));
+  }, []);
 
-  // ✅ CREATE GRID RENDERER for GenericDataGrid
-  const gridRenderer = useMemo(
-    (): GridCardRenderer<EnhancedTransaction> => ({
-      getStatusConfig: (transaction: EnhancedTransaction): DataGridStatusConfig => {
-        return getTransactionStatusConfig(transaction);
-      },
+  // Handlers for range selector changes
+  const handleAmountRangeChange = useCallback((from?: number | string, to?: number | string, optionId?: string) => {
+    setFilterParams((prev) => ({
+      ...prev,
+      minAmount: typeof from === 'number' ? from : undefined,
+      maxAmount: typeof to === 'number' ? to : undefined,
+    }));
+  }, []);
 
-      getAnimationDelay: (index: number): string => `${index * 100}ms`,
+  const handleDateRangeChange = useCallback((from?: number | string, to?: number | string, optionId?: string) => {
+    setFilterParams((prev) => ({
+      ...prev,
+      fromDate: typeof from === 'string' ? from : undefined,
+      toDate: typeof to === 'string' ? to : undefined,
+    }));
+  }, []);
 
-      renderHeader: (transaction: EnhancedTransaction): React.ReactNode => {
-        const statusConfig = getTransactionStatusConfig(transaction);
-        const TypeIcon = getTransactionTypeIcon(transaction.type);
+  // Compose quick filter groups with handlers
+  const quickFilters = useMemo(() => {
+    return quickFilterGroups.map((group) => ({
+      ...group,
+      selectedValue: filterParams[group.id as keyof FilterParams] ?? 'all',
+      onChange: (value: string) => handleQuickFilterChange(group.id, value),
+    }));
+  }, [filterParams, handleQuickFilterChange]);
 
-        return (
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-12 h-12 rounded-xl ${statusConfig.badgeColor} flex items-center justify-center`}
-              >
-                <TypeIcon className={`w-6 h-6 ${statusConfig.textColor}`} />
-              </div>
-              <div>
-                <div
-                  className={`text-sm font-medium ${statusConfig.textColor} mb-1`}
-                >
-                  {transaction.type.replace('_', ' ')}
-                </div>
-                <div className="text-white font-semibold text-lg">
-                  {transaction.amount}
-                </div>
-              </div>
-            </div>
+  // Compose detailed filter groups for GenericDataPane
+const filterGroups: QuickFilterGroup[] = [
+    {
+      id: 'amount',
+      title: 'Amount Range',
+      icon: () => null,
+      selectedValue: '',
+      onChange: () => {},
+      options: amountRangeOptions.map(({ id, label }) => ({
+        id,
+        label,
+        icon: () => null,
+        color: 'gray',
+      })),
+      // type and onRangeChange handled via rangeSelectorConfig
+    },
+    {
+      id: 'date',
+      title: 'Date Range',
+      icon: () => null,
+      selectedValue: '',
+      onChange: () => {},
+      options: dateRangeOptions.map(({ id, label }) => ({
+        id,
+        label,
+        icon: () => null,
+        color: 'gray',
+      })),
+      // options: dateRangeOptions,
+    },
+  ];
 
-            {/* ✅ Use shared StatusBadge */}
-            <DataStatusBadge
-              status={{
-                variant: transaction.status === 'COMPLETED' ? 'success' : 
-                         transaction.status === 'PENDING' ? 'warning' : 'danger',
-                label: transaction.status,
-                pulse: transaction.status === 'PENDING',
-              }}
-            />
-          </div>
-        );
-      },
+  // Filter transactions based on filterParams
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((tx) => {
+      if (filterParams.userId && tx.userId !== filterParams.userId) return false;
+      if (filterParams.type && filterParams.type !== 'all' && tx.type !== filterParams.type) return false;
+      if (filterParams.status && filterParams.status !== 'all' && tx.status !== filterParams.status) return false;
+      if (filterParams.search && !tx.id.includes(filterParams.search)) return false;
+      if (filterParams.minAmount !== undefined && tx.amount.value < filterParams.minAmount) return false;
+      if (filterParams.maxAmount !== undefined && tx.amount.value > filterParams.maxAmount) return false;
+      if (filterParams.fromDate && tx.createdAt < filterParams.fromDate) return false;
+      if (filterParams.toDate && tx.createdAt > filterParams.toDate) return false;
+      return true;
+    });
+  }, [transactions, filterParams]);
 
-      renderContent: (transaction: EnhancedTransaction): React.ReactNode => (
-        <>
-          {/* Transaction Info */}
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-gray-300">
-              <ClockIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="text-sm truncate">
-                {new Date(transaction.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-300">
-              <BanknotesIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <span className="text-sm">{transaction.currency.toLowerCase()}</span>
-            </div>
-          </div>
-
-          {/* Transaction Details */}
-          <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
-            <div className="flex items-center gap-2">
-              <WalletIcon className="w-4 h-4 flex-shrink-0" />
-              <span>
-                ID: {transaction.id.slice(-8)}
-              </span>
-            </div>
-            <div className="text-gray-300">
-              {new Date(transaction.createdAt).toLocaleTimeString()}
-            </div>
-          </div>
-        </>
-      ),
-    }),
-    [],
-  );
-
-  // ✅ CREATE ACTION BUTTONS for GenericDataGrid
-  const gridActions = useMemo(
-    (): GridActionButton[] => [
-      {
-        icon: EyeIcon,
-        label: 'View',
-        onClick: (transaction) => onViewDetails(transaction as EnhancedTransaction),
-        variant: 'ghost',
-      },
-      {
-        icon: ArrowPathIcon,
-        label: 'Retry',
-        onClick: (transaction) => onRetryTransaction(transaction as EnhancedTransaction),
-        variant: 'primary',
-      }],
-    [onViewDetails, onRetryTransaction, showRetryButton],
-  );
-
-  // ✅ CREATE TABLE COLUMNS for GenericDataTable
-  const tableColumns = useMemo(
-    (): TableColumn<EnhancedTransaction>[] => [
-      {
-        id: 'transaction',
-        label: 'Transaction',
-        accessor: 'type',
-        sticky: true,
-        render: (transaction) => {
-          const TypeIcon = getTransactionTypeIcon(transaction.type);
-          return (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center">
-                <TypeIcon className="w-4 h-4 text-teal-400" />
-              </div>
-              <div>
-                <div className="font-medium text-white">{transaction.type.replace('_', ' ')}</div>
-                <div className="text-sm text-gray-400">ID: {transaction.id.slice(-8)}</div>
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        id: 'amount',
-        label: 'Amount',
-        accessor: 'amount',
-        render: (transaction) => (
-          <span className="text-sm font-medium text-white">
-            {transaction.amount}
-          </span>
-        ),
-      },
-      {
-        id: 'status',
-        label: 'Status',
-        accessor: 'status',
-        render: (transaction) => (
-          <DataStatusBadge
-            status={{
-              variant: transaction.status === 'COMPLETED' ? 'success' : 
-                       transaction.status === 'PENDING' ? 'warning' : 'danger',
-              label: transaction.status,
-              size: 'sm',
-            }}
-          />
-        ),
-      },
-      {
-        id: 'date',
-        label: 'Date',
-        accessor: 'createdAt',
-        render: (transaction) => (
-          <span className="text-sm text-gray-300">
-            {new Date(transaction.createdAt).toLocaleDateString()}
-          </span>
-        ),
-      },
-    ],
-    [],
-  );
-
-  // ✅ Convert transactions to enhanced format
-  const enhancedTransactions = transactions as EnhancedTransaction[];
-
-  // ✅ Loading States - NEW Shared Skeleton
-  if (isLoading) {
-    return (
-      <GridSkeleton
-        itemCount={viewMode === 'table' ? 10 : 6}
-        columns={{
-          sm: 1,
-          md: viewMode === 'table' ? 1 : 2,
-          lg: viewMode === 'table' ? 1 : 2,
-          xl: viewMode === 'table' ? 1 : 3,
-          '2xl': viewMode === 'table' ? 1 : 4,
-        }}
-      />
-    );
-  }
-
-  // ✅ Error State
-  if (error && !isLoading) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-          <ShieldExclamationIcon className="w-6 h-6 text-red-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-white mb-2">
-          Wallet Service Unavailable
-        </h3>
-        <p className="text-gray-400 mb-4">
-          Transaction service connection failed: {error.message}
-        </p>
-        <Button
-          onClick={onClearFilters}
-          className="mx-auto bg-teal-600 hover:bg-teal-700"
+  const renderListItem = (tx: Transaction) => (
+    <div>
+      <div className="inline-flex items-center rounded-lg px-3 py-[2.5]">
+        <span className="text-xs font-medium text-gray-400 mr-4">ID</span>
+        <span className="font-mono text-sm text-indigo-300">{tx.id}</span>
+        <Button 
+          className="ml-2 text-gray-400 hover:text-indigo-300 transition-colors p-0"
+          onClick={() => navigator.clipboard.writeText(tx.id)}
         >
-          Clear Filters
+          <DocumentDuplicateIcon className="h-4 w-4 bgColor-transparent p-0" />
         </Button>
       </div>
-    );
-  }
+    </div>
+  );
 
-  // ✅ Data Views - NOW USING SHARED COMPONENTS! 🎉
-  if (enhancedTransactions.length > 0) {
-    return (
-      <GenericDataGrid
-        items={enhancedTransactions}
-        renderer={gridRenderer}
-        actions={gridActions}
-        onLoadMore={onLoadMore}
-        isLoadingMore={isLoadingMore}
-        hasNextPage={hasNextPage}
-        total={total}
-        columns={{
-          sm: 1,
-          md: 2,
-          lg: 2,
-          xl: 3,
-          '2xl': 4,
-        }}
-      />
-    );
-  }
+  // Render details pane
+  const renderDetails = (tx: Transaction) => (
+    <div className={`rounded-xl p-5 bg-gray-900/50 border-gray-700`}>
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center`}>
+            <CurrencyDollarIcon className="w-6 h-6 text-indigo-400" />
+          </div>
+          <div>
+            <div className="text-sm font-medium text-indigo-400 mb-1">
+              Transaction #{tx.id.slice(0, 6)}
+            </div>
+            <div className="text-white font-semibold text-lg">
+              {tx.type === 'ADD_PLN_FUNDS' ? 'Deposit' : 'Withdrawal'}
+            </div>
+          </div>
+        </div>
 
-  // ✅ Empty State
+        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+          tx.status === 'COMPLETED' 
+            ? 'bg-emerald-500/10 text-emerald-400' 
+            : 'bg-amber-500/10 text-amber-400'
+        }`}>
+          {tx.status}
+        </div>
+      </div>
+
+      <div className="space-y-3 mb-4">
+        <div className="flex items-center gap-2 text-gray-300">
+          <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+          <span className="text-sm">User ID: {tx.userId}</span>
+        </div>
+        
+        <div className="flex items-center gap-2 text-gray-300">
+          <CurrencyDollarIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+          <span className="text-sm">
+            Amount: <span className="text-white font-medium">
+              {tx.amount.value.toFixed(2)} {tx.amount.currency}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between text-sm text-gray-400">
+        <div className="flex items-center gap-2">
+          <ClockIcon className="w-4 h-4 flex-shrink-0" />
+          <span>{new Date(tx.createdAt).toLocaleDateString()}</span>
+        </div>
+        <div className="text-gray-300">
+          {new Date(tx.createdAt).toLocaleTimeString()}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <EmptyState
-      icon={BanknotesIcon}
-      title="No Payment Records Found"
-      description="Adjust search parameters or transaction filters to view relevant financial operations."
-      actionLabel="Clear Filters"
-      onAction={onClearFilters}
-      variant="teal"
-    />
+    <div className={scrollable ? 'overflow-auto' : undefined} style={scrollable ? { maxHeight: scrollHeight } : undefined}>
+
+      <GenericDataPane
+        items={filteredTransactions}
+        selectedItem={selectedTransaction}
+        onSelectItem={onSelectTransaction}
+        renderListItem={renderListItem}
+        renderDetails={renderDetails}
+      actions={[
+          {
+            id: 'refund',
+            label: 'Refund',
+            onClick: (tx) => {
+              if (typeof window !== 'undefined' && window.dispatchEvent) {
+                window.dispatchEvent(new CustomEvent('openRefundModal', { detail: tx.id }));
+              }
+            },
+            variant: 'secondary',
+          },
+          {
+            id: 'edit',
+            label: 'Refund',
+            onClick: (tx) => {
+              if (typeof window !== 'undefined' && window.dispatchEvent) {
+                window.dispatchEvent(new CustomEvent('openRefundModal', { detail: tx.id }));
+              }
+            },
+            variant: 'secondary',
+          },
+          {
+            id: 'edit2',
+            label: 'Refund',
+            onClick: (tx) => {
+              if (typeof window !== 'undefined' && window.dispatchEvent) {
+                window.dispatchEvent(new CustomEvent('openRefundModal', { detail: tx.id }));
+              }
+            },
+            variant: 'secondary',
+          },
+          {
+            id: 'edit3',
+            label: 'Refund',
+            onClick: (tx) => {
+              if (typeof window !== 'undefined' && window.dispatchEvent) {
+                window.dispatchEvent(new CustomEvent('openRefundModal', { detail: tx.id }));
+              }
+            },
+            variant: 'secondary',
+          },
+        ]}
+        filters={filterGroups}
+        onClearFilters={() => setFilterParams({
+          userId,
+          type: 'all',
+          status: 'all',
+          search: '',
+          minAmount: undefined,
+          maxAmount: undefined,
+          fromDate: undefined,
+          toDate: undefined,
+        })}
+        size="full"
+        listWidthRatio={0.4}
+        listPosition="left"
+        rangeSelectorConfig={{
+          type: 'number',
+          options: amountRangeOptions,
+          selectedOptionId: undefined,
+          fromValue: filterParams.minAmount,
+          toValue: filterParams.maxAmount,
+          onRangeChange: handleAmountRangeChange,
+          minFrom: 0,
+          maxFrom: undefined,
+          minTo: 0,
+          maxTo: undefined,
+        }}
+        scrollable={true}
+        scrollHeight={'300px'}
+      />
+    </div>
   );
 };
