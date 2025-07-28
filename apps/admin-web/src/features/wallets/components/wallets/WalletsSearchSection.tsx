@@ -25,6 +25,7 @@ export const WalletsSearchSection: React.FC<WalletsSearchSectionProps> = ({
   onOpenFilterModal,
   isFilterActive,
 }) => {
+
   return (
     <section>
       <div className="flex items-center gap-3 mb-8">

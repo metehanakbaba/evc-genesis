@@ -77,7 +77,7 @@ export const AdjustBalanceModal: React.FC<AdjustBalanceModalProps> = ({
         onClose();
     };
 
-    const isValid = data.amount > 0 && data.amount < 10000 && data.reason.trim().length >= 5;
+    const isValid = data.amount != 0 && data.reason.trim().length >= 5;
 
     return (
         <Modal

@@ -22,6 +22,7 @@ import {
   type TableColumn,
 } from '@/shared/ui';
 import { Wallet } from '../../../../../../../packages/shared/api/src/lib/types/wallet.types';
+import { ArrowPathIcon, BanknotesIcon, CalendarDaysIcon } from '@heroicons/react/20/solid';
 
 interface EnhancedWallet extends Wallet, Omit<DataGridItem, 'id'> {}
 
@@ -120,17 +121,17 @@ export const WalletsDataSection: React.FC<WalletsDataSectionProps> = ({
       <>
         <div className="space-y-2 mb-4 text-gray-300 text-sm mb-2">
           <div className="flex items-center gap-2">
-            <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <BanknotesIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <span>
               Balance: {wallet.balance.value} {wallet.balance.currency}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <CalendarDaysIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <span>Created: {new Date(wallet.createdAt).toLocaleDateString()}</span>
           </div>
           <div className="flex items-center gap-2">
-            <UserIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <ArrowPathIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <span>
               Last Transaction:{' '}
               {wallet.lastTransactionAt

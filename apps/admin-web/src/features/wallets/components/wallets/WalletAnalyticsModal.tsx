@@ -10,14 +10,12 @@ import { Period } from '../../../../../../../packages/shared/api/src/lib/types/w
 export interface WalletAnalyticsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRefresh: () => void;
 }
 
 
 export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
   isOpen,
   onClose,
-  onRefresh,
 }) => {
   const [period, setPeriod] = useState<Period>('30d');
   const [includeCharts, setIncludeCharts] = useState<'true' | 'false'>('true');
@@ -35,7 +33,6 @@ export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
   const errorData = error;
 
   const handleRefresh = () => {
-    onRefresh();
     refetch();
   };
 
@@ -99,12 +96,12 @@ export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
         {!loading && !errorState && data && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Basic Info */}
-            <section className="bg-white/5 border border-white/10 p-4 rounded-lg">
+            <section className="bg-white/5 border border-white/10 p-5 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <ChartBarIcon className="w-5 h-5 text-sky-400" />
                 <h4 className="text-white font-semibold">General Overview</h4>
               </div>
-              <ul className="text-sm space-y-1">
+              <ul className="text-md space-y-1">
                 <li><strong>Period:</strong> {data.period}</li>
                 <li><strong>Total System Balance:</strong> {data.totalSystemBalance.toFixed(2)}</li>
                 <li><strong>Total Users:</strong> {data.totalUsers}</li>
@@ -113,12 +110,12 @@ export const WalletAnalyticsModal: React.FC<WalletAnalyticsModalProps> = ({
             </section>
 
             {/* System Health */}
-            <section className="bg-white/5 border border-white/10 p-4 rounded-lg">
+            <section className="bg-white/5 border border-white/10 p-5 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Cog6ToothIcon className="w-5 h-5 text-purple-400" />
                 <h4 className="text-white font-semibold">System Health</h4>
               </div>
-              <ul className="text-sm space-y-1">
+              <ul className="text-md space-y-1">
                 <li>Average Wallet Balance: {data.systemHealth.averageWalletBalance.toFixed(2)}</li>
                 <li>Transaction Success Rate: {data.systemHealth.transactionSuccessRate.toFixed(2)}%</li>
               </ul>

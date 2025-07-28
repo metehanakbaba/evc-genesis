@@ -204,7 +204,6 @@ export const WalletsPage: React.FC = () => {
         <WalletAnalyticsModal
           isOpen={isAnalyticsModalOpen}
           onClose={() => setIsAnalyticsModalOpen(false)}
-          onRefresh={refresh}
         />
 
         <TransactionsModal
