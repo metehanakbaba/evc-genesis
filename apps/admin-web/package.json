@@ -25,8 +25,7 @@
     "perf:lighthouse": "lighthouse http://localhost:3000 --view",
     "perf:profile": "npm run build:profile && echo 'Check .next/profile-events.json for React profiling data'",
     "clean": "rm -rf .next node_modules/.cache",
-    "clean:all": "rm -rf .next node_modules",
-    "preinstall": "npx only-allow npm"
+    "clean:all": "rm -rf .next node_modules"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -34,33 +33,31 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@reduxjs/toolkit": "^2.8.2",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "lucide-react": "^0.525.0",
     "next": "15.3.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-redux": "^9.2.0",
-    "set-cookie-parser": "^2.7.1",
-    "tailwind-merge": "^3.3.1"
+    "set-cookie-parser": "^2.7.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
     "@next/bundle-analyzer": "^15.3.4",
     "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
+    "@testing-library/react": "16.1.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/jest": "^29.5.8",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "@nx/react": "^17.2.8",
+    "@nx/react": "21.2.1",
     "babel-jest": "^29.7.0",
     "lighthouse": "^12.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "5.8.3"
   },
   "engines": {
     "node": ">=18.0.0",

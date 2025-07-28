@@ -7,6 +7,7 @@
    - Follow consistent coding style and naming conventions
    - Write comprehensive documentation for all functions and classes
    - Maintain test coverage for critical components
+   - When you need documentation use Context7
 
 2. **Collaboration Guidelines**
    - Create descriptive commit messages

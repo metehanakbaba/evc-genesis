@@ -2,6 +2,7 @@
   "name": "@evc/workspace",
   "version": "1.0.0",
   "license": "MIT",
+  "packageManager": "npm@10.8.0",
   "scripts": {
     "dev": "nx dev @evc/admin-web",
     "dev:admin": "nx dev @evc/admin-web",
@@ -41,7 +42,7 @@
     "clean": "nx reset && rm -rf node_modules/.nx/cache",
     "clean:builds": "nx run-many --target=clean --all --parallel=3",
     "affected": "nx affected",
-    "ci:prepare": "npm ci --legacy-peer-deps",
+    "ci:prepare": "npm ci",
     "ci:build": "nx affected --target=build --parallel=3 --base=origin/main",
     "ci:test": "nx affected --target=test --parallel=3 --coverage --base=origin/main",
     "ci:quality": "nx affected --target=lint,typecheck --parallel=3 --base=origin/main",
@@ -52,22 +53,16 @@
   },
   "private": true,
   "dependencies": {
-    "@expo/metro-config": "~0.19.4",
+    "@expo/metro-config": "~0.20.17",
     "@expo/metro-runtime": "~4.0.0",
-    "@reduxjs/toolkit": "^2.8.2",
-    "@tailwindcss/vite": "^4.1.11",
     "clsx": "^2.1.1",
-    "expo": "~52.0.11",
-    "expo-splash-screen": "~0.29.13",
-    "expo-status-bar": "~2.0.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-native": "0.76.3",
+    "expo": "~53.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-native": "0.79.5",
     "react-native-svg": "~15.8.0",
     "react-native-svg-transformer": "~1.5.0",
-    "react-native-web": "~0.19.13",
-    "react-redux": "^9.2.0",
-    "react-router-dom": "^7.6.3",
+    "react-native-web": "^0.21.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
@@ -107,11 +102,11 @@
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "nx": "21.2.1",
-    "react-test-renderer": "~18.3.1",
+    "react-test-renderer": "^19.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
-    "typescript": "~5.8.2",
+    "typescript": "5.8.3",
     "vite": "^6.0.0",
     "vite-plugin-dts": "~4.5.0",
     "vitest": "^3.0.0"
@@ -121,5 +116,15 @@
     "packages/shared/*",
     "packages/ui/*",
     "packages/design/*"
-  ]
+  ],
+  "resolutions": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.5",
+    "react-native-web": "^0.21.0",
+    "expo": "~53.0.0",
+    "typescript": "5.8.3",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0"
+  }
 }
